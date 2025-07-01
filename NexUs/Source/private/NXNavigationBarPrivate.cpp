@@ -126,7 +126,6 @@ void NXNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool is
                     routeData.insert("NXPageKey", pageKey);
                     NXNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRouteBack", routeData);
                 }
-                Q_EMIT q->navigationNodeClicked(NXNavigationType::PageNode, node->getNodeKey());
 
                 if (_footerModel->getSelectedNode())
                 {
@@ -180,6 +179,7 @@ void NXNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool is
             }
         }
         _resetNodeSelected();
+        Q_EMIT q->navigationNodeClicked(NXNavigationType::PageNode, node->getNodeKey());
     }
 }
 
@@ -214,7 +214,6 @@ void NXNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool 
             routeData.insert("NXPageKey", pageKey);
             NXNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRouteBack", routeData);
         }
-        Q_EMIT q->navigationNodeClicked(NXNavigationType::FooterNode, node->getNodeKey());
 
         if (node->getIsHasFooterPage())
         {
@@ -239,6 +238,7 @@ void NXNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool 
             _footerModel->setSelectedNode(node);
         }
     }
+    Q_EMIT q->navigationNodeClicked(NXNavigationType::FooterNode, node->getNodeKey());
 }
 
 void NXNavigationBarPrivate::_initNodeModelIndex(const QModelIndex& parentIndex)

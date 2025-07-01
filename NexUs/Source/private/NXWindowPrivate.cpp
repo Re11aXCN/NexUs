@@ -168,32 +168,29 @@ void NXWindowPrivate::onxThemeModeChanged(NXThemeType::ThemeMode themeMode)
 void NXWindowPrivate::onNavigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey)
 {
     Q_Q(NXWindow);
-    Q_EMIT q->navigationNodeClicked(nodeType, nodeKey);
     QWidget* page = _routeMap.value(nodeKey);
-    if (!page)
+    if (page)
     {
-        return;
+        int nodeIndex = _centerStackedWidget->indexOf(page);
+        if (_navigationTargetIndex != nodeIndex && _centerStackedWidget->count() > nodeIndex)
+        {
+            _navigationTargetIndex = nodeIndex;
+            QTimer::singleShot(180, this, [=]() {
+                QWidget* currentWidget = _centerStackedWidget->widget(nodeIndex);
+                _centerStackedWidget->setCurrentIndex(nodeIndex);
+                QPropertyAnimation* currentWidgetAnimation = new QPropertyAnimation(currentWidget, "pos");
+                currentWidgetAnimation->setEasingCurve(QEasingCurve::OutCubic);
+                currentWidgetAnimation->setDuration(300);
+                QPoint currentWidgetPos = currentWidget->pos();
+                currentWidgetAnimation->setEndValue(currentWidgetPos);
+                currentWidgetPos.setY(currentWidgetPos.y() + 80);
+                currentWidgetAnimation->setStartValue(currentWidgetPos);
+                currentWidgetAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+                });
+        }
     }
-    int nodeIndex = _centerStackedWidget->indexOf(page);
-    if (_navigationTargetIndex == nodeIndex || _centerStackedWidget->count() <= nodeIndex)
-    {
-        return;
-    }
-    _navigationTargetIndex = nodeIndex;
-    QTimer::singleShot(180, this, [=]() {
-        QWidget* currentWidget = _centerStackedWidget->widget(nodeIndex);
-        _centerStackedWidget->setCurrentIndex(nodeIndex);
-        _currentVisibleWidget = { nodeType, nodeKey, currentWidget };
-        Q_EMIT q->navigationNodeToggled(nodeType, nodeKey, currentWidget);
-        QPropertyAnimation* currentWidgetAnimation = new QPropertyAnimation(currentWidget, "pos");
-        currentWidgetAnimation->setEasingCurve(QEasingCurve::OutCubic);
-        currentWidgetAnimation->setDuration(300);
-        QPoint currentWidgetPos = currentWidget->pos();
-        currentWidgetAnimation->setEndValue(currentWidgetPos);
-        currentWidgetPos.setY(currentWidgetPos.y() + 80);
-        currentWidgetAnimation->setStartValue(currentWidgetPos);
-        currentWidgetAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-        });
+    _currentVisibleWidget = { nodeType, nodeKey, page };
+    Q_EMIT q->navigationNodeClicked(nodeType, nodeKey, page);
 }
 
 void NXWindowPrivate::onNavigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* page)
@@ -223,16 +220,20 @@ void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeTy
     {
         return;
     }
-    QWidget* page = _routeMap.value(nodeKey);
-    _routeMap.remove(nodeKey);
+    QWidget* page = _routeMap.take(nodeKey);
     _centerStackedWidget->removeWidget(page);
+    page->deleteLater();
     QWidget* currentWidget = _centerStackedWidget->currentWidget();
     if (currentWidget)
     {
-        q->navigation(currentWidget->property("NXPageKey").toString());
+        const QString& currentKey = currentWidget->property("NXPageKey").toString();
+        q->navigation(currentKey);
+        _currentVisibleWidget = { nodeType, currentKey, currentWidget };
     }
-    page->deleteLater();
-    _currentVisibleWidget = { nodeType, nodeKey, currentWidget };
+    else
+    {
+        _currentVisibleWidget = { nodeType, QString{}, nullptr };
+    }
     Q_EMIT q->navigationNodeRemoved(nodeType, nodeKey);
 }
 

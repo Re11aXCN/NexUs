@@ -66,8 +66,7 @@ public:
 Q_SIGNALS:
     Q_SIGNAL void userInfoCardClicked();
     Q_SIGNAL void closeButtonClicked();
-    Q_SIGNAL void navigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey);
-    Q_SIGNAL void navigationNodeToggled(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* widget);
+    Q_SIGNAL void navigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* widget);
     Q_SIGNAL void navigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* widget);
     Q_SIGNAL void navigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey);
     Q_SIGNAL void customWidgetChanged();
