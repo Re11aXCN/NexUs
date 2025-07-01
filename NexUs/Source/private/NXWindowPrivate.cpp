@@ -168,6 +168,7 @@ void NXWindowPrivate::onxThemeModeChanged(NXThemeType::ThemeMode themeMode)
 void NXWindowPrivate::onNavigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey)
 {
     Q_Q(NXWindow);
+    Q_EMIT q->navigationNodeClicked(nodeType, nodeKey);
     QWidget* page = _routeMap.value(nodeKey);
     if (!page)
     {
@@ -179,10 +180,11 @@ void NXWindowPrivate::onNavigationNodeClicked(NXNavigationType::NavigationNodeTy
         return;
     }
     _navigationTargetIndex = nodeIndex;
-    Q_EMIT q->navigationNodeClicked(nodeType, nodeKey, page);
     QTimer::singleShot(180, this, [=]() {
         QWidget* currentWidget = _centerStackedWidget->widget(nodeIndex);
         _centerStackedWidget->setCurrentIndex(nodeIndex);
+        _currentVisibleWidget = { nodeType, nodeKey, currentWidget };
+        Q_EMIT q->navigationNodeToggled(nodeType, nodeKey, currentWidget);
         QPropertyAnimation* currentWidgetAnimation = new QPropertyAnimation(currentWidget, "pos");
         currentWidgetAnimation->setEasingCurve(QEasingCurve::OutCubic);
         currentWidgetAnimation->setDuration(300);
@@ -196,6 +198,7 @@ void NXWindowPrivate::onNavigationNodeClicked(NXNavigationType::NavigationNodeTy
 
 void NXWindowPrivate::onNavigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* page)
 {
+    Q_Q(NXWindow);
     if (nodeType == NXNavigationType::PageNode)
     {
         _routeMap.insert(nodeKey, page);
@@ -209,6 +212,8 @@ void NXWindowPrivate::onNavigationNodeAdded(NXNavigationType::NavigationNodeType
             _centerStackedWidget->addWidget(page);
         }
     }
+    _currentVisibleWidget = { nodeType, nodeKey, page };
+    Q_EMIT q->navigationNodeAdded(nodeType, nodeKey, page);
 }
 
 void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey)
@@ -219,7 +224,6 @@ void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeTy
         return;
     }
     QWidget* page = _routeMap.value(nodeKey);
-    Q_EMIT q->navigationNodeRemoved(nodeType, nodeKey);
     _routeMap.remove(nodeKey);
     _centerStackedWidget->removeWidget(page);
     QWidget* currentWidget = _centerStackedWidget->currentWidget();
@@ -228,6 +232,8 @@ void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeTy
         q->navigation(currentWidget->property("NXPageKey").toString());
     }
     page->deleteLater();
+    _currentVisibleWidget = { nodeType, nodeKey, currentWidget };
+    Q_EMIT q->navigationNodeRemoved(nodeType, nodeKey);
 }
 
 qreal NXWindowPrivate::_distance(QPoint point1, QPoint point2)

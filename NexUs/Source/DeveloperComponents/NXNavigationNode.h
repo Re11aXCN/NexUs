@@ -39,11 +39,12 @@ public:
 
     void appendChildNode(NXNavigationNode* childNode);
     void removeChildNode(NXNavigationNode* childNode);
+    void insertChildNode(int row, NXNavigationNode* childNode);
 
     bool getIsChildHasKeyPoints() const;
 
     NXNavigationNode* getOriginalNode();
-    bool getIsChildNode(NXNavigationNode* node);
+    bool getIsChildNode(NXNavigationNode* node) const;
 
     int getRow() const;
 

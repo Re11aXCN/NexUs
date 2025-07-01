@@ -51,6 +51,7 @@ private:
     QMap<QString, const QMetaObject*> _pageMetaMap;
     QMap<NXNavigationNode*, NXMenu*> _compactMenuMap;
     QList<NXNavigationNode*> _lastExpandedNodesList;
+    std::function<void(const QString&)> _openPageFunc{};
 
     QVBoxLayout* _navigationButtonLayout{nullptr};
     QHBoxLayout* _navigationSuggestLayout{nullptr};

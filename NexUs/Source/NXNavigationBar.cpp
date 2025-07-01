@@ -31,7 +31,7 @@ NXNavigationBar::NXNavigationBar(QWidget* parent)
     d->q_ptr = this;
     setFixedWidth(300);
     d->_pIsTransparent = true;
-
+    
     //用户卡片
     d->_userCard = new NXInteractiveCard(this);
     d->_userCard->setCardPixmap(QPixmap(":/include/Image/Cirno.jpg"));
@@ -113,7 +113,13 @@ NXNavigationBar::NXNavigationBar(QWidget* parent)
         });
     connect(d->_navigationView, &NXNavigationView::navigationOpenNewWindow, d, &NXNavigationBarPrivate::onNavigationOpenNewWindow);
     connect(d->_navigationView, &NXNavigationView::navigationCloseCurrentWindow, d, &NXNavigationBarPrivate::onNavigationCloseCurrentWindow);
-
+    connect(d->_navigationModel, &NXNavigationModel::rowsMoved, this, [=](const QModelIndex& sourceParent, int sourceStart, int sourceEnd, const QModelIndex& destinationParent, int destinationRow) {
+        /*const QModelIndex destinationIndex = d->_navigationModel->index(destinationRow, 0, destinationParent);
+        const QModelIndex sourceIndex = d->_navigationModel->index(sourceEnd - sourceStart + 1, 0, sourceParent);
+        d->onTreeViewClicked(sourceIndex);*/
+        d->_initNodeModelIndex(QModelIndex());
+        d->_resetNodeSelected();
+        });
     // 页脚
     d->_footerView = new NXBaseListView(this);
     d->_footerView->setFixedHeight(0);
@@ -187,6 +193,25 @@ void NXNavigationBar::setUserInfoCardSubTitle(const QString& subTitle)
 {
     Q_D(NXNavigationBar);
     d->_userCard->setSubTitle(subTitle);
+}
+
+/*template<typename Func>
+inline */void NXNavigationBar::setNavigationPageOpenPolicy(std::function<void(const QString&/*nodeKey*/)>&& openNavigationPageFunc)
+{
+    Q_D(NXNavigationBar);
+    d->_openPageFunc = std::move(openNavigationPageFunc);/*std::forward<Func>(func)*/;
+}
+
+void NXNavigationBar::setIsLeftButtonPressedToggleNavigation(bool isPressed)
+{
+    Q_D(NXNavigationBar);
+    d->_navigationView->setIsLeftButtonPressedToggleNavigation(isPressed);
+}
+
+void NXNavigationBar::setNavigationNodeDragAndDropEnable(bool isEnable)
+{
+    Q_D(NXNavigationBar);
+    d->_navigationView->setNavigationNodeDragAndDropEnable(isEnabled);
 }
 
 NodeOperateReturnTypeWithKey NXNavigationBar::addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome)

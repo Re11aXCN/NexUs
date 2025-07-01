@@ -124,6 +124,29 @@ void NXNavigationStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
     {
         return;
     }
+    case  QStyle::PE_IndicatorItemViewItemDrop:
+    {
+       /* if (option->rect.isNull()) return;
+
+        QRect itemRect = option->rect;
+        QPen pen;
+        pen.setColor(NXThemeColor(_themeMode, PrimaryNormal));
+        pen.setWidth(2);
+        painter->setPen(pen);
+        painter->setRenderHint(QPainter::Antialiasing);
+        if (option->rect.height() == 0)
+        {
+            painter->drawEllipse(QPoint(10, option->rect.top()), 4, 4);
+            painter->drawLine(QPoint(10, option->rect.top()), QPoint(widget->width() - 10, option->rect.top()));
+        }
+        else
+        {
+            itemRect.setLeft(5);
+            itemRect.setRight(widget->width() - 5);
+            painter->drawRect(itemRect);
+        }*/
+        return;
+    }
     default:
     {
         break;

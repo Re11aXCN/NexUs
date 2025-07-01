@@ -20,6 +20,7 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    Qt::ItemFlags flags(const QModelIndex& index) const override;
     NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome);
     NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome);
     NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, NXIconType::IconName awesome);
@@ -32,6 +33,12 @@ public:
     QList<NXNavigationNode*> getRootExpanderNodes() const;
     QList<NXNavigationNode*> getRootExpandedNodes() const;
 
+    virtual Qt::DropActions supportedDropActions() const override;
+    virtual Qt::DropActions supportedDragActions() const override;
+    virtual QStringList mimeTypes() const override;
+    virtual QMimeData* mimeData(const QModelIndexList& indexes) const override;
+    virtual bool canDropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent) const override;
+    virtual bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent) override;
 private:
     QMap<QString, NXNavigationNode*> _nodesMap;
     NXNavigationNode* _rootNode{nullptr};

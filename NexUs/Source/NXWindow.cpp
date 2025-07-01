@@ -51,9 +51,7 @@ NXWindow::NXWindow(QWidget* parent)
 
     QObject::connect(d->_navigationBar, &NXNavigationBar::userInfoCardClicked, this, &NXWindow::userInfoCardClicked);
     QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeClicked, d, &NXWindowPrivate::onNavigationNodeClicked);
-
-    QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeAdded, this, &NXWindow::navigationNodeAdded);
-    QObject::connect(this, &NXWindow::navigationNodeAdded, d, &NXWindowPrivate::onNavigationNodeAdded);
+    QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeAdded, d, &NXWindowPrivate::onNavigationNodeAdded);
     QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeRemoved, d, &NXWindowPrivate::onNavigationNodeRemoved);
 
     d->_centerStackedWidget = new NXCentralStackedWidget(this);
@@ -212,6 +210,18 @@ bool NXWindow::getIsNavigationBarEnable() const
     return d_ptr->_isNavigationEnable;
 }
 
+void NXWindow::setIsLeftButtonPressedToggleNavigation(bool isPressed)
+{
+    Q_D(NXWindow);
+    d->_navigationBar->setIsLeftButtonPressedToggleNavigation(isPressed);
+}
+
+void NXWindow::setNavigationNodeDragAndDropEnable(bool isEnable)
+{
+    Q_D(NXWindow);
+    d->_navigationBar->setNavigationNodeDragAndDropEnable(isEnabled);
+}
+
 void NXWindow::setUserInfoCardVisible(bool isVisible)
 {
     Q_D(NXWindow);
@@ -246,6 +256,12 @@ NXNavigationType::NodeOperateReturnType NXWindow::navigationPageNodeSwitch(const
 {
     Q_D(NXWindow);
     return d->_navigationBar->navigationPageNodeSwitch(targetPageKey);
+}
+
+void NXWindow::setNavigationPageOpenPolicy(std::function<void(const QString&/*nodeKey*/)>&& openNavigationPageFunc)
+{
+    Q_D(NXWindow);
+    d->_navigationBar->setNavigationPageOpenPolicy(std::move(openNavigationPageFunc));
 }
 
 NodeOperateReturnTypeWithKey NXWindow::addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome) const
@@ -331,6 +347,12 @@ int NXWindow::getNodeKeyPoints(const QString& nodeKey) const
 {
     Q_D(const NXWindow);
     return d->_navigationBar->getNodeKeyPoints(nodeKey);
+}
+
+std::tuple<NXNavigationType::NavigationNodeType, QString, QWidget*> NXWindow::currentVisibleWidget() const
+{
+    Q_D(const NXWindow);
+    return d->_currentVisibleWidget;
 }
 
 void NXWindow::navigation(const QString& pageKey)

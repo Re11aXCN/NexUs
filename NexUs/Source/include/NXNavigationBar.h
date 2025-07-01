@@ -18,6 +18,10 @@ public:
     void setUserInfoCardPixmap(QPixmap pix);
     void setUserInfoCardTitle(const QString& title);
     void setUserInfoCardSubTitle(const QString& subTitle);
+    //template<typename Func>
+    void setNavigationPageOpenPolicy(std::function<void(const QString&/*nodeKey*/)>&& openNavigationPageFunc);
+    void setIsLeftButtonPressedToggleNavigation(bool isPressed);
+    void setNavigationNodeDragAndDropEnable(bool isEnable);
 
     NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome = NXIconType::None);
     NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome = NXIconType::None);

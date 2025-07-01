@@ -103,7 +103,7 @@ bool NXNavigationNode::getIsHasPageChild() const
 
 void NXNavigationNode::appendChildNode(NXNavigationNode* childNode)
 {
-    if (_pIsExpanderNode)
+    if (_pIsExpanderNode)// 根节点也是ExpanderNode
     {
         _pChildrenNodes.append(childNode);
     }
@@ -115,6 +115,13 @@ void NXNavigationNode::removeChildNode(NXNavigationNode* childNode)
     {
         _pChildrenNodes.removeOne(childNode);
     }
+}
+
+void NXNavigationNode::insertChildNode(int row, NXNavigationNode* childNode)
+{
+    if (row < 0 || row > _pChildrenNodes.count()) return;
+    _pChildrenNodes.insert(row, childNode);
+    childNode->setParentNode(this);
 }
 
 bool NXNavigationNode::getIsChildHasKeyPoints() const
@@ -150,7 +157,7 @@ NXNavigationNode* NXNavigationNode::getOriginalNode()
     }
 }
 
-bool NXNavigationNode::getIsChildNode(NXNavigationNode* node)
+bool NXNavigationNode::getIsChildNode(NXNavigationNode* node) const
 {
     if (_pChildrenNodes.count() > 0)
     {

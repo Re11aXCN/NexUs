@@ -28,6 +28,8 @@ public:
     QWidget* getCustomWidget() const;
     void setIsNavigationBarEnable(bool isEnable);
     bool getIsNavigationBarEnable() const;
+    void setIsLeftButtonPressedToggleNavigation(bool isPressed);
+    void setNavigationNodeDragAndDropEnable(bool isEnable);
     void setUserInfoCardVisible(bool isVisible);
     void setUserInfoCardPixmap(QPixmap pix);
     void setUserInfoCardTitle(const QString& title);
@@ -52,6 +54,7 @@ public:
     void setNodeKeyPoints(const QString& nodeKey, int keyPoints);
     int getNodeKeyPoints(const QString& nodeKey) const;
 
+    std::tuple<NXNavigationType::NavigationNodeType, QString, QWidget*> currentVisibleWidget() const;
     void navigation(const QString& pageKey);
     void setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable = true);
     void setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags);
@@ -59,13 +62,13 @@ public:
 
     void closeWindow();
     Q_SLOT NXNavigationType::NodeOperateReturnType navigationPageNodeSwitch(const QString& targetPageKey);
-
+    void setNavigationPageOpenPolicy(std::function<void(const QString&/*nodeKey*/)>&& openNavigationPageFunc);
 Q_SIGNALS:
     Q_SIGNAL void userInfoCardClicked();
     Q_SIGNAL void closeButtonClicked();
-    // if you not add node widget, signal param widget is nullptr
-    Q_SIGNAL void navigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* page);
-    Q_SIGNAL void navigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* page);
+    Q_SIGNAL void navigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey);
+    Q_SIGNAL void navigationNodeToggled(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* widget);
+    Q_SIGNAL void navigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* widget);
     Q_SIGNAL void navigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey);
     Q_SIGNAL void customWidgetChanged();
 protected:

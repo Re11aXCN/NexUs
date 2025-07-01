@@ -37,3 +37,23 @@
 >
 > NXMessageButton修改，新增showMessage方法，外部可以调用，新增disconnect按钮clicked时弹出按钮方法，外部可以取消这个点击事件，然后自行建立
 > NXWindow的navigationNodeClicked信号修改新增QWidget*参数
+
+### 4.  Modify Optize4
+
+> 1. NXNavigationModel新增拖拽方法支持拖拽功能
+>
+> 2. NXNavigationNode新增insertChildNode方法
+>
+> 3. NXNavigationStyle尝试内置拖拽指示器逻辑case  QStyle::PE_IndicatorItemViewItemDrop:
+>
+> 4. NXNavigationView新增IsLeftButtonPressedToggleNavigation选择pressed切换pagenode还是released、setNavigationNodeDragAndDropEnable方法设置支持拖拽——NXWindow同步方
+>
+>    新增自定义dropIndicatorPositionOverride方法（qt内置的不太好用）、拖拽事件的完善、paintEvent指示器的绘制
+>
+> 5. NXNavigationBar增加信号槽连接model的move信号完成节点交换重绘
+>
+>    新增setNavigationPageOpenPolicy自定义打开逻辑（可以使用内部自定义打开custom，也可以自定义方法打开PageNode的widget）——NXWindow同步方法
+>
+> 6. NXWindow新增navigationNodeToggled信号替换原来的navigationNodeClicked作用，navigationNodeClicked变为点击触发即使node没有page，navigationNodeToggled是进行page切换
+>
+>    新增_currentVisibleWidget获取当前stackedWidget和nodekey、nodetype

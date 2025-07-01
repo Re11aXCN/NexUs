@@ -45,6 +45,11 @@ void NXNavigationBarPrivate::onNavigationButtonClicked()
 void NXNavigationBarPrivate::onNavigationOpenNewWindow(const QString& nodeKey)
 {
     Q_Q(NXNavigationBar);
+    if (_openPageFunc)
+    {
+        _openPageFunc(nodeKey);
+        return;
+    }
     const QMetaObject* meta = _pageMetaMap.value(nodeKey);
     if (!meta)
     {

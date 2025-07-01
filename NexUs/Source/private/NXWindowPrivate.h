@@ -20,7 +20,6 @@ class NXWindowPrivate : public QObject
     Q_D_CREATE(NXWindow)
     Q_PROPERTY_CREATE_D(int, ThemeChangeTime)
     Q_PROPERTY_CREATE_D(NXNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
-
 public:
     explicit NXWindowPrivate(QObject* parent = nullptr);
     ~NXWindowPrivate() override;
@@ -54,7 +53,7 @@ private:
     NXAppBar* _appBar{ nullptr };
     QHBoxLayout* _centerLayout{ nullptr };
     NXThemeAnimationWidget* _animationWidget{ nullptr };
-
+    std::tuple<NXNavigationType::NavigationNodeType, QString, QWidget*> _currentVisibleWidget{ NXNavigationType::NavigationNodeType::PageNode, QString{}, nullptr};
     qreal _distance(QPoint point1, QPoint point2);
     void _resetWindowLayout(bool isAnimation);
     void _doNavigationDisplayModeChange();
