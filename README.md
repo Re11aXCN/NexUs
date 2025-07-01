@@ -68,3 +68,7 @@
 > 2. NXTreeView新增设置NXIcon图标作为文字绘制，修改NXTreeViewStyle的文字绘制逻辑，绘制选择时的文本间距及文字颜色（如果采用Model将NXIconType作为QIcon返回NXIcon::getInstance()->getNXIcon间距太宽，图标颜色不好使用QStyle::State进行修改）
 > 3. NXListViewStyle的视口绘制逻辑修复
 > 4. NXDockWidget增加dockClosed、dockResized信号
+
+### 7. Modify Optize7
+
+> 1. 修复NavigationNodeClicked/Removed的错误逻辑
