@@ -1,0 +1,27 @@
+#ifndef NXFOOTERMODEL_H
+#define NXFOOTERMODEL_H
+
+#include <QAbstractListModel>
+
+#include "NXDef.h"
+class NXNavigationNode;
+class NXFooterModel : public QAbstractListModel
+{
+    Q_OBJECT
+    Q_PRIVATE_CREATE(NXNavigationNode*, SelectedNode)
+public:
+    explicit NXFooterModel(QObject* parent = nullptr);
+    ~NXFooterModel();
+    NXNavigationType::NodeOperateReturnType addFooterNode(QString footerTitle, QString& footerKey, bool isHasFooterPage, int keyPoints = 0, NXIconType::IconName awesome = NXIconType::None);
+    int getFooterNodeCount() const;
+    NXNavigationNode* getNavigationNode(QString footerKey);
+    void removeNavigationNode(QString footerKey);
+protected:
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex& index, int role) const override;
+
+private:
+    QList<NXNavigationNode*> _footerNodeList;
+};
+
+#endif // NXFOOTERMODEL_H
