@@ -44,8 +44,6 @@ NXContentDialog::NXContentDialog(QWidget* parent)
     QObject::connect(d->_leftButton, &NXPushButton::clicked, this, [=]() {
         Q_EMIT leftButtonClicked();
         onLeftButtonClicked();
-        d->_maskWidget->doMaskAnimation(0);
-        d->_doCloseAnimation();
     });
     d->_leftButton->setMinimumSize(0, 0);
     d->_leftButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
@@ -64,7 +62,6 @@ NXContentDialog::NXContentDialog(QWidget* parent)
     QObject::connect(d->_rightButton, &NXPushButton::clicked, this, [=]() {
         Q_EMIT rightButtonClicked();
         onRightButtonClicked();
-        d->_doCloseAnimation();
     });
     d->_rightButton->setLightDefaultColor(NXThemeColor(NXThemeType::Light, PrimaryNormal));
     d->_rightButton->setLightHoverColor(NXThemeColor(NXThemeType::Light, PrimaryHover));

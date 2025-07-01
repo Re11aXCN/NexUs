@@ -167,6 +167,7 @@ void NXWindowPrivate::onxThemeModeChanged(NXThemeType::ThemeMode themeMode)
 
 void NXWindowPrivate::onNavigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey)
 {
+    Q_Q(NXWindow);
     QWidget* page = _routeMap.value(nodeKey);
     if (!page)
     {
@@ -178,6 +179,7 @@ void NXWindowPrivate::onNavigationNodeClicked(NXNavigationType::NavigationNodeTy
         return;
     }
     _navigationTargetIndex = nodeIndex;
+    Q_EMIT q->navigationNodeClicked(nodeType, nodeKey, page);
     QTimer::singleShot(180, this, [=]() {
         QWidget* currentWidget = _centerStackedWidget->widget(nodeIndex);
         _centerStackedWidget->setCurrentIndex(nodeIndex);
@@ -217,6 +219,7 @@ void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeTy
         return;
     }
     QWidget* page = _routeMap.value(nodeKey);
+    Q_EMIT q->navigationNodeRemoved(nodeType, nodeKey);
     _routeMap.remove(nodeKey);
     _centerStackedWidget->removeWidget(page);
     QWidget* currentWidget = _centerStackedWidget->currentWidget();

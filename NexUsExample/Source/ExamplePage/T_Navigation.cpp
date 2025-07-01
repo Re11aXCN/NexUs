@@ -32,7 +32,7 @@ T_Navigation::T_Navigation(QWidget* parent)
 
     NXPushButton* resetButton = new NXPushButton("还原", this);
     resetButton->setFixedSize(60, 32);
-    connect(resetButton, &NXPushButton::clicked, this, [=]() {
+    QObject::connect(resetButton, &NXPushButton::clicked, this, [=]() {
         _breadcrumbBar->setBreadcrumbList(breadcrumbBarList);
     });
 

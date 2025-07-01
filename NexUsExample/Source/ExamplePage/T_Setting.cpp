@@ -35,7 +35,7 @@ T_Setting::T_Setting(QWidget* parent)
     themeSwitchLayout->addWidget(themeSwitchText);
     themeSwitchLayout->addStretch();
     themeSwitchLayout->addWidget(_themeComboBox);
-    connect(_themeComboBox, QOverload<int>::of(&NXComboBox::currentIndexChanged), this, [=](int index) {
+    QObject::connect(_themeComboBox, QOverload<int>::of(&NXComboBox::currentIndexChanged), this, [=](int index) {
         if (index == 0)
         {
             nxTheme->setThemeMode(NXThemeType::Light);
@@ -45,7 +45,7 @@ T_Setting::T_Setting(QWidget* parent)
             nxTheme->setThemeMode(NXThemeType::Dark);
         }
     });
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeComboBox->blockSignals(true);
         if (themeMode == NXThemeType::Light)
         {
@@ -71,7 +71,7 @@ T_Setting::T_Setting(QWidget* parent)
     micaSwitchLayout->addWidget(micaSwitchText);
     micaSwitchLayout->addStretch();
     micaSwitchLayout->addWidget(_micaSwitchButton);
-    connect(_micaSwitchButton, &NXToggleSwitch::toggled, this, [=](bool checked) {
+    QObject::connect(_micaSwitchButton, &NXToggleSwitch::toggled, this, [=](bool checked) {
         nxApp->setIsEnableMica(checked);
     });
 
@@ -84,7 +84,7 @@ T_Setting::T_Setting(QWidget* parent)
     logSwitchLayout->addWidget(logSwitchText);
     logSwitchLayout->addStretch();
     logSwitchLayout->addWidget(_logSwitchButton);
-    connect(_logSwitchButton, &NXToggleSwitch::toggled, this, [=](bool checked) {
+    QObject::connect(_logSwitchButton, &NXToggleSwitch::toggled, this, [=](bool checked) {
         NXLog::getInstance()->initMessageLog(checked);
         if (checked)
         {
@@ -112,25 +112,25 @@ T_Setting::T_Setting(QWidget* parent)
     displayModeLayout->addWidget(_compactButton);
     displayModeLayout->addWidget(_maximumButton);
     displayModeLayout->addWidget(_autoButton);
-    connect(_minimumButton, &NXRadioButton::toggled, this, [=](bool checked) {
+    QObject::connect(_minimumButton, &NXRadioButton::toggled, this, [=](bool checked) {
         if (checked)
         {
             window->setNavigationBarDisplayMode(NXNavigationType::Minimal);
         }
     });
-    connect(_compactButton, &NXRadioButton::toggled, this, [=](bool checked) {
+    QObject::connect(_compactButton, &NXRadioButton::toggled, this, [=](bool checked) {
         if (checked)
         {
             window->setNavigationBarDisplayMode(NXNavigationType::Compact);
         }
     });
-    connect(_maximumButton, &NXRadioButton::toggled, this, [=](bool checked) {
+    QObject::connect(_maximumButton, &NXRadioButton::toggled, this, [=](bool checked) {
         if (checked)
         {
             window->setNavigationBarDisplayMode(NXNavigationType::Maximal);
         }
     });
-    connect(_autoButton, &NXRadioButton::toggled, this, [=](bool checked) {
+    QObject::connect(_autoButton, &NXRadioButton::toggled, this, [=](bool checked) {
         if (checked)
         {
             window->setNavigationBarDisplayMode(NXNavigationType::Auto);

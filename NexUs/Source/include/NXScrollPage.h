@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "stdafx.h"
+#include "NXDef.h"
 class NXScrollArea;
 class NXText;
 class QHBoxLayout;

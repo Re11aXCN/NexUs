@@ -27,6 +27,7 @@ private:
     int _shadowBorderWidth{3};
     int _penBorderWidth{1};
     NXThemeType::ThemeMode _themeMode;
+    Q_SLOT void _showMessage();
 };
 
 #endif // NXMESSAGEBUTTONPRIVATE_H

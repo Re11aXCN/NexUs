@@ -23,7 +23,9 @@ public:
     explicit NXMessageButton(QWidget* parent = nullptr);
     explicit NXMessageButton(const QString& text, QWidget* parent = nullptr);
     ~NXMessageButton();
-
+    void disconnectBuiltInSignalClicked();
+Q_SIGNALS: 
+    Q_SIGNAL void showMessage();
 protected:
     virtual void mousePressEvent(QMouseEvent* event) override;
     virtual void mouseReleaseEvent(QMouseEvent* event) override;

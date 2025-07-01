@@ -30,3 +30,10 @@
 >    NXAppBar注释`WM_NCCALCSIZE`部分代码，因为窗口最大化会造成边缘空缺
 >
 > 9. NXScrollPage修改addCentralWidget参数新增可以选择开启垂直或者水平的滚动条
+
+### 3. Modify Optize3
+
+> NXContentDialog修改内部按钮信号槽，如果想要设置关闭使用时外部建立即可（NXKeyBinder.cpp被修改，因为使用了NXContentDialog）
+>
+> NXMessageButton修改，新增showMessage方法，外部可以调用，新增disconnect按钮clicked时弹出按钮方法，外部可以取消这个点击事件，然后自行建立
+> NXWindow的navigationNodeClicked信号修改新增QWidget*参数

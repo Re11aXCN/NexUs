@@ -33,34 +33,13 @@ NXMessageButton::NXMessageButton(QWidget* parent)
     d->_pMessageMode = NXMessageBarType::Success;
     d->_pPositionPolicy = NXMessageBarType::TopRight;
     d->_themeMode = nxTheme->getThemeMode();
-    d->_pMessageTargetWidget = nullptr;
+    d->_pMessageTargetWidget = parent;
     connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
-    connect(this, &NXMessageButton::clicked, this, [=]() {
-        switch(d->_pMessageMode)
-        {
-        case NXMessageBarType::Success:
-        {
-            NXMessageBar::success(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
-            break;
-        }
-        case NXMessageBarType::Warning:
-        {
-            NXMessageBar::warning(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
-            break;
-        }
-        case NXMessageBarType::Information:
-        {
-            NXMessageBar::information(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
-            break;
-        }
-        case NXMessageBarType::Error:
-        {
-            NXMessageBar::error(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
-            break;
-        }
-        } });
+    
+    connect(this, &NXMessageButton::clicked, d, &NXMessageButtonPrivate::_showMessage);
+    connect(this, &NXMessageButton::showMessage, d, &NXMessageButtonPrivate::_showMessage);
 }
 
 NXMessageButton::NXMessageButton(const QString& text, QWidget* parent)
@@ -71,6 +50,12 @@ NXMessageButton::NXMessageButton(const QString& text, QWidget* parent)
 
 NXMessageButton::~NXMessageButton()
 {
+}
+
+void NXMessageButton::disconnectBuiltInSignalClicked()
+{
+    Q_D(NXMessageButton);
+    disconnect(this, &NXMessageButton::clicked, d, &NXMessageButtonPrivate::_showMessage);
 }
 
 void NXMessageButton::mousePressEvent(QMouseEvent* event)

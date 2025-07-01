@@ -16,7 +16,7 @@ T_LogWidget::T_LogWidget(QWidget* parent)
     _logModel = new T_LogModel(this);
     logView->setModel(_logModel);
     mainLayout->addWidget(logView);
-    connect(NXLog::getInstance(), &NXLog::logMessage, this, [=](QString log) {
+    QObject::connect(NXLog::getInstance(), &NXLog::logMessage, this, [=](QString log) {
         _logModel->appendLogList(log);
     });
     _logModel->appendLogList("测试条例11223344556677889900");

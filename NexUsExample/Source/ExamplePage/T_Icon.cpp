@@ -30,7 +30,7 @@ T_Icon::T_Icon(QWidget* parent)
     _iconView->setFlow(QListView::LeftToRight);
     _iconView->setViewMode(QListView::IconMode);
     _iconView->setResizeMode(QListView::Adjust);
-    connect(_iconView, &NXListView::clicked, this, [=](const QModelIndex& index) {
+    QObject::connect(_iconView, &NXListView::clicked, this, [=](const QModelIndex& index) {
         QString iconName = _iconModel->getIconNameFromModelIndex(index);
         if (iconName.isEmpty())
         {
@@ -48,8 +48,8 @@ T_Icon::T_Icon(QWidget* parent)
     _searchEdit = new NXLineEdit(this);
     _searchEdit->setPlaceholderText("搜索图标");
     _searchEdit->setFixedSize(300, 35);
-    connect(_searchEdit, &NXLineEdit::textEdited, this, &T_Icon::onSearchEditTextEdit);
-    connect(_searchEdit, &NXLineEdit::focusIn, this, &T_Icon::onSearchEditTextEdit);
+    QObject::connect(_searchEdit, &NXLineEdit::textEdited, this, &T_Icon::onSearchEditTextEdit);
+    QObject::connect(_searchEdit, &NXLineEdit::focusIn, this, &T_Icon::onSearchEditTextEdit);
 
     centerVLayout->addSpacing(13);
     centerVLayout->addWidget(_searchEdit);

@@ -48,13 +48,14 @@ MainWindow::MainWindow(QWidget* parent)
 
     // 拦截默认关闭事件
     _closeDialog = new NXContentDialog(this);
-    connect(_closeDialog, &NXContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
-    connect(_closeDialog, &NXContentDialog::middleButtonClicked, this, [=]() {
+    QObject::connect(_closeDialog, &NXContentDialog::leftButtonClicked, &NXContentDialog::close);
+    QObject::connect(_closeDialog, &NXContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
+    QObject::connect(_closeDialog, &NXContentDialog::middleButtonClicked, this, [=]() {
         _closeDialog->close();
         showMinimized();
     });
     this->setIsDefaultClosed(false);
-    connect(this, &MainWindow::closeButtonClicked, this, [=]() {
+    QObject::connect(this, &MainWindow::closeButtonClicked, this, [=]() {
         _closeDialog->exec();
     });
 
@@ -261,7 +262,7 @@ void MainWindow::initContent()
     _aboutPage = new T_About();
 
     _aboutPage->hide();
-    connect(this, &NXWindow::navigationNodeClicked, this, [=](NXNavigationType::NavigationNodeType nodeType, QString nodeKey) {
+    QObject::connect(this, &NXWindow::navigationNodeClicked, this, [=](NXNavigationType::NavigationNodeType nodeType, QString nodeKey) {
         if (_aboutKey == nodeKey)
         {
             _aboutPage->setFixedSize(400, 400);
@@ -270,24 +271,24 @@ void MainWindow::initContent()
         }
     });
     _settingKey = addFooterNode("Setting", _settingPage, 0, NXIconType::GearComplex).second;
-    connect(this, &MainWindow::userInfoCardClicked, this, [=]() {
+    QObject::connect(this, &MainWindow::userInfoCardClicked, this, [=]() {
         this->navigation(_homePage->property("NXPageKey").toString());
     });
 //#ifdef Q_OS_WIN
-//    connect(_homePage, &T_Home::elaScreenNavigation, this, [=]() {
+//    QObject::connect(_homePage, &T_Home::elaScreenNavigation, this, [=]() {
 //        this->navigation(_elaScreenPage->property("NXPageKey").toString());
 //    });
 //#endif
-    connect(_homePage, &T_Home::elaBaseComponentNavigation, this, [=]() {
+    QObject::connect(_homePage, &T_Home::elaBaseComponentNavigation, this, [=]() {
         this->navigation(_baseComponentsPage->property("NXPageKey").toString());
     });
-    connect(_homePage, &T_Home::elaSceneNavigation, this, [=]() {
+    QObject::connect(_homePage, &T_Home::elaSceneNavigation, this, [=]() {
         this->navigation(_graphicsPage->property("NXPageKey").toString());
     });
-    connect(_homePage, &T_Home::elaIconNavigation, this, [=]() {
+    QObject::connect(_homePage, &T_Home::elaIconNavigation, this, [=]() {
         this->navigation(_iconPage->property("NXPageKey").toString());
     });
-    connect(_homePage, &T_Home::elaCardNavigation, this, [=]() {
+    QObject::connect(_homePage, &T_Home::elaCardNavigation, this, [=]() {
         this->navigation(_cardPage->property("NXPageKey").toString());
     });
     //qDebug() << "已注册的事件列表" << NXEventBus::getInstance()->getRegisteredEventsName();

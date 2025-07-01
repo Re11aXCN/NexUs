@@ -43,7 +43,7 @@
 //    _outputComboBox->addItems(dxgiManager->getOutputDeviceList());
 //    _outputComboBox->setCurrentIndex(dxgiManager->getOutputDeviceID());
 //
-//    connect(_dxComboBox, QOverload<int>::of(&NXComboBox::currentIndexChanged), this, [=](int index) {
+//    QObject::connect(_dxComboBox, QOverload<int>::of(&NXComboBox::currentIndexChanged), this, [=](int index) {
 //        dxgiManager->setDxDeviceID(index);
 //        _outputComboBox->blockSignals(true);
 //        _outputComboBox->clear();
@@ -52,13 +52,13 @@
 //        _outputComboBox->blockSignals(false);
 //        _dxgiScreen->update();
 //    });
-//    connect(_outputComboBox, QOverload<int>::of(&NXComboBox::currentIndexChanged), this, [=](int index) {
+//    QObject::connect(_outputComboBox, QOverload<int>::of(&NXComboBox::currentIndexChanged), this, [=](int index) {
 //        dxgiManager->setOutputDeviceID(index);
 //        _dxgiScreen->update();
 //    });
 //
 //    NXToggleButton* startButton = new NXToggleButton("捕获", this);
-//    connect(startButton, &NXToggleButton::toggled, this, [=](bool isToggled) {
+//    QObject::connect(startButton, &NXToggleButton::toggled, this, [=](bool isToggled) {
 //        if (isToggled)
 //        {
 //            dxgiManager->startGrabScreen();
@@ -92,7 +92,7 @@
 //    interfaceIPEdit->setText("192.168.1");
 //
 //    NXToggleButton* sendButton = new NXToggleButton("初始发送", this);
-//    connect(sendButton, &NXToggleButton::toggled, this, [=](bool isToggled) {
+//    QObject::connect(sendButton, &NXToggleButton::toggled, this, [=](bool isToggled) {
 //        if (isToggled)
 //        {
 //            _initSendThread(interfaceIPEdit->text().trimmed());
@@ -103,7 +103,7 @@
 //        }
 //    });
 //    NXToggleButton* recvButton = new NXToggleButton("初始接收", this);
-//    connect(recvButton, &NXToggleButton::toggled, this, [=](bool isToggled) {
+//    QObject::connect(recvButton, &NXToggleButton::toggled, this, [=](bool isToggled) {
 //        if (isToggled)
 //        {
 //            _initRecvThread(interfaceIPEdit->text().trimmed());
@@ -153,7 +153,7 @@
 //    _packetSendIO = new T_NXPacketIO();
 //    _packetSendIO->setInterfaceIP(interfaceIP);
 //    _packetSendIO->moveToThread(_packetIOSendThread);
-//    connect(_packetIOSendThread, &QThread::started, _packetSendIO, &T_NXPacketIO::handleGrabImage);
+//    QObject::connect(_packetIOSendThread, &QThread::started, _packetSendIO, &T_NXPacketIO::handleGrabImage);
 //    _packetIOSendThread->start();
 //}
 //
@@ -165,9 +165,9 @@
 //        _packetRecvIO = new T_NXPacketIO();
 //        _packetRecvIO->setInterfaceIP(interfaceIP);
 //        _packetRecvIO->moveToThread(_packetIORecvThread);
-//        connect(_packetIORecvThread, &QThread::started, _packetRecvIO, &T_NXPacketIO::handleImagePacket);
+//        QObject::connect(_packetIORecvThread, &QThread::started, _packetRecvIO, &T_NXPacketIO::handleImagePacket);
 //        _packetIORecvThread->start();
-//        connect(_packetRecvIO, &T_NXPacketIO::sendHandleResult, _recvScreen, &T_RecvScreen::onSendHandleResult);
+//        QObject::connect(_packetRecvIO, &T_NXPacketIO::sendHandleResult, _recvScreen, &T_RecvScreen::onSendHandleResult);
 //    });
 //}
 //

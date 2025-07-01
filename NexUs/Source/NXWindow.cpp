@@ -50,9 +50,7 @@ NXWindow::NXWindow(QWidget* parent)
     });
 
     QObject::connect(d->_navigationBar, &NXNavigationBar::userInfoCardClicked, this, &NXWindow::userInfoCardClicked);
-    QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeClicked, this, &NXWindow::navigationNodeClicked);
-    //QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeClicked, d, &NXWindowPrivate::onNavigationNodeClicked);
-    QObject::connect(this, &NXWindow::navigationNodeClicked, d, &NXWindowPrivate::onNavigationNodeClicked);
+    QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeClicked, d, &NXWindowPrivate::onNavigationNodeClicked);
 
     QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeAdded, this, &NXWindow::navigationNodeAdded);
     QObject::connect(this, &NXWindow::navigationNodeAdded, d, &NXWindowPrivate::onNavigationNodeAdded);
