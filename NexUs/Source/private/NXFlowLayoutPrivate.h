@@ -1,4 +1,4 @@
-#ifndef NXFLOWLAYOUTPRIVATE_H
+﻿#ifndef NXFLOWLAYOUTPRIVATE_H
 #define NXFLOWLAYOUTPRIVATE_H
 
 #include <QLayout>

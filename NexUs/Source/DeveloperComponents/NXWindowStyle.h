@@ -9,7 +9,7 @@ class NXWindowStyle : public QProxyStyle
     Q_OBJECT
 public:
     explicit NXWindowStyle(QStyle* style = nullptr);
-    ~NXWindowStyle();
+    ~NXWindowStyle() override;
     void drawPrimitive(PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
 

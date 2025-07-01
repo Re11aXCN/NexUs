@@ -1,4 +1,4 @@
-#include "NXTabBarStyle.h"
+﻿#include "NXTabBarStyle.h"
 
 #include <QDebug>
 #include <QPainter>
@@ -23,7 +23,7 @@ void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption* opt, 
     {
     case QStyle::PE_FrameTabBarBase:
     {
-        //鎼存洝绔熺痪?
+        //底边线
         return;
     }
     case QStyle::PE_IndicatorArrowLeft:
@@ -36,7 +36,7 @@ void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption* opt, 
     }
     case QStyle::PE_PanelButtonTool:
     {
-        //瀹革缚鏅堕梾鎰閸ョ偓鐖?
+        //左侧隐藏图标
         return;
     }
     case QStyle::PE_IndicatorTabTear:
@@ -53,7 +53,7 @@ void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption* opt, 
             p->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
             p->drawRoundedRect(opt->rect, 2, 2);
         }
-        QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+        QFont iconFont = QFont("NXAwesome");
         iconFont.setPixelSize(16);
         p->setFont(iconFont);
         p->setPen(NXThemeColor(_themeMode, BasicText));
@@ -77,7 +77,7 @@ void NXTabBarStyle::drawControl(ControlElement element, const QStyleOption* opti
     {
     case QStyle::CE_TabBarTabShape:
     {
-        //閼冲本娅欑紒妯哄煑
+        //背景绘制
         if (const QStyleOptionTab* topt = qstyleoption_cast<const QStyleOptionTab*>(option))
         {
             QRect tabRect = topt->rect;
@@ -86,7 +86,7 @@ void NXTabBarStyle::drawControl(ControlElement element, const QStyleOption* opti
             painter->setPen(Qt::NoPen);
             if (topt->state.testFlag(QStyle::State_Selected))
             {
-                //闁鑵戦懗灞炬珯缂佹ê鍩?
+                //选中背景绘制
                 tabRect.setLeft(tabRect.left() - margin);
                 if (topt->position != QStyleOptionTab::End)
                 {
@@ -122,27 +122,27 @@ void NXTabBarStyle::drawControl(ControlElement element, const QStyleOption* opti
                 tabRect.setHeight(tabRect.height() - 10);
             }
 
-            //闂傛挳娈х粭锔剧帛閸?
-            //if (!topt->state.testFlag(QStyle::State_Selected) && topt->position != QStyleOptionTab::End && topt->selectedPosition != QStyleOptionTab::NextIsSelected)
-            //{
-            //    painter->setPen(Qt::NoPen);
-            //    painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
-            //    painter->drawRoundedRect(QRectF(tabRect.right() - 3, tabRect.y() + 7, 3, tabRect.height() - 14), 2, 2);
-            //}
+            //间隔符绘制
+            if (!topt->state.testFlag(QStyle::State_Selected) && topt->position != QStyleOptionTab::End && topt->selectedPosition != QStyleOptionTab::NextIsSelected)
+            {
+                painter->setPen(Qt::NoPen);
+                painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
+                painter->drawRoundedRect(QRectF(tabRect.right() - 3, tabRect.y() + 7, 3, tabRect.height() - 14), 2, 2);
+            }
             painter->restore();
             return;
         }
     }
     case QStyle::CE_TabBarTabLabel:
     {
-        //閺傚洤鐡ч崪灞芥禈閺嶅洨绮崚?
+        //文字和图标绘制
         if (const QStyleOptionTab* topt = qstyleoption_cast<const QStyleOptionTab*>(option))
         {
             QRect textRect = subElementRect(QStyle::SE_TabBarTabText, topt, widget);
             textRect.setLeft(textRect.left() + 10);
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
-            //閸ョ偓鐖ｇ紒妯哄煑
+            //图标绘制
             QIcon icon = topt->icon;
             if (!icon.isNull())
             {
@@ -162,7 +162,7 @@ void NXTabBarStyle::drawControl(ControlElement element, const QStyleOption* opti
 #endif
                 painter->drawPixmap(iconRect.x(), iconRect.y(), iconPix);
             }
-            //閺傚洤鐡х紒妯哄煑
+            //文字绘制
             painter->setPen(NXThemeColor(_themeMode, BasicText));
             QString text = painter->fontMetrics().elidedText(topt->text, Qt::ElideRight, textRect.width());
             painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter | Qt::TextDontClip, text);

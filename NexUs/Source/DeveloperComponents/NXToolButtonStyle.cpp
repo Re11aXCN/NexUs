@@ -1,4 +1,4 @@
-#include "NXToolButtonStyle.h"
+﻿#include "NXToolButtonStyle.h"
 
 #include <QDebug>
 #include <QPainter>
@@ -14,7 +14,9 @@ NXToolButtonStyle::NXToolButtonStyle(QStyle* style)
     _pExpandIconRotate = 0;
     _pBorderRadius = 4;
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
 }
 
 NXToolButtonStyle::~NXToolButtonStyle()
@@ -27,6 +29,7 @@ void NXToolButtonStyle::drawComplexControl(ComplexControl control, const QStyleO
     {
     case QStyle::CC_ToolButton:
     {
+        // 内容绘制
         if (const QStyleOptionToolButton* bopt = qstyleoption_cast<const QStyleOptionToolButton*>(option))
         {
             if (bopt->arrowType != Qt::NoArrow)
@@ -36,12 +39,13 @@ void NXToolButtonStyle::drawComplexControl(ComplexControl control, const QStyleO
             QRect toolButtonRect = bopt->rect;
             if (!_pIsTransparent)
             {
+                // 边框距离
                 toolButtonRect.adjust(1, 1, -1, -1);
             }
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
             painter->setPen(_pIsTransparent ? Qt::transparent : NXThemeColor(_themeMode, BasicBorder));
-            
+            // 背景绘制
             if (bopt->state.testFlag(QStyle::State_Enabled))
             {
                 if (bopt->state.testFlag(QStyle::State_Sunken))
@@ -69,7 +73,7 @@ void NXToolButtonStyle::drawComplexControl(ComplexControl control, const QStyleO
                             {
                                 painter->setBrush(NXThemeColor(_themeMode, BasicBase));
                                 painter->drawRoundedRect(toolButtonRect, _pBorderRadius, _pBorderRadius);
-                               
+                                // 底边线绘制
                                 painter->setPen(NXThemeColor(_themeMode, BasicBaseLine));
                                 painter->drawLine(toolButtonRect.x() + _pBorderRadius, toolButtonRect.y() + toolButtonRect.height(), toolButtonRect.x() + toolButtonRect.width() - _pBorderRadius, toolButtonRect.y() + toolButtonRect.height());
                             }
@@ -77,13 +81,16 @@ void NXToolButtonStyle::drawComplexControl(ComplexControl control, const QStyleO
                     }
                 }
             }
+            // 指示器绘制
             _drawIndicator(painter, bopt, widget);
 
+            // 图标绘制
             QRect contentRect = subControlRect(control, bopt, QStyle::SC_ScrollBarAddLine, widget);
             int heightOffset = contentRect.height() * 0.05;
             contentRect.adjust(0, heightOffset, 0, -heightOffset);
             _drawIcon(painter, contentRect, bopt, widget);
 
+            // 文字绘制
             _drawText(painter, contentRect, bopt);
             painter->restore();
         }
@@ -119,7 +126,7 @@ void NXToolButtonStyle::_drawIndicator(QPainter* painter, const QStyleOptionTool
     if (bopt->features.testFlag(QStyleOptionToolButton::MenuButtonPopup))
     {
         QRect indicatorRect = subControlRect(QStyle::CC_ToolButton, bopt, QStyle::SC_ScrollBarSubLine, widget);
-        
+        // 指示器区域
         if (bopt->state.testFlag(QStyle::State_Enabled) && bopt->activeSubControls.testFlag(QStyle::SC_ScrollBarSubLine))
         {
             painter->setBrush(NXThemeColor(_themeMode, BasicIndicator));
@@ -133,6 +140,7 @@ void NXToolButtonStyle::_drawIndicator(QPainter* painter, const QStyleOptionTool
             path.closeSubpath();
             painter->drawPath(path);
         }
+        // 指示器
         painter->setBrush(bopt->state.testFlag(QStyle::State_Enabled) ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
         QPainterPath indicatorPath;
         qreal indicatorHeight = qCos(30 * M_PI / 180.0) * indicatorRect.width() * 0.85;
@@ -144,10 +152,11 @@ void NXToolButtonStyle::_drawIndicator(QPainter* painter, const QStyleOptionTool
     }
     else if (bopt->features.testFlag(QStyleOptionToolButton::HasMenu))
     {
+        // 展开指示器
         QSize iconSize = bopt->iconSize;
         painter->save();
         QRect toolButtonRect = bopt->rect;
-        QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+        QFont iconFont = QFont("NXAwesome");
         iconFont.setPixelSize(0.75 * std::min(iconSize.width(), iconSize.height()));
         painter->setFont(iconFont);
         int indicatorWidth = painter->fontMetrics().horizontalAdvance(QChar((unsigned short)NXIconType::AngleDown));
@@ -168,6 +177,7 @@ void NXToolButtonStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QSty
         QSize iconSize = bopt->iconSize;
         if (widget->property("NXIconType").toString().isEmpty())
         {
+            // 绘制QIcon
             QIcon icon = bopt->icon;
             if (!icon.isNull())
             {
@@ -189,7 +199,7 @@ void NXToolButtonStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QSty
                     painter->drawPixmap(QRect(QPoint(iconRect.x() + _contentMargin, iconRect.center().y() - iconSize.height() / 2), iconSize), iconPix);
                     break;
                 }
-                case Qt::ToolButtonTextUnderIcon:
+                 case Qt::ToolButtonTextUnderIcon:
                 {
                     // 图片高度、字体高度、上下边距共10
                     QRect buttonRect = bopt->rect;
@@ -223,8 +233,9 @@ void NXToolButtonStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QSty
         }
         else
         {
+            // 绘制NXIcon
             painter->save();
-            bool isSelected = bopt->state.testFlag(QStyle::State_Enabled) && _pIsSelected;
+			bool isSelected = bopt->state.testFlag(QStyle::State_Enabled) && _pIsSelected;
             if (bopt->state.testFlag(QStyle::State_Enabled))
             {
                 painter->setPen(NXThemeColor(_themeMode, BasicText));
@@ -235,7 +246,7 @@ void NXToolButtonStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QSty
             }
             if (isSelected)
                 painter->setPen(NXThemeColor(_themeMode, PrimaryPress));
-            QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+            QFont iconFont = QFont("NXAwesome");
             switch (bopt->toolButtonStyle)
             {
             case Qt::ToolButtonIconOnly:
@@ -254,7 +265,7 @@ void NXToolButtonStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QSty
                 painter->drawText(adjustIconRect, Qt::AlignCenter, widget->property("NXIconType").toString());
                 break;
             }
-            case Qt::ToolButtonTextUnderIcon:
+ 			case Qt::ToolButtonTextUnderIcon:
             {
                 QRect buttonRect = bopt->rect;
                 const qreal iconHeightRatio = 0.4;
@@ -304,7 +315,7 @@ void NXToolButtonStyle::_drawText(QPainter* painter, QRect contentRect, const QS
         {
             painter->setPen(NXThemeColor(_themeMode, BasicTextDisable));
         }
-        if (isSelected)
+ 		if (isSelected)
             painter->setPen(NXThemeColor(_themeMode, PrimaryPress));
         switch (bopt->toolButtonStyle)
         {
@@ -312,15 +323,15 @@ void NXToolButtonStyle::_drawText(QPainter* painter, QRect contentRect, const QS
         {
             contentRect.setLeft(contentRect.left() + _contentMargin + 2);
             painter->drawText(contentRect, Qt::AlignLeft | Qt::AlignVCenter, bopt->text);
-            if (isSelected)
+  			if (isSelected)
             {
                 painter->setPen(Qt::NoPen);
                 painter->setBrush(NXThemeColor(_themeMode, PrimaryHover));
                 QFontMetricsF metrics(painter->font());
                 qreal textWidth = metrics.horizontalAdvance(bopt->text);
                 painter->drawRoundedRect(QRectF(contentRect.left(), contentRect.bottom() - 1, textWidth, 2), 2, 2);
-            }
-            break;
+            }            
+			break;
         }
         case Qt::ToolButtonTextBesideIcon:
         {
@@ -364,9 +375,10 @@ void NXToolButtonStyle::_drawText(QPainter* painter, QRect contentRect, const QS
 
 qreal NXToolButtonStyle::_calculateExpandIndicatorWidth(const QStyleOptionToolButton* bopt, QPainter* painter) const
 {
+    // 展开指示器
     QSize iconSize = bopt->iconSize;
     painter->save();
-    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+    QFont iconFont = QFont("NXAwesome");
     iconFont.setPixelSize(0.75 * std::min(iconSize.width(), iconSize.height()));
     painter->setFont(iconFont);
     int indicatorWidth = painter->fontMetrics().horizontalAdvance(QChar((unsigned short)NXIconType::AngleDown));

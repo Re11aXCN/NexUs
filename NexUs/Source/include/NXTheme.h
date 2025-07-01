@@ -18,6 +18,7 @@ class NX_EXPORT NXTheme : public QObject
 private:
     explicit NXTheme(QObject* parent = nullptr);
     ~NXTheme();
+
 public:
     void setThemeMode(NXThemeType::ThemeMode themeMode);
     NXThemeType::ThemeMode getThemeMode() const;

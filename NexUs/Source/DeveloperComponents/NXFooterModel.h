@@ -1,4 +1,4 @@
-#ifndef NXFOOTERMODEL_H
+﻿#ifndef NXFOOTERMODEL_H
 #define NXFOOTERMODEL_H
 
 #include <QAbstractListModel>
@@ -16,6 +16,7 @@ public:
     int getFooterNodeCount() const;
     NXNavigationNode* getNavigationNode(const QString& footerKey);
     void removeNavigationNode(const QString& footerKey);
+
 protected:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role) const override;

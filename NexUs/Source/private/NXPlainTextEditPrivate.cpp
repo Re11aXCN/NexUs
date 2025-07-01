@@ -1,4 +1,4 @@
-#include "NXPlainTextEditPrivate.h"
+﻿#include "NXPlainTextEditPrivate.h"
 #include "NXApplication.h"
 #include "NXPlainTextEdit.h"
 #include <QTimer>

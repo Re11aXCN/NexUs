@@ -1,4 +1,4 @@
-#ifndef NXTREEVIEWPRIVATE_H
+﻿#ifndef NXTREEVIEWPRIVATE_H
 #define NXTREEVIEWPRIVATE_H
 
 #include <QObject>

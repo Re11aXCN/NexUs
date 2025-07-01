@@ -1,5 +1,5 @@
-#ifndef NXWIDGETTOOLS_NXLCDNUMBER_H
-#define NXWIDGETTOOLS_NXLCDNUMBER_H
+﻿#ifndef NEXUS_NXLCDNUMBER_H
+#define NEXUS_NXLCDNUMBER_H
 
 #include <QLCDNumber>
 
@@ -12,14 +12,12 @@ class NX_EXPORT NXLCDNumber : public QLCDNumber
     Q_Q_CREATE(NXLCDNumber)
     Q_PROPERTY_CREATE_Q_H(bool, IsUseAutoClock)
     Q_PROPERTY_CREATE_Q_H(bool, IsTransparent)
-
 public:
     explicit NXLCDNumber(QWidget* parent = nullptr);
     explicit NXLCDNumber(uint numDigits, QWidget* parent = nullptr);
     ~NXLCDNumber() override;
     void setAutoClockFormat(const QString& format);
     QString getAutoClockFormat() const;
-    Q_SIGNAL void pAutoClockFormatChanged();
-};
+    Q_SIGNAL void pAutoClockFormatChanged();};
 
-#endif //NXWIDGETTOOLS_NXLCDNUMBER_H
+#endif //NEXUS_NXLCDNUMBER_H

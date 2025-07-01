@@ -1,4 +1,4 @@
-#include "NXImageCardPrivate.h"
+﻿#include "NXImageCardPrivate.h"
 
 NXImageCardPrivate::NXImageCardPrivate(QObject* parent)
     : QObject{parent}

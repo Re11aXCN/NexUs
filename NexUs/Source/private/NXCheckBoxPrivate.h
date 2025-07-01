@@ -1,24 +1,21 @@
-﻿#ifndef NXMENUPRIVATE_H
-#define NXMENUPRIVATE_H
+﻿#ifndef NXCHECKBOXPRIVATE_H
+#define NXCHECKBOXPRIVATE_H
 
 #include <QObject>
-#include <QPixmap>
-#include <QPoint>
-
 #include "NXDef.h"
 class NXCheckBox;
 class NXCheckBoxStyle;
 class NXCheckBoxPrivate : public QObject
 {
-    Q_OBJECT
-    Q_D_CREATE(NXCheckBox)
+	Q_OBJECT
+	Q_D_CREATE(NXCheckBox)
 public:
-    explicit NXCheckBoxPrivate(QObject* parent = nullptr);
-    ~NXCheckBoxPrivate();
+	explicit NXCheckBoxPrivate(QObject* parent = nullptr);
+	~NXCheckBoxPrivate();
 
 private:
-    std::shared_ptr<NXCheckBoxStyle> _checkStyle{ nullptr };
-    NXTextType::TextStyle _textStyle{ NXTextType::NoStyle };
+	NXTextType::TextStyle _textStyle{ NXTextType::NoStyle };
+	NXCheckBoxStyle* _checkBoxStyle{ nullptr };
 };
 
-#endif // NXMENUPRIVATE_H
+#endif // NXCHECKBOXPRIVATE_H

@@ -1,4 +1,4 @@
-#include "NXPromotionCardPrivate.h"
+﻿#include "NXPromotionCardPrivate.h"
 
 #include <QPoint>
 #include <QPropertyAnimation>
@@ -35,7 +35,7 @@ void NXPromotionCardPrivate::_startHoverOpacityAnimation(bool isVisible)
 {
     Q_Q(NXPromotionCard);
     QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pHoverOpacity");
-    connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    QObject::connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         q->update();
     });
     opacityAnimation->setDuration(250);

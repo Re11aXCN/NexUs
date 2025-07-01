@@ -1,4 +1,4 @@
-#ifndef NXDOCKWIDGET_H
+﻿#ifndef NXDOCKWIDGET_H
 #define NXDOCKWIDGET_H
 
 #include <QDockWidget>

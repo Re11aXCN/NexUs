@@ -1,4 +1,4 @@
-#include "NXDockWidgetTitleBar.h"
+﻿#include "NXDockWidgetTitleBar.h"
 
 #include <QHBoxLayout>
 #include <QPainter>
@@ -20,20 +20,20 @@ NXDockWidgetTitleBar::NXDockWidgetTitleBar(QWidget* parent)
     _floatButton = new NXIconButton(NXIconType::WindowRestore, 13, 32, 26, this);
     _floatButton->setLightHoverColor(NXThemeColor(NXThemeType::Light, BasicHoverAlpha));
     _floatButton->setDarkHoverColor(NXThemeColor(NXThemeType::Dark, BasicHoverAlpha));
-    connect(_floatButton, &NXIconButton::clicked, this, &NXDockWidgetTitleBar::onFloatButtonClicked);
+    QObject::connect(_floatButton, &NXIconButton::clicked, this, &NXDockWidgetTitleBar::onFloatButtonClicked);
     _closeButton = new NXIconButton(NXIconType::Xmark, 17, 32, 26, this);
     _closeButton->setLightHoverColor(NXThemeColor(NXThemeType::Light, StatusDanger));
     _closeButton->setDarkHoverColor(NXThemeColor(NXThemeType::Dark, StatusDanger));
-    connect(_closeButton, &NXIconButton::clicked, this, &NXDockWidgetTitleBar::onCloseButtonClicked);
+    QObject::connect(_closeButton, &NXIconButton::clicked, this, &NXDockWidgetTitleBar::onCloseButtonClicked);
 
     _setVisibleFromFeatures(_dockWidget->features());
-    connect(_dockWidget, &QDockWidget::featuresChanged, this, [=](QDockWidget::DockWidgetFeatures features) {
+    QObject::connect(_dockWidget, &QDockWidget::featuresChanged, this, [=](QDockWidget::DockWidgetFeatures features) {
         _setVisibleFromFeatures(features);
     });
-    connect(_dockWidget, &QDockWidget::windowTitleChanged, this, [=](const QString& title) {
+    QObject::connect(_dockWidget, &QDockWidget::windowTitleChanged, this, [=](const QString& title) {
         _titleLabel->setText(title);
     });
-    connect(_dockWidget, &QDockWidget::windowIconChanged, this, [=](const QIcon& icon) {
+    QObject::connect(_dockWidget, &QDockWidget::windowIconChanged, this, [=](const QIcon& icon) {
         _iconLabel->setPixmap(icon.pixmap(QSize(18, 18)));
     });
 
@@ -51,7 +51,7 @@ NXDockWidgetTitleBar::NXDockWidgetTitleBar(QWidget* parent)
 
     //主题变更
     _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

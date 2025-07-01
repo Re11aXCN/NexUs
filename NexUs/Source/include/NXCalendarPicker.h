@@ -1,4 +1,4 @@
-#ifndef NXCALENDARPICKER_H
+﻿#ifndef NXCALENDARPICKER_H
 #define NXCALENDARPICKER_H
 
 #include <QPushButton>

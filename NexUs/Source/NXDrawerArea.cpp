@@ -1,4 +1,4 @@
-#include "NXDrawerArea.h"
+﻿#include "NXDrawerArea.h"
 #include "private/NXDrawerAreaPrivate.h"
 #include "NXTheme.h"
 NXDrawerArea::NXDrawerArea(QWidget* parent)
@@ -11,7 +11,7 @@ NXDrawerArea::NXDrawerArea(QWidget* parent)
 
     d->_drawerHeader = new NXDrawerHeader(this);
     d->_drawerContainer = new NXDrawerContainer(this);
-    connect(d->_drawerHeader, &NXDrawerHeader::drawerHeaderClicked, d, &NXDrawerAreaPrivate::onDrawerHeaderClicked);
+    QObject::connect(d->_drawerHeader, &NXDrawerHeader::drawerHeaderClicked, d, &NXDrawerAreaPrivate::onDrawerHeaderClicked);
 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
@@ -20,7 +20,7 @@ NXDrawerArea::NXDrawerArea(QWidget* parent)
     mainLayout->addWidget(d->_drawerContainer);
 
     d->_themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
 }

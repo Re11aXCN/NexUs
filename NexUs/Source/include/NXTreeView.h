@@ -1,4 +1,4 @@
-#ifndef NXTREEVIEW_H
+﻿#ifndef NXTREEVIEW_H
 #define NXTREEVIEW_H
 
 #include <QTreeView>
@@ -16,7 +16,6 @@ public:
     explicit NXTreeView(QWidget* parent = nullptr);
     ~NXTreeView();
     void setNXIcon(NXIconType::IconName icon);
-
 };
 
 #endif // NXTREEVIEW_H

@@ -3,7 +3,7 @@
 
 #include <QPushButton>
 
-#include "stdafx.h"
+#include "NXDef.h"
 class NXPushButtonPrivate;
 class NX_EXPORT NXPushButton : public QPushButton
 {
@@ -18,7 +18,7 @@ class NX_EXPORT NXPushButton : public QPushButton
     Q_PROPERTY_CREATE_Q_H(QColor, DarkPressColor)
 public:
     explicit NXPushButton(QWidget* parent = nullptr);
-    explicit NXPushButton(QString text, QWidget* parent = nullptr);
+    explicit NXPushButton(const QString& text, QWidget* parent = nullptr);
     ~NXPushButton();
 
     void setLightTextColor(QColor color);
@@ -27,6 +27,7 @@ public:
     void setDarkTextColor(QColor color);
     QColor getDarkTextColor() const;
 
+    void setTextStyle(NXTextType::TextStyle textStyle, std::optional<int> pixelSize, std::optional<QFont::Weight> weight);
 protected:
     virtual void mousePressEvent(QMouseEvent* event) override;
     virtual void mouseReleaseEvent(QMouseEvent* event) override;

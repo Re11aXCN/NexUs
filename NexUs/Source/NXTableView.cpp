@@ -6,13 +6,14 @@
 #include "DeveloperComponents/NXTableViewStyle.h"
 #include "NXScrollBar.h"
 #include "private/NXTableViewPrivate.h"
-
 Q_PROPERTY_CREATE_Q_CPP(NXTableView, bool, DrawSelectionBackground)
 NXTableView::NXTableView(QWidget* parent)
     : QTableView(parent), d_ptr(new NXTableViewPrivate())
 {
     Q_D(NXTableView);
     d->q_ptr = this;
+    d->_pDrawSelectionBackground = true;
+
     setMouseTracking(true);
     setObjectName("NXTableView");
     setStyleSheet(
@@ -25,13 +26,46 @@ NXTableView::NXTableView(QWidget* parent)
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-    d->_pTableViewStyle = std::make_shared<NXTableViewStyle>(style());
-    setStyle(d->_pTableViewStyle.get());
+    d->_pTableViewStyle = new NXTableViewStyle(style());
+    setStyle(d->_pTableViewStyle);
     this->installEventFilter(this);
 }
 
 NXTableView::~NXTableView()
 {
+}
+
+void NXTableView::setBorderRadius(int radius) {
+	Q_D(NXTableView);
+    d->_pTableViewStyle->setBorderRadius(radius);
+    update();
+}
+
+int NXTableView::getBorderRadius() const {
+	Q_D(const NXTableView);
+    return d->_pTableViewStyle->getBorderRadius();
+}
+
+void NXTableView::setIsDrawAlternateRowsEnabled(bool enabled) {
+    Q_D(NXTableView);
+    d->_pTableViewStyle->setIsDrawAlternateRowsEnabled(enabled);
+    update();
+}
+
+bool NXTableView::getIsDrawAlternateRowsEnabled() const {
+    Q_D(const NXTableView);
+    return d->_pTableViewStyle->getIsDrawAlternateRowsEnabled();
+}
+
+void NXTableView::setIsSelectionEffectsEnabled(bool enabled) {
+    Q_D(NXTableView);
+    d->_pTableViewStyle->setIsSelectionEffectsEnabled(enabled);
+    update();
+}
+
+bool NXTableView::getIsSelectionEffectsEnabled() const {
+    Q_D(const NXTableView);
+    return d->_pTableViewStyle->getIsSelectionEffectsEnabled();
 }
 
 void NXTableView::setIndexWidget(const QModelIndex& index, QWidget* widget) {
@@ -131,7 +165,6 @@ void NXTableView::enterIndexWidgetUpdateHoverIndex(const QModelIndex& index)
         update();
     }
 }
-
 void NXTableView::showEvent(QShowEvent* event)
 {
     Q_EMIT tableViewShow();
@@ -147,7 +180,6 @@ void NXTableView::hideEvent(QHideEvent* event)
 void NXTableView::mouseMoveEvent(QMouseEvent* event)
 {
     Q_D(NXTableView);
-    
     if (selectionBehavior() == QAbstractItemView::SelectRows)
     {
         const QModelIndex& currentIndex = indexAt(event->pos());
@@ -171,7 +203,6 @@ void NXTableView::mouseReleaseEvent(QMouseEvent* event)
 {
     QTableView::mouseReleaseEvent(event);
 }
-
 void NXTableView::leaveEvent(QEvent* event)
 {
     Q_D(NXTableView);

@@ -1,4 +1,4 @@
-#ifndef NXNAVIGATIONMODEL_H
+﻿#ifndef NXNAVIGATIONMODEL_H
 #define NXNAVIGATIONMODEL_H
 
 #include <QAbstractItemModel>
@@ -21,6 +21,7 @@ public:
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
+ 
     NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome);
     NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome);
     NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, NXIconType::IconName awesome);

@@ -1,4 +1,4 @@
-#include "NXTreeViewPrivate.h"
+﻿#include "NXTreeViewPrivate.h"
 
 NXTreeViewPrivate::NXTreeViewPrivate(QObject* parent)
     : QObject{parent}

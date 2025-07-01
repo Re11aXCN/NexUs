@@ -22,7 +22,7 @@ bool NXToolTipPrivate::eventFilter(QObject* watched, QEvent* event)
     {
     case QEvent::Enter:
     {
-        QTimer::singleShot(_pShowDNXyMsec, this, [=]() {
+        QTimer::singleShot(_pShowDelayMsec, this, [=]() {
             _doShowAnimation();
         });
         if (_pDisplayMsec > -1)
@@ -35,7 +35,7 @@ bool NXToolTipPrivate::eventFilter(QObject* watched, QEvent* event)
     }
     case QEvent::Leave:
     {
-        QTimer::singleShot(_pHideDNXyMsec, this, [=]() {
+        QTimer::singleShot(_pHideDelayMsec, this, [=]() {
             q->hide();
         });
         break;

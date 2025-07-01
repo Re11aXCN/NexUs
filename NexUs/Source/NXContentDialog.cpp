@@ -1,4 +1,4 @@
-#include "NXContentDialog.h"
+﻿#include "NXContentDialog.h"
 
 #include <NXPushButton.h>
 
@@ -7,7 +7,6 @@
 #include "NXTheme.h"
 #include "DeveloperComponents/NXWinShadowHelper.h"
 #include "private/NXContentDialogPrivate.h"
-
 #include <QApplication>
 #include <QGuiApplication>
 #include <QHBoxLayout>
@@ -16,8 +15,6 @@
 #include <QScreen>
 #include <QTimer>
 #include <QVBoxLayout>
-
-
 
 NXContentDialog::NXContentDialog(QWidget* parent)
     : QDialog{parent}, d_ptr(new NXContentDialogPrivate())
@@ -44,6 +41,7 @@ NXContentDialog::NXContentDialog(QWidget* parent)
     QObject::connect(d->_leftButton, &NXPushButton::clicked, this, [=]() {
         Q_EMIT leftButtonClicked();
         onLeftButtonClicked();
+        d->_doCloseAnimation(false);
     });
     d->_leftButton->setMinimumSize(0, 0);
     d->_leftButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
@@ -62,6 +60,7 @@ NXContentDialog::NXContentDialog(QWidget* parent)
     QObject::connect(d->_rightButton, &NXPushButton::clicked, this, [=]() {
         Q_EMIT rightButtonClicked();
         onRightButtonClicked();
+        d->_doCloseAnimation(true);
     });
     d->_rightButton->setLightDefaultColor(NXThemeColor(NXThemeType::Light, PrimaryNormal));
     d->_rightButton->setLightHoverColor(NXThemeColor(NXThemeType::Light, PrimaryHover));
@@ -100,7 +99,9 @@ NXContentDialog::NXContentDialog(QWidget* parent)
     d->_mainLayout->addWidget(d->_buttonWidget);
 
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+        d->_themeMode = themeMode;
+    });
 }
 
 NXContentDialog::~NXContentDialog()
@@ -127,6 +128,7 @@ void NXContentDialog::setCentralWidget(QWidget* centralWidget)
     d->_mainLayout->takeAt(0);
     d->_mainLayout->takeAt(0);
     delete d->_centralWidget;
+    d->_centralWidget = centralWidget;
     d->_mainLayout->addWidget(centralWidget);
     d->_mainLayout->addWidget(d->_buttonWidget);
 }
@@ -152,7 +154,7 @@ void NXContentDialog::setRightButtonText(const QString& text)
 void NXContentDialog::close()
 {
     Q_D(NXContentDialog);
-    d->_doCloseAnimation();
+    d->_doCloseAnimation(false);
 }
 
 void NXContentDialog::showEvent(QShowEvent* event)
@@ -165,7 +167,7 @@ void NXContentDialog::showEvent(QShowEvent* event)
 #ifdef Q_OS_WIN
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
     HWND hwnd = (HWND)d->_currentWinID;
-    setShadow(hwnd);
+    NXWinShadowHelper::getInstance()->setWindowShadow(d->_currentWinID);
     DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
     bool hasCaption = (style & WS_CAPTION) == WS_CAPTION;
     if (!hasCaption)

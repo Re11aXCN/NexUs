@@ -8,8 +8,8 @@
 #include "private/NXToolTipPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, BorderRadius)
 Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, DisplayMsec)
-Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, ShowDNXyMsec)
-Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, HideDNXyMsec)
+Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, ShowDelayMsec)
+Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, HideDelayMsec)
 NXToolTip::NXToolTip(QWidget* parent)
     : QWidget{parent}, d_ptr(new NXToolTipPrivate())
 {
@@ -17,12 +17,14 @@ NXToolTip::NXToolTip(QWidget* parent)
     d->q_ptr = this;
     d->_pBorderRadius = 5;
     d->_pDisplayMsec = -1;
-    d->_pShowDNXyMsec = 0;
-    d->_pHideDNXyMsec = 0;
+    d->_pShowDelayMsec = 0;
+    d->_pHideDelayMsec = 0;
     d->_pCustomWidget = nullptr;
     setObjectName("NXToolTip");
-    parent->installEventFilter(d);
-
+    if (parent)
+    {
+        parent->installEventFilter(d);
+    }
     setAttribute(Qt::WA_TransparentForMouseEvents);
     setAttribute(Qt::WA_TranslucentBackground);
     setWindowFlags(Qt::Tool | Qt::FramelessWindowHint);
@@ -96,7 +98,7 @@ void NXToolTip::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing);
-    //闃村奖
+    //阴影
     nxTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
     QRect foregroundRect = rect();
     foregroundRect.adjust(d->_shadowBorderWidth, d->_shadowBorderWidth, -d->_shadowBorderWidth, -d->_shadowBorderWidth);

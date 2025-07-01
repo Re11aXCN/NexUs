@@ -16,7 +16,7 @@ class NX_EXPORT NXNavigationRouter : public QObject
     Q_PROPERTY_CREATE_Q_H(int, MaxRouteCount)
 private:
     explicit NXNavigationRouter(QObject* parent = nullptr);
-    ~NXNavigationRouter();
+    ~NXNavigationRouter() override;
 
 Q_SIGNALS:
     Q_SIGNAL void navigationRouterStateChanged(bool state);

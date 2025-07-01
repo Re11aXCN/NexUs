@@ -2,7 +2,6 @@
 #define NXCOLORDIALOG_H
 
 #include <QDialog>
-#include <QColor>
 
 #include "NXAppBar.h"
 class NXColorDialogPrivate;
@@ -16,7 +15,7 @@ class NX_EXPORT NXColorDialog : public QDialog
 public:
     explicit NXColorDialog(QWidget* parent = nullptr);
     explicit NXColorDialog(const QColor& currentColor, QWidget* parent = nullptr);
-    ~NXColorDialog();
+    ~NXColorDialog() override;
 
     QList<QColor> getCustomColorList() const;
     QColor getCustomColor(int index) const;

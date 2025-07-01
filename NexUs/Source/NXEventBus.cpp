@@ -1,4 +1,4 @@
-#include "NXEventBus.h"
+﻿#include "NXEventBus.h"
 
 #include <QVariant>
 

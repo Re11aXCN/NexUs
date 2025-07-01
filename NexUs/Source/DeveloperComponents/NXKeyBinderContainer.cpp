@@ -1,4 +1,4 @@
-#include "NXKeyBinderContainer.h"
+﻿#include "NXKeyBinderContainer.h"
 #include "NXKeyBinder.h"
 #include "NXTheme.h"
 #include <QKeyEvent>
@@ -18,7 +18,7 @@ NXKeyBinderContainer::NXKeyBinderContainer(QWidget* parent)
     textFont.setPixelSize(16);
     setFont(textFont);
     _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

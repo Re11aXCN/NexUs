@@ -1,4 +1,4 @@
-#include "NXSuggestBox.h"
+﻿#include "NXSuggestBox.h"
 
 #include <QAction>
 #include <QDebug>
@@ -38,7 +38,7 @@ NXSuggestBox::NXSuggestBox(QWidget* parent)
     d->_darkSearchAction = new QAction(NXIcon::getInstance()->getNXIcon(NXIconType::MagnifyingGlass, QColor(0xFF, 0xFF, 0xFF)), "Search", this);
 
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXSuggestBoxPrivate::onxThemeModeChanged);
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXSuggestBoxPrivate::onThemeModeChanged);
     if (d->_themeMode == NXThemeType::Light)
     {
         d->_searchEdit->addAction(d->_lightSearchAction, QLineEdit::TrailingPosition);
@@ -76,6 +76,7 @@ NXSuggestBox::NXSuggestBox(QWidget* parent)
     QObject::connect(d->_searchEdit, &NXLineEdit::focusIn, d, &NXSuggestBoxPrivate::onSearchEditTextEdit);
     QObject::connect(d->_searchView, &NXBaseListView::clicked, d, &NXSuggestBoxPrivate::onSearchViewClicked);
 
+    // 焦点事件
     QObject::connect(d->_searchEdit, &NXLineEdit::wmFocusOut, this, [d]() {
         d->_startCloseAnimation();
     });
@@ -91,7 +92,7 @@ void NXSuggestBox::setPlaceholderText(const QString& placeholderText)
     d->_searchEdit->setPlaceholderText(placeholderText);
 }
 
-QString  NXSuggestBox::addSuggestion(const QString& suggestText, const QVariantMap& suggestData)
+QString NXSuggestBox::addSuggestion(const QString& suggestText, const QVariantMap& suggestData)
 {
     Q_D(NXSuggestBox);
     NXSuggestion* suggest = new NXSuggestion(this);
@@ -101,7 +102,7 @@ QString  NXSuggestBox::addSuggestion(const QString& suggestText, const QVariantM
     return suggest->getSuggestKey();
 }
 
-QString  NXSuggestBox::addSuggestion(NXIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData)
+QString NXSuggestBox::addSuggestion(NXIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData)
 {
     Q_D(NXSuggestBox);
     NXSuggestion* suggest = new NXSuggestion(this);

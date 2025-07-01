@@ -9,13 +9,12 @@ class NXToolButtonStyle : public QProxyStyle
 {
     Q_OBJECT
     Q_PROPERTY_CREATE(qreal, ExpandIconRotate)
+    Q_PRIVATE_CREATE(bool, IsSelected);
     Q_PRIVATE_CREATE(bool, IsTransparent)
     Q_PRIVATE_CREATE(int, BorderRadius)
-    Q_PRIVATE_CREATE(bool, IsSelected);
-
 public:
     explicit NXToolButtonStyle(QStyle* style = nullptr);
-    ~NXToolButtonStyle();
+    ~NXToolButtonStyle() override;
     void drawComplexControl(ComplexControl control, const QStyleOptionComplex* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     QSize sizeFromContents(ContentsType type, const QStyleOption* option, const QSize& size, const QWidget* widget) const override;
 

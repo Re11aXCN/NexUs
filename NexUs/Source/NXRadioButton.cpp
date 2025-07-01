@@ -1,7 +1,6 @@
 ﻿#include "NXRadioButton.h"
 
 #include <optional>
-
 #include "DeveloperComponents/NXRadioButtonStyle.h"
 #include "NXTheme.h"
 #include "private/NXRadioButtonPrivate.h"
@@ -16,8 +15,7 @@ NXRadioButton::NXRadioButton(QWidget* parent)
     QFont font = this->font();
     font.setPixelSize(15);
     setFont(font);
-    d->_radioButtonStyle = std::make_shared<NXRadioButtonStyle>(style());
-    setStyle(d->_radioButtonStyle.get());
+    setStyle(new NXRadioButtonStyle(style()));
     d->onThemeChanged(nxTheme->getThemeMode());
     QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXRadioButtonPrivate::onThemeChanged);
 }
@@ -31,7 +29,6 @@ NXRadioButton::NXRadioButton(const QString& text, QWidget* parent)
 NXRadioButton::~NXRadioButton()
 {
 }
-
 void NXRadioButton::setTextStyle(NXTextType::TextStyle textStyle, std::optional<int> pixelSize, std::optional<QFont::Weight> weight)
 {
     if (textStyle < NXTextType::NoStyle || textStyle > NXTextType::CustomStyle) {

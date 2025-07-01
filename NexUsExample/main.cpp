@@ -3,7 +3,6 @@
 
 #include "NXApplication.h"
 #include "mainwindow.h"
-#include "PWEditorWindow.h"
 #ifdef Q_OS_WIN
 #include <Windows.h>
 #endif
@@ -21,12 +20,10 @@ int main(int argc, char* argv[])
 #endif
     QApplication a(argc, argv);
     nxApp->init();
-    //MainWindow mainwindow;
-    //mainwindow.show();
-    PWEditorWindow w;
+    MainWindow w;
     w.show();
 #ifdef Q_OS_WIN
-//    HWND handle = FindWindowA(NULL, "ElaWidgetTool");
+//    HWND handle = FindWindowA(NULL, "NXWidgetTool");
 //    if (handle != NULL)
 //    {
 //        SetWindowDisplayAffinity(handle, WDA_EXCLUDEFROMCAPTURE);

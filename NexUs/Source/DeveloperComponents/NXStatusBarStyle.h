@@ -1,4 +1,4 @@
-#ifndef NXSTATUSBARSTYLE_H
+﻿#ifndef NXSTATUSBARSTYLE_H
 #define NXSTATUSBARSTYLE_H
 
 #include <QProxyStyle>
@@ -9,7 +9,7 @@ class NXStatusBarStyle : public QProxyStyle
     Q_OBJECT
 public:
     explicit NXStatusBarStyle(QStyle* style = nullptr);
-    ~NXStatusBarStyle();
+    ~NXStatusBarStyle() override;
     void drawPrimitive(PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     QSize sizeFromContents(ContentsType type, const QStyleOption* option, const QSize& size, const QWidget* widget) const override;

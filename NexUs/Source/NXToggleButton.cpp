@@ -1,4 +1,4 @@
-#include "NXToggleButton.h"
+﻿#include "NXToggleButton.h"
 
 #include <QEvent>
 #include <QPainter>
@@ -24,7 +24,9 @@ NXToggleButton::NXToggleButton(QWidget* parent)
     setFont(font);
     setObjectName("NXToggleButton");
     setStyleSheet("#NXToggleButton{background-color:transparent;}");
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+        d->_themeMode = themeMode;
+    });
 }
 
 NXToggleButton::NXToggleButton(QString text, QWidget* parent)
@@ -43,6 +45,7 @@ void NXToggleButton::setIsToggled(bool isToggled)
     Q_D(NXToggleButton);
     d->_isToggled = isToggled;
     d->_pToggleAlpha = isToggled ? 255 : 0;
+    d->_isAlphaAnimationFinished = true;
     update();
     Q_EMIT toggled(isToggled);
 }
@@ -86,10 +89,10 @@ void NXToggleButton::mouseReleaseEvent(QMouseEvent* event)
     d->_isAlphaAnimationFinished = false;
     d->_isToggled = !d->_isToggled;
     QPropertyAnimation* alphaAnimation = new QPropertyAnimation(d, "pToggleAlpha");
-    connect(alphaAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    QObject::connect(alphaAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         update();
     });
-    connect(alphaAnimation, &QPropertyAnimation::finished, this, [=]() {
+    QObject::connect(alphaAnimation, &QPropertyAnimation::finished, this, [=]() {
         d->_isAlphaAnimationFinished = true;
     });
     alphaAnimation->setDuration(250);
@@ -136,14 +139,14 @@ void NXToggleButton::paintEvent(QPaintEvent* event)
         painter.setBrush(toggleColor);
     }
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
-    
+    // 底边线绘制
     if (!d->_isPressed && !d->_isToggled)
     {
         painter.setPen(NXThemeColor(d->_themeMode, BasicBaseLine));
         painter.drawLine(foregroundRect.x() + d->_pBorderRadius, height() - 1, foregroundRect.x() + foregroundRect.width() - d->_pBorderRadius, height() - 1);
     }
 
-    //鏂囧瓧缁樺埗
+    //文字绘制
     painter.setPen(isEnabled() ? d->_isToggled ? NXThemeColor(d->_themeMode, BasicTextInvert) : NXThemeColor(d->_themeMode, BasicText) : NXThemeColor(d->_themeMode, BasicTextDisable));
     painter.drawText(foregroundRect, Qt::AlignCenter, d->_pText);
     painter.restore();

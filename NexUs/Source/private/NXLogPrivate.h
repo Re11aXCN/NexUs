@@ -1,4 +1,4 @@
-#ifndef NXLOGPRIVATE_H
+﻿#ifndef NXLOGPRIVATE_H
 #define NXLOGPRIVATE_H
 
 #include <QObject>

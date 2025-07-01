@@ -1,4 +1,4 @@
-#ifndef NXMENU_H
+﻿#ifndef NXMENU_H
 #define NXMENU_H
 
 #include <QMenu>
@@ -21,7 +21,6 @@ public:
     int getMenuItemHeight() const;
     void setAlignParentMenuHeight(bool alignParentMenuHeight);
     bool getAlignParentMenuHeight() const;
-
     QAction* addMenu(QMenu* menu);
     NXMenu* addMenu(const QString& title);
     NXMenu* addMenu(const QIcon& icon, const QString& title);

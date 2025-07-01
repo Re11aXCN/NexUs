@@ -1,4 +1,4 @@
-#ifndef NXNAVIGATIONNODE_H
+﻿#ifndef NXNAVIGATIONNODE_H
 #define NXNAVIGATIONNODE_H
 
 #include <QModelIndex>
@@ -21,7 +21,8 @@ class NXNavigationNode : public QObject
     Q_PROPERTY_CREATE(bool, IsExpanderNode)
     Q_PROPERTY_CREATE(bool, IsVisible)
     bool _isExpanded{ false };
-
+    QString _nodeKey{};
+    QString _nodeTitle{};
 public:
     explicit NXNavigationNode(const QString& nodeTitle, NXNavigationNode* parent = nullptr);
     ~NXNavigationNode();
@@ -47,10 +48,6 @@ public:
     bool getIsChildNode(NXNavigationNode* node) const;
 
     int getRow() const;
-
-private:
-    QString _nodeKey = "";
-    QString _nodeTitle = "";
 };
 
 #endif // NXNAVIGATIONNODE_H

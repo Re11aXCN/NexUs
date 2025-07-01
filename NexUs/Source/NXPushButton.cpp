@@ -1,4 +1,4 @@
-#include "NXPushButton.h"
+﻿#include "NXPushButton.h"
 
 #include <QPainter>
 #include <QPainterPath>
@@ -39,7 +39,7 @@ NXPushButton::NXPushButton(QWidget* parent)
     });
 }
 
-NXPushButton::NXPushButton(QString text, QWidget* parent)
+NXPushButton::NXPushButton(const QString& text, QWidget* parent)
     : NXPushButton(parent)
 {
     setText(text);
@@ -73,6 +73,82 @@ QColor NXPushButton::getDarkTextColor() const
     return d->_darkTextColor;
 }
 
+void NXPushButton::setTextStyle(NXTextType::TextStyle textStyle, std::optional<int> pixelSize, std::optional<QFont::Weight> weight)
+{
+	if (textStyle < NXTextType::NoStyle || textStyle > NXTextType::CustomStyle) {
+		qWarning() << "Warning: Invalid textStyle provided. Please use a valid NXTextType::TextStyle enum value.";
+		return;
+	}
+	if (textStyle != NXTextType::CustomStyle && (pixelSize.has_value() || weight.has_value()))
+	{
+		qWarning() << "Warning: To use pixelSize and weight, set textStyle to NXTextType::CustomStyle.";
+		return;
+	}
+	QFont textFont = this->font();
+	switch (textStyle)
+	{
+	case NXTextType::NoStyle:
+	{
+		break;
+	}
+	case NXTextType::Caption:
+	{
+		textFont.setPixelSize(12);
+		break;
+	}
+	case NXTextType::Body:
+	{
+		textFont.setPixelSize(13);
+		break;
+	}
+	case NXTextType::BodyStrong:
+	{
+		textFont.setPixelSize(13);
+		textFont.setWeight(QFont::DemiBold);
+		break;
+	}
+	case NXTextType::Subtitle:
+	{
+		textFont.setPixelSize(20);
+		textFont.setWeight(QFont::DemiBold);
+		break;
+	}
+	case NXTextType::Title:
+	{
+		textFont.setPixelSize(28);
+		textFont.setWeight(QFont::DemiBold);
+		break;
+	}
+	case NXTextType::TitleLarge:
+	{
+		textFont.setPixelSize(40);
+		textFont.setWeight(QFont::DemiBold);
+		break;
+	}
+	case NXTextType::Display:
+	{
+		textFont.setPixelSize(48);
+		textFont.setWeight(QFont::DemiBold);
+		break;
+	}
+	case NXTextType::CustomStyle:
+	{
+		if (pixelSize.has_value()) {
+			textFont.setPixelSize(pixelSize.value());
+		}
+		if (weight.has_value()) {
+			textFont.setWeight(weight.value());
+		}
+		break;
+	}
+	default:
+	{
+		break;
+	}
+	}
+	setFont(textFont);
+}
+
 void NXPushButton::mousePressEvent(QMouseEvent* event)
 {
     Q_D(NXPushButton);
@@ -92,9 +168,10 @@ void NXPushButton::paintEvent(QPaintEvent* event)
     Q_D(NXPushButton);
     QPainter painter(this);
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-   
+    // 高性能阴影
     nxTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
 
+    // 背景绘制
     painter.save();
     QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * (d->_shadowBorderWidth), height() - 2 * d->_shadowBorderWidth);
     if (d->_themeMode == NXThemeType::Light)
@@ -108,13 +185,13 @@ void NXPushButton::paintEvent(QPaintEvent* event)
         painter.setBrush(isEnabled() ? d->_isPressed ? d->_pDarkPressColor : (underMouse() ? d->_pDarkHoverColor : d->_pDarkDefaultColor) : NXThemeColor(d->_themeMode, BasicDisable));
     }
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
-    
+    // 底边线绘制
     if (!d->_isPressed)
     {
         painter.setPen(NXThemeColor(d->_themeMode, BasicBaseLine));
-        painter.drawLine(foregroundRect.x() + d->_pBorderRadius, height() - d->_shadowBorderWidth, foregroundRect.width(), height() - d->_shadowBorderWidth);
+        painter.drawLine(foregroundRect.x() + d->_pBorderRadius, height() - d->_shadowBorderWidth + 1, foregroundRect.width() - d->_pBorderRadius, height() - d->_shadowBorderWidth + 1);
     }
-    //鏂囧瓧缁樺埗
+    //文字绘制
     painter.setPen(isEnabled() ? d->_themeMode == NXThemeType::Light ? d->_lightTextColor : d->_darkTextColor : NXThemeColor(d->_themeMode, BasicTextDisable));
     painter.drawText(foregroundRect, Qt::AlignCenter, text());
     painter.restore();

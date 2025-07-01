@@ -1,4 +1,4 @@
-#ifndef NXEVENTBUS_H
+﻿#ifndef NXEVENTBUS_H
 #define NXEVENTBUS_H
 
 #include <QObject>
@@ -23,7 +23,7 @@ public:
 };
 
 class NXEventBusPrivate;
-class NXEventBus : public QObject
+class NX_EXPORT NXEventBus : public QObject
 {
     Q_OBJECT
     Q_Q_CREATE(NXEventBus)

@@ -1,4 +1,4 @@
-#include "NXDrawerHeader.h"
+﻿#include "NXDrawerHeader.h"
 #include "NXTheme.h"
 #include <QEvent>
 #include <QMouseEvent>
@@ -20,7 +20,7 @@ NXDrawerHeader::NXDrawerHeader(QWidget* parent)
     setContentsMargins(0, 0, 30, 0);
 
     _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }
@@ -47,7 +47,7 @@ void NXDrawerHeader::setHeaderWidget(QWidget* widget)
 void NXDrawerHeader::doExpandOrCollpaseAnimation()
 {
     QPropertyAnimation* rotateAnimation = new QPropertyAnimation(this, "pExpandIconRotate");
-    connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    QObject::connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         update();
     });
     rotateAnimation->setDuration(300);

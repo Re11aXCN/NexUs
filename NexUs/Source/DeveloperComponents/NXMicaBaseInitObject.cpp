@@ -5,23 +5,20 @@
 #include "private/NXApplicationPrivate.h"
 #include "NXExponentialBlur.h"
 NXMicaBaseInitObject::NXMicaBaseInitObject(NXApplicationPrivate* appPrivate, QObject* parent)
-    : QObject{ parent }
+    : QObject{parent}
 {
     _appPrivate = appPrivate;
 }
-
-
 
 NXMicaBaseInitObject::~NXMicaBaseInitObject()
 {
 }
 
-void NXMicaBaseInitObject::onInitMicaBase(QImage img)
+void NXMicaBaseInitObject::onInitMicaBase(const QImage& img)
 {
     // QColorDialog
-    img = img.scaled(QSize(1920, 1080), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-
-    QImage blurImage = NXExponentialBlur::doExponentialBlur(img, 500).toImage();
+    // 统一处理为1920*1080以节省空间
+    QImage blurImage = NXExponentialBlur::doExponentialBlur(img.scaled(QSize(1920, 1080), Qt::IgnoreAspectRatio, Qt::SmoothTransformation), 500).toImage();
     QImage lightImage = blurImage;
     QImage darkImage = blurImage;
     QColor lightMixColor = QColor(0xF3, 0xF3, 0xF3);

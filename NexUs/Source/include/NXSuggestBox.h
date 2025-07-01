@@ -1,4 +1,4 @@
-#ifndef NXSUGGESTBOX_H
+﻿#ifndef NXSUGGESTBOX_H
 #define NXSUGGESTBOX_H
 
 #include <QVariantMap>
@@ -18,8 +18,8 @@ public:
     ~NXSuggestBox();
     void setPlaceholderText(const QString& placeholderText);
 
-    QString  addSuggestion(const QString& suggestText, const QVariantMap& suggestData = {});
-    QString  addSuggestion(NXIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData = {});
+    QString addSuggestion(const QString& suggestText, const QVariantMap& suggestData = {});
+    QString addSuggestion(NXIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData = {});
     void removeSuggestion(const QString& suggestKey);
     void removeSuggestion(int index);
 Q_SIGNALS:

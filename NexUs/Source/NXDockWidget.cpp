@@ -1,4 +1,4 @@
-#include "NXDockWidget.h"
+﻿#include "NXDockWidget.h"
 
 #include <QEvent>
 #include <QLayout>
@@ -19,21 +19,23 @@ NXDockWidget::NXDockWidget(QWidget* parent, Qt::WindowFlags flags)
     Q_D(NXDockWidget);
     d->q_ptr = this;
     setObjectName("NXDockWidget");
-
     d->_titleBar = new NXDockWidgetTitleBar(this);
     setTitleBarWidget(d->_titleBar);
 
     // 主题变更动画
     d->_themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, d, &NXDockWidgetPrivate::onThemeModeChanged);
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXDockWidgetPrivate::onThemeModeChanged);
 
-    d->_isEnableMica = nxApp->getIsEnableMica();
-    connect(nxApp, &NXApplication::pIsEnableMicaChanged, this, [=]() {
-        d->_isEnableMica = nxApp->getIsEnableMica();
+    d->_windowDisplayMode = nxApp->getWindowDisplayMode();
+    QObject::connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]() {
+        d->_windowDisplayMode = nxApp->getWindowDisplayMode();
         update();
     });
-    connect(this, &NXDockWidget::topLevelChanged, this, [=](bool topLevel) {
-        nxApp->syncMica(this, topLevel);
+    QObject::connect(this, &NXDockWidget::topLevelChanged, this, [=](bool topLevel) {
+        if (nxApp->getWindowDisplayMode() == NXApplicationType::WindowDisplayMode::NXMica)
+        {
+            nxApp->syncWindowDisplayMode(this, topLevel);
+        }
     });
 }
 
@@ -69,7 +71,7 @@ void NXDockWidget::paintEvent(QPaintEvent* event)
         painter.setRenderHints(QPainter::Antialiasing);
 #ifdef Q_OS_WIN
         // 背景
-        if (!d->_isEnableMica)
+        if (d->_windowDisplayMode != NXApplicationType::WindowDisplayMode::NXMica)
         {
             painter.setPen(Qt::NoPen);
             painter.setBrush(NXThemeColor(d->_themeMode, DialogBase));
@@ -78,7 +80,7 @@ void NXDockWidget::paintEvent(QPaintEvent* event)
 #else
         // 背景
         painter.setPen(Qt::NoPen);
-        painter.setBrush(d->_isEnableMica ? Qt::transparent : NXThemeColor(d->_themeMode, DialogBase));
+        painter.setBrush(d->_windowDisplayMode == NXApplicationType::WindowDisplayMode::NXMica ? Qt::transparent : NXThemeColor(d->_themeMode, DialogBase));
         QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
         painter.drawRect(rect());
 #endif
@@ -99,7 +101,7 @@ bool NXDockWidget::event(QEvent* event)
         HWND hwnd = (HWND)d->_currentWinID;
         DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
         ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX | WS_THICKFRAME);
-        setShadow(hwnd);
+        NXWinShadowHelper::getInstance()->setWindowShadow(d->_currentWinID);
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
         bool hasCaption = (style & WS_CAPTION) == WS_CAPTION;
         if (!hasCaption)

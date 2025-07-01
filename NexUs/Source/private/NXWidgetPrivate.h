@@ -2,24 +2,26 @@
 #define NXWIDGETPRIVATE_H
 
 #include <QObject>
+#include <QColor>
 #include "NXDef.h"
 
-class QStackedLayout;
 class NXWidget;
 class NXAppBar;
 class NXWidgetPrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(NXWidget)
-    Q_PROPERTY_CREATE_D(QStackedLayout*, ModuleStackedLayout)
 public:
     explicit NXWidgetPrivate(QObject* parent = nullptr);
-    ~NXWidgetPrivate();
+    ~NXWidgetPrivate() override;
 
 private:
-    bool _isEnableMica;
-    NXThemeType::ThemeMode _themeMode;
-    NXAppBar* _appBar{nullptr};
+	bool _isCustomBackground{ false };
+	NXApplicationType::WindowDisplayMode _windowDisplayMode;
+	NXThemeType::ThemeMode _themeMode;
+	QColor _customLightBgColor;
+	QColor _customDarkBgColor;
+	NXAppBar* _appBar{ nullptr };
 };
 
 #endif // NXWIDGETPRIVATE_H

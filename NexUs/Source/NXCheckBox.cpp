@@ -8,12 +8,11 @@ NXCheckBox::NXCheckBox(QWidget* parent)
     : QCheckBox(parent), d_ptr(new NXCheckBoxPrivate())
 {
     Q_D(NXCheckBox);
+	d->q_ptr = this;
     setMouseTracking(true);
     setObjectName("NXCheckBox");
-    //std::shared_ptr<NXCheckBoxStyle> checkBoxStyle(std::make_shared<NXCheckBoxStyle>(style()));
-    //setStyle(checkBoxStyle.get());
-    d->_checkStyle = std::make_shared<NXCheckBoxStyle>(style());
-    setStyle(d->_checkStyle.get());
+    d->_checkBoxStyle = new NXCheckBoxStyle(style());
+    setStyle(d->_checkBoxStyle);
     QFont font = this->font();
     font.setPixelSize(15);
     setFont(font);
@@ -116,23 +115,23 @@ NXTextType::TextStyle NXCheckBox::getTextStyle() const
 void NXCheckBox::setCheckBorderRadius(int borderRadius)
 {
     Q_D(const NXCheckBox);
-    d->_checkStyle.get()->setCheckBorderRadius(borderRadius);
+    d->_checkBoxStyle->setCheckBorderRadius(borderRadius);
 }
 
 int NXCheckBox::getCheckBorderRadius() const
 {
     Q_D(const NXCheckBox);
-    return d->_checkStyle.get()->getCheckBorderRadius();
+    return d->_checkBoxStyle->getCheckBorderRadius();
 }
 
 void NXCheckBox::setCheckIndicatorWidth(int indicatorWidth)
 {
     Q_D(const NXCheckBox);
-    d->_checkStyle.get()->setCheckIndicatorWidth(indicatorWidth);
+    d->_checkBoxStyle->setCheckIndicatorWidth(indicatorWidth);
 }
 
 int NXCheckBox::getCheckIndicatorWidth() const
 {
     Q_D(const NXCheckBox);
-    return d->_checkStyle.get()->getCheckIndicatorWidth();
+    return d->_checkBoxStyle->getCheckIndicatorWidth();
 }

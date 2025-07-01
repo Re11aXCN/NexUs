@@ -1,4 +1,4 @@
-#include "NXText.h"
+﻿#include "NXText.h"
 
 #include <optional>
 
@@ -7,6 +7,8 @@
 
 #include "NXTheme.h"
 #include "private/NXTextPrivate.h"
+Q_PROPERTY_CREATE_Q_CPP(NXText, bool, IsAllowClick)
+Q_PROPERTY_CREATE_Q_CPP(NXText, NXWidgetBorder::BorderFlags, BorderFlag)
 NXText::NXText(QWidget* parent)
     : QLabel(parent), d_ptr(new NXTextPrivate())
 {
@@ -14,6 +16,9 @@ NXText::NXText(QWidget* parent)
     d->q_ptr = this;
     d->_pTextStyle = NXTextType::NoStyle;
     d->_pNXIcon = NXIconType::None;
+    d->_pIsAllowClick = false;
+	d->_pIsWrapAnywhere = false;
+
     setObjectName("NXText");
     setStyleSheet("#NXText{background-color:transparent;}");
     QFont textFont = font();
@@ -44,17 +49,24 @@ NXText::~NXText()
 {
 }
 
+void NXText::setBorderStyle(int pixelSize, NXWidgetBorder::BorderFlags borderFlag, QColor color)
+{
+    Q_D(NXText);
+    d->_pBorderFlag = borderFlag;
+    d->_borderColor = color;
+    d->_borderPx = pixelSize;
+}
 void NXText::setIsWrapAnywhere(bool isWrapAnywhere)
 {
     Q_D(NXText);
     setWordWrap(isWrapAnywhere);
-    d->_isWrapAnywhere = isWrapAnywhere;
+    d->_pIsWrapAnywhere = isWrapAnywhere;
 }
 
 bool NXText::getIsWrapAnywhere() const
 {
     Q_D(const NXText);
-    return d->_isWrapAnywhere;
+    return d->_pIsWrapAnywhere;
 }
 
 void NXText::setTextPixelSize(int size)
@@ -179,6 +191,36 @@ NXIconType::IconName NXText::getNXIcon() const
     return d->_pNXIcon;
 }
 
+void NXText::mouseReleaseEvent(QMouseEvent* event)
+{
+	Q_D(NXText);
+	if (d_ptr->_pIsAllowClick && event->button() == Qt::LeftButton)
+	{
+		Q_EMIT clicked();
+	}
+	QLabel::mouseReleaseEvent(event);
+}
+
+void NXText::enterEvent(QEnterEvent* event)
+{
+	Q_D(const NXText);
+	if (d_ptr->_pIsAllowClick)
+	{
+		setCursor(QCursor(Qt::PointingHandCursor));
+	}
+	QLabel::enterEvent(event);
+}
+
+void NXText::leaveEvent(QEvent* event)
+{
+	Q_D(const NXText);
+	if (d_ptr->_pIsAllowClick)
+	{
+		setCursor(QCursor(Qt::ArrowCursor));
+	}
+	QLabel::leaveEvent(event);
+}
+
 void NXText::paintEvent(QPaintEvent* event)
 {
     Q_D(NXText);
@@ -196,7 +238,7 @@ void NXText::paintEvent(QPaintEvent* event)
     }
     else
     {
-        if (wordWrap() && d->_isWrapAnywhere)
+        if (wordWrap() && d->_pIsWrapAnywhere)
         {
             QPainter painter(this);
             painter.save();
@@ -207,6 +249,37 @@ void NXText::paintEvent(QPaintEvent* event)
         }
         else
         {
+			QRect contentRect = rect().adjusted(
+				contentsMargins().left(),
+				contentsMargins().top(),
+				-contentsMargins().right(),
+				-contentsMargins().bottom()
+			);
+			QPainter painter(this);
+			painter.save();
+			painter.setPen(QPen(d->_borderColor, d->_borderPx));
+			QFontMetrics fontMetrics(font());
+			int textWidth = fontMetrics.horizontalAdvance(text());
+			if (d->_pBorderFlag & NXWidgetBorder::TopBorder) {
+				painter.drawLine(QPoint(contentRect.center().x() - textWidth / 2, contentRect.top()),
+					QPoint(contentRect.center().x() + textWidth / 2, contentRect.top()));
+			}
+
+			if (d->_pBorderFlag & NXWidgetBorder::BottomBorder) {
+				painter.drawLine(QPoint(contentRect.center().x() - textWidth / 2, contentRect.bottom()),
+					QPoint(contentRect.center().x() + textWidth / 2, contentRect.bottom()));
+			}
+
+			if (d->_pBorderFlag & NXWidgetBorder::LeftBorder) {
+				painter.drawLine(QPoint(contentRect.left(), contentRect.center().y() - fontMetrics.height() / 2),
+					QPoint(contentRect.left(), contentRect.center().y() + fontMetrics.height() / 2));
+			}
+
+			if (d->_pBorderFlag & NXWidgetBorder::RightBorder) {
+				painter.drawLine(QPoint(contentRect.right(), contentRect.center().y() - fontMetrics.height() / 2),
+					QPoint(contentRect.right(), contentRect.center().y() + fontMetrics.height() / 2));
+			}
+			painter.restore();
             QLabel::paintEvent(event);
         }
     }

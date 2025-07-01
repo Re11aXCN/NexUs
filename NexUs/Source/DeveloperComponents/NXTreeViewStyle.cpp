@@ -1,4 +1,4 @@
-#include "NXTreeViewStyle.h"
+﻿#include "NXTreeViewStyle.h"
 
 #include <QDebug>
 #include <QPainter>
@@ -12,7 +12,9 @@ NXTreeViewStyle::NXTreeViewStyle(QStyle* style)
     _pHeaderMargin = 5;
     _pIconName = NXIconType::None;
     _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
 }
 
 NXTreeViewStyle::~NXTreeViewStyle()
@@ -111,7 +113,7 @@ void NXTreeViewStyle::drawControl(ControlElement element, const QStyleOption* op
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
         painter->setPen(NXThemeColor(_themeMode, PopupBorder));
-        painter->setBrush(NXThemeColor(_themeMode, BasicBase));
+        painter->setBrush(NXThemeColor(_themeMode, BasicBaseAlpha));
         painter->drawRoundedRect(frameRect, 3, 3);
         painter->restore();
         return;

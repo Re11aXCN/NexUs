@@ -1,9 +1,10 @@
-#ifndef NXCUSTOMWIDGET_H
+﻿#ifndef NXCUSTOMWIDGET_H
 #define NXCUSTOMWIDGET_H
 
 #include <QDialog>
 
 #include "NXAppBar.h"
+
 class QVBoxLayout;
 class NXCustomWidget : public QDialog
 {
@@ -11,9 +12,12 @@ class NXCustomWidget : public QDialog
     Q_TAKEOVER_NATIVEEVENT_H
 public:
     explicit NXCustomWidget(QWidget* parent = nullptr);
-    ~NXCustomWidget();
+    ~NXCustomWidget() override;
 
     void setCentralWidget(QWidget* widget);
+
+Q_SIGNALS:
+    Q_SIGNAL void customWidgetClosed();
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;
@@ -23,7 +27,7 @@ protected:
 
 private:
     NXThemeType::ThemeMode _themeMode;
-    bool _isEnableMica;
+    NXApplicationType::WindowDisplayMode _windowDisplayMode;
 };
 
 #endif // NXCUSTOMWIDGET_H

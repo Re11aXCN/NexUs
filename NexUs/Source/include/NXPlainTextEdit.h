@@ -1,4 +1,4 @@
-#ifndef NXPLAINTEXTEDIT_H
+﻿#ifndef NXPLAINTEXTEDIT_H
 #define NXPLAINTEXTEDIT_H
 
 #include <QPlainTextEdit>

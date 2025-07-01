@@ -1,4 +1,4 @@
-#ifndef NXPOPULARCARDFLOATER_H
+﻿#ifndef NXPOPULARCARDFLOATER_H
 #define NXPOPULARCARDFLOATER_H
 
 #include <QWidget>
@@ -10,10 +10,10 @@ class NXPopularCardPrivate;
 class QGraphicsOpacityEffect;
 class NXPopularCardFloater : public QWidget
 {
+    friend class NXPopularCard;
     Q_OBJECT
     Q_PROPERTY_CREATE(qreal, HoverYOffset);
     Q_PROPERTY_CREATE(qreal, HoverOpacity);
-
 public:
     explicit NXPopularCardFloater(NXPopularCard* card, NXPopularCardPrivate* cardPrivate, QWidget* parent = nullptr);
     ~NXPopularCardFloater();
@@ -25,15 +25,17 @@ protected:
     virtual void paintEvent(QPaintEvent* event) override;
 
 private:
-    friend class NXPopularCard;
+
+    int _floatGeometryOffset{ 25 };
     NXThemeType::ThemeMode _themeMode;
+    bool _isHideAnimationFinished{ true };
+
     NXPushButton* _overButton{nullptr};
     QGraphicsOpacityEffect* _opacityEffect{nullptr};
-    bool _isHideAnimationFinished{true};
     NXPopularCard* _card{nullptr};
     NXPopularCardPrivate* _cardPrivate{nullptr};
+
     QRect _calculateTargetGeometry(QRect cardGeometry);
-    int _floatGeometryOffset{25};
 };
 
 #endif // NXPOPULARCARDFLOATER_H

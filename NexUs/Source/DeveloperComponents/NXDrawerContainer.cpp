@@ -1,4 +1,4 @@
-#include "NXDrawerContainer.h"
+﻿#include "NXDrawerContainer.h"
 
 #include "NXTheme.h"
 
@@ -30,7 +30,7 @@ NXDrawerContainer::NXDrawerContainer(QWidget* parent)
     setGraphicsEffect(_opacityEffect);
 
     _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }
@@ -66,13 +66,14 @@ void NXDrawerContainer::doDrawerAnimation(bool isExpand)
         return;
     }
     QPropertyAnimation* heightAnimation = new QPropertyAnimation(this, "maximumHeight");
-    connect(heightAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    QObject::connect(heightAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         setMinimumHeight(value.toUInt());
     });
     heightAnimation->setEasingCurve(QEasingCurve::OutCubic);
     heightAnimation->setDuration(isExpand ? 300 : 450);
     heightAnimation->setStartValue(maximumHeight());
-    heightAnimation->setEndValue(isExpand ? 200 : 0);
+
+    heightAnimation->setEndValue(isExpand ? _calculateContainertMinimumHeight() : 0);
     heightAnimation->start(QPropertyAnimation::DeleteWhenStopped);
 
     QPropertyAnimation* opacityAnimation = new QPropertyAnimation(_opacityEffect, "opacity");
@@ -102,4 +103,15 @@ void NXDrawerContainer::paintEvent(QPaintEvent* event)
         painter.drawLine(0, drawerHeight, width(), drawerHeight);
     }
     painter.restore();
+}
+
+int NXDrawerContainer::_calculateContainertMinimumHeight() const
+{
+    int minimumHeight = 0;
+    for (auto widget : _drawerWidgetList)
+    {
+        minimumHeight += widget->minimumHeight();
+    }
+    minimumHeight = std::max(100, minimumHeight);
+    return minimumHeight;
 }

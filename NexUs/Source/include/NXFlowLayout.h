@@ -1,4 +1,4 @@
-#ifndef NXFLOWLAYOUT_H
+﻿#ifndef NXFLOWLAYOUT_H
 #define NXFLOWLAYOUT_H
 
 #include <QLayout>

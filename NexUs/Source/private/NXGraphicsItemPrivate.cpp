@@ -1,4 +1,4 @@
-#include "NXGraphicsItemPrivate.h"
+﻿#include "NXGraphicsItemPrivate.h"
 
 NXGraphicsItemPrivate::NXGraphicsItemPrivate(QObject* parent)
     : QObject(parent)

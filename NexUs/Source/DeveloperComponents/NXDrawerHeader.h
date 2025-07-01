@@ -1,5 +1,5 @@
-#ifndef NXFRAMEWORK_NXWIDGETTOOLS_DEVELOPERCOMPONENTS_NXDRAWERHEADER_H_
-#define NXFRAMEWORK_NXWIDGETTOOLS_DEVELOPERCOMPONENTS_NXDRAWERHEADER_H_
+﻿#ifndef NXFRAMEWORK_NEXUS_DEVELOPERCOMPONENTS_NXDRAWERHEADER_H_
+#define NXFRAMEWORK_NEXUS_DEVELOPERCOMPONENTS_NXDRAWERHEADER_H_
 
 #include "NXDef.h"
 #include <QVBoxLayout>
@@ -7,9 +7,9 @@
 class NXDrawerHeader : public QWidget
 {
     Q_OBJECT
+    Q_PROPERTY_CREATE(qreal, ExpandIconRotate)
     Q_PRIVATE_CREATE(int, BorderRadius)
     Q_PRIVATE_CREATE(bool, IsExpand)
-    Q_PROPERTY_CREATE(qreal, ExpandIconRotate)
 public:
     explicit NXDrawerHeader(QWidget* parent = nullptr);
     ~NXDrawerHeader() override;
@@ -27,10 +27,10 @@ protected:
     virtual void paintEvent(QPaintEvent* event) override;
 
 private:
-    NXThemeType::ThemeMode _themeMode;
     bool _isPressed{false};
+    NXThemeType::ThemeMode _themeMode;
     QWidget* _headerWidget{nullptr};
     QVBoxLayout* _mainLayout{nullptr};
 };
 
-#endif //NXFRAMEWORK_NXWIDGETTOOLS_DEVELOPERCOMPONENTS_NXDRAWERHEADER_H_
+#endif //NXFRAMEWORK_NEXUS_DEVELOPERCOMPONENTS_NXDRAWERHEADER_H_

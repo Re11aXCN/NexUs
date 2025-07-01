@@ -1,4 +1,4 @@
-#include "NXAcrylicUrlCard.h"
+﻿#include "NXAcrylicUrlCard.h"
 
 #include <QDesktopServices>
 #include <QPainter>
@@ -27,7 +27,7 @@ NXAcrylicUrlCard::NXAcrylicUrlCard(QWidget* parent)
 {
     Q_D(NXAcrylicUrlCard);
     d->q_ptr = this;
-    d->_noisePix = QPixmap(":/include/Image/noise.png");
+    d->_noisePix = QPixmap(":/Resource/Image/noise.png");
     d->_pBorderRadius = 5;
     d->_pMainOpacity = 0.95;
     d->_pNoiseOpacity = 0.06;
@@ -41,8 +41,8 @@ NXAcrylicUrlCard::NXAcrylicUrlCard(QWidget* parent)
     d->_pCardPixmapBorderRadius = 6;
     d->_pCardPixMode = NXCardPixType::PixMode::Ellipse;
     d->_themeMode = nxTheme->getThemeMode();
-    connect(this, &NXAcrylicUrlCard::clicked, this, [=]() { QDesktopServices::openUrl(QUrl(d->_pUrl)); });
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    QObject::connect(this, &NXAcrylicUrlCard::clicked, this, [=]() { QDesktopServices::openUrl(QUrl(d->_pUrl)); });
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXAcrylicUrlCard::~NXAcrylicUrlCard()

@@ -1,4 +1,4 @@
-#include "NXNavigationView.h"
+﻿#include "NXNavigationView.h"
 
 #include <QDebug>
 #include <QHeaderView>
@@ -16,7 +16,6 @@
 #include "NXNavigationStyle.h"
 #include "NXScrollBar.h"
 #include "NXToolTip.h"
-
 QColor gIndicatorColor = NXThemeColor(nxTheme->getThemeMode(), PrimaryNormal);
 NXNavigationView::NXNavigationView(QWidget* parent)
     : QTreeView(parent)
@@ -31,6 +30,8 @@ NXNavigationView::NXNavigationView(QWidget* parent)
     setAutoScroll(false);
     setMouseTracking(true);
     setSelectionMode(QAbstractItemView::NoSelection);
+
+    // 滚动条设置
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     NXScrollBar* vScrollBar = new NXScrollBar(this);
@@ -73,8 +74,8 @@ NXNavigationView::NXNavigationView(QWidget* parent)
 
     setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, &NXNavigationView::customContextMenuRequested, this, &NXNavigationView::onCustomContextMenuRequested);
-    _compactToolTip = new NXToolTip(this);
 
+    _compactToolTip = new NXToolTip(this);
 }
 
 NXNavigationView::~NXNavigationView()
@@ -116,6 +117,10 @@ QAbstractItemView::DropIndicatorPosition NXNavigationView::dropIndicatorPosition
 
 void NXNavigationView::onCustomContextMenuRequested(const QPoint& pos)
 {
+    if (!_pNavigationBarPrivate->_pIsAllowPageOpenInNewWindow)
+    {
+        return;
+    }
     QModelIndex posIndex = indexAt(pos);
     if (!posIndex.isValid())
     {
@@ -126,12 +131,11 @@ void NXNavigationView::onCustomContextMenuRequested(const QPoint& pos)
     {
         NXMenu menu;
         menu.setMenuItemHeight(27);
-
         QAction* openAction = menu.addNXIconAction(NXIconType::ObjectGroup, "在新窗口中打开");
         QObject::connect(openAction, &QAction::triggered, this, [=]() {
             Q_EMIT navigationOpenNewWindow(posNode->getNodeKey());
         });
-        QAction* closeAction = menu.addNXIconAction(NXIconType::FilmSlash, "关闭当前导航窗口");
+  		QAction* closeAction = menu.addNXIconAction(NXIconType::FilmSlash, "关闭当前导航窗口");
         QObject::connect(closeAction, &QAction::triggered, this, [=]() {
             Q_EMIT navigationCloseCurrentWindow(posNode->getNodeKey());
             });
@@ -155,7 +159,7 @@ void NXNavigationView::mousePressEvent(QMouseEvent* event)
 
 void NXNavigationView::mouseMoveEvent(QMouseEvent* event)
 {
-    if (width() <= 60)
+    if (_pNavigationBarPrivate->_currentDisplayMode == NXNavigationType::NavigationDisplayMode::Compact)
     {
         QModelIndex posIndex = indexAt(event->pos());
         if (!posIndex.isValid())
@@ -175,7 +179,6 @@ void NXNavigationView::mouseMoveEvent(QMouseEvent* event)
     QTreeView::mouseMoveEvent(event);
 }
 
-
 void NXNavigationView::mouseDoubleClickEvent(QMouseEvent* event)
 {
     _navigationStyle->setPressIndex(indexAt(event->pos()));
@@ -186,7 +189,7 @@ void NXNavigationView::mouseDoubleClickEvent(QMouseEvent* event)
 void NXNavigationView::mouseReleaseEvent(QMouseEvent* event)
 {
     QTreeView::mouseReleaseEvent(event);
-    if(event->button() == Qt::LeftButton && !_pIsLeftButtonPressedToggleNavigation)
+    if (event->button() == Qt::LeftButton && !_pIsLeftButtonPressedToggleNavigation)
     {
         QModelIndex index = indexAt(event->pos());
         if (index.isValid())
@@ -319,7 +322,7 @@ bool NXNavigationView::eventFilter(QObject* watched, QEvent* event)
     case QEvent::MouseMove:
     case QEvent::HoverMove:
     {
-        if (width() <= 60)
+        if (_pNavigationBarPrivate->_currentDisplayMode == NXNavigationType::NavigationDisplayMode::Compact)
         {
             QModelIndex posIndex = indexAt(mapFromGlobal(QCursor::pos()));
             if (!posIndex.isValid())

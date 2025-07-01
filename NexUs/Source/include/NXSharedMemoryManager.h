@@ -6,7 +6,7 @@ class NX_EXPORT NXSharedMemoryManager : QObject
 {
 	Q_OBJECT
 public:
-	explicit NXSharedMemoryManager(QObject *parent = nullptr);
+	explicit NXSharedMemoryManager(QObject* parent = nullptr);
 	~NXSharedMemoryManager();
 	bool writeToSharedMemory(const QJsonDocument& doc, const QString& key);
 	void releaseMemory();

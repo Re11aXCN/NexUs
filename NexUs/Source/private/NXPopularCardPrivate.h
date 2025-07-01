@@ -1,4 +1,4 @@
-#ifndef NXPOPULARCARDPRIVATE_H
+﻿#ifndef NXPOPULARCARDPRIVATE_H
 #define NXPOPULARCARDPRIVATE_H
 
 #include <QObject>
@@ -9,33 +9,33 @@ class NXPopularCard;
 class NXPopularCardFloater;
 class NXPopularCardPrivate : public QObject
 {
+    friend class NXPopularCardFloater;
     Q_OBJECT
     Q_D_CREATE(NXPopularCard)
-    Q_PROPERTY_CREATE_D(int, BorderRadius)
+    Q_PROPERTY_CREATE_D(QWidget*, CardFloatArea)
     Q_PROPERTY_CREATE_D(QPixmap, CardPixmap)
     Q_PROPERTY_CREATE_D(QString, Title)
     Q_PROPERTY_CREATE_D(QString, SubTitle)
     Q_PROPERTY_CREATE_D(QString, InteractiveTips)
     Q_PROPERTY_CREATE_D(QString, DetailedText)
-    Q_PROPERTY_CREATE_D(QString, CardButtontext)
-    Q_PROPERTY_CREATE_D(QWidget*, CardFloatArea)
+    Q_PROPERTY_CREATE_D(QString, CardButtonText)
     Q_PROPERTY_CREATE_D(QPixmap, CardFloatPixmap)
     Q_PROPERTY_CREATE(qreal, HoverYOffset);
     Q_PROPERTY_CREATE(qreal, HoverOpacity);
-
+    Q_PROPERTY_CREATE_D(int, BorderRadius)
 public:
     explicit NXPopularCardPrivate(QObject* parent = nullptr);
     ~NXPopularCardPrivate();
 
 private:
-    friend class NXPopularCardFloater;
+    int _shadowBorderWidth{ 6 };
+    int _textHSpacing{ 20 };
+    int _textVSpacing{ 5 };
     NXThemeType::ThemeMode _themeMode;
+    bool _isFloating{ false };
+
     QTimer* _floatTimer{nullptr};
     NXPopularCardFloater* _floater{nullptr};
-    bool _isFloating{false};
-    int _shadowBorderWidth{6};
-    int _textHSpacing{20};
-    int _textVSpacing{5};
     QRectF _interactiveTipsBaseRect;
     QRect _buttonTargetRect;
 

@@ -1,4 +1,4 @@
-#ifndef NXNAVIGATIONBARPRIVATE_H
+﻿#ifndef NXNAVIGATIONBARPRIVATE_H
 #define NXNAVIGATIONBARPRIVATE_H
 
 #include <QMap>
@@ -15,6 +15,7 @@ class NXNavigationBar;
 class NXNavigationNode;
 class NXNavigationModel;
 class NXNavigationView;
+class NXNavigationStyle;
 class NXNavigationDelegate;
 class NXSuggestBox;
 class NXInteractiveCard;
@@ -26,11 +27,15 @@ class NXIconButton;
 class NXToolButton;
 class NXNavigationBarPrivate : public QObject
 {
+    friend class NXNavigationView;
+    friend class NXNavigationStyle;
+
     Q_OBJECT
     Q_D_CREATE(NXNavigationBar)
     Q_PROPERTY_CREATE(int, NavigationViewWidth);
+    Q_PROPERTY_CREATE_D(int, NavigationBarWidth)
     Q_PROPERTY_CREATE_D(bool, IsTransparent)
-
+    Q_PROPERTY_CREATE_D(bool, IsAllowPageOpenInNewWindow)
 public:
     explicit NXNavigationBarPrivate(QObject* parent = nullptr);
     ~NXNavigationBarPrivate() override;
@@ -39,20 +44,21 @@ public:
     Q_SLOT void onNavigationCloseCurrentWindow(const QString& nodeKey);
     Q_INVOKABLE void onNavigationRouteBack(QVariantMap routeData);
 
-    void onTreeViewClicked(const QModelIndex& index, bool isLogRoute = true);
-    void onFooterViewClicked(const QModelIndex& index, bool isLogRoute = true);
+    //核心跳转逻辑
+    void onTreeViewClicked(const QModelIndex& index, bool isLogRoute = true, bool isRouteBack = false);
+    void onFooterViewClicked(const QModelIndex& index, bool isLogRoute = true, bool isRouteBack = false);
 
 private:
-    bool _isShowUserCard{ true };
+ 	bool _isShowUserCard{ true };
 
     NXThemeType::ThemeMode _themeMode;
     NXNavigationType::NavigationDisplayMode _currentDisplayMode{ NXNavigationType::NavigationDisplayMode::Maximal };
     QMap<QString, QString> _suggestKeyMap;
     QMap<QString, const QMetaObject*> _pageMetaMap;
+    QMap<QString, int> _pageNewWindowCountMap;
     QMap<NXNavigationNode*, NXMenu*> _compactMenuMap;
     QList<NXNavigationNode*> _lastExpandedNodesList;
     std::function<void(const QString&)> _openPageFunc{};
-
     QVBoxLayout* _navigationButtonLayout{nullptr};
     QHBoxLayout* _navigationSuggestLayout{nullptr};
     QVBoxLayout* _userButtonLayout{nullptr};

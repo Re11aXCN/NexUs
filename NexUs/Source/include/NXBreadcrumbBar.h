@@ -1,4 +1,4 @@
-#ifndef NXBREADCRUMBBAR_H
+﻿#ifndef NXBREADCRUMBBAR_H
 #define NXBREADCRUMBBAR_H
 #include <QWidget>
 

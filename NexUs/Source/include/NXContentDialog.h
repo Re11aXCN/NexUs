@@ -1,4 +1,4 @@
-#ifndef NXCONTENTDIALOG_H
+﻿#ifndef NXCONTENTDIALOG_H
 #define NXCONTENTDIALOG_H
 #include <QAbstractNativeEventFilter>
 #include <QDialog>
@@ -12,7 +12,7 @@ class NX_EXPORT NXContentDialog : public QDialog
     Q_Q_CREATE(NXContentDialog)
 public:
     explicit NXContentDialog(QWidget* parent);
-    ~NXContentDialog();
+    ~NXContentDialog() override;
     Q_SLOT virtual void onLeftButtonClicked();
     Q_SLOT virtual void onMiddleButtonClicked();
     Q_SLOT virtual void onRightButtonClicked();
@@ -21,6 +21,7 @@ public:
     void setLeftButtonText(const QString& text);
     void setMiddleButtonText(const QString& text);
     void setRightButtonText(const QString& text);
+
     void close();
 Q_SIGNALS:
     Q_SIGNAL void leftButtonClicked();

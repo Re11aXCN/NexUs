@@ -1,4 +1,4 @@
-#ifndef NXPROMOTIONVIEWPRIVATE_H
+﻿#ifndef NXPROMOTIONVIEWPRIVATE_H
 #define NXPROMOTIONVIEWPRIVATE_H
 
 #include <QObject>
@@ -14,22 +14,24 @@ class NXPromotionViewPrivate : public QObject
     Q_PROPERTY_CREATE_D(int, CardExpandWidth)
     Q_PROPERTY_CREATE_D(int, CardCollapseWidth)
     Q_PROPERTY_CREATE_D(int, CurrentIndex)
-    Q_PROPERTY_CREATE_D(bool, IsAutoScroll)
     Q_PROPERTY_CREATE_D(int, AutoScrollInterval)
+    Q_PROPERTY_CREATE_D(bool, IsAutoScroll)
 public:
     explicit NXPromotionViewPrivate(QObject* parent = nullptr);
     ~NXPromotionViewPrivate();
     void onPromotionCardClicked(NXPromotionCard* clickedCard);
 
 private:
+    bool _isAllowSwitch{ true };
     NXThemeType::ThemeMode _themeMode;
+    int _leftPadding{ 40 };
+    int _cardSpacing{ 5 };
+    int _bottomMargin{ 30 };
+    int _indicatorSpacing{ 12 };
+
     QTimer* _autoScrollTimer{nullptr};
-    int _leftPadding{40};
-    int _cardSpacing{5};
-    int _bottomMargin{30};
-    int _indicatorSpacing{12};
-    bool _isAllowSwitch{true};
     QList<NXPromotionCard*> _promotionCardList;
+
     void _startCardGeometryAnimation(NXPromotionCard* card, QRect start, QRect end);
     void _startHorizontalCardPixmapRatioAnimation(NXPromotionCard* card, qreal start, qreal end);
     void _updatePromotionCardGeometry();

@@ -1,35 +1,26 @@
-#include "NXDxgi.h"
-
-
+﻿#include "NXDxgi.h"
+#ifdef Q_OS_WIN
 #include <QDateTime>
 #include <QDebug>
 
 NXDxgi::NXDxgi(QObject* parent)
     : QObject(parent)
 {
-#ifdef Q_OS_WIN
-    _pDxDeviceID = -1;
     _pIsInitSuccess = false;
     _pIsGrabActive = false;
     _pGrabFrameRate = 120;
     _pTimeoutMsValue = 50;
     _pIsGrabStoped = true;
     _pIsGrabCenter = false;
-#else
-    qCritical() << "Critical Error: NXDxgi not support for non-windows platform!";
-#endif
 }
 
 NXDxgi::~NXDxgi()
 {
-#ifdef Q_OS_WIN
     releaseInterface();
-#endif
 }
 
 bool NXDxgi::initialize(int dxID, int outputID)
 {
-#ifdef Q_OS_WIN
     _pIsInitSuccess = false;
     _pDxDeviceID = dxID;
     _pOutputDeviceID = outputID;
@@ -162,15 +153,10 @@ bool NXDxgi::initialize(int dxID, int outputID)
     _context = d3dContext;
     _pIsInitSuccess = true;
     return true;
-#else
-    qCritical() << "Critical Error: NXDxgi not support for non-windows platform!";
-    return false;
-#endif
 }
 
 QImage NXDxgi::getGrabImage() const
 {
-#ifdef Q_OS_WIN
     QImage grabImage(_imageBits, _descWidth, _descHeight, QImage::Format_ARGB32);
     if (_pIsGrabCenter)
     {
@@ -180,15 +166,10 @@ QImage NXDxgi::getGrabImage() const
     {
         return grabImage.copy(_pGrabArea);
     }
-#else
-    qCritical() << "Critical Error: NXDxgi not support for non-windows platform!";
-    return QImage();
-#endif
 }
 
 void NXDxgi::onGrabScreen()
 {
-#ifdef Q_OS_WIN
     if (!_duplication || !_device || !_context)
     {
         setIsGrabStoped(true);
@@ -301,12 +282,8 @@ void NXDxgi::onGrabScreen()
         // qDebug() << _cpuSleepTime << _lastGrabTime;
     }
     setIsGrabStoped(true);
-#else
-    qCritical() << "Critical Error: NXDxgi not support for non-windows platform!";
-#endif
 }
 
-#ifdef Q_OS_WIN
 void NXDxgi::releaseInterface()
 {
     if (_duplication)
@@ -346,4 +323,4 @@ void NXDxgi::cpuSleep(qint64 usec)
         }
     }
 }
-#endif // NXDxgi Windows private functions
+#endif

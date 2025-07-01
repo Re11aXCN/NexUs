@@ -1,4 +1,4 @@
-#include "NXPivotPrivate.h"
+﻿#include "NXPivotPrivate.h"
 
 #include <QModelIndex>
 #include <QPropertyAnimation>

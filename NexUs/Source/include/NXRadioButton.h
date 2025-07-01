@@ -15,7 +15,6 @@ public:
     ~NXRadioButton();
 
     void setTextStyle(NXTextType::TextStyle textStyle, std::optional<int> pixelSize = std::nullopt, std::optional<QFont::Weight> weight = std::nullopt);
-    NXTextType::TextStyle getTextStyle() const;
-};
+    NXTextType::TextStyle getTextStyle() const;};
 
 #endif // NXRADIOBUTTON_H

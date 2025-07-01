@@ -1,4 +1,4 @@
-#include "NXGraphicsScenePrivate.h"
+﻿#include "NXGraphicsScenePrivate.h"
 
 #include "NXGraphicsItem.h"
 #include "NXGraphicsLineItem.h"

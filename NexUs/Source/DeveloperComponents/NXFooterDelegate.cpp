@@ -1,4 +1,4 @@
-#include "NXFooterDelegate.h"
+﻿#include "NXFooterDelegate.h"
 
 #include <QPainter>
 #include <QPainterPath>
@@ -20,15 +20,15 @@ NXFooterDelegate::NXFooterDelegate(QObject* parent)
     setProperty("lastSelectMarkBottom", 10.0);
     setProperty("selectMarkTop", 10.0);
     setProperty("selectMarkBottom", 10.0);
-
-    _lastSelectMarkTopAnimation = new QPropertyAnimation(this, "lastSelectMarkTop", parent);
+    // Mark向上
+    _lastSelectMarkTopAnimation = new QPropertyAnimation(this, "lastSelectMarkTop");
     QObject::connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         _lastSelectMarkTop = value.toReal();
         _pNXListView->viewport()->update(); });
     _lastSelectMarkTopAnimation->setDuration(300);
     _lastSelectMarkTopAnimation->setEasingCurve(QEasingCurve::InOutSine);
 
-    _selectMarkBottomAnimation = new QPropertyAnimation(this, "selectMarkBottom", parent);
+    _selectMarkBottomAnimation = new QPropertyAnimation(this, "selectMarkBottom");
     QObject::connect(_selectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         _selectMarkBottom = value.toReal();
         _pNXListView->viewport()->update(); });
@@ -40,21 +40,22 @@ NXFooterDelegate::NXFooterDelegate(QObject* parent)
         _selectMarkBottomAnimation->setStartValue(0);
         _selectMarkBottomAnimation->setEndValue(10);
         _selectMarkBottomAnimation->start(); 
-        });
+		});
 
-    _lastSelectMarkBottomAnimation = new QPropertyAnimation(this, "lastSelectMarkBottom", parent);
+    // Mark向下
+    _lastSelectMarkBottomAnimation = new QPropertyAnimation(this, "lastSelectMarkBottom");
     QObject::connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         _lastSelectMarkBottom = value.toReal();
         _pNXListView->viewport()->update(); 
-        });
+		});
     _lastSelectMarkBottomAnimation->setDuration(300);
     _lastSelectMarkBottomAnimation->setEasingCurve(QEasingCurve::InOutSine);
 
-    _selectMarkTopAnimation = new QPropertyAnimation(this, "selectMarkTop", parent);
+    _selectMarkTopAnimation = new QPropertyAnimation(this, "selectMarkTop");
     QObject::connect(_selectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         _selectMarkTop = value.toReal();
         _pNXListView->viewport()->update();
-        });
+		});
     _selectMarkTopAnimation->setDuration(300);
     _selectMarkTopAnimation->setEasingCurve(QEasingCurve::InOutSine);
     QObject::connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::finished, this, [=]() {
@@ -63,7 +64,7 @@ NXFooterDelegate::NXFooterDelegate(QObject* parent)
         _selectMarkTopAnimation->setStartValue(0);
         _selectMarkTopAnimation->setEndValue(10);
         _selectMarkTopAnimation->start(); 
-        });
+		});
 }
 
 NXFooterDelegate::~NXFooterDelegate()
@@ -113,7 +114,7 @@ void NXFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opti
         viewOption.state &= ~QStyle::State_HasFocus;
     }
     QStyledItemDelegate::paint(painter, viewOption, index);
-
+    // 背景绘制
     QRect itemRect = option.rect;
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
@@ -125,16 +126,19 @@ void NXFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opti
     {
         if (index == _pPressIndex)
         {
+            // 选中时点击
             painter->fillPath(path, NXThemeColor(_themeMode, BasicHoverAlpha));
         }
         else
         {
             if (option.state & QStyle::State_MouseOver)
             {
+                // 选中时覆盖
                 painter->fillPath(path, NXThemeColor(_themeMode, BasicSelectedHoverAlpha));
             }
             else
             {
+                // 选中
                 painter->fillPath(path, NXThemeColor(_themeMode, BasicSelectedAlpha));
             }
         }
@@ -143,12 +147,14 @@ void NXFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opti
     {
         if (index == _pPressIndex)
         {
+            // 点击时颜色
             painter->fillPath(path, NXThemeColor(_themeMode, BasicSelectedHoverAlpha));
         }
         else
         {
             if (option.state & QStyle::State_MouseOver)
             {
+                // 覆盖时颜色
                 painter->fillPath(path, NXThemeColor(_themeMode, BasicHoverAlpha));
             }
         }
@@ -159,17 +165,18 @@ void NXFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opti
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
     itemRect = option.rect;
 
+    //顶边线绘制
     if (index.row() == 0)
     {
         painter->setPen(NXThemeColor(_themeMode, BasicBaseLine));
         painter->drawLine(option.rect.x(), itemRect.y() + 1, option.rect.x() + option.rect.width(), itemRect.y() + 1);
     }
-
+    // 图标绘制
     painter->setPen(index == _pPressIndex ? NXThemeColor(_themeMode, BasicTextPress) : NXThemeColor(_themeMode, BasicText));
     if (node->getAwesome() != NXIconType::None)
     {
         painter->save();
-        QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+        QFont iconFont = QFont("NXAwesome");
         iconFont.setPixelSize(17);
         painter->setFont(iconFont);
         painter->drawText(QRect(itemRect.x(), itemRect.y(), _iconAreaWidth, itemRect.height()), Qt::AlignCenter, QChar((unsigned short)node->getAwesome()));
@@ -206,6 +213,7 @@ void NXFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opti
         painter->restore();
     }
 
+    // 文字绘制
     painter->setPen(index == _pPressIndex ? NXThemeColor(_themeMode, BasicTextPress) : NXThemeColor(_themeMode, BasicText));
     QRect textRect;
     if (node->getAwesome() != NXIconType::None)
@@ -218,7 +226,7 @@ void NXFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opti
     }
     QString text = painter->fontMetrics().elidedText(node->getNodeTitle(), Qt::ElideRight, textRect.width());
     painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, text);
-
+    // 选中特效
     if (_isSelectMarkDisplay && (node == model->getSelectedNode()))
     {
         painter->setPen(Qt::NoPen);

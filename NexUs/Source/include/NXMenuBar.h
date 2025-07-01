@@ -1,4 +1,4 @@
-#ifndef NXMENUBAR_H
+﻿#ifndef NXMENUBAR_H
 #define NXMENUBAR_H
 
 #include <QMenuBar>

@@ -1,4 +1,4 @@
-#ifndef NXCALENDARTITLEMODEL_H
+﻿#ifndef NXCALENDARTITLEMODEL_H
 #define NXCALENDARTITLEMODEL_H
 
 #include <QAbstractListModel>

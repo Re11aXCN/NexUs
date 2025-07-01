@@ -1,4 +1,4 @@
-#ifndef NXPIVOTSTYLE_H
+﻿#ifndef NXPIVOTSTYLE_H
 #define NXPIVOTSTYLE_H
 
 #include <QModelIndex>
@@ -13,7 +13,7 @@ class NXPivotStyle : public QProxyStyle
     Q_PRIVATE_CREATE(int, PivotSpacing)
 public:
     explicit NXPivotStyle(QStyle* style = nullptr);
-    ~NXPivotStyle();
+    ~NXPivotStyle() override;
     void drawPrimitive(PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     int pixelMetric(PixelMetric metric, const QStyleOption* option = nullptr, const QWidget* widget = nullptr) const override;

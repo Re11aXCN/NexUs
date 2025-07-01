@@ -1,4 +1,4 @@
-#include "NXFooterModel.h"
+﻿#include "NXFooterModel.h"
 
 #include <QUuid>
 

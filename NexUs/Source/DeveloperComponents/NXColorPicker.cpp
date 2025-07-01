@@ -10,7 +10,7 @@ NXColorPicker::NXColorPicker(QWidget* parent)
 {
     setFixedSize(260, 260);
     _pThemeMode = nxTheme->getThemeMode();
-
+    // 初始化色相图
     QPixmap ColorPickerPix(QSize(257, 257));
     QImage ColorPickerImage = ColorPickerPix.toImage();
     for (int y = 0; y < ColorPickerImage.height(); y++)
@@ -77,7 +77,7 @@ void NXColorPicker::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing);
-
+    // 色相图绘制
     QRect pickerRect = rect();
     pickerRect.adjust(penWidth, penWidth, -penWidth, -penWidth);
     painter.setPen(QPen(NXThemeColor(_pThemeMode, BasicBorder), penWidth));
@@ -87,6 +87,7 @@ void NXColorPicker::paintEvent(QPaintEvent* event)
     painter.setClipPath(path);
     painter.drawImage(pickerRect, _colorPickerImage);
 
+    // 取色点绘制
     if (!_selectedPoint.isNull())
     {
         painter.setPen(QPen(Qt::black, 2));

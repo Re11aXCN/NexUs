@@ -1,4 +1,4 @@
-#include "NXPromotionViewPrivate.h"
+﻿#include "NXPromotionViewPrivate.h"
 
 #include <QPropertyAnimation>
 
@@ -70,7 +70,7 @@ void NXPromotionViewPrivate::onPromotionCardClicked(NXPromotionCard* clickedCard
             QRect targetGeometry(_leftPadding + _pCardExpandWidth + _cardSpacing * i + _pCardCollapseWidth * (i - 2), 0, _pCardCollapseWidth, q->height() - _bottomMargin);
             if (isRightToLeft && targetGeometry.x() > card->x())
             {
-                connect(geometryAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+                QObject::connect(geometryAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
                     if (card->geometry().right() <= 0)
                     {
                         geometryAnimation->pause();

@@ -1,4 +1,4 @@
-#include "NXMenuBar.h"
+﻿#include "NXMenuBar.h"
 
 #include <QEvent>
 #include <QPainter>

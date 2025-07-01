@@ -33,28 +33,31 @@ void NXSliderStyle::drawComplexControl(ComplexControl control, const QStyleOptio
         QRect sliderRect = sopt->rect;
         QRect sliderHandleRect = subControlRect(control, sopt, SC_SliderHandle, widget);
         sliderHandleRect.adjust(1, 1, -1, -1);
-        
+        // 滑槽
         painter->setPen(Qt::NoPen);
         painter->setBrush(NXThemeColor(_themeMode, BasicChute));
         if (sopt->orientation == Qt::Horizontal)
         {
+            // 未滑过
             painter->drawRoundedRect(QRect(sliderRect.x() + sliderRect.height() / 8, sliderRect.y() + sliderRect.height() * 0.375, sliderRect.width() - sliderRect.height() / 4, sliderRect.height() / 4), sliderRect.height() / 8, sliderRect.height() / 8);
-            
+            // 已滑过
             painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
             painter->drawRoundedRect(QRect(sliderRect.x() + sliderRect.height() / 8, sliderRect.y() + sliderRect.height() * 0.375, sliderHandleRect.x(), sliderRect.height() / 4), sliderRect.height() / 8, sliderRect.height() / 8);
         }
         else
         {
+            // 未滑过
             painter->drawRoundedRect(QRect(sliderRect.x() + sliderRect.width() * 0.375, sliderRect.y() + sliderRect.width() / 8, sliderRect.width() / 4, sliderRect.height() - sliderRect.width() / 4), sliderRect.width() / 8, sliderRect.width() / 8);
-            
+            // 已滑过
             painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
             painter->drawRoundedRect(QRect(sliderRect.x() + sliderRect.width() * 0.375, sliderHandleRect.y(), sliderRect.width() / 4, sliderRect.height() - sliderRect.width() / 8 - sliderHandleRect.y()), sliderRect.width() / 8, sliderRect.width() / 8);
         }
-
+        // 滑块
+        // 外圆形
         painter->setPen(NXThemeColor(_themeMode, BasicBorder));
         painter->setBrush(NXThemeColor(_themeMode, BasicBase));
         painter->drawEllipse(QPointF(sliderHandleRect.center().x() + 1, sliderHandleRect.center().y() + 1), sliderHandleRect.width() / 2, sliderHandleRect.width() / 2);
-        
+        // 内圆形
         painter->setPen(Qt::NoPen);
         painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
         if (_lastState == 0)
@@ -150,7 +153,7 @@ int NXSliderStyle::styleHint(StyleHint hint, const QStyleOption* option, const Q
 void NXSliderStyle::_startRadiusAnimation(qreal startRadius, qreal endRadius, QWidget* widget) const
 {
     NXSliderStyle* style = const_cast<NXSliderStyle*>(this);
-    QPropertyAnimation* circleRadiusAnimation = new QPropertyAnimation(style, "circleRadius", widget);
+    QPropertyAnimation* circleRadiusAnimation = new QPropertyAnimation(style, "circleRadius");
     QObject::connect(circleRadiusAnimation, &QPropertyAnimation::valueChanged, style, [=](const QVariant& value) {
                 this->_circleRadius = value.toReal();
                 widget->update(); });

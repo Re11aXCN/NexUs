@@ -1,4 +1,4 @@
-#include "NXCalendarPickerPrivate.h"
+﻿#include "NXCalendarPickerPrivate.h"
 
 #include <QDate>
 #include <QPropertyAnimation>

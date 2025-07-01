@@ -9,7 +9,7 @@ class NXTabBarStyle : public QProxyStyle
     Q_OBJECT
 public:
     explicit NXTabBarStyle(QStyle* style = nullptr);
-    ~NXTabBarStyle();
+    ~NXTabBarStyle() override;
     void drawPrimitive(QStyle::PrimitiveElement pe, const QStyleOption* opt, QPainter* p, const QWidget* w) const override;
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     QSize sizeFromContents(ContentsType type, const QStyleOption* option, const QSize& size, const QWidget* widget) const override;

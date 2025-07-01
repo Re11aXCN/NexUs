@@ -1,4 +1,4 @@
-#include "NXCalendarPrivate.h"
+﻿#include "NXCalendarPrivate.h"
 
 #include <QApplication>
 #include <QPropertyAnimation>
@@ -148,16 +148,16 @@ void NXCalendarPrivate::_doSwitchAnimation(bool isZoomIn)
     _isSwitchAnimationFinished = false;
     _calendarDelegate->setIsTransparent(true);
     QPropertyAnimation* oldPixZoomAnimation = new QPropertyAnimation(this, "pZoomRatio");
-    connect(oldPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+    QObject::connect(oldPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
         q->update();
     });
-    connect(oldPixZoomAnimation, &QPropertyAnimation::finished, this, [=]() {
+    QObject::connect(oldPixZoomAnimation, &QPropertyAnimation::finished, this, [=]() {
         _isDrawNewPix = true;
         QPropertyAnimation* newPixZoomAnimation = new QPropertyAnimation(this, "pZoomRatio");
-        connect(newPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+        QObject::connect(newPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
             q->update();
         });
-        connect(newPixZoomAnimation, &QPropertyAnimation::finished, this, [=]() {
+        QObject::connect(newPixZoomAnimation, &QPropertyAnimation::finished, this, [=]() {
             if (_calendarModel->getDisplayMode() == NXCalendarType::DayMode)
             {
                 _calendarTitleView->setVisible(true);
@@ -196,7 +196,7 @@ void NXCalendarPrivate::_doSwitchAnimation(bool isZoomIn)
     oldPixZoomAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
     QPropertyAnimation* oldPixOpacityAnimation = new QPropertyAnimation(this, "pPixOpacity");
-    connect(oldPixZoomAnimation, &QPropertyAnimation::finished, this, [=]() {
+    QObject::connect(oldPixZoomAnimation, &QPropertyAnimation::finished, this, [=]() {
         QPropertyAnimation* newPixOpacityAnimation = new QPropertyAnimation(this, "pPixOpacity");
         newPixOpacityAnimation->setStartValue(0);
         newPixOpacityAnimation->setEndValue(1);

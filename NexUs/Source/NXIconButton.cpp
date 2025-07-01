@@ -1,4 +1,4 @@
-#include "NXIconButton.h"
+﻿#include "NXIconButton.h"
 
 #include <QEvent>
 #include <QFont>
@@ -54,7 +54,7 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, QWidget* parent)
     d->_pIsSelected = false;
     d->_pBorderRadius = 0;
     d->_themeMode = nxTheme->getThemeMode();
-    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+    QFont iconFont = QFont("NXAwesome");
     iconFont.setPixelSize(15);
     this->setFont(iconFont);
     d->_pAwesome = awesome;
@@ -79,7 +79,7 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, int pixelSize, QWidget*
     d->_pIsSelected = false;
     d->_pBorderRadius = 0;
     d->_themeMode = nxTheme->getThemeMode();
-    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+    QFont iconFont = QFont("NXAwesome");
     iconFont.setPixelSize(pixelSize);
     this->setFont(iconFont);
     d->_pAwesome = awesome;
@@ -104,7 +104,7 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, int pixelSize, int fixe
     d->_pIsSelected = false;
     d->_pBorderRadius = 0;
     d->_themeMode = nxTheme->getThemeMode();
-    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+    QFont iconFont = QFont("NXAwesome");
     iconFont.setPixelSize(pixelSize);
     this->setFont(iconFont);
     d->_pAwesome = awesome;
@@ -146,7 +146,7 @@ bool NXIconButton::event(QEvent* event)
         if (isEnabled() && !d->_pIsSelected)
         {
             d->_isAlphaAnimationFinished = false;
-            QPropertyAnimation* alphaAnimation = new QPropertyAnimation(d, "pHoverAlpha", this);
+            QPropertyAnimation* alphaAnimation = new QPropertyAnimation(d, "pHoverAlpha");
             QObject::connect(alphaAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
                 update();
             });
@@ -165,7 +165,7 @@ bool NXIconButton::event(QEvent* event)
         if (isEnabled() && !d->_pIsSelected)
         {
             d->_isAlphaAnimationFinished = false;
-            QPropertyAnimation* alphaAnimation = new QPropertyAnimation(d, "pHoverAlpha", this);
+            QPropertyAnimation* alphaAnimation = new QPropertyAnimation(d, "pHoverAlpha");
             QObject::connect(alphaAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
                 update();
             });
@@ -208,7 +208,7 @@ void NXIconButton::paintEvent(QPaintEvent* event)
         painter.setBrush(hoverColor);
     }
     painter.drawRoundedRect(rect(), d->_pBorderRadius, d->_pBorderRadius);
-
+    // 图标绘制
     if (!d->_iconPix.isNull())
     {
         QPainterPath path;

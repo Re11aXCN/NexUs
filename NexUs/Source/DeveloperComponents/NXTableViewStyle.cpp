@@ -1,4 +1,4 @@
-#include "NXTableViewStyle.h"
+﻿#include "NXTableViewStyle.h"
 
 #include <QPainter>
 #include <QPainterPath>
@@ -6,11 +6,13 @@
 
 #include "NXTableView.h"
 #include "NXTheme.h"
-
 NXTableViewStyle::NXTableViewStyle(QStyle* style)
 {
     _pHeaderMargin = 6;
     _pCurrentHoverRow = -1;
+    _pIsDrawAlternateRowsEnabled = true;
+    _pIsSelectionEffectsEnabled = true;
+    _pBorderRadius = 3;
     _themeMode = nxTheme->getThemeMode();
     QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
@@ -28,25 +30,25 @@ void NXTableViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
     {
     case QStyle::PE_PanelItemViewItem:
     {
+        // 行覆盖绘制
         if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
         {
+            const NXTableView* tabView = dynamic_cast<const NXTableView*>(widget);
+            if (!tabView)
+            {
+				tabView = dynamic_cast<const NXTableView*>(widget->focusProxy());
+				if(!tabView) return;
+            }
             painter->save();
             painter->setRenderHint(QPainter::Antialiasing);
-
-            const NXTableView* tabView = dynamic_cast<const NXTableView*>(widget);
-            if (!tabView) {
-                tabView = dynamic_cast<const NXTableView*>(widget->focusProxy());
-            }
-            if (tabView) {
-                QAbstractItemView::SelectionBehavior selectionBehavior = tabView->selectionBehavior();
-                if (selectionBehavior == QAbstractItemView::SelectRows)
+            QAbstractItemView::SelectionBehavior selectionBehavior = tabView->selectionBehavior();
+            if (selectionBehavior == QAbstractItemView::SelectRows)
+            {
+                if (vopt->index.row() == _pCurrentHoverRow)
                 {
-                    if (vopt->index.row() == _pCurrentHoverRow)
-                    {
-                        painter->setPen(Qt::NoPen);
-                        painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
-                        painter->drawRect(vopt->rect);
-                    }
+                    painter->setPen(Qt::NoPen);
+                    painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
+                    painter->drawRect(vopt->rect);
                 }
             }
             else
@@ -58,7 +60,6 @@ void NXTableViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
                     painter->drawRect(vopt->rect);
                 }
             }
-
             painter->restore();
         }
         return;
@@ -71,7 +72,7 @@ void NXTableViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
             painter->setRenderHint(QPainter::Antialiasing);
             QRect itemRect = vopt->rect;
             painter->setPen(Qt::NoPen);
-            const NXTableView* tabView = qobject_cast<const NXTableView*>(widget);
+			const NXTableView* tabView = qobject_cast<const NXTableView*>(widget);
             if (vopt->state & QStyle::State_Selected)
             {
                 if (tabView && !tabView->getDrawSelectionBackground())
@@ -87,11 +88,12 @@ void NXTableViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
             }
             else
             {
-                if (vopt->features.testFlag(QStyleOptionViewItem::Alternate))
+                if (_pIsDrawAlternateRowsEnabled && vopt->features.testFlag(QStyleOptionViewItem::Alternate))
                 {
-                    //painter->setPen(Qt::NoPen);
-                    //painter->setBrush(NXThemeColor(_themeMode, BasicAlternating));
-                    //painter->drawRect(vopt->rect);
+                    // Item背景隔行变色
+                    painter->setPen(Qt::NoPen);
+                    painter->setBrush(NXThemeColor(_themeMode, BasicAlternating));
+                    painter->drawRect(vopt->rect);
                 }
             }
             painter->restore();
@@ -117,19 +119,20 @@ void NXTableViewStyle::drawControl(ControlElement element, const QStyleOption* o
     {
     case QStyle::CE_ShapedFrame:
     {
+        // viewport视口外的其他区域背景
         QRect frameRect = option->rect;
         frameRect.adjust(1, 1, -1, -1);
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
         painter->setPen(NXThemeColor(_themeMode, PopupBorder));
         painter->setBrush(NXThemeColor(_themeMode, BasicBaseAlpha));
-        //painter->drawRoundedRect(frameRect, 3, 3);
-        painter->drawRect(frameRect);
+        painter->drawRoundedRect(frameRect, _pBorderRadius, _pBorderRadius);
         painter->restore();
         return;
     }
     case QStyle::CE_HeaderLabel:
     {
+        // 表头文字绘制
         if (const QStyleOptionHeader* hopt = qstyleoption_cast<const QStyleOptionHeader*>(option))
         {
             QRect headerRect = option->rect;
@@ -140,7 +143,7 @@ void NXTableViewStyle::drawControl(ControlElement element, const QStyleOption* o
                 painter->setPen(NXThemeColor(_themeMode, BasicText));
                 painter->drawText(headerRect, hopt->textAlignment, hopt->text);
             }
-            if (!hopt->icon.isNull())
+ 			if (!hopt->icon.isNull())
             {
                 QIcon::Mode mode = QIcon::Normal;
                 QIcon::State state = hopt->state & QStyle::State_Open ? QIcon::On : QIcon::Off;
@@ -151,17 +154,18 @@ void NXTableViewStyle::drawControl(ControlElement element, const QStyleOption* o
                 if(_headerAdjustParamMap.contains(hopt->section))
                     iconRect.adjust(_headerAdjustParamMap[hopt->section].x1, _headerAdjustParamMap[hopt->section].y1, _headerAdjustParamMap[hopt->section].x2, _headerAdjustParamMap[hopt->section].y2);
                 hopt->icon.paint(painter, iconRect, hopt->textAlignment, mode, state);
-            }
-            painter->restore();
+            }           
+			painter->restore();
         }
         return;
     }
     case QStyle::CE_HeaderSection:
     {
+        // 表头背景绘制
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(NXThemeColor(_themeMode, BasicBaseDeep));
+        painter->setBrush(NXThemeColor(_themeMode, BasicBaseDeepAlpha));
         painter->drawRect(option->rect);
         if (option->state.testFlag(QStyle::State_Sunken))
         {
@@ -180,6 +184,7 @@ void NXTableViewStyle::drawControl(ControlElement element, const QStyleOption* o
     }
     case QStyle::CE_HeaderEmptyArea:
     {
+        // 表头未使用区域背景绘制
         QRect frameRect = option->rect;
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
@@ -193,11 +198,14 @@ void NXTableViewStyle::drawControl(ControlElement element, const QStyleOption* o
     {
         if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
         {
+            // 背景绘制
+            const NXTableView* tabView = dynamic_cast<const NXTableView*>(widget);
+            if (!tabView)
+            {
+                return;
+            }
             this->drawPrimitive(QStyle::PE_PanelItemViewItem, option, painter, widget);
-
-            //const NXTableView* tabView = dynamic_cast<const NXTableView*>(widget);
-            //QAbstractItemView::SelectionBehavior selectionBehavior = tabView->selectionBehavior();
-            
+			QAbstractItemView::SelectionBehavior selectionBehavior = tabView->selectionBehavior();
             QRect itemRect = option->rect;
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
@@ -245,7 +253,7 @@ void NXTableViewStyle::drawControl(ControlElement element, const QStyleOption* o
                     painter->restore();
                 }
             }
-
+            // 图标绘制
             if (!vopt->icon.isNull())
             {
                 QIcon::Mode mode = QIcon::Normal;
@@ -260,22 +268,25 @@ void NXTableViewStyle::drawControl(ControlElement element, const QStyleOption* o
                 QIcon::State state = vopt->state & QStyle::State_Open ? QIcon::On : QIcon::Off;
                 vopt->icon.paint(painter, iconRect, vopt->decorationAlignment, mode, state);
             }
+            // 文字绘制
             if (!vopt->text.isEmpty())
             {
                 painter->setPen(NXThemeColor(_themeMode, BasicText));
                 painter->drawText(textRect, vopt->displayAlignment, vopt->text);
             }
-
-            //int heightOffset = itemRect.height() / 4;
-            //painter->setPen(Qt::NoPen);
-            //painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
-            //if (vopt->state.testFlag(QStyle::State_Selected))
-            //{
-            //    if (selectionBehavior == QAbstractItemView::SelectRows && vopt->index.column() == 0)
-            //    {
-            //        painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
-            //    }
-            //}
+            if (_pIsSelectionEffectsEnabled) {
+				// 选中特效
+				int heightOffset = itemRect.height() / 4;
+				painter->setPen(Qt::NoPen);
+				painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
+				if (vopt->state.testFlag(QStyle::State_Selected))
+				{
+					if (selectionBehavior == QAbstractItemView::SelectRows && vopt->index.column() == 0)
+					{
+						painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
+					}
+				}
+            }
             painter->restore();
         }
         return;

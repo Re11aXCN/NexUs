@@ -1,4 +1,4 @@
-#include "NXCalendarDelegate.h"
+﻿#include "NXCalendarDelegate.h"
 
 #include <QPainter>
 #include <QPainterPath>
@@ -14,10 +14,10 @@ NXCalendarDelegate::NXCalendarDelegate(NXCalendarModel* calendarModel, QObject* 
     _pItemHeight = 42;
     _nowDate = QDate::currentDate();
     _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
-    connect(_calendarModel, &NXCalendarModel::displayModeChanged, this, &NXCalendarDelegate::onCalendarModelDisplayModeChanged);
+    QObject::connect(_calendarModel, &NXCalendarModel::displayModeChanged, this, &NXCalendarDelegate::onCalendarModelDisplayModeChanged);
 }
 
 NXCalendarDelegate::~NXCalendarDelegate()

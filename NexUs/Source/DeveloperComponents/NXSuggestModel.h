@@ -1,4 +1,4 @@
-#ifndef NXSUGGESTMODEL_H
+﻿#ifndef NXSUGGESTMODEL_H
 #define NXSUGGESTMODEL_H
 
 #include <QAbstractListModel>
@@ -18,7 +18,7 @@ public:
     NXSuggestion* getSearchSuggestion(int row);
 
 private:
-    QVector<NXSuggestion*> _suggestionVector; //缁楋箑鎮庨幖婊呭偍閻ㄥ嫯濡悙?
+    QVector<NXSuggestion*> _suggestionVector; //符合搜索的节点
 };
 
 #endif // NXSUGGESTMODEL_H

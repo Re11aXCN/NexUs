@@ -1,4 +1,4 @@
-#ifndef NXNAVIGATIONBAR_H
+﻿#ifndef NXNAVIGATIONBAR_H
 #define NXNAVIGATIONBAR_H
 
 #include <QWidget>
@@ -11,6 +11,8 @@ class NX_EXPORT NXNavigationBar : public QWidget
     Q_OBJECT
     Q_Q_CREATE(NXNavigationBar)
     Q_PROPERTY_CREATE_Q_H(bool, IsTransparent)
+    Q_PROPERTY_CREATE_Q_H(bool, IsAllowPageOpenInNewWindow)
+    Q_PROPERTY_CREATE_Q_H(int, NavigationBarWidth)
 public:
     explicit NXNavigationBar(QWidget* parent = nullptr);
     ~NXNavigationBar() override;
@@ -22,7 +24,7 @@ public:
     void setIsLeftButtonPressedToggleNavigation(bool isPressed);
     void setNavigationNodeDragAndDropEnable(bool isEnable);
 
-    NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome = NXIconType::None);
+	NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome = NXIconType::None);
     NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome = NXIconType::None);
     NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, QWidget* page, NXIconType::IconName awesome = NXIconType::None);
     NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, NXIconType::IconName awesome = NXIconType::None);
@@ -31,6 +33,7 @@ public:
     NodeOperateReturnTypeWithKey addFooterNode(const QString& footerTitle, int keyPoints = 0, NXIconType::IconName awesome = NXIconType::None);
     NodeOperateReturnTypeWithKey addFooterNode(const QString& footerTitle, QWidget* page, int keyPoints = 0, NXIconType::IconName awesome = NXIconType::None);
 
+    QString getNavigationRootKey() const;
     bool getNavigationNodeIsExpanded(const QString& expanderKey) const;
     void expandNavigationNode(const QString& expanderKey);
     void collpaseNavigationNode(const QString& expanderKey);
@@ -39,13 +42,16 @@ public:
     void setNodeKeyPoints(const QString& nodeKey, int keyPoints);
     int getNodeKeyPoints(const QString& nodeKey) const;
 
-    void navigation(const QString& pageKey, bool isLogClicked = true);
+    void navigation(const QString& pageKey, bool isLogClicked = true, bool isRouteBack = false);
     void setDisplayMode(NXNavigationType::NavigationDisplayMode displayMode, bool isAnimation = true);
-    NXNavigationType::NodeOperateReturnType setNodeTitle(const QString& nodeTitle, const QString& nodeKey);
+    int getPageOpenInNewWindowCount(const QString& nodeKey) const;
+
+	NXNavigationType::NodeOperateReturnType setNodeTitle(const QString& nodeTitle, const QString& nodeKey);
     Q_SLOT NXNavigationType::NodeOperateReturnType navigationPageNodeSwitch(const QString& targetPageNodeKey);
 Q_SIGNALS:
+    Q_SIGNAL void pageOpenInNewWindow(const QString& nodeKey);
     Q_SIGNAL void userInfoCardClicked();
-    Q_SIGNAL void navigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey);
+    Q_SIGNAL void navigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, bool isRouteBack);
     Q_SIGNAL void navigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* page);
     Q_SIGNAL void navigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey);
 protected:

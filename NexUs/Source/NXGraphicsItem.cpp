@@ -1,4 +1,4 @@
-#include "NXGraphicsItem.h"
+﻿#include "NXGraphicsItem.h"
 
 #include <QGraphicsSceneMouseEvent>
 #include <QPainterPath>
@@ -24,8 +24,8 @@ NXGraphicsItem::NXGraphicsItem(QGraphicsItem* parent)
     d->_pWidth = 50;
     d->_pHeight = 50;
     d->_itemUID = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
-    d->_pItemImage = QImage(":/include/Image/Moon.jpg");
-    d->_pItemSelectedImage = QImage(":/include/Image/Cirno.jpg");
+    d->_pItemImage = QImage(":/Resource/Image/Moon.jpg");
+    d->_pItemSelectedImage = QImage(":/Resource/Image/Cirno.jpg");
     d->_pItemName = "";
     d->_pMaxLinkPortCount = 1;
     d->_currentLinkPortState.resize(1);

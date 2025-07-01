@@ -1,4 +1,4 @@
-#ifndef NXPIVOT_H
+﻿#ifndef NXPIVOT_H
 #define NXPIVOT_H
 #include <QWidget>
 

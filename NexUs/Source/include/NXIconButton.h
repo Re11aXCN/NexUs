@@ -4,11 +4,13 @@
 #include <QPushButton>
 
 #include "NXDef.h"
+#include "stdafx.h"
 class NXIconButtonPrivate;
 class NX_EXPORT NXIconButton : public QPushButton
 {
     Q_OBJECT
     Q_Q_CREATE(NXIconButton)
+    Q_PROPERTY_CREATE_Q_H(bool, IsSelected);
     Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
     Q_PROPERTY_CREATE_Q_H(qreal, Opacity);
     Q_PROPERTY_CREATE_Q_H(QColor, LightHoverColor);
@@ -17,8 +19,6 @@ class NX_EXPORT NXIconButton : public QPushButton
     Q_PROPERTY_CREATE_Q_H(QColor, DarkIconColor);
     Q_PROPERTY_CREATE_Q_H(QColor, LightHoverIconColor);
     Q_PROPERTY_CREATE_Q_H(QColor, DarkHoverIconColor);
-    Q_PROPERTY_CREATE_Q_H(bool, IsSelected);
-
 public:
     NXIconButton(QPixmap pix, QWidget* parent = nullptr);
     NXIconButton(NXIconType::IconName awesome, QWidget* parent = nullptr);

@@ -1,4 +1,4 @@
-#include "NXPivotStyle.h"
+﻿#include "NXPivotStyle.h"
 
 #include <QPainter>
 #include <QPainterPath>
@@ -10,7 +10,7 @@ NXPivotStyle::NXPivotStyle(QStyle* style)
     _pCurrentIndex = -1;
     _pPivotSpacing = 5;
     _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

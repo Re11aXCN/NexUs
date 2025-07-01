@@ -17,36 +17,36 @@ class NXAppBarPrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(NXAppBar)
-
     Q_PROPERTY_CREATE_D(bool, IsCustomModule)
     Q_PROPERTY_CREATE_D(bool, IsStayTop)
     Q_PROPERTY_CREATE_D(bool, IsFixedSize)
     Q_PROPERTY_CREATE_D(bool, IsDefaultClosed)
     Q_PROPERTY_CREATE_D(bool, IsOnlyAllowMinAndClose)
     bool _isHoverMaxButton{ false };
-    Q_PROPERTY_CREATE_D(int, AppBarHeight)
-    Q_PROPERTY_CREATE_D(int, CustomWidgetMaximumWidth)
     Q_PROPERTY_CREATE_D(QWidget*, CustomWidget)
     Q_PROPERTY_CREATE_D(QButtonGroup*, ModuleButtonGroup)
     Q_PROPERTY_CREATE_D(QBoxLayout*, CustomModuleLayout)
+    Q_PROPERTY_CREATE_D(int, AppBarHeight)
+    Q_PROPERTY_CREATE_D(int, CustomWidgetMaximumWidth)
 public:
     explicit NXAppBarPrivate(QObject* parent = nullptr);
-    ~NXAppBarPrivate();
+    ~NXAppBarPrivate() override;
     Q_SLOT void onMinButtonClicked();
     Q_SLOT void onMaxButtonClicked();
     Q_SLOT void onCloseButtonClicked();
     Q_SLOT void onStayTopButtonClicked();
 
 private:
-    int _lastMinTrackWidth{ 0 };
-    int _edges{ 0 };
-    int _margins{ 8 };
+    int _lastMinTrackWidth{0};
+    int _edges{0};
+    int _margins{8};
     NXAppBarType::ButtonFlags _buttonFlags;
-    qint64 _currentWinID{ 0 };
-    quint64 _clickTimer{ 0 };
+    qint64 _currentWinID{0};
+    quint64 _clickTimer{0};
     QHBoxLayout* _mainLayout{nullptr};
-    QBoxLayout* _iconLabelLayout{nullptr};
-    QBoxLayout* _titleLabelLayout{nullptr};
+    QVBoxLayout* _iconLabelLayout{nullptr};
+    QVBoxLayout* _titleLabelLayout{nullptr};
+
     NXToolButton* _routeBackButton{nullptr};
     NXToolButton* _navigationButton{nullptr};
     NXToolButton* _themeChangeButton{nullptr};
@@ -62,7 +62,7 @@ private:
     void _showSystemMenu(QPoint point);
     void _updateCursor(int edges);
     bool _containsCursorToItem(QWidget* item);
-    void _onxThemeModeChange(NXThemeType::ThemeMode themeMode);
+    void _onThemeModeChange(NXThemeType::ThemeMode themeMode);
     int _calculateMinimumWidth();
     QVBoxLayout* _createVLayout(QWidget* widget);
     QHBoxLayout* _createHLayout(QWidget* widget);

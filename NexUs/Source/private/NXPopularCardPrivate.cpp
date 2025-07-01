@@ -1,4 +1,4 @@
-#include "NXPopularCardPrivate.h"
+﻿#include "NXPopularCardPrivate.h"
 
 #include <QTimer>
 

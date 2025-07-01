@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E40F93B2-5D66-4C3F-B952-A407E8B40B84}</ProjectGuid>
+    <ProjectGuid>{5B0F1707-797D-421C-8441-846F6BE473CF}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
@@ -62,26 +62,21 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutDir>$(SolutionDir)Bin\$(SolutionName)_$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)Bin\Intermediate\$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+    <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutDir>$(SolutionDir)Bin\$(SolutionName)_$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)Bin\Intermediate\$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
+      <LanguageStandard>stdcpp23</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Source;$(ProjectDir)\Source\include;`$(WindowsSDK_IncludePath)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NX_BUILD_DLL;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <QtMoc>
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
-    </QtMoc>
-    <QtMoc>
       <QtMocDir>.\GeneratedFiles\$(ConfigurationName)</QtMocDir>
     </QtMoc>
     <QtRcc>
@@ -91,30 +86,24 @@
       <QtRccDir>.\GeneratedFiles</QtRccDir>
     </QtRcc>
     <QtUic>
-      <ExecutionDescription>Uic'ing %(Identity)...</ExecutionDescription>
+      <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
     </QtUic>
     <QtUic>
       <QtUicDir>.\GeneratedFiles</QtUicDir>
     </QtUic>
     <Link>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxguid.lib;DXGI.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxguid.lib;DXGI.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Source;$(ProjectDir)\Source\include;`$(WindowsSDK_IncludePath)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NX_BUILD_DLL;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <QtMoc>
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
-    </QtMoc>
-    <QtMoc>
       <QtMocDir>.\GeneratedFiles\$(ConfigurationName)</QtMocDir>
     </QtMoc>
     <QtRcc>
@@ -124,13 +113,13 @@
       <QtRccDir>.\GeneratedFiles</QtRccDir>
     </QtRcc>
     <QtUic>
-      <ExecutionDescription>Uic'ing %(Identity)...</ExecutionDescription>
+      <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
     </QtUic>
     <QtUic>
       <QtUicDir>.\GeneratedFiles</QtUicDir>
     </QtUic>
     <Link>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxguid.lib;DXGI.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxguid.lib;DXGI.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -156,11 +145,14 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <QtRcc Include="NexUs.qrc" />
+  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DeveloperComponents\NXBaseListView.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXBreadcrumbBarDelegate.cpp" />
@@ -170,7 +162,6 @@
     <ClCompile Include="Source\DeveloperComponents\NXCalendarPickerContainer.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXCalendarTitleDelegate.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXCalendarTitleModel.cpp" />
-    <ClCompile Include="Source\DeveloperComponents\NXCentralStackedWidget.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXCheckBoxStyle.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXColorDisplayDelegate.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXColorDisplayModel.cpp" />
@@ -221,14 +212,15 @@
     <ClCompile Include="Source\DeveloperComponents\NXToolButtonStyle.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXTreeViewStyle.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXWindowStyle.cpp" />
+    <ClCompile Include="Source\DeveloperComponents\NXWinShadowHelper.cpp" />
     <ClCompile Include="Source\NXAcrylicUrlCard.cpp" />
-    <ClCompile Include="Source\NXAdvancedToolButton.cpp" />
     <ClCompile Include="Source\NXAESEncryption.cpp" />
     <ClCompile Include="Source\NXAppBar.cpp" />
     <ClCompile Include="Source\NXApplication.cpp" />
     <ClCompile Include="Source\NXBreadcrumbBar.cpp" />
     <ClCompile Include="Source\NXCalendar.cpp" />
     <ClCompile Include="Source\NXCalendarPicker.cpp" />
+	<ClCompile Include="Source\NXCentralStackedWidget.cpp" />
     <ClCompile Include="Source\NXCheckBox.cpp" />
     <ClCompile Include="Source\NXColorDialog.cpp" />
     <ClCompile Include="Source\NXComboBox.cpp" />
@@ -264,6 +256,7 @@
     <ClCompile Include="Source\NXPlainTextEdit.cpp" />
     <ClCompile Include="Source\NXPopularCard.cpp" />
     <ClCompile Include="Source\NXProgressBar.cpp" />
+    <ClCompile Include="Source\NXProgressRing.cpp" />
     <ClCompile Include="Source\NXPromotionCard.cpp" />
     <ClCompile Include="Source\NXPromotionView.cpp" />
     <ClCompile Include="Source\NXPushButton.cpp" />
@@ -331,6 +324,7 @@
     <ClCompile Include="Source\private\NXPlainTextEditPrivate.cpp" />
     <ClCompile Include="Source\private\NXPopularCardPrivate.cpp" />
     <ClCompile Include="Source\private\NXProgressBarPrivate.cpp" />
+    <ClCompile Include="Source\private\NXProgressRingPrivate.cpp" />
     <ClCompile Include="Source\private\NXPromotionCardPrivate.cpp" />
     <ClCompile Include="Source\private\NXPromotionViewPrivate.cpp" />
     <ClCompile Include="Source\private\NXPushButtonPrivate.cpp" />
@@ -341,7 +335,6 @@
     <ClCompile Include="Source\private\NXScrollBarPrivate.cpp" />
     <ClCompile Include="Source\private\NXScrollPageAreaPrivate.cpp" />
     <ClCompile Include="Source\private\NXScrollPagePrivate.cpp" />
-    <ClCompile Include="Source\private\NXSliderPrivate.cpp" />
     <ClCompile Include="Source\private\NXSpinBoxPrivate.cpp" />
     <ClCompile Include="Source\private\NXSuggestBoxPrivate.cpp" />
     <ClCompile Include="Source\private\NXTabBarPrivate.cpp" />
@@ -357,213 +350,220 @@
     <ClCompile Include="Source\private\NXTreeViewPrivate.cpp" />
     <ClCompile Include="Source\private\NXWidgetPrivate.cpp" />
     <ClCompile Include="Source\private\NXWindowPrivate.cpp" />
-    <QtRcc Include="NexUs.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Source\DeveloperComponents\NXDxgi.h" />
     <ClInclude Include="Source\include\aesni\aesni-enc-cbc.h" />
     <ClInclude Include="Source\include\aesni\aesni-enc-ecb.h" />
     <ClInclude Include="Source\include\aesni\aesni-key-exp.h" />
     <ClInclude Include="Source\include\aesni\aesni-key-init.h" />
-    <QtMoc Include="Source\include\NXDxgiManager.h" />
-    <ClInclude Include="Source\include\NXGraphicsLineItem.h" />
-    <QtMoc Include="Source\private\NXDxgiManagerPrivate.h" />
-    <ClInclude Include="Source\private\NXGraphicsLineItemPrivate.h" />
-    <ClInclude Include="Source\include\scienum.h" />
+    <ClInclude Include="Source\include\magic_enum\magic_enum.hpp" />
+    <ClInclude Include="Source\include\magic_enum\magic_enum_all.hpp" />
+    <ClInclude Include="Source\include\magic_enum\magic_enum_containers.hpp" />
+    <ClInclude Include="Source\include\magic_enum\magic_enum_flags.hpp" />
+    <ClInclude Include="Source\include\magic_enum\magic_enum_format.hpp" />
+    <ClInclude Include="Source\include\magic_enum\magic_enum_fuse.hpp" />
+    <ClInclude Include="Source\include\magic_enum\magic_enum_iostream.hpp" />
+    <ClInclude Include="Source\include\magic_enum\magic_enum_switch.hpp" />
+    <ClInclude Include="Source\include\magic_enum\magic_enum_utility.hpp" />
     <ClInclude Include="Source\include\singleton.h" />
-    <ClInclude Include="Source\include\stdafx.h" />
     <ClInclude Include="Source\include\NXIcon.h" />
-    <ClInclude Include="Source\DeveloperComponents\NXWinShadowHelper.h" />
-    <QtMoc Include="Source\private\NXDrawerAreaPrivate.h" />
-    <QtMoc Include="Source\private\NXTreeViewPrivate.h" />
-    <QtMoc Include="Source\private\NXToolBarPrivate.h" />
-    <QtMoc Include="Source\private\NXRollerPrivate.h" />
-    <QtMoc Include="Source\private\NXReminderCardPrivate.h" />
-    <QtMoc Include="Source\private\NXPromotionViewPrivate.h" />
-    <QtMoc Include="Source\private\NXPromotionCardPrivate.h" />
-    <QtMoc Include="Source\private\NXProgressBarPrivate.h" />
-    <QtMoc Include="Source\private\NXPopularCardPrivate.h" />
-    <QtMoc Include="Source\private\NXPlainTextEditPrivate.h" />
-    <QtMoc Include="Source\private\NXPivotPrivate.h" />
-    <QtMoc Include="Source\private\NXMultiSelectComboBoxPrivate.h" />
-    <QtMoc Include="Source\private\NXMessageButtonPrivate.h" />
-    <QtMoc Include="Source\private\NXMessageBarPrivate.h" />
-    <QtMoc Include="Source\private\NXLogPrivate.h" />
-    <QtMoc Include="Source\private\NXListViewPrivate.h" />
-    <QtMoc Include="Source\private\NXLCDNumberPrivate.h" />
-    <QtMoc Include="Source\private\NXKeyBinderPrivate.h" />
-    <QtMoc Include="Source\private\NXImageCardPrivate.h" />
-    <QtMoc Include="Source\private\NXGraphicsViewPrivate.h" />
-    <QtMoc Include="Source\private\NXGraphicsScenePrivate.h" />
-    <QtMoc Include="Source\private\NXGraphicsItemPrivate.h" />
-    <QtMoc Include="Source\private\NXFlowLayoutPrivate.h" />
-    <QtMoc Include="Source\private\NXDoubleSpinBoxPrivate.h" />
-    <QtMoc Include="Source\private\NXDockWidgetPrivate.h" />
-    <QtMoc Include="Source\private\NXCalendarPrivate.h" />
-    <QtMoc Include="Source\private\NXCalendarPickerPrivate.h" />
-    <QtMoc Include="Source\private\NXAcrylicUrlCardPrivate.h" />
+    <ClInclude Include="Source\include\NXGraphicsLineItem.h" />
+    <ClInclude Include="Source\include\stdafx.h" />
+    <ClInclude Include="Source\private\NXGraphicsLineItemPrivate.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXBaseListView.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXBreadcrumbBarDelegate.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXBreadcrumbBarModel.h" />
     <QtMoc Include="Source\DeveloperComponents\NXCalendarDelegate.h" />
     <QtMoc Include="Source\DeveloperComponents\NXCalendarModel.h" />
     <QtMoc Include="Source\DeveloperComponents\NXCalendarPickerContainer.h" />
     <QtMoc Include="Source\DeveloperComponents\NXCalendarTitleDelegate.h" />
     <QtMoc Include="Source\DeveloperComponents\NXCalendarTitleModel.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXCheckBoxStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXColorDisplayDelegate.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXColorDisplayModel.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXColorPicker.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXColorPreview.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXColorValueSliderStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXComboBoxStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXComboBoxView.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXCustomTabWidget.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXCustomWidget.h" />
     <QtMoc Include="Source\DeveloperComponents\NXDockWidgetTitleBar.h" />
     <QtMoc Include="Source\DeveloperComponents\NXDrawerContainer.h" />
     <QtMoc Include="Source\DeveloperComponents\NXDrawerHeader.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXDxgi.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXFooterDelegate.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXFooterModel.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXIntValidator.h" />
     <QtMoc Include="Source\DeveloperComponents\NXKeyBinderContainer.h" />
     <QtMoc Include="Source\DeveloperComponents\NXLCDNumberStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXLineEditStyle.h" />
     <QtMoc Include="Source\DeveloperComponents\NXListViewStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXMaskWidget.h" />
     <QtMoc Include="Source\DeveloperComponents\NXMenuBarStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXMenuStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXMicaBaseInitObject.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXNavigationModel.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXNavigationNode.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXNavigationStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXNavigationView.h" />
     <QtMoc Include="Source\DeveloperComponents\NXPivotModel.h" />
     <QtMoc Include="Source\DeveloperComponents\NXPivotStyle.h" />
     <QtMoc Include="Source\DeveloperComponents\NXPivotView.h" />
     <QtMoc Include="Source\DeveloperComponents\NXPlainTextEditStyle.h" />
     <QtMoc Include="Source\DeveloperComponents\NXPopularCardFloater.h" />
     <QtMoc Include="Source\DeveloperComponents\NXProgressBarStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXRadioButtonStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXScrollBarStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXSliderStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXSpinBoxStyle.h" />
     <QtMoc Include="Source\DeveloperComponents\NXStatusBarStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXSuggestBoxSearchViewContainer.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXSuggestDelegate.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXSuggestModel.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXTabBarStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXTableViewStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXThemeAnimationWidget.h" />
     <QtMoc Include="Source\DeveloperComponents\NXToolBarStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXToolButtonStyle.h" />
     <QtMoc Include="Source\DeveloperComponents\NXTreeViewStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXWindowStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXWinShadowHelper.h" />
     <QtMoc Include="Source\include\NXAcrylicUrlCard.h" />
+    <QtMoc Include="Source\include\NXAESEncryption.h" />
+    <QtMoc Include="Source\include\NXAppBar.h" />
+    <QtMoc Include="Source\include\NXApplication.h" />
+    <QtMoc Include="Source\include\NXBreadcrumbBar.h" />
     <QtMoc Include="Source\include\NXCalendar.h" />
     <QtMoc Include="Source\include\NXCalendarPicker.h" />
+	<QtMoc Include="Source\include\NXCentralStackedWidget.h" />
+    <QtMoc Include="Source\include\NXCheckBox.h" />
+    <QtMoc Include="Source\include\NXColorDialog.h" />
+    <QtMoc Include="Source\include\NXComboBox.h" />
+    <QtMoc Include="Source\include\NXContentDialog.h" />
+    <QtMoc Include="Source\include\NXDef.h" />
     <QtMoc Include="Source\include\NXDockWidget.h" />
     <QtMoc Include="Source\include\NXDoubleSpinBox.h" />
     <QtMoc Include="Source\include\NXDrawerArea.h" />
+    <QtMoc Include="Source\include\NXDxgiManager.h" />
+    <QtMoc Include="Source\include\NXEventBus.h" />
+    <QtMoc Include="Source\include\NXExponentialBlur.h" />
     <QtMoc Include="Source\include\NXFlowLayout.h" />
     <QtMoc Include="Source\include\NXGraphicsItem.h" />
     <QtMoc Include="Source\include\NXGraphicsScene.h" />
     <QtMoc Include="Source\include\NXGraphicsView.h" />
+    <QtMoc Include="Source\include\NXIconButton.h" />
     <QtMoc Include="Source\include\NXImageCard.h" />
+    <QtMoc Include="Source\include\NXInteractiveCard.h" />
     <QtMoc Include="Source\include\NXKeyBinder.h" />
     <QtMoc Include="Source\include\NXLCDNumber.h" />
+    <QtMoc Include="Source\include\NXLineEdit.h" />
     <QtMoc Include="Source\include\NXListView.h" />
     <QtMoc Include="Source\include\NXLog.h" />
+    <QtMoc Include="Source\include\NXMenu.h" />
     <QtMoc Include="Source\include\NXMenuBar.h" />
     <QtMoc Include="Source\include\NXMessageBar.h" />
     <QtMoc Include="Source\include\NXMessageButton.h" />
     <QtMoc Include="Source\include\NXMultiSelectComboBox.h" />
+    <QtMoc Include="Source\include\NXNavigationBar.h" />
+    <QtMoc Include="Source\include\NXNavigationRouter.h" />
     <QtMoc Include="Source\include\NXPivot.h" />
     <QtMoc Include="Source\include\NXPlainTextEdit.h" />
     <QtMoc Include="Source\include\NXPopularCard.h" />
     <QtMoc Include="Source\include\NXProgressBar.h" />
+    <QtMoc Include="Source\include\NXProgressRing.h" />
     <QtMoc Include="Source\include\NXPromotionCard.h" />
     <QtMoc Include="Source\include\NXPromotionView.h" />
+    <QtMoc Include="Source\include\NXPushButton.h" />
+    <QtMoc Include="Source\include\NXRadioButton.h" />
     <QtMoc Include="Source\include\NXReminderCard.h" />
     <QtMoc Include="Source\include\NXRoller.h" />
-    <QtMoc Include="Source\include\NXStatusBar.h" />
-    <QtMoc Include="Source\include\NXToolBar.h" />
-    <QtMoc Include="Source\include\NXTreeView.h" />
-    <QtMoc Include="Source\include\NXDef.h" />
-    <QtMoc Include="Source\private\NXWindowPrivate.h" />
-    <QtMoc Include="Source\private\NXWidgetPrivate.h" />
-    <QtMoc Include="Source\private\NXToolTipPrivate.h" />
-    <QtMoc Include="Source\private\NXToolButtonPrivate.h" />
-    <QtMoc Include="Source\private\NXToggleSwitchPrivate.h" />
-    <QtMoc Include="Source\private\NXToggleButtonPrivate.h" />
-    <QtMoc Include="Source\private\NXThemePrivate.h" />
-    <QtMoc Include="Source\private\NXTextPrivate.h" />
-    <QtMoc Include="Source\private\NXTabWidgetPrivate.h" />
-    <QtMoc Include="Source\private\NXTableViewPrivate.h" />
-    <QtMoc Include="Source\private\NXTabBarPrivate.h" />
-    <QtMoc Include="Source\private\NXSuggestBoxPrivate.h" />
-    <QtMoc Include="Source\private\NXSpinBoxPrivate.h" />
-    <QtMoc Include="Source\private\NXSliderPrivate.h" />
-    <QtMoc Include="Source\private\NXScrollPagePrivate.h" />
-    <QtMoc Include="Source\private\NXScrollPageAreaPrivate.h" />
-    <QtMoc Include="Source\private\NXScrollBarPrivate.h" />
-    <QtMoc Include="Source\private\NXScrollAreaPrivate.h" />
-    <QtMoc Include="Source\private\NXRadioButtonPrivate.h" />
-    <QtMoc Include="Source\private\NXPushButtonPrivate.h" />
-    <QtMoc Include="Source\private\NXNavigationRouterPrivate.h" />
-    <QtMoc Include="Source\private\NXNavigationBarPrivate.h" />
-    <QtMoc Include="Source\private\NXMenuPrivate.h" />
-    <QtMoc Include="Source\private\NXLineEditPrivate.h" />
-    <QtMoc Include="Source\private\NXInteractiveCardPrivate.h" />
-    <QtMoc Include="Source\private\NXIconButtonPrivate.h" />
-    <QtMoc Include="Source\private\NXExponentialBlurPrivate.h" />
-    <QtMoc Include="Source\private\NXEventBusPrivate.h" />
-    <QtMoc Include="Source\include\NXEventBus.h" />
-    <QtMoc Include="Source\private\NXContentDialogPrivate.h" />
-    <QtMoc Include="Source\private\NXComboBoxPrivate.h" />
-    <QtMoc Include="Source\private\NXColorDialogPrivate.h" />
-    <QtMoc Include="Source\private\NXCheckBoxPrivate.h" />
-    <QtMoc Include="Source\private\NXBreadcrumbBarPrivate.h" />
-    <QtMoc Include="Source\private\NXApplicationPrivate.h" />
-    <QtMoc Include="Source\private\NXAppBarPrivate.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXWindowStyle.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXToolButtonStyle.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXThemeAnimationWidget.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXTableViewStyle.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXTabBarStyle.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXSuggestModel.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXSuggestDelegate.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXSuggestBoxSearchViewContainer.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXSpinBoxStyle.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXSliderStyle.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXScrollBarStyle.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXRadioButtonStyle.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXNavigationView.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXNavigationStyle.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXNavigationNode.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXNavigationModel.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXMicaBaseInitObject.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXMenuStyle.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXMaskWidget.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXLineEditStyle.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXIntValidator.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXFooterModel.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXFooterDelegate.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXCustomWidget.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXCustomTabWidget.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXComboBoxView.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXComboBoxStyle.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXColorValueSliderStyle.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXColorPreview.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXColorPicker.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXColorDisplayModel.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXColorDisplayDelegate.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXCheckBoxStyle.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXCentralStackedWidget.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXBreadcrumbBarModel.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXBreadcrumbBarDelegate.h" />
-    <QtMoc Include="Source\DeveloperComponents\NXBaseListView.h" />
-    <QtMoc Include="Source\include\NXWindow.h" />
-    <QtMoc Include="Source\include\NXWidget.h" />
-    <QtMoc Include="Source\include\NXToolTip.h" />
-    <QtMoc Include="Source\include\NXToolButton.h" />
-    <QtMoc Include="Source\include\NXToggleSwitch.h" />
-    <QtMoc Include="Source\include\NXToggleButton.h" />
-    <QtMoc Include="Source\include\NXTheme.h" />
-    <QtMoc Include="Source\include\NXText.h" />
-    <QtMoc Include="Source\include\NXTabWidget.h" />
-    <QtMoc Include="Source\include\NXTableView.h" />
-    <QtMoc Include="Source\include\NXTabBar.h" />
-    <QtMoc Include="Source\include\NXSuggestBox.h" />
-    <QtMoc Include="Source\include\NXSpinBox.h" />
-    <QtMoc Include="Source\include\NXSlider.h" />
-    <QtMoc Include="Source\include\NXSharedMemoryManager.h" />
-    <QtMoc Include="Source\include\NXScrollPageArea.h" />
-    <QtMoc Include="Source\include\NXScrollPage.h" />
-    <QtMoc Include="Source\include\NXScrollBar.h" />
     <QtMoc Include="Source\include\NXScrollArea.h" />
-    <QtMoc Include="Source\include\NXRadioButton.h" />
-    <QtMoc Include="Source\include\NXPushButton.h" />
-    <QtMoc Include="Source\include\NXNavigationRouter.h" />
-    <QtMoc Include="Source\include\NXNavigationBar.h" />
-    <QtMoc Include="Source\include\NXMenu.h" />
-    <QtMoc Include="Source\include\NXLineEdit.h" />
-    <QtMoc Include="Source\include\NXInteractiveCard.h" />
-    <QtMoc Include="Source\include\NXIconButton.h" />
-    <QtMoc Include="Source\include\NXExponentialBlur.h" />
-    <QtMoc Include="Source\include\NXContentDialog.h" />
-    <QtMoc Include="Source\include\NXComboBox.h" />
-    <QtMoc Include="Source\include\NXColorDialog.h" />
-    <QtMoc Include="Source\include\NXCheckBox.h" />
-    <QtMoc Include="Source\include\NXBreadcrumbBar.h" />
-    <QtMoc Include="Source\include\NXApplication.h" />
-    <QtMoc Include="Source\include\NXAppBar.h" />
-    <QtMoc Include="Source\include\NXAESEncryption.h" />
-    <QtMoc Include="Source\include\NXAdvancedToolButton.h" />
+    <QtMoc Include="Source\include\NXScrollBar.h" />
+    <QtMoc Include="Source\include\NXScrollPage.h" />
+    <QtMoc Include="Source\include\NXScrollPageArea.h" />
+    <QtMoc Include="Source\include\NXSharedMemoryManager.h" />
+    <QtMoc Include="Source\include\NXSlider.h" />
+    <QtMoc Include="Source\include\NXSpinBox.h" />
+    <QtMoc Include="Source\include\NXStatusBar.h" />
+    <QtMoc Include="Source\include\NXSuggestBox.h" />
+    <QtMoc Include="Source\include\NXTabBar.h" />
+    <QtMoc Include="Source\include\NXTableView.h" />
+    <QtMoc Include="Source\include\NXTabWidget.h" />
+    <QtMoc Include="Source\include\NXText.h" />
+    <QtMoc Include="Source\include\NXTheme.h" />
+    <QtMoc Include="Source\include\NXToggleButton.h" />
+    <QtMoc Include="Source\include\NXToggleSwitch.h" />
+    <QtMoc Include="Source\include\NXToolBar.h" />
+    <QtMoc Include="Source\include\NXToolButton.h" />
+    <QtMoc Include="Source\include\NXToolTip.h" />
+    <QtMoc Include="Source\include\NXTreeView.h" />
+    <QtMoc Include="Source\include\NXWidget.h" />
+    <QtMoc Include="Source\include\NXWindow.h" />
+    <QtMoc Include="Source\private\NXAcrylicUrlCardPrivate.h" />
+    <QtMoc Include="Source\private\NXAppBarPrivate.h" />
+    <QtMoc Include="Source\private\NXApplicationPrivate.h" />
+    <QtMoc Include="Source\private\NXBreadcrumbBarPrivate.h" />
+    <QtMoc Include="Source\private\NXCalendarPickerPrivate.h" />
+    <QtMoc Include="Source\private\NXCalendarPrivate.h" />
+    <QtMoc Include="Source\private\NXCheckBoxPrivate.h" />
+    <QtMoc Include="Source\private\NXColorDialogPrivate.h" />
+    <QtMoc Include="Source\private\NXComboBoxPrivate.h" />
+    <QtMoc Include="Source\private\NXContentDialogPrivate.h" />
+    <QtMoc Include="Source\private\NXDockWidgetPrivate.h" />
+    <QtMoc Include="Source\private\NXDoubleSpinBoxPrivate.h" />
+    <QtMoc Include="Source\private\NXDrawerAreaPrivate.h" />
+    <QtMoc Include="Source\private\NXDxgiManagerPrivate.h" />
+    <QtMoc Include="Source\private\NXEventBusPrivate.h" />
+    <QtMoc Include="Source\private\NXExponentialBlurPrivate.h" />
+    <QtMoc Include="Source\private\NXFlowLayoutPrivate.h" />
+    <QtMoc Include="Source\private\NXGraphicsItemPrivate.h" />
+    <QtMoc Include="Source\private\NXGraphicsScenePrivate.h" />
+    <QtMoc Include="Source\private\NXGraphicsViewPrivate.h" />
+    <QtMoc Include="Source\private\NXIconButtonPrivate.h" />
+    <QtMoc Include="Source\private\NXImageCardPrivate.h" />
+    <QtMoc Include="Source\private\NXInteractiveCardPrivate.h" />
+    <QtMoc Include="Source\private\NXKeyBinderPrivate.h" />
+    <QtMoc Include="Source\private\NXLCDNumberPrivate.h" />
+    <QtMoc Include="Source\private\NXLineEditPrivate.h" />
+    <QtMoc Include="Source\private\NXListViewPrivate.h" />
+    <QtMoc Include="Source\private\NXLogPrivate.h" />
+    <QtMoc Include="Source\private\NXMenuPrivate.h" />
+    <QtMoc Include="Source\private\NXMessageBarPrivate.h" />
+    <QtMoc Include="Source\private\NXMessageButtonPrivate.h" />
+    <QtMoc Include="Source\private\NXMultiSelectComboBoxPrivate.h" />
+    <QtMoc Include="Source\private\NXNavigationBarPrivate.h" />
+    <QtMoc Include="Source\private\NXNavigationRouterPrivate.h" />
+    <QtMoc Include="Source\private\NXPivotPrivate.h" />
+    <QtMoc Include="Source\private\NXPlainTextEditPrivate.h" />
+    <QtMoc Include="Source\private\NXPopularCardPrivate.h" />
+    <QtMoc Include="Source\private\NXProgressBarPrivate.h" />
+    <QtMoc Include="Source\private\NXProgressRingPrivate.h" />
+    <QtMoc Include="Source\private\NXPromotionCardPrivate.h" />
+    <QtMoc Include="Source\private\NXPromotionViewPrivate.h" />
+    <QtMoc Include="Source\private\NXPushButtonPrivate.h" />
+    <QtMoc Include="Source\private\NXRadioButtonPrivate.h" />
+    <QtMoc Include="Source\private\NXReminderCardPrivate.h" />
+    <QtMoc Include="Source\private\NXRollerPrivate.h" />
+    <QtMoc Include="Source\private\NXScrollAreaPrivate.h" />
+    <QtMoc Include="Source\private\NXScrollBarPrivate.h" />
+    <QtMoc Include="Source\private\NXScrollPageAreaPrivate.h" />
+    <QtMoc Include="Source\private\NXScrollPagePrivate.h" />
+    <QtMoc Include="Source\private\NXSpinBoxPrivate.h" />
+    <QtMoc Include="Source\private\NXSuggestBoxPrivate.h" />
+    <QtMoc Include="Source\private\NXTabBarPrivate.h" />
+    <QtMoc Include="Source\private\NXTableViewPrivate.h" />
+    <QtMoc Include="Source\private\NXTabWidgetPrivate.h" />
+    <QtMoc Include="Source\private\NXTextPrivate.h" />
+    <QtMoc Include="Source\private\NXThemePrivate.h" />
+    <QtMoc Include="Source\private\NXToggleButtonPrivate.h" />
+    <QtMoc Include="Source\private\NXToggleSwitchPrivate.h" />
+    <QtMoc Include="Source\private\NXToolBarPrivate.h" />
+    <QtMoc Include="Source\private\NXToolButtonPrivate.h" />
+    <QtMoc Include="Source\private\NXToolTipPrivate.h" />
+    <QtMoc Include="Source\private\NXTreeViewPrivate.h" />
+    <QtMoc Include="Source\private\NXWidgetPrivate.h" />
+    <QtMoc Include="Source\private\NXWindowPrivate.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

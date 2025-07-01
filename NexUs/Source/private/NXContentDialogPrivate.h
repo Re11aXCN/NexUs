@@ -14,22 +14,22 @@ class NXContentDialogPrivate : public QObject
     Q_D_CREATE(NXContentDialog)
 public:
     explicit NXContentDialogPrivate(QObject* parent = nullptr);
-    ~NXContentDialogPrivate();
+    ~NXContentDialogPrivate() override;
 
 private:
-    qint64 _currentWinID{0};
+ 	qint64 _currentWinID{0};
     NXThemeType::ThemeMode _themeMode;
+    QString _leftButtonText{ "cancel" };
+    QString _middleButtonText{ "minimum" };
+    QString _rightButtonText{ "exit" };
     NXMaskWidget* _maskWidget{nullptr};
     QWidget* _centralWidget{nullptr};
     QWidget* _buttonWidget{nullptr};
     QVBoxLayout* _mainLayout{nullptr};
-    QString _leftButtonText{"cancel"};
-    QString _middleButtonText{"minimum"};
-    QString _rightButtonText{"exit"};
     NXPushButton* _leftButton{nullptr};
     NXPushButton* _middleButton{nullptr};
     NXPushButton* _rightButton{nullptr};
-    void _doCloseAnimation();
+    void _doCloseAnimation(bool isAccept);
 };
 
 #endif // NXCONTENTDIALOGPRIVATE_H

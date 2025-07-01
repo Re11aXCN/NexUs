@@ -1,7 +1,6 @@
-#include "NXColorValueSliderStyle.h"
+﻿#include "NXColorValueSliderStyle.h"
 
 #include <QPainter>
-#include <QLinearGradient>
 #include <QPropertyAnimation>
 #include <QStyleOptionSlider>
 
@@ -33,7 +32,7 @@ void NXColorValueSliderStyle::drawComplexControl(ComplexControl control, const Q
         }
         _baseGradient->setFinalStop(widget->rect().bottomRight());
         QColor highValueColor = _pBaseColor.toHsv();
-        if (_pIsUseAlpha)
+ 		if (_pIsUseAlpha)
         {
             highValueColor.setHsv(highValueColor.hue(), highValueColor.saturation(), highValueColor.value(), 255);
         }
@@ -58,16 +57,18 @@ void NXColorValueSliderStyle::drawComplexControl(ComplexControl control, const Q
         sliderRect.adjust(1.5, 0, -1.5, 0);
         QRect sliderHandleRect = subControlRect(control, sopt, SC_SliderHandle, widget);
         sliderHandleRect.adjust(1, 1, -1, -1);
-
+        // 滑槽
         painter->setPen(Qt::NoPen);
         painter->setBrush(*_baseGradient);
-
+        // 渐变背景
         painter->drawRoundedRect(QRectF(sliderRect.x(), sliderRect.y() + sliderRect.width() / 8, sliderRect.width(), sliderRect.height() - sliderRect.width() / 4), sliderRect.width() / 2, sliderRect.width() / 2);
 
+        // 滑块
+        // 外圆形
         painter->setPen(NXThemeColor(_themeMode, BasicBorder));
         painter->setBrush(NXThemeColor(_themeMode, BasicBase));
         painter->drawEllipse(QPointF(sliderHandleRect.center().x() + 1, sliderHandleRect.center().y() + 1), sliderHandleRect.width() / 2, sliderHandleRect.width() / 2);
-
+        // 内圆形
         painter->setPen(Qt::NoPen);
         painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
         if (_lastState == 0)

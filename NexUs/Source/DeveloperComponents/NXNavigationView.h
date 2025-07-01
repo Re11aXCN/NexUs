@@ -1,9 +1,10 @@
-#ifndef NXNAVIGATIONVIEW_H
+﻿#ifndef NXNAVIGATIONVIEW_H
 #define NXNAVIGATIONVIEW_H
 
+#include "NXDef.h"
+#include "private/NXNavigationBarPrivate.h"
 #include <QObject>
 #include <QTreeView>
-#include "stdafx.h"
 class NXScrollBar;
 class NXNavigationStyle;
 class NXToolTip;
@@ -12,9 +13,10 @@ class NXNavigationView : public QTreeView
 {
     Q_OBJECT
     Q_PROPERTY_CREATE(bool, IsLeftButtonPressedToggleNavigation)
+    Q_PRIVATE_CREATE(const NXNavigationBarPrivate*, NavigationBarPrivate)
 public:
     explicit NXNavigationView(QWidget* parent = nullptr);
-    ~NXNavigationView();
+    ~NXNavigationView() override;
     void navigationNodeStateChange(QVariantMap data);
     void setNavigationNodeDragAndDropEnable(bool isEnable);
     QAbstractItemView::DropIndicatorPosition dropIndicatorPositionOverride() const;
@@ -37,8 +39,7 @@ protected:
 private:
     QModelIndex _hoveredIndex; 
     NXNavigationStyle* _navigationStyle{nullptr};
-    NXToolTip* _compactToolTip{ nullptr };
-
+    NXToolTip* _compactToolTip{nullptr};
     bool _canProceedWithDragDrop(QAbstractItemView::DropIndicatorPosition dropIndicatorPosition,
         const QModelIndex& draggedIndex, const QModelIndex& targetIndex,
         const QModelIndex& draggedPreviousIndex, const QModelIndex& draggedNextIndex,

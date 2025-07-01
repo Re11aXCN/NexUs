@@ -1,4 +1,4 @@
-#ifndef NXPIVOTVIEW_H
+﻿#ifndef NXPIVOTVIEW_H
 #define NXPIVOTVIEW_H
 
 #include <QListView>

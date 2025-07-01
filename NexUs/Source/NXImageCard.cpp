@@ -1,4 +1,4 @@
-#include "NXImageCard.h"
+﻿#include "NXImageCard.h"
 
 #include <QGraphicsDropShadowEffect>
 #include <QPainter>
@@ -21,7 +21,7 @@ NXImageCard::NXImageCard(QWidget* parent)
     d->_pIsPreserveAspectCrop = true;
     setMinimumSize(350, 260);
     d->_themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
 }

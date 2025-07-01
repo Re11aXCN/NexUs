@@ -1,4 +1,4 @@
-#include "NXReminderCard.h"
+﻿#include "NXReminderCard.h"
 
 #include <QGraphicsDropShadowEffect>
 #include <QPainter>
@@ -32,7 +32,7 @@ NXReminderCard::NXReminderCard(QWidget* parent)
     d->_pCardPixMode = NXCardPixType::PixMode::Default;
     d->_themeMode = nxTheme->getThemeMode();
     setMouseTracking(true);
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXReminderCard::~NXReminderCard()

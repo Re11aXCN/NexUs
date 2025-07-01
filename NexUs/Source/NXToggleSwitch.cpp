@@ -1,4 +1,4 @@
-#include "NXToggleSwitch.h"
+﻿#include "NXToggleSwitch.h"
 
 #include <QEvent>
 #include <QMouseEvent>
@@ -20,7 +20,9 @@ NXToggleSwitch::NXToggleSwitch(QWidget* parent)
     d->_themeMode = nxTheme->getThemeMode();
     setProperty("circleCenterX", 0.01);
     setProperty("circleRadius", 0.01);
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+        d->_themeMode = themeMode;
+    });
 }
 
 NXToggleSwitch::~NXToggleSwitch()
@@ -144,7 +146,7 @@ void NXToggleSwitch::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-    
+    // 背景绘制
     painter.setPen(d->_isToggled ? QPen(NXThemeColor(d->_themeMode, BasicBorder), 1.5) : QPen(NXThemeColor(d->_themeMode, BasicBorderDeep), 1.5));
     painter.setBrush(isEnabled() ? d->_isToggled ? NXThemeColor(d->_themeMode, PrimaryNormal) : (underMouse() ? NXThemeColor(d->_themeMode, BasicHover) : NXThemeColor(d->_themeMode, BasicBase)) : NXThemeColor(d->_themeMode, BasicDisable));
     QPainterPath path;
@@ -156,6 +158,7 @@ void NXToggleSwitch::paintEvent(QPaintEvent* event)
     path.closeSubpath();
     painter.drawPath(path);
 
+    // 圆心绘制
     painter.setPen(Qt::NoPen);
     painter.setBrush(isEnabled() ? d->_isToggled ? NXThemeColor(d->_themeMode, BasicTextInvert) : NXThemeColor(d->_themeMode, ToggleSwitchNoToggledCenter) : NXThemeColor(d->_themeMode, BasicTextDisable));
     if (d->_circleRadius == 0)

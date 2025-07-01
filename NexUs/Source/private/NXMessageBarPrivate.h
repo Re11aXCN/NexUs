@@ -1,4 +1,4 @@
-#ifndef NXMESSAGEBARPRIVATE_H
+﻿#ifndef NXMESSAGEBARPRIVATE_H
 #define NXMESSAGEBARPRIVATE_H
 
 #include <QMap>
@@ -48,6 +48,7 @@ class NXIconButton;
 class QPainter;
 class NXMessageBarPrivate : public QObject
 {
+    friend class NXMessageBarManager;
     Q_OBJECT
     Q_D_CREATE(NXMessageBar)
     Q_PROPERTY_CREATE(qreal, Opacity)
@@ -61,14 +62,14 @@ public:
     Q_SLOT void onCloseButtonClicked();
 
 private:
-    friend class NXMessageBarManager;
-    NXThemeType::ThemeMode _themeMode;
-    int _borderRadius{6};
+    qreal _createTime{0};
+
     QString _title{""};
     QString _text{""};
-    NXMessageBarType::PositionPolicy _policy;
+    NXThemeType::ThemeMode _themeMode;
+    int _borderRadius{6};    NXMessageBarType::PositionPolicy _policy;
     NXMessageBarType::MessageMode _messageMode;
-    qreal _createTime{0};
+
 
     // 位置数据
     int _leftPadding{20};                // 左边框到图标中心
@@ -88,6 +89,7 @@ private:
     bool _isNormalDisplay{false};
     bool _isMessageBarEventAnimationStart{false};
     NXIconButton* _closeButton{nullptr};
+
     Q_INVOKABLE void _messageBarCreate(int displayMsec);
 
     // 初始坐标计算

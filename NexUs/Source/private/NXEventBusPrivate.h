@@ -1,4 +1,4 @@
-#ifndef NXEVENTBUSPRIVATE_H
+﻿#ifndef NXEVENTBUSPRIVATE_H
 #define NXEVENTBUSPRIVATE_H
 
 #include <QMap>

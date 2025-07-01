@@ -1,4 +1,4 @@
-#include "NXRoller.h"
+﻿#include "NXRoller.h"
 #include "private/NXRollerPrivate.h"
 #include "NXTheme.h"
 #include <QPainter>
@@ -26,10 +26,10 @@ NXRoller::NXRoller(QWidget* parent)
     setFont(font);
 
     d->_scrollAnimation = new QPropertyAnimation(d, "pScrollOffset");
-    connect(d->_scrollAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+    QObject::connect(d->_scrollAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
         update();
     });
-    connect(d->_scrollAnimation, &QPropertyAnimation::finished, this, [=]() {
+    QObject::connect(d->_scrollAnimation, &QPropertyAnimation::finished, this, [=]() {
         while (d->_pScrollOffset < -d->_pItemList.size() * d->_pItemHeight)
         {
             d->_pScrollOffset += d->_pItemList.size() * d->_pItemHeight;
@@ -60,7 +60,7 @@ NXRoller::NXRoller(QWidget* parent)
     d->_scrollAnimation->setEasingCurve(QEasingCurve::OutCubic);
 
     d->_themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
 }

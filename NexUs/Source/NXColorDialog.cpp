@@ -1,4 +1,4 @@
-#include "NXColorDialog.h"
+﻿#include "NXColorDialog.h"
 
 #include <QHBoxLayout>
 #include <QPainter>
@@ -24,13 +24,12 @@ NXColorDialog::NXColorDialog(QWidget* parent)
 {
     Q_D(NXColorDialog);
     d->q_ptr = this;
-    setFixedSize(620, 630); 
+    setFixedSize(620, 630); // 默认宽高
     setObjectName("NXColorDialog");
     setWindowTitle("NXColorDialog");
     setWindowModality(Qt::ApplicationModal);
 
     d->_pColorSchemeType = NXColorSchemeType::Argb;
-
     // 自定义AppBar
     d->_appBar = new NXAppBar(this);
     d->_appBar->setAppBarHeight(30);
@@ -71,8 +70,8 @@ NXColorDialog::NXColorDialog(QWidget* parent)
     d->_colorValueSlider->setOrientation(Qt::Vertical);
     d->_colorValueSlider->setRange(0, 255);
     d->_colorValueSlider->setValue(255);
-    d->_colorValueSliderStyle = std::make_shared<NXColorValueSliderStyle>(style());
-    d->_colorValueSlider->setStyle(d->_colorValueSliderStyle.get());
+    d->_colorValueSliderStyle = new NXColorValueSliderStyle();
+    d->_colorValueSlider->setStyle(d->_colorValueSliderStyle);
     QObject::connect(d->_colorValueSlider, &QSlider::valueChanged, d, &NXColorDialogPrivate::onColorValueSliderChanged);
     QVBoxLayout* colorValueSliderLayout = new QVBoxLayout();
     colorValueSliderLayout->setContentsMargins(0, 0, 0, 0);
@@ -84,9 +83,9 @@ NXColorDialog::NXColorDialog(QWidget* parent)
     d->_transparencyValueSlider->setOrientation(Qt::Vertical);
     d->_transparencyValueSlider->setRange(0, 255);
     d->_transparencyValueSlider->setValue(255);
-    d->_transparencyValueSliderStyle = std::make_shared <NXColorValueSliderStyle>(style());
+    d->_transparencyValueSliderStyle = new NXColorValueSliderStyle(style());
     d->_transparencyValueSliderStyle->setIsUseAlpha(true);
-    d->_transparencyValueSlider->setStyle(d->_transparencyValueSliderStyle.get());
+    d->_transparencyValueSlider->setStyle(d->_transparencyValueSliderStyle);
     QObject::connect(d->_transparencyValueSlider, &QSlider::valueChanged, d, &NXColorDialogPrivate::onTransparencyValueSliderChanged);
     QVBoxLayout* transparencyValueSliderLayout = new QVBoxLayout();
     transparencyValueSliderLayout->setContentsMargins(0, 0, 0, 0);
@@ -322,9 +321,8 @@ NXColorDialog::NXColorDialog(QWidget* parent)
 NXColorDialog::NXColorDialog(const QColor& currentColor, QWidget* parent)
     : NXColorDialog{ parent }
 {
-    //setCurrentColor(currentColor);
+    setCurrentColor(currentColor);
 }
-
 NXColorDialog::~NXColorDialog()
 {
 }

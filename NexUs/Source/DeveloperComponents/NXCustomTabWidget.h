@@ -1,8 +1,7 @@
-#ifndef NXCUSTOMTABWIDGET_H
+﻿#ifndef NXCUSTOMTABWIDGET_H
 #define NXCUSTOMTABWIDGET_H
 
 #include "NXCustomWidget.h"
-#include <QVariant>
 
 class NXTabBar;
 class NXTabWidget;

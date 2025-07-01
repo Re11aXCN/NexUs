@@ -53,7 +53,7 @@ void NXInteractiveCard::paintEvent(QPaintEvent* event)
     painter.setPen(Qt::NoPen);
     painter.setBrush(underMouse() ? NXThemeColor(d->_themeMode, BasicHoverAlpha) : Qt::transparent);
     painter.drawRoundedRect(rect(), d->_pBorderRadius, d->_pBorderRadius);
-    // 鍥剧墖缁樺埗
+    // 图片绘制
     if (!d->_pCardPixmap.isNull())
     {
         painter.save();
@@ -62,7 +62,7 @@ void NXInteractiveCard::paintEvent(QPaintEvent* event)
         {
             path.addEllipse(QPointF(d->_pCardPixmapSize.width() / 2 + 10, height() / 2), d->_pCardPixmapSize.width() / 2, d->_pCardPixmapSize.height() / 2);
             painter.setClipPath(path);
-            painter.drawPixmap(QRect(10, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height()), d->_pCardPixmap); 
+            painter.drawPixmap(QRect(10, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height()), d->_pCardPixmap); // rect为绘制区域，image为要绘制的图片
         }
         else if (d->_pCardPixMode == NXCardPixType::PixMode::Default)
         {
@@ -76,7 +76,7 @@ void NXInteractiveCard::paintEvent(QPaintEvent* event)
         }
         painter.restore();
     }
-
+    // 文字绘制
     painter.setPen(NXThemeColor(d->_themeMode, BasicText));
     QFont font = this->font();
     font.setWeight(QFont::Bold);

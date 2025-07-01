@@ -1,4 +1,4 @@
-#ifndef NXGRAPHICSLINEITEMPRIVATE_H
+﻿#ifndef NXGRAPHICSLINEITEMPRIVATE_H
 #define NXGRAPHICSLINEITEMPRIVATE_H
 
 #include <QMap>
@@ -23,8 +23,9 @@ public:
     ~NXGraphicsLineItemPrivate();
 
 private:
-    QMap<NXGraphicsItem*, int> _linkItemMap;
     bool _isCreateWithItem{true};
+    QMap<NXGraphicsItem*, int> _linkItemMap;
+
 };
 
 #endif // NXGRAPHICSLINEITEMPRIVATE_H

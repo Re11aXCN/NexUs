@@ -1,10 +1,9 @@
-#ifndef NXDOCKWIDGETPRIVATE_H
+﻿#ifndef NXDOCKWIDGETPRIVATE_H
 #define NXDOCKWIDGETPRIVATE_H
 
 #include <QObject>
 
 #include "NXDef.h"
-#include "stdafx.h"
 class NXDockWidget;
 class NXDockWidgetTitleBar;
 class NXDockWidgetPrivate : public QObject
@@ -19,9 +18,9 @@ public:
 private:
     qint64 _currentWinID{0};
     int _margins{8};
-    NXThemeType::ThemeMode _themeMode;
-    bool _isEnableMica;
     int _shadowBorderWidth{6};
+    NXThemeType::ThemeMode _themeMode;
+    NXApplicationType::WindowDisplayMode _windowDisplayMode;
     NXDockWidgetTitleBar* _titleBar{nullptr};
 };
 

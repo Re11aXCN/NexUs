@@ -1,4 +1,4 @@
-﻿#ifndef SINGLETON_H
+#ifndef SINGLETON_H
 #define SINGLETON_H
 
 #include <QMutex>
@@ -58,4 +58,30 @@ public:                                             \
         return _instance.get();              \
     }
 
+#define Q_SINGLETON_CREATE_SHARED_H(Class)                    \
+private:                                                    \
+    static std::shared_ptr<Class> _instance;                \
+    friend std::default_delete<Class>;                      \
+    template<typename... Args>                              \
+    static std::shared_ptr<Class> _create(Args&&... args) { \
+        struct make_shared_helper : public Class            \
+        {                                                   \
+            make_shared_helper(Args&&... a) : Class(std::forward<Args>(a)...){}     \
+        };                                                  \
+        return <make_shared_helper>(std::forward<Args>(args)...);   \
+    }                                                       \
+public:                                                     \
+    static std::shared_ptr<Class> getInstance();
+
+// std::shared_ptr<Class>(new Class(), [](Class* ptr) { delete ptr; });   
+#define Q_SINGLETON_CREATE_SHARED_CPP(Class)          \
+    std::shared_ptr<Class> Class::_instance = nullptr; \
+    std::shared_ptr<Class> Class::getInstance()     \
+    {                                               \
+        static std::once_flag flag;                 \
+        std::call_once(flag, [&]() {                \
+            _instance = _create();                  \
+        });                                         \
+        return _instance;                           \
+    } 
 #endif // SINGLETON_H

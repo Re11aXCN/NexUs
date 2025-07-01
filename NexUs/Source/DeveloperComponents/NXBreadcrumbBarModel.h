@@ -1,4 +1,4 @@
-#ifndef NXBREADCRUMBBARMODEL_H
+﻿#ifndef NXBREADCRUMBBARMODEL_H
 #define NXBREADCRUMBBARMODEL_H
 
 #include <QAbstractListModel>

@@ -10,7 +10,6 @@
 #include <QScreen>
 #include <QVBoxLayout>
 #include <QWidget>
-#include <QButtonGroup>
 
 #include "NXAppBar.h"
 #include "NXIconButton.h"
@@ -186,29 +185,7 @@ bool NXAppBarPrivate::_containsCursorToItem(QWidget* item)
     QRectF rect = QRectF(item->mapTo(item->window(), QPoint(0, 0)), item->size());
     if (item == q)
     {
-        if(_pIsCustomModule)
-        {
-            for (QAbstractButton* button : _pModuleButtonGroup->buttons()) 
-            {
-                if (_containsCursorToItem(button))
-                {
-                    return false;
-                }
-            }
-        }
-        if (_containsCursorToItem(_routeBackButton)     ||
-            _containsCursorToItem(_navigationButton)    ||
-            _containsCursorToItem(_pCustomWidget)       ||
-            _containsCursorToItem(_stayTopButton)       ||
-            _containsCursorToItem(_themeChangeButton)   ||
-            _containsCursorToItem(_minButton)           ||
-            _containsCursorToItem(_maxButton)           ||
-            _containsCursorToItem(_closeButton)         
-/*            _containsCursorToItem(_module_typeButton1)||
-            _containsCursorToItem(_module_typeButton2)  ||
-            _containsCursorToItem(_module_typeButton3)  ||
-            _containsCursorToItem(_module_typeButton4)  ||
-            _containsCursorToItem(_module_typeButton5)*/)
+        if (_containsCursorToItem(_routeBackButton) || _containsCursorToItem(_navigationButton) || _containsCursorToItem(_pCustomWidget) || _containsCursorToItem(_stayTopButton) || _containsCursorToItem(_themeChangeButton) || _containsCursorToItem(_minButton) || _containsCursorToItem(_maxButton) || _containsCursorToItem(_closeButton))
         {
             return false;
         }
@@ -220,7 +197,7 @@ bool NXAppBarPrivate::_containsCursorToItem(QWidget* item)
     return false;
 }
 
-void NXAppBarPrivate::_onxThemeModeChange(NXThemeType::ThemeMode themeMode)
+void NXAppBarPrivate::_onThemeModeChange(NXThemeType::ThemeMode themeMode)
 {
     if (themeMode == NXThemeType::Light)
     {
@@ -271,7 +248,7 @@ int NXAppBarPrivate::_calculateMinimumWidth()
             width += customWidgetWidth;
         }
     }
-    QVector<QAbstractButton*> buttonList = q->findChildren<QAbstractButton*>();
+    QList<QAbstractButton*> buttonList = q->findChildren<QAbstractButton*>();
     for (auto button : buttonList)
     {
         if (button->isVisible() && button->objectName() != "NavigationButton")
@@ -299,22 +276,3 @@ QVBoxLayout* NXAppBarPrivate::_createVLayout(QWidget* widget)
     vLayout->addStretch();
     return vLayout;
 }
-
-QHBoxLayout* NXAppBarPrivate::_createHLayout(QWidget* widget)
-{
-    if (!widget)
-    {
-        return nullptr;
-    }
-    QHBoxLayout* vLayout = new QHBoxLayout();
-    vLayout->setContentsMargins(0, 0, 0, 0);
-    vLayout->setSpacing(0);
-    if (widget == _iconLabel || widget == _titleLabel)
-    {
-        vLayout->addSpacing(6);
-    }
-    vLayout->addWidget(widget);
-    vLayout->addStretch();
-    return vLayout;
-}
-

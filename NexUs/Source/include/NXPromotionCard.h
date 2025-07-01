@@ -1,4 +1,4 @@
-#ifndef NXPROMOTIONCARD_H
+﻿#ifndef NXPROMOTIONCARD_H
 #define NXPROMOTIONCARD_H
 #include <QWidget>
 
@@ -9,6 +9,12 @@ class NX_EXPORT NXPromotionCard : public QWidget
     Q_OBJECT
     Q_Q_CREATE(NXPromotionCard)
     Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+    Q_PROPERTY_CREATE_Q_H(int, CardTitlePixelSize)
+    Q_PROPERTY_CREATE_Q_H(int, PromotionTitlePixelSize)
+    Q_PROPERTY_CREATE_Q_H(int, TitlePixelSize)
+    Q_PROPERTY_CREATE_Q_H(int, SubTitlePixelSize)
+    Q_PROPERTY_CREATE_Q_H(qreal, HorizontalCardPixmapRatio)
+    Q_PROPERTY_CREATE_Q_H(qreal, VerticalCardPixmapRatio)
     Q_PROPERTY_CREATE_Q_H(QPixmap, CardPixmap)
     Q_PROPERTY_CREATE_Q_H(QString, CardTitle)
     Q_PROPERTY_CREATE_Q_H(QString, PromotionTitle)
@@ -19,12 +25,6 @@ class NX_EXPORT NXPromotionCard : public QWidget
     Q_PROPERTY_CREATE_Q_H(QColor, PromotionTitleBaseColor)
     Q_PROPERTY_CREATE_Q_H(QColor, TitleColor)
     Q_PROPERTY_CREATE_Q_H(QColor, SubTitleColor)
-    Q_PROPERTY_CREATE_Q_H(int, CardTitlePixelSize)
-    Q_PROPERTY_CREATE_Q_H(int, PromotionTitlePixelSize)
-    Q_PROPERTY_CREATE_Q_H(int, TitlePixelSize)
-    Q_PROPERTY_CREATE_Q_H(int, SubTitlePixelSize)
-    Q_PROPERTY_CREATE_Q_H(qreal, HorizontalCardPixmapRatio)
-    Q_PROPERTY_CREATE_Q_H(qreal, VerticalCardPixmapRatio)
 public:
     explicit NXPromotionCard(QWidget* parent = nullptr);
     ~NXPromotionCard();

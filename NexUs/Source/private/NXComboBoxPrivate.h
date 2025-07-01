@@ -4,6 +4,8 @@
 #include <QObject>
 
 #include "NXDef.h"
+
+class QLineEdit;
 class NXComboBox;
 class NXComboBoxStyle;
 class NXComboBoxPrivate : public QObject
@@ -14,13 +16,16 @@ class NXComboBoxPrivate : public QObject
 
 public:
     explicit NXComboBoxPrivate(QObject* parent = nullptr);
-    ~NXComboBoxPrivate();
+    ~NXComboBoxPrivate() override;
+
+    Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
 
 private:
-    bool _isAllowHidePopup{false};
     NXThemeType::ThemeMode _themeMode;
+    bool _isAllowHidePopup{false};
+    NXComboBoxStyle* _comboBoxStyle{nullptr};
 
-    std::shared_ptr<NXComboBoxStyle> _comboBoxStyle{ nullptr };
+    void _changeTheme(QLineEdit* lineEdit);
 };
 
 #endif // NXCOMBOBOXPRIVATE_H

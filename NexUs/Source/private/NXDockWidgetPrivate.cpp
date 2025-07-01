@@ -1,4 +1,4 @@
-#include "NXDockWidgetPrivate.h"
+﻿#include "NXDockWidgetPrivate.h"
 
 #include <QLinearGradient>
 

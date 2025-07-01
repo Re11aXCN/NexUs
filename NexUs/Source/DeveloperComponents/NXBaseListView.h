@@ -1,4 +1,4 @@
-#ifndef NXBASELISTVIEW_H
+﻿#ifndef NXBASELISTVIEW_H
 #define NXBASELISTVIEW_H
 
 #include <QListView>

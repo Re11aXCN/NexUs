@@ -1,4 +1,4 @@
-#ifndef NXMESSAGEBAR_H
+﻿#ifndef NXMESSAGEBAR_H
 #define NXMESSAGEBAR_H
 
 #include <QWidget>

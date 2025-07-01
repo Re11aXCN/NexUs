@@ -4,7 +4,6 @@
 
 #include "NXDef.h"
 class NXRadioButton;
-class NXRadioButtonStyle;
 class NXRadioButtonPrivate : public QObject
 {
     Q_OBJECT
@@ -13,8 +12,8 @@ public:
     explicit NXRadioButtonPrivate(QObject* parent = nullptr);
     ~NXRadioButtonPrivate();
     Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
+
 private:
-    std::shared_ptr<NXRadioButtonStyle> _radioButtonStyle{ nullptr };
     NXTextType::TextStyle _textStyle{ NXTextType::NoStyle };
 };
 

@@ -1,4 +1,4 @@
-#include "NXCheckBoxStyle.h"
+﻿#include "NXCheckBoxStyle.h"
 
 #include <QDebug>
 #include <QPainter>
@@ -10,7 +10,9 @@ NXCheckBoxStyle::NXCheckBoxStyle(QStyle* style)
     _pCheckIndicatorWidth = 21;
     _pCheckBorderRadius = 2;
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
 }
 
 NXCheckBoxStyle::~NXCheckBoxStyle()
@@ -32,9 +34,9 @@ void NXCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* op
             QRect checkBoxRect = bopt->rect;
             QRect checkRect(checkBoxRect.x(), checkBoxRect.y(), _pCheckIndicatorWidth, _pCheckIndicatorWidth);
             int yAdjust = (checkBoxRect.height() - _pCheckIndicatorWidth) / 2; 
-            checkRect.moveTop(checkBoxRect.top() + yAdjust); 
-            checkRect.adjust(1, 1, -1, -1);
-
+            checkRect.moveTop(checkBoxRect.top() + yAdjust);
+             checkRect.adjust(1, 1, -1, -1);
+            //复选框绘制
             painter->setPen(Qt::NoPen);
             if (bopt->state.testFlag(QStyle::State_On) || bopt->state.testFlag(QStyle::State_NoChange))
             {
@@ -76,12 +78,13 @@ void NXCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* op
                 }
             }
             painter->drawRoundedRect(checkRect, _pCheckBorderRadius, _pCheckBorderRadius);
+            //图标绘制
             painter->setPen(NXThemeColor(NXThemeType::Dark, BasicText));
             if (bopt->state.testFlag(QStyle::State_On))
             {
                 painter->save();
-                QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-                iconFont.setPixelSize(_pCheckIndicatorWidth * 0.8);
+                QFont iconFont = QFont("NXAwesome");
+                iconFont.setPixelSize(_pCheckIndicatorWidth * 0.75);
                 painter->setFont(iconFont);
                 painter->drawText(checkRect, Qt::AlignCenter, QChar((unsigned short)NXIconType::Check));
                 painter->restore();
@@ -91,7 +94,7 @@ void NXCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* op
                 QLine checkLine(checkRect.x() + 3, checkRect.center().y(), checkRect.right() - 3, checkRect.center().y());
                 painter->drawLine(checkLine);
             }
-
+            //文字绘制
             painter->setPen(isEnabled ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
             QRect textRect(checkRect.right() + 10, checkRect.y(), checkBoxRect.width(), checkRect.height());
             painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, bopt->text);

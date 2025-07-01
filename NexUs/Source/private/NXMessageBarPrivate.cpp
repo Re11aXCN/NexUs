@@ -1,4 +1,4 @@
-#include "NXMessageBarPrivate.h"
+﻿#include "NXMessageBarPrivate.h"
 
 #include <QDateTime>
 #include <QGraphicsOpacityEffect>
@@ -196,8 +196,8 @@ void NXMessageBarPrivate::onOtherMessageBarEnd(QVariantMap eventData)
     _isMessageBarEventAnimationStart = true;
     qreal targetPosY = eventData.value("TargetPosY").toReal();
     QPropertyAnimation* closePosAnimation = new QPropertyAnimation(this, "MessageBarClosedY");
-    connect(closePosAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { q->move(q->pos().x(), value.toUInt()); });
-    connect(closePosAnimation, &QPropertyAnimation::finished, this, [=]() {
+    QObject::connect(closePosAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { q->move(q->pos().x(), value.toUInt()); });
+    QObject::connect(closePosAnimation, &QPropertyAnimation::finished, this, [=]() {
         _isMessageBarEventAnimationStart = false;
         if (NXMessageBarManager::getInstance()->getMessageBarEventCount(q) > 1)
         {
@@ -220,11 +220,11 @@ void NXMessageBarPrivate::messageBarEnd(QVariantMap eventData)
     Q_Q(NXMessageBar);
     NXMessageBarManager::getInstance()->postMessageBarEndEvent(q);
     QPropertyAnimation* barFinishedOpacityAnimation = new QPropertyAnimation(this, "pOpacity");
-    connect(barFinishedOpacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+    QObject::connect(barFinishedOpacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
         _closeButton->setOpacity(_pOpacity);
         q->update();
     });
-    connect(barFinishedOpacityAnimation, &QPropertyAnimation::finished, this, [=]() {
+    QObject::connect(barFinishedOpacityAnimation, &QPropertyAnimation::finished, this, [=]() {
         q->deleteLater();
     });
     barFinishedOpacityAnimation->setDuration(300);
@@ -245,11 +245,11 @@ void NXMessageBarPrivate::onCloseButtonClicked()
     _isNormalDisplay = false;
     NXMessageBarManager::getInstance()->forcePostMessageBarEndEvent(q);
     QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pOpacity");
-    connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+    QObject::connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
         _closeButton->setOpacity(_pOpacity);
         q->update();
     });
-    connect(opacityAnimation, &QPropertyAnimation::finished, q, [=]() { q->deleteLater(); });
+    QObject::connect(opacityAnimation, &QPropertyAnimation::finished, q, [=]() { q->deleteLater(); });
     opacityAnimation->setStartValue(_pOpacity);
     opacityAnimation->setEndValue(0);
     opacityAnimation->setDuration(220);
@@ -280,7 +280,7 @@ void NXMessageBarPrivate::_messageBarCreate(int displayMsec)
     _calculateInitialPos(startX, startY, endX, endY);
     // 滑入动画
     QPropertyAnimation* barPosAnimation = new QPropertyAnimation(q, "pos");
-    connect(barPosAnimation, &QPropertyAnimation::finished, q, [=]() {
+    QObject::connect(barPosAnimation, &QPropertyAnimation::finished, q, [=]() {
         _isNormalDisplay = true;
         _isMessageBarCreateAnimationFinished = true;
         if(NXMessageBarManager::getInstance()->getMessageBarEventCount(q) > 1)

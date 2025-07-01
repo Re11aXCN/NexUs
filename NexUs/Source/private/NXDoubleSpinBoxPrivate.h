@@ -1,21 +1,28 @@
-#ifndef NXDOUBLESPINBOXPRIVATE_H
+﻿#ifndef NXDOUBLESPINBOXPRIVATE_H
 #define NXDOUBLESPINBOXPRIVATE_H
 
 #include <QObject>
 
-#include "stdafx.h"
+#include "NXDef.h"
+
 class NXMenu;
 class NXDoubleSpinBox;
+class NXSpinBoxStyle;
 class NXDoubleSpinBoxPrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(NXDoubleSpinBox)
+    Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
 public:
     explicit NXDoubleSpinBoxPrivate(QObject* parent = nullptr);
-    ~NXDoubleSpinBoxPrivate();
+    ~NXDoubleSpinBoxPrivate() override;
+    Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
 
 private:
+    NXSpinBoxStyle* _style{nullptr};
+    NXThemeType::ThemeMode _themeMode;
     NXMenu* _createStandardContextMenu();
+    void _changeTheme();
 };
 
 #endif // NXDOUBLESPINBOXPRIVATE_H

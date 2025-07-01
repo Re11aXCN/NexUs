@@ -1,4 +1,4 @@
-#include "NXNavigationModel.h"
+﻿#include "NXNavigationModel.h"
 
 #include <QIcon>
 #include <QJsonObject>
@@ -12,6 +12,7 @@ NXNavigationModel::NXNavigationModel(QObject* parent)
     _rootNode->setIsRootNode(true);
     _rootNode->setIsExpanderNode(true);
     _rootNode->setIsExpanded(true);
+	_nodesMap.insert(_rootNode->getNodeKey(), _rootNode);
     _pSelectedNode = nullptr;
     _pSelectedExpandedNode = nullptr;
 }

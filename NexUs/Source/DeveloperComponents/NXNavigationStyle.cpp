@@ -1,4 +1,4 @@
-#include "NXNavigationStyle.h"
+﻿#include "NXNavigationStyle.h"
 
 #include <QPainter>
 #include <QPainterPath>
@@ -18,13 +18,18 @@ NXNavigationStyle::NXNavigationStyle(QStyle* style)
     _pSelectMarkTop = 10.0;
     _pSelectMarkBottom = 10.0;
 
+    // Mark向上
     _lastSelectMarkTopAnimation = new QPropertyAnimation(this, "pLastSelectMarkTop");
-    QObject::connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { _pNavigationView->viewport()->update(); });
+    QObject::connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        _pNavigationView->viewport()->update();
+    });
     _lastSelectMarkTopAnimation->setDuration(300);
     _lastSelectMarkTopAnimation->setEasingCurve(QEasingCurve::InOutSine);
 
     _selectMarkBottomAnimation = new QPropertyAnimation(this, "pSelectMarkBottom");
-    QObject::connect(_selectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { _pNavigationView->viewport()->update(); });
+    QObject::connect(_selectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        _pNavigationView->viewport()->update();
+    });
     _selectMarkBottomAnimation->setDuration(300);
     _selectMarkBottomAnimation->setEasingCurve(QEasingCurve::InOutSine);
     QObject::connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::finished, this, [=]() {
@@ -32,15 +37,21 @@ NXNavigationStyle::NXNavigationStyle(QStyle* style)
         _lastSelectedNode = nullptr;
         _selectMarkBottomAnimation->setStartValue(0);
         _selectMarkBottomAnimation->setEndValue(10);
-        _selectMarkBottomAnimation->start(); });
+        _selectMarkBottomAnimation->start();
+    });
 
+    // Mark向下
     _lastSelectMarkBottomAnimation = new QPropertyAnimation(this, "pLastSelectMarkBottom");
-    QObject::connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { _pNavigationView->viewport()->update(); });
+    QObject::connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        _pNavigationView->viewport()->update();
+    });
     _lastSelectMarkBottomAnimation->setDuration(300);
     _lastSelectMarkBottomAnimation->setEasingCurve(QEasingCurve::InOutSine);
 
     _selectMarkTopAnimation = new QPropertyAnimation(this, "pSelectMarkTop");
-    QObject::connect(_selectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { _pNavigationView->viewport()->update(); });
+    QObject::connect(_selectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        _pNavigationView->viewport()->update();
+    });
     _selectMarkTopAnimation->setDuration(300);
     _selectMarkTopAnimation->setEasingCurve(QEasingCurve::InOutSine);
     QObject::connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::finished, this, [=]() {
@@ -48,7 +59,8 @@ NXNavigationStyle::NXNavigationStyle(QStyle* style)
         _lastSelectedNode = nullptr;
         _selectMarkTopAnimation->setStartValue(0);
         _selectMarkTopAnimation->setEndValue(10);
-        _selectMarkTopAnimation->start(); });
+        _selectMarkTopAnimation->start();
+    });
     _themeMode = nxTheme->getThemeMode();
     QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
@@ -65,6 +77,7 @@ void NXNavigationStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
     {
     case QStyle::PE_PanelItemViewItem:
     {
+        // Item背景
         if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
         {
             painter->save();
@@ -84,16 +97,19 @@ void NXNavigationStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
             {
                 if (index == _pPressIndex)
                 {
+                    // 选中时点击
                     painter->fillPath(path, NXThemeColor(_themeMode, BasicHoverAlpha));
                 }
                 else
                 {
                     if (vopt->state & QStyle::State_MouseOver)
                     {
+                        // 选中时覆盖
                         painter->fillPath(path, NXThemeColor(_themeMode, BasicSelectedHoverAlpha));
                     }
                     else
                     {
+                        // 选中
                         painter->fillPath(path, NXThemeColor(_themeMode, BasicSelectedAlpha));
                     }
                 }
@@ -102,12 +118,14 @@ void NXNavigationStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
             {
                 if (index == _pPressIndex)
                 {
+                    // 点击时颜色
                     painter->fillPath(path, NXThemeColor(_themeMode, BasicSelectedHoverAlpha));
                 }
                 else
                 {
                     if (vopt->state & QStyle::State_MouseOver)
                     {
+                        // 覆盖时颜色
                         painter->fillPath(path, NXThemeColor(_themeMode, BasicHoverAlpha));
                     }
                 }
@@ -118,13 +136,15 @@ void NXNavigationStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
     }
     case QStyle::PE_PanelItemViewRow:
     {
+        // 行背景
         return;
     }
     case QStyle::PE_IndicatorBranch:
     {
+        // Branch指示器
         return;
     }
-    case  QStyle::PE_IndicatorItemViewItemDrop:
+	case  QStyle::PE_IndicatorItemViewItemDrop:
     {
        /* if (option->rect.isNull()) return;
 
@@ -146,8 +166,7 @@ void NXNavigationStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
             painter->drawRect(itemRect);
         }*/
         return;
-    }
-    default:
+    }    default:
     {
         break;
     }
@@ -161,14 +180,17 @@ void NXNavigationStyle::drawControl(ControlElement element, const QStyleOption* 
     {
     case QStyle::CE_ShapedFrame:
     {
+        // viewport视口外的其他区域背景
         return;
     }
     case QStyle::CE_ItemViewItem:
     {
         if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
         {
+            // 背景绘制
             this->drawPrimitive(QStyle::PE_PanelItemViewItem, option, painter, widget);
 
+            // 内容绘制
             QRect itemRect = option->rect;
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
@@ -180,6 +202,7 @@ void NXNavigationStyle::drawControl(ControlElement element, const QStyleOption* 
                 painter->setOpacity(_pOpacity);
             }
 
+            // 选中特效
             if (_isSelectMarkDisplay && (node == model->getSelectedNode() || node == model->getSelectedExpandedNode()))
             {
                 painter->setPen(Qt::NoPen);
@@ -193,11 +216,12 @@ void NXNavigationStyle::drawControl(ControlElement element, const QStyleOption* 
                 painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _pLastSelectMarkTop, 3, itemRect.height() - _pLastSelectMarkTop - _pLastSelectMarkBottom), 3, 3);
             }
 
+            // 图标绘制
             painter->setPen(vopt->index == _pPressIndex ? NXThemeColor(_themeMode, BasicTextPress) : NXThemeColor(_themeMode, BasicText));
             if (node->getAwesome() != NXIconType::None)
             {
                 painter->save();
-                QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+                QFont iconFont = QFont("NXAwesome");
                 iconFont.setPixelSize(17);
                 painter->setFont(iconFont);
                 painter->drawText(QRect(itemRect.x(), itemRect.y(), _iconAreaWidth, itemRect.height()), Qt::AlignCenter, QChar((unsigned short)node->getAwesome()));
@@ -205,6 +229,7 @@ void NXNavigationStyle::drawControl(ControlElement element, const QStyleOption* 
             }
 
             int viewWidth = widget->width();
+            // 文字绘制
             painter->setPen(vopt->index == _pPressIndex ? NXThemeColor(_themeMode, BasicTextPress) : NXThemeColor(_themeMode, BasicText));
             QRect textRect;
             if (node->getAwesome() != NXIconType::None)
@@ -218,8 +243,9 @@ void NXNavigationStyle::drawControl(ControlElement element, const QStyleOption* 
             QString text = painter->fontMetrics().elidedText(node->getNodeTitle(), Qt::ElideRight, textRect.width());
             painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, text);
 
-            if (viewWidth > 260)
+            if (viewWidth > _pNavigationView->getNavigationBarPrivate()->_pNavigationBarWidth - _indicatorIconAreaWidth)
             {
+                // 展开图标 KeyPoints
                 if (node->getIsExpanderNode())
                 {
                     if (node->getIsHasChild())
@@ -227,7 +253,7 @@ void NXNavigationStyle::drawControl(ControlElement element, const QStyleOption* 
                         QRectF expandIconRect(itemRect.right() - _indicatorIconAreaWidth, itemRect.y(), 17, itemRect.height());
 
                         painter->save();
-                        QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+                        QFont iconFont = QFont("NXAwesome");
                         iconFont.setPixelSize(17);
                         painter->setFont(iconFont);
                         painter->translate(expandIconRect.x() + (qreal)expandIconRect.width() / 2, expandIconRect.y() + (qreal)expandIconRect.height() / 2);
@@ -239,10 +265,12 @@ void NXNavigationStyle::drawControl(ControlElement element, const QStyleOption* 
                         {
                             if (node->getIsExpanded())
                             {
+                                //展开
                                 painter->rotate(-180);
                             }
                             else
                             {
+                                // 未展开
                                 painter->rotate(0);
                             }
                         }
@@ -331,7 +359,9 @@ void NXNavigationStyle::navigationNodeStateChange(QVariantMap data)
         _opacityAnimationTargetNode = data.value("Expand").value<NXNavigationNode*>();
         _expandAnimationTargetNode = _opacityAnimationTargetNode;
         QPropertyAnimation* nodeOpacityAnimation = new QPropertyAnimation(this, "pOpacity");
-        QObject::connect(nodeOpacityAnimation, &QPropertyAnimation::finished, this, [=]() { _opacityAnimationTargetNode = nullptr; });
+        QObject::connect(nodeOpacityAnimation, &QPropertyAnimation::finished, this, [=]() {
+            _opacityAnimationTargetNode = nullptr;
+        });
         QObject::connect(nodeOpacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             _pNavigationView->viewport()->update();
         });
@@ -343,7 +373,9 @@ void NXNavigationStyle::navigationNodeStateChange(QVariantMap data)
         nodeOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
         QPropertyAnimation* rotateAnimation = new QPropertyAnimation(this, "pRotate");
-        QObject::connect(rotateAnimation, &QPropertyAnimation::finished, this, [=]() { _expandAnimationTargetNode = nullptr; });
+        QObject::connect(rotateAnimation, &QPropertyAnimation::finished, this, [=]() {
+            _expandAnimationTargetNode = nullptr;
+        });
         QObject::connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             _pNavigationView->viewport()->update();
         });
@@ -370,7 +402,8 @@ void NXNavigationStyle::navigationNodeStateChange(QVariantMap data)
         QPropertyAnimation* rotateAnimation = new QPropertyAnimation(this, "pRotate");
         QObject::connect(rotateAnimation, &QPropertyAnimation::finished, this, [=]() {
             _pOpacity = 1;
-            _expandAnimationTargetNode = nullptr; });
+            _expandAnimationTargetNode = nullptr;
+        });
         QObject::connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             _pNavigationView->viewport()->update();
         });
@@ -419,6 +452,7 @@ void NXNavigationStyle::navigationNodeStateChange(QVariantMap data)
 
 bool NXNavigationStyle::_compareItemY(NXNavigationNode* node1, NXNavigationNode* node2)
 {
+    // 返回true 即node1 高于 node2
     if (!node1)
     {
         return false;
@@ -427,6 +461,7 @@ bool NXNavigationStyle::_compareItemY(NXNavigationNode* node1, NXNavigationNode*
     {
         return true;
     }
+    // 同一父节点
     if (node1->getParentNode() == node2->getParentNode())
     {
         if (node1->getModelIndex().row() < node2->getModelIndex().row())
@@ -442,11 +477,12 @@ bool NXNavigationStyle::_compareItemY(NXNavigationNode* node1, NXNavigationNode*
     {
         NXNavigationNode* node1OriginalNode = node1->getOriginalNode();
         NXNavigationNode* node2OriginalNode = node2->getOriginalNode();
-
+        // 不同父节点  相同起源节点
         if (node1OriginalNode == node2OriginalNode)
         {
             int node1Depth = node1->getDepth();
             int node2Depth = node2->getDepth();
+            // 相同深度
             if (node1Depth == node2Depth)
             {
                 NXNavigationNode* node1ParentNode = node1->getParentNode();
@@ -469,6 +505,7 @@ bool NXNavigationStyle::_compareItemY(NXNavigationNode* node1, NXNavigationNode*
                     {
                         node2ParentNode = node2ParentNode->getParentNode();
                     }
+                    // 父子节点关系
                     if (node1 == node2ParentNode)
                     {
                         return true;

@@ -23,7 +23,7 @@ public:
     Q_INVOKABLE void onNavigationRouteBack(QVariantMap routeData);
 
 private:
-    QHBoxLayout* _pageTitlNXyout{nullptr};
+    QHBoxLayout* _pageTitleLayout{nullptr};
     QVBoxLayout* _mainLayout{nullptr};
     QStackedWidget* _centralStackedWidget{nullptr};
     NXBreadcrumbBar* _breadcrumbBar{nullptr};

@@ -1,4 +1,4 @@
-#include "NXCalendarTitleDelegate.h"
+﻿#include "NXCalendarTitleDelegate.h"
 
 #include <QPainter>
 #include <QPainterPath>
@@ -9,7 +9,7 @@ NXCalendarTitleDelegate::NXCalendarTitleDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {
     _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

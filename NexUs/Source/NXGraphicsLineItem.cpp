@@ -1,4 +1,4 @@
-#include "NXGraphicsLineItem.h"
+﻿#include "NXGraphicsLineItem.h"
 
 #include <QGraphicsScene>
 #include <QPainter>

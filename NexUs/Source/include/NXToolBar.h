@@ -1,4 +1,4 @@
-#ifndef NXTOOLBAR_H
+﻿#ifndef NXTOOLBAR_H
 #define NXTOOLBAR_H
 
 #include <QToolBar>
@@ -16,6 +16,7 @@ public:
 
     void setToolBarSpacing(int spacing);
     int getToolBarSpacing() const;
+
     QAction* addNXIconAction(NXIconType::IconName icon, const QString& text);
     QAction* addNXIconAction(NXIconType::IconName icon, const QString& text, const QKeySequence& shortcut);
 

@@ -1,4 +1,4 @@
-#include "NXMenuBarStyle.h"
+﻿#include "NXMenuBarStyle.h"
 
 #include <QDebug>
 #include <QPainter>
@@ -9,7 +9,7 @@
 NXMenuBarStyle::NXMenuBarStyle(QStyle* style)
 {
     _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

@@ -1,4 +1,4 @@
-#ifndef NXTOOLBARSTYLE_H
+﻿#ifndef NXTOOLBARSTYLE_H
 #define NXTOOLBARSTYLE_H
 
 #include <QProxyStyle>
@@ -10,7 +10,7 @@ class NXToolBarStyle : public QProxyStyle
     Q_OBJECT
 public:
     explicit NXToolBarStyle(QStyle* style = nullptr);
-    ~NXToolBarStyle();
+    ~NXToolBarStyle() override;
     void drawPrimitive(PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     int pixelMetric(PixelMetric metric, const QStyleOption* option = nullptr, const QWidget* widget = nullptr) const override;

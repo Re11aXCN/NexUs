@@ -3,21 +3,26 @@
 
 #include <QObject>
 
-#include "stdafx.h"
-class NXSpinBox;
+#include "NXDef.h"
+
 class NXMenu;
+class NXSpinBox;
 class NXSpinBoxStyle;
 class NXSpinBoxPrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(NXSpinBox)
+    Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
 public:
     explicit NXSpinBoxPrivate(QObject* parent = nullptr);
-    ~NXSpinBoxPrivate();
+    ~NXSpinBoxPrivate() override;
+    Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
 
 private:
+    NXSpinBoxStyle* _style{nullptr};
+    NXThemeType::ThemeMode _themeMode;
     NXMenu* _createStandardContextMenu();
-    std::shared_ptr<NXSpinBoxStyle> _spinBoxStyle{ nullptr };
+    void _changeTheme();
 };
 
 #endif // NXSPINBOXPRIVATE_H

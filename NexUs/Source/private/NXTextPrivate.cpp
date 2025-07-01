@@ -2,7 +2,6 @@
 
 #include "NXText.h"
 #include <QTimer>
-
 NXTextPrivate::NXTextPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -24,7 +23,7 @@ void NXTextPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
     {
         QTimer::singleShot(1, this, [=] {
             _changeTheme();
-            });
+        });
     }
 }
 
@@ -32,14 +31,6 @@ void NXTextPrivate::_changeTheme()
 {
     Q_Q(NXText);
     QPalette palette = q->palette();
-    if (_themeMode == NXThemeType::Light)
-    {
-        palette.setColor(QPalette::WindowText, Qt::black);
-        q->setPalette(palette);
-    }
-    else
-    {
-        palette.setColor(QPalette::WindowText, Qt::white);
-        q->setPalette(palette);
-    }
+    palette.setColor(QPalette::WindowText, _themeMode == NXThemeType::Light ? Qt::black : Qt::white);
+    q->setPalette(palette);
 }

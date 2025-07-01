@@ -1,4 +1,4 @@
-#include "NXBreadcrumbBar.h"
+﻿#include "NXBreadcrumbBar.h"
 
 #include <QHeaderView>
 #include <QScroller>
@@ -41,7 +41,7 @@ NXBreadcrumbBar::NXBreadcrumbBar(QWidget* parent)
         }
         else
         {
-                Q_EMIT breadcrumbClicked(index.data(Qt::DisplayRole).toString(), d->_listModel->getBreadcrumbList());
+            Q_EMIT breadcrumbClicked(index.data(Qt::DisplayRole).toString(), d->_listModel->getBreadcrumbList());
         }
     });
     QFont textFont = this->font();

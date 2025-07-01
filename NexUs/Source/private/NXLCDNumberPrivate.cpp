@@ -1,4 +1,4 @@
-#include "NXLCDNumberPrivate.h"
+﻿#include "NXLCDNumberPrivate.h"
 #include "NXLCDNumber.h"
 #include "NXTheme.h"
 #include <QTimer>

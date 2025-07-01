@@ -1,4 +1,4 @@
-#ifndef NXMENUBARSTYLE_H
+﻿#ifndef NXMENUBARSTYLE_H
 #define NXMENUBARSTYLE_H
 
 #include <QProxyStyle>
@@ -9,7 +9,7 @@ class NXMenuBarStyle : public QProxyStyle
     Q_OBJECT
 public:
     explicit NXMenuBarStyle(QStyle* style = nullptr);
-    ~NXMenuBarStyle();
+    ~NXMenuBarStyle() override;
     void drawPrimitive(PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     QSize sizeFromContents(ContentsType type, const QStyleOption* option, const QSize& size, const QWidget* widget) const override;

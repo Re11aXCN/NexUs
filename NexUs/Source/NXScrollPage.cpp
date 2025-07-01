@@ -1,4 +1,4 @@
-#include "NXScrollPage.h"
+﻿#include "NXScrollPage.h"
 
 #include <QHBoxLayout>
 #include <QPainter>
@@ -32,18 +32,19 @@ NXScrollPage::NXScrollPage(QWidget* parent)
             QVariantMap routeData = QVariantMap();
             routeData.insert("NXScrollPageCheckSumKey", "BreadcrumbClicked");
             routeData.insert("LastBreadcrumbList", lastBreadcrumbList);
-            NXNavigationRouter::getInstance()->navigationRoute(d,"onNavigationRouteBack", routeData);
-        } });
-    d->_pageTitlNXyout = new QHBoxLayout();
-    d->_pageTitlNXyout->setContentsMargins(0, 0, 0, 0);
-    d->_pageTitlNXyout->addWidget(d->_breadcrumbBar);
+            NXNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRouteBack", routeData);
+        }
+    });
+    d->_pageTitleLayout = new QHBoxLayout();
+    d->_pageTitleLayout->setContentsMargins(0, 0, 0, 0);
+    d->_pageTitleLayout->addWidget(d->_breadcrumbBar);
 
     d->_centralStackedWidget = new QStackedWidget(this);
     d->_centralStackedWidget->setContentsMargins(0, 0, 0, 0);
 
     d->_mainLayout = new QVBoxLayout(this);
     d->_mainLayout->setContentsMargins(0, 0, 0, 0);
-    d->_mainLayout->addLayout(d->_pageTitlNXyout);
+    d->_mainLayout->addLayout(d->_pageTitleLayout);
     d->_mainLayout->addWidget(d->_centralStackedWidget);
     setContentsMargins(20, 20, 0, 0);
 }
@@ -52,7 +53,7 @@ NXScrollPage::~NXScrollPage()
 {
 }
 
-void NXScrollPage::addCentralWidget(QWidget* centralWidget, bool isWidgetResizeable, bool isVerticalGrabGesture, qreal mousePressEventDNXy, Qt::ScrollBarPolicy vScrollBarPolicy, Qt::ScrollBarPolicy hScrollBarPolicy)
+void NXScrollPage::addCentralWidget(QWidget* centralWidget, bool isWidgetResizeable, bool isVerticalGrabGesture, qreal mousePressEventDelay, Qt::ScrollBarPolicy vScrollBarPolicy, Qt::ScrollBarPolicy hScrollBarPolicy)
 {
     Q_D(NXScrollPage);
     if (!centralWidget)
@@ -70,21 +71,14 @@ void NXScrollPage::addCentralWidget(QWidget* centralWidget, bool isWidgetResizea
     NXScrollArea* scrollArea = new NXScrollArea(this);
     scrollArea->setMouseTracking(true);
     scrollArea->setIsAnimation(Qt::Vertical, true);
-    scrollArea->setIsAnimation(Qt::Horizontal, true);
     scrollArea->setWidgetResizable(isWidgetResizeable);
-    scrollArea->setIsGrabGesture(isVerticalGrabGesture, mousePressEventDNXy);
+    scrollArea->setIsGrabGesture(isVerticalGrabGesture, mousePressEventDelay);
     scrollArea->setIsOverShoot(Qt::Vertical, true);
-    scrollArea->setIsOverShoot(Qt::Horizontal, true);
+
     scrollArea->setVerticalScrollBarPolicy(vScrollBarPolicy);
     scrollArea->setHorizontalScrollBarPolicy(hScrollBarPolicy);
-    //if (vScrollBarPolicy != Qt::ScrollBarAlwaysOff) {
-    //    NXScrollBar* floatVScrollBar = new NXScrollBar(scrollArea->verticalScrollBar(), scrollArea);
-    //    floatVScrollBar->setIsAnimation(true);
-    //}
-    //if (hScrollBarPolicy != Qt::ScrollBarAlwaysOff) {
-    //    NXScrollBar* floatHScrollBar = new NXScrollBar(scrollArea->horizontalScrollBar(), scrollArea);
-    //    floatHScrollBar->setIsAnimation(true);
-    //}
+    NXScrollBar* floatVScrollBar = new NXScrollBar(scrollArea->verticalScrollBar(), scrollArea);
+    floatVScrollBar->setIsAnimation(true);
     scrollArea->setWidget(centralWidget);
     centralWidget->setObjectName("NXScrollPage_CentralPage");
     centralWidget->setStyleSheet("#NXScrollPage_CentralPage{background-color:transparent;}");
@@ -137,9 +131,9 @@ void NXScrollPage::navigation(int widgetIndex, bool isLogRoute)
 void NXScrollPage::setPageTitleSpacing(int spacing)
 {
     Q_D(NXScrollPage);
-    d->_pageTitlNXyout->takeAt(0);
-    d->_pageTitlNXyout->addSpacing(spacing);
-    d->_pageTitlNXyout->addWidget(d->_breadcrumbBar);
+    d->_pageTitleLayout->takeAt(0);
+    d->_pageTitleLayout->addSpacing(spacing);
+    d->_pageTitleLayout->addWidget(d->_breadcrumbBar);
 }
 
 int NXScrollPage::getPageTitleSpacing() const

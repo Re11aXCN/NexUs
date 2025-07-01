@@ -1,14 +1,12 @@
 #include "T_BaseComponents.h"
 
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-
 #include "NXCheckBox.h"
 #include "NXComboBox.h"
 #include "NXMessageButton.h"
 #include "NXMultiSelectComboBox.h"
 #include "NXPlainTextEdit.h"
 #include "NXProgressBar.h"
+#include "NXProgressRing.h"
 #include "NXRadioButton.h"
 #include "NXScrollPageArea.h"
 #include "NXSlider.h"
@@ -16,6 +14,11 @@
 #include "NXText.h"
 #include "NXToggleButton.h"
 #include "NXToggleSwitch.h"
+
+#include <QButtonGroup>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+
 T_BaseComponents::T_BaseComponents(QWidget* parent)
     : T_BasePage(parent)
 {
@@ -182,6 +185,35 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     spinBoxLayout->addWidget(_spinBox);
     spinBoxLayout->addStretch();
 
+    NXRadioButton* inlineButton = new NXRadioButton("Inline", this);
+    NXRadioButton* compactButton = new NXRadioButton("Compact", this);
+    NXRadioButton* sideButton = new NXRadioButton("Side", this);
+    NXRadioButton* pmSideButton = new NXRadioButton("PMSide", this);
+    inlineButton->setChecked(true);
+    QHBoxLayout* buttonModeLayout = new QHBoxLayout();
+    NXText* buttonModeText = new NXText("按钮模式切换", this);
+    buttonModeText->setWordWrap(false);
+    buttonModeText->setTextPixelSize(15);
+    buttonModeLayout->addWidget(buttonModeText);
+    buttonModeLayout->addWidget(inlineButton);
+    buttonModeLayout->addWidget(compactButton);
+    buttonModeLayout->addWidget(sideButton);
+    buttonModeLayout->addWidget(pmSideButton);
+
+    spinBoxLayout->addLayout(buttonModeLayout);
+
+    QButtonGroup* spinButtonGroup = new QButtonGroup(this);
+    spinButtonGroup->addButton(inlineButton, 0);
+    spinButtonGroup->addButton(compactButton, 1);
+    spinButtonGroup->addButton(sideButton, 2);
+    spinButtonGroup->addButton(pmSideButton, 3);
+    QObject::connect(spinButtonGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled), this, [=](QAbstractButton* button, bool isToggled) {
+        if (isToggled)
+        {
+            _spinBox->setButtonMode((NXSpinBoxType::ButtonMode)spinButtonGroup->id(button));
+        }
+    });
+
     _slider = new NXSlider(this);
     NXScrollPageArea* sliderArea = new NXScrollPageArea(this);
     QHBoxLayout* sliderLayout = new QHBoxLayout(sliderArea);
@@ -211,6 +243,31 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     progressBarLayout->addWidget(_progressBar);
     progressBarLayout->addStretch();
 
+    _progressRing = new NXProgressRing(this);
+    _progressRing->setValue(30);
+    _progressPercentRing = new NXProgressRing(this);
+    _progressPercentRing->setValue(50);
+    _progressPercentRing->setValueDisplayMode(NXProgressRingType::ValueDisplayMode::Percent);
+    _progressBusyRing = new NXProgressRing(this);
+    _progressBusyRing->setIsBusying(true);
+    _progressBusyTransparentRing = new NXProgressRing(this);
+    _progressBusyTransparentRing->setIsBusying(true);
+    _progressBusyTransparentRing->setIsTransparent(true);
+    NXScrollPageArea* progressRingArea = new NXScrollPageArea(this);
+    progressRingArea->setFixedHeight(90);
+    QHBoxLayout* progressRingLayout = new QHBoxLayout(progressRingArea);
+    NXText* progressRingText = new NXText("NXProgressRing", this);
+    progressRingText->setTextPixelSize(15);
+    progressRingLayout->addWidget(progressRingText);
+    progressRingLayout->addWidget(_progressRing);
+    progressRingLayout->addSpacing(10);
+    progressRingLayout->addWidget(_progressPercentRing);
+    progressRingLayout->addSpacing(10);
+    progressRingLayout->addWidget(_progressBusyRing);
+    progressRingLayout->addSpacing(10);
+    progressRingLayout->addWidget(_progressBusyTransparentRing);
+    progressRingLayout->addStretch();
+
     NXPlainTextEdit* edit = new NXPlainTextEdit(this);
     edit->setPlainText("这是一个NXPlainTextEdit  暂时放在这里");
 
@@ -227,6 +284,7 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     centerLayout->addWidget(sliderArea);
     centerLayout->addWidget(radioButtonArea);
     centerLayout->addWidget(progressBarArea);
+    centerLayout->addWidget(progressRingArea);
     centerLayout->addWidget(edit);
     centerLayout->addStretch();
     centerLayout->setContentsMargins(0, 0, 0, 0);

@@ -1,4 +1,4 @@
-#include "NXKeyBinder.h"
+﻿#include "NXKeyBinder.h"
 #include "NXContentDialog.h"
 #include "DeveloperComponents/NXKeyBinderContainer.h"
 #include "private/NXKeyBinderPrivate.h"
@@ -27,15 +27,15 @@ NXKeyBinder::NXKeyBinder(QWidget* parent)
     d->_binderDialog->setLeftButtonText(u8"取消");
     d->_binderDialog->setMiddleButtonText(u8"重置");
     d->_binderDialog->setRightButtonText(u8"确认");
-    connect(d->_binderDialog, &NXContentDialog::leftButtonClicked, &NXContentDialog::close);
-    connect(d->_binderDialog, &NXContentDialog::middleButtonClicked, this, [=]() {
+    QObject::connect(d->_binderDialog, &NXContentDialog::leftButtonClicked, &NXContentDialog::close);
+    QObject::connect(d->_binderDialog, &NXContentDialog::middleButtonClicked, this, [=]() {
         d->_binderContainer->logOrResetHistoryData(false);
     });
-    connect(d->_binderDialog, &NXContentDialog::rightButtonClicked, this, [=]() {
+    QObject::connect(d->_binderDialog, &NXContentDialog::rightButtonClicked, this, [=]() {
         d->_binderContainer->saveBinderChanged();
     });
     d->onThemeChanged(nxTheme->getThemeMode());
-    connect(nxTheme, &NXTheme::themeModeChanged, d, &NXKeyBinderPrivate::onThemeChanged);
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXKeyBinderPrivate::onThemeChanged);
 }
 
 NXKeyBinder::~NXKeyBinder()

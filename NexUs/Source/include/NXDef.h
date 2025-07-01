@@ -1,7 +1,22 @@
-#ifndef NXDEF_H
+﻿#ifndef NXDEF_H
 #define NXDEF_H
 
 #include "stdafx.h"
+
+Q_BEGIN_ENUM_CREATE(NXApplicationType)
+enum WindowDisplayMode
+{
+    Normal = 0x0000,
+    NXMica = 0x0001,
+#if defined(Q_OS_WIN)
+    Mica = 0x0002,
+    MicaAlt = 0x0003,
+    Acrylic = 0x0004,
+    DWMBlur = 0x0005,
+#endif
+};
+Q_ENUM_CREATE(WindowDisplayMode)
+Q_END_ENUM_CREATE(NXApplicationType)
 
 Q_BEGIN_ENUM_CREATE(NXThemeType, NX_EXPORT)
 enum ThemeMode
@@ -57,15 +72,6 @@ enum ThemeColor
 Q_ENUM_CREATE(ThemeColor)
 Q_END_ENUM_CREATE(NXThemeType)
 
-Q_BEGIN_ENUM_CREATE(NXColorSchemeType, NX_EXPORT)
-enum ColorSchemeType
-{
-    Rgba,
-    Argb
-};
-Q_ENUM_CREATE(ColorSchemeType)
-Q_END_ENUM_CREATE(NXColorSchemeType)
-
 Q_BEGIN_ENUM_CREATE(NXAppBarType, NX_EXPORT)
 enum ButtonType
 {
@@ -76,18 +82,6 @@ enum ButtonType
     MinimizeButtonHint = 0x00010,
     MaximizeButtonHint = 0x0020,
     CloseButtonHint = 0x0040,
-
-    ModuleButton1Hint = 0x0080,
-    ModuleButton2Hint = 0x0100,
-    ModuleButton3Hint = 0x0200,
-    ModuleButton4Hint = 0x0400,
-    ModuleButton5Hint = 0x0800,
-
-    ModuleButtonsHint = ModuleButton1Hint |
-    ModuleButton2Hint |
-    ModuleButton3Hint |
-    ModuleButton4Hint |
-    ModuleButton5Hint, 
 };
 Q_ENUM_CREATE(ButtonType)
 Q_DECLARE_FLAGS(ButtonFlags, ButtonType)
@@ -124,7 +118,7 @@ enum TextStyle
     Title = 0x0005,
     TitleLarge = 0x0006,
     Display = 0x0007,
-    CustomStyle = 0x0008,
+	CustomStyle = 0x0008,
 };
 Q_ENUM_CREATE(TextStyle)
 Q_END_ENUM_CREATE(NXTextType)
@@ -223,6 +217,38 @@ enum MessageMode
 };
 Q_ENUM_CREATE(MessageMode)
 Q_END_ENUM_CREATE(NXMessageBarType)
+
+Q_BEGIN_ENUM_CREATE(NXProgressRingType)
+enum ValueDisplayMode
+{
+    Actual = 0x0000,
+    Percent = 0x0001,
+};
+Q_ENUM_CREATE(ValueDisplayMode)
+Q_END_ENUM_CREATE(NXProgressRingType)
+
+Q_BEGIN_ENUM_CREATE(NXWindowType)
+enum StackSwitchMode
+{
+    None = 0x0000,
+    Popup = 0x0001,
+    Scale = 0x0002,
+    Flip = 0x0003,
+    Blur = 0x0004,
+};
+Q_ENUM_CREATE(StackSwitchMode)
+Q_END_ENUM_CREATE(NXWindowType)
+
+Q_BEGIN_ENUM_CREATE(NXSpinBoxType)
+enum ButtonMode
+{
+    Inline = 0x0000,
+    Compact = 0x0001,
+    Side = 0x0002,
+    PMSide = 0x0003,
+};
+Q_ENUM_CREATE(ButtonMode)
+Q_END_ENUM_CREATE(NXSpinBoxType)
 
 Q_BEGIN_ENUM_CREATE(NXIconType, NX_EXPORT)
 enum IconName
@@ -1176,7 +1202,7 @@ enum IconName
     Crab = 0xebb1,
     CreditCardBlank = 0xebb2,
     CreditCard = 0xebb3,
-    CrateApple = 0xebb4,
+    CratnxApple = 0xebb4,
     ConveyorBeltEmpty = 0xebb5,
     Crop = 0xebb6,
     Crosshairs = 0xebb7,
@@ -3513,4 +3539,27 @@ Q_ENUM_CREATE(IconName)
 Q_END_ENUM_CREATE(NXIconType)
 
 using NodeOperateReturnTypeWithKey = QPair<NXNavigationType::NodeOperateReturnType, QString>;
+
+Q_BEGIN_ENUM_CREATE(NXColorSchemeType, NX_EXPORT)
+enum ColorSchemeType
+{
+    Rgba,
+    Argb
+};
+Q_ENUM_CREATE(ColorSchemeType)
+Q_END_ENUM_CREATE(NXColorSchemeType)
+
+Q_BEGIN_ENUM_CREATE(NXWidgetBorder, NX_EXPORT)
+enum BorderType
+{
+	NoBorder = 0x0000,
+	TopBorder = 0x0001,
+	BottomBorder = 0x0002,
+	LeftBorder = 0x0004,
+	RightBorder = 0x0008,
+	AllBorder = TopBorder | BottomBorder | LeftBorder | RightBorder,
+};
+Q_ENUM_CREATE(BorderType)
+Q_DECLARE_FLAGS(BorderFlags, BorderType)
+Q_END_ENUM_CREATE(NXWidgetBorder)
 #endif // NXDEF_H

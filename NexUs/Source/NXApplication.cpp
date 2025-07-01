@@ -1,54 +1,82 @@
-#include "NXApplication.h"
+﻿#include "NXApplication.h"
 
+#include "NXTheme.h"
+#include "DeveloperComponents/NXWinShadowHelper.h"
+#include "private/NXApplicationPrivate.h"
 #include <QApplication>
 #include <QCursor>
 #include <QFontDatabase>
 #include <QWidget>
-
-#include "NXTheme.h"
-#include "private/NXApplicationPrivate.h"
+#include <utility>
 Q_SINGLETON_CREATE_CPP(NXApplication)
 NXApplication::NXApplication(QObject* parent)
     : QObject{parent}, d_ptr(new NXApplicationPrivate())
 {
     Q_D(NXApplication);
     d->q_ptr = this;
-    d->_pIsEnableMica = false;
-    d->_pMicaImagePath = ":/Resource/MicaBase.png";
+    d->_pMicaImagePath = ":/Resource/Image/MicaBase.png";
+    d->_pWindowDisplayMode = NXApplicationType::Normal;
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXApplicationPrivate::onxThemeModeChanged);
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXApplicationPrivate::onThemeModeChanged);
 }
 
 NXApplication::~NXApplication()
 {
 }
 
-void NXApplication::setIsEnableMica(bool isEnable)
+void NXApplication::setWindowDisplayMode(NXApplicationType::WindowDisplayMode windowDisplayType)
 {
     Q_D(NXApplication);
-    d->_pIsEnableMica = isEnable;
-    if (isEnable)
+    auto lastDisplayMode = d->_pWindowDisplayMode;
+    if (lastDisplayMode == windowDisplayType)
     {
-        d->_initMicaBaseImage(QImage(d->_pMicaImagePath));
+        return;
     }
-    else
+    switch (windowDisplayType)
     {
-        d->onxThemeModeChanged(d->_themeMode);
-        Q_EMIT pIsEnableMicaChanged();
+    case NXApplicationType::Normal:
+    {
+        break;
+    }
+    case NXApplicationType::NXMica:
+    {
+        d->_pWindowDisplayMode = windowDisplayType;
+        d->_initMicaBaseImage(QImage(d->_pMicaImagePath));
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+#ifdef Q_OS_WIN
+    for (auto widget: d->_micaWidgetList)
+    {
+        NXWinShadowHelper::getInstance()->setWindowDisplayMode(widget, windowDisplayType, lastDisplayMode);
+        NXWinShadowHelper::getInstance()->setWindowThemeMode(widget->winId(), d->_themeMode == NXThemeType::Light);
+    }
+#endif
+    if (windowDisplayType != NXApplicationType::NXMica)
+    {
+        d->_pWindowDisplayMode = windowDisplayType;
+        Q_EMIT pWindowDisplayModeChanged();
     }
 }
-bool NXApplication::getIsEnableMica() const
+
+NXApplicationType::WindowDisplayMode NXApplication::getWindowDisplayMode() const
 {
     Q_D(const NXApplication);
-    return d->_pIsEnableMica;
+    return d->_pWindowDisplayMode;
 }
+
 void NXApplication::setMicaImagePath(const QString& micaImagePath)
 {
     Q_D(NXApplication);
     d->_pMicaImagePath = micaImagePath;
-    d->_initMicaBaseImage(QImage(d->_pMicaImagePath));
+    d->_initMicaBaseImage(QImage(micaImagePath));
     Q_EMIT pMicaImagePathChanged();
 }
+
 QString NXApplication::getMicaImagePath() const
 {
     Q_D(const NXApplication);
@@ -60,8 +88,8 @@ void NXApplication::init()
     Q_INIT_RESOURCE(NexUs);
     QApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
     QFontDatabase::addApplicationFont(":/Resource/Font/NXAwesome.ttf");
-    QFontDatabase::addApplicationFont(":/Resource/Font/segoe_slboot_EX.ttf");
-    //é»˜è®¤å­—ä½“
+    QFontDatabase::addApplicationFont(":/Resource/Font/segoe_slboot.ttf");
+    //默认字体
     QFont font = qApp->font();
     font.setPixelSize(13);
     font.setFamily("Microsoft YaHei");
@@ -69,7 +97,7 @@ void NXApplication::init()
     qApp->setFont(font);
 }
 
-void NXApplication::syncMica(QWidget* widget, bool isSync)
+void NXApplication::syncWindowDisplayMode(QWidget* widget, bool isSync)
 {
     Q_D(NXApplication);
     if (!widget)
@@ -78,21 +106,49 @@ void NXApplication::syncMica(QWidget* widget, bool isSync)
     }
     if (isSync)
     {
-        widget->installEventFilter(d);
         d->_micaWidgetList.append(widget);
-        if (d->_pIsEnableMica)
-        {
-            d->_updateMica(widget, false);
-        }
+        widget->installEventFilter(d);
     }
     else
     {
-        widget->removeEventFilter(d);
         d->_micaWidgetList.removeOne(widget);
+        widget->removeEventFilter(d);
     }
-    d->_updateMica(widget, false);
+    switch (d->_pWindowDisplayMode)
+    {
+    case NXApplicationType::Normal:
+    case NXApplicationType::NXMica:
+    {
+        if (isSync)
+        {
+            if (d->_pWindowDisplayMode == NXApplicationType::WindowDisplayMode::NXMica)
+            {
+                d->_updateMica(widget, false);
+            }
+        }
+        else
+        {
+        }
+        break;
+    }
+    default:
+    {
+#ifdef Q_OS_WIN
+        if (isSync)
+        {
+            NXWinShadowHelper::getInstance()->setWindowDisplayMode(widget, d->_pWindowDisplayMode, NXApplicationType::Normal);
+            NXWinShadowHelper::getInstance()->setWindowThemeMode(widget->winId(), d->_themeMode == NXThemeType::Light);
+        }
+        else
+        {
+            NXWinShadowHelper::getInstance()->setWindowDisplayMode(widget, NXApplicationType::Normal, d->_pWindowDisplayMode);
+            NXWinShadowHelper::getInstance()->setWindowThemeMode(widget->winId(), true);
+        }
+#endif
+        break;
+    }
+    }
 }
-
 
 bool NXApplication::containsCursorToItem(QWidget* item)
 {

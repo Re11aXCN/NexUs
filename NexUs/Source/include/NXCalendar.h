@@ -1,4 +1,4 @@
-#ifndef NXCALENDAR_H
+﻿#ifndef NXCALENDAR_H
 #define NXCALENDAR_H
 
 #include <QWidget>

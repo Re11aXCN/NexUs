@@ -1,4 +1,4 @@
-#include "NXGraphicsLineItemPrivate.h"
+﻿#include "NXGraphicsLineItemPrivate.h"
 
 NXGraphicsLineItemPrivate::NXGraphicsLineItemPrivate()
 {

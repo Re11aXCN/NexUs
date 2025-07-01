@@ -1,8 +1,8 @@
-#ifndef NXDXGIMANAGER_H
+﻿#ifndef NXDXGIMANAGER_H
 #define NXDXGIMANAGER_H
 
 #include <QWidget>
-
+#ifdef Q_OS_WIN
 #include "singleton.h"
 #include "stdafx.h"
 
@@ -54,5 +54,5 @@ public:
 protected:
     void paintEvent(QPaintEvent* event) override;
 };
-
+#endif
 #endif // NXDXGIMANAGER_H

@@ -1,4 +1,4 @@
-#include "NXScrollBarStyle.h"
+﻿#include "NXScrollBarStyle.h"
 
 #include <QPainter>
 #include <QPainterPath>
@@ -59,6 +59,7 @@ void NXScrollBarStyle::drawComplexControl(ComplexControl control, const QStyleOp
                     leftPath.lineTo(centerLeftX + qCos(30 * M_PI / 180.0) * sideLength / 2, centerY - sideLength / 2);
                     leftPath.closeSubpath();
                     painter->drawPath(leftPath);
+
                     // 右三角
                     QPainterPath rightPath;
                     rightPath.moveTo(centerRightX + qCos(30 * M_PI / 180.0) * sideLength / 2, centerY);
@@ -83,6 +84,7 @@ void NXScrollBarStyle::drawComplexControl(ComplexControl control, const QStyleOp
                     upPath.lineTo(centerX - sideLength / 2, centerUpY + centerToBottom);
                     upPath.closeSubpath();
                     painter->drawPath(upPath);
+
                     // 下三角
                     QPainterPath downPath;
                     downPath.moveTo(centerX, centerDownY + centerToBottom);
@@ -148,7 +150,7 @@ void NXScrollBarStyle::startExpandAnimation(bool isExpand)
     if (isExpand)
     {
         _pIsExpand = true;
-        QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pOpacity", this);
+        QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pOpacity");
         QObject::connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
             _pScrollBar->update();
         });
@@ -158,7 +160,7 @@ void NXScrollBarStyle::startExpandAnimation(bool isExpand)
         opacityAnimation->setEndValue(1);
         opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
-        QPropertyAnimation* extentAnimation = new QPropertyAnimation(this, "pSliderExtent", this);
+        QPropertyAnimation* extentAnimation = new QPropertyAnimation(this, "pSliderExtent");
         extentAnimation->setDuration(250);
         extentAnimation->setEasingCurve(QEasingCurve::InOutSine);
         extentAnimation->setStartValue(_pSliderExtent);
@@ -167,7 +169,7 @@ void NXScrollBarStyle::startExpandAnimation(bool isExpand)
     }
     else
     {
-        QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pOpacity", this);
+        QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pOpacity");
         QObject::connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]() {
             _pIsExpand = false;
         });
@@ -180,7 +182,7 @@ void NXScrollBarStyle::startExpandAnimation(bool isExpand)
         opacityAnimation->setEndValue(0);
         opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
-        QPropertyAnimation* extentAnimation = new QPropertyAnimation(this, "pSliderExtent", this);
+        QPropertyAnimation* extentAnimation = new QPropertyAnimation(this, "pSliderExtent");
         extentAnimation->setDuration(250);
         extentAnimation->setEasingCurve(QEasingCurve::InOutSine);
         extentAnimation->setStartValue(_pSliderExtent);

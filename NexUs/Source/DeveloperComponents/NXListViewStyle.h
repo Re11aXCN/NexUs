@@ -1,4 +1,4 @@
-#ifndef NXLISTVIEWSTYLE_H
+﻿#ifndef NXLISTVIEWSTYLE_H
 #define NXLISTVIEWSTYLE_H
 
 #include <QProxyStyle>
@@ -7,11 +7,11 @@
 class NXListViewStyle : public QProxyStyle
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(int, ItemHeight)
     Q_PROPERTY_CREATE(bool, IsTransparent)
+    Q_PROPERTY_CREATE(int, ItemHeight)
 public:
     explicit NXListViewStyle(QStyle* style = nullptr);
-    ~NXListViewStyle();
+    ~NXListViewStyle() override;
     void drawPrimitive(PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     QSize sizeFromContents(ContentsType type, const QStyleOption* option, const QSize& size, const QWidget* widget) const override;

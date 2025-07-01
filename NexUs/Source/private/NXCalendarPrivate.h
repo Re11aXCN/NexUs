@@ -1,4 +1,4 @@
-#ifndef NXCALENDARPRIVATE_H
+﻿#ifndef NXCALENDARPRIVATE_H
 #define NXCALENDARPRIVATE_H
 
 #include <QDate>
@@ -15,10 +15,10 @@ class NXCalendarPrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(NXCalendar)
-    Q_PROPERTY_CREATE_D(int, BorderRaiuds)
     Q_PROPERTY_CREATE_D(QDate, SelectedDate)
     Q_PROPERTY_CREATE(qreal, ZoomRatio)
     Q_PROPERTY_CREATE(qreal, PixOpacity)
+    Q_PROPERTY_CREATE_D(int, BorderRaiuds)
 public:
     explicit NXCalendarPrivate(QObject* parent = nullptr);
     ~NXCalendarPrivate();
@@ -28,12 +28,14 @@ public:
     Q_SLOT void onDownButtonClicked();
 
 private:
-    QPixmap _oldCalendarViewPix;
-    QPixmap _newCalendarViewPix;
+    NXThemeType::ThemeMode _themeMode;
     int _lastSelectedYear{0};
     int _lastSelectedMonth{1};
+    bool _isSwitchAnimationFinished{true};
+    bool _isDrawNewPix{false};
     qreal _borderWidth{1.5};
-    NXThemeType::ThemeMode _themeMode;
+    QPixmap _oldCalendarViewPix;
+    QPixmap _newCalendarViewPix;
     NXBaseListView* _calendarView{nullptr};
     NXCalendarModel* _calendarModel{nullptr};
     NXCalendarDelegate* _calendarDelegate{nullptr};
@@ -41,8 +43,7 @@ private:
     NXToolButton* _modeSwitchButton{nullptr};
     NXToolButton* _upButton{nullptr};
     NXToolButton* _downButton{nullptr};
-    bool _isSwitchAnimationFinished{true};
-    bool _isDrawNewPix{false};
+
     void _scrollToDate(QDate date);
     void _doSwitchAnimation(bool isZoomIn);
     void _updateSwitchButtonText();

@@ -1,4 +1,4 @@
-#include "NXStatusBarStyle.h"
+﻿#include "NXStatusBarStyle.h"
 
 #include "NXTheme.h"
 #include <QDebug>
@@ -8,7 +8,7 @@
 NXStatusBarStyle::NXStatusBarStyle(QStyle* style)
 {
     _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

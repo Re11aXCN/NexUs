@@ -1,4 +1,4 @@
-#include "NXListView.h"
+﻿#include "NXListView.h"
 
 #include <QMouseEvent>
 

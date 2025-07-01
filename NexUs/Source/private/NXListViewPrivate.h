@@ -1,4 +1,4 @@
-#ifndef NXLISTVIEWPRIVATE_H
+﻿#ifndef NXLISTVIEWPRIVATE_H
 #define NXLISTVIEWPRIVATE_H
 
 #include <QObject>

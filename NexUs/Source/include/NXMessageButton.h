@@ -1,4 +1,4 @@
-#ifndef NXMESSAGEBUTTON_H
+﻿#ifndef NXMESSAGEBUTTON_H
 #define NXMESSAGEBUTTON_H
 
 #include <QPushButton>
@@ -12,18 +12,17 @@ class NX_EXPORT NXMessageButton : public QPushButton
     Q_OBJECT
     Q_Q_CREATE(NXMessageButton)
     Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
-    Q_PROPERTY_CREATE_Q_H(QString, BarTitle);
-    Q_PROPERTY_CREATE_Q_H(QString, BarText);
     Q_PROPERTY_CREATE_Q_H(int, DisplayMsec);
-    Q_PROPERTY_CREATE_Q_H(QWidget*, MessageTargetWidget)
     Q_PROPERTY_CREATE_Q_H(NXMessageBarType::MessageMode, MessageMode);
     Q_PROPERTY_CREATE_Q_H(NXMessageBarType::PositionPolicy, PositionPolicy);
-
+    Q_PROPERTY_CREATE_Q_H(QString, BarTitle);
+    Q_PROPERTY_CREATE_Q_H(QString, BarText);
+    Q_PROPERTY_CREATE_Q_H(QWidget*, MessageTargetWidget)
 public:
     explicit NXMessageButton(QWidget* parent = nullptr);
     explicit NXMessageButton(const QString& text, QWidget* parent = nullptr);
     ~NXMessageButton();
-    void disconnectBuiltInSignalClicked();
+    void disconnectInternalSignalOfClicked();
 Q_SIGNALS: 
     Q_SIGNAL void showMessage();
 protected:

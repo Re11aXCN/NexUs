@@ -1,4 +1,4 @@
-#ifndef NXSCROLLPAGE_H
+﻿#ifndef NXSCROLLPAGE_H
 #define NXSCROLLPAGE_H
 
 #include <QWidget>

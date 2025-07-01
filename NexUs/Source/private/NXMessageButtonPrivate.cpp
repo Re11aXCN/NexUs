@@ -1,10 +1,9 @@
-#include "NXMessageButtonPrivate.h"
+﻿#include "NXMessageButtonPrivate.h"
 
 #include <QPalette>
 
 #include "NXMessageButton.h"
 #include "NXMessageBar.h"
-
 NXMessageButtonPrivate::NXMessageButtonPrivate(QObject* parent)
     : QObject{parent}
 {

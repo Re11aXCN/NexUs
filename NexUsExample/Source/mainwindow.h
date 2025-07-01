@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include "NXWindow.h"
@@ -31,12 +31,15 @@ public:
     void initEdgeLayout();
     void initContent();
 
+protected:
+    virtual void mouseReleaseEvent(QMouseEvent* event);
+
 private:
     NXContentDialog* _closeDialog{nullptr};
     T_Home* _homePage{nullptr};
-//#ifdef Q_OS_WIN
-//    T_NXScreen* _elaScreenPage{nullptr};
-//#endif
+#ifdef Q_OS_WIN
+    T_NXScreen* _elaScreenPage{nullptr};
+#endif
     T_Icon* _iconPage{nullptr};
     T_BaseComponents* _baseComponentsPage{nullptr};
     T_Graphics* _graphicsPage{nullptr};
@@ -47,10 +50,11 @@ private:
     T_TableView* _tableViewPage{nullptr};
     T_TreeView* _treeViewPage{nullptr};
     T_About* _aboutPage{nullptr};
-    T_Setting* _settingPage{nullptr};
-    QString _elaDxgiKey{""};
-    QString _viewKey{""};
-    QString _aboutKey{""};
-    QString _settingKey{""};
+	T_Setting* _settingPage{ nullptr };
+    QString _rootKey{};
+	QString _elaDxgiKey{ "" };
+	QString _viewKey{ "" };
+	QString _aboutKey{ "" };
+	QString _settingKey{ "" };
 };
 #endif // MAINWINDOW_H

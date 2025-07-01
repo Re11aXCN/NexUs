@@ -1,4 +1,4 @@
-#ifndef NXMULTISELECTCOMBOBOXPRIVATE_H
+﻿#ifndef NXMULTISELECTCOMBOBOXPRIVATE_H
 #define NXMULTISELECTCOMBOBOXPRIVATE_H
 #include <QObject>
 #include <QVector>
@@ -12,20 +12,19 @@ class NXMultiSelectComboBoxPrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(NXMultiSelectComboBox)
-    Q_PROPERTY_CREATE_D(int, BorderRadius)
     Q_PROPERTY_CREATE(qreal, ExpandIconRotate)
     Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
+    Q_PROPERTY_CREATE_D(int, BorderRadius)
 public:
     explicit NXMultiSelectComboBoxPrivate(QObject* parent = nullptr);
-    ~NXMultiSelectComboBoxPrivate();
+    ~NXMultiSelectComboBoxPrivate() override;
     Q_SLOT void onItemPressed(const QModelIndex& index);
 
 private:
-    NXComboBoxStyle* _comboBoxStyle{nullptr};
+    bool _isFirstPopup{false};
+    bool _isAllowHidePopup{false};    NXComboBoxStyle* _comboBoxStyle{nullptr};
     NXComboBoxView* _comboView{nullptr};
     QVector<bool> _itemSelection;
-    bool _isFirstPopup{false};
-    bool _isAllowHidePopup{false};
     QString _currentText;
     QStringList _selectedTextList;
     void _refreshCurrentIndexs();

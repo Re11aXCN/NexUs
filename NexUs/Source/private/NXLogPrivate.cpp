@@ -1,4 +1,4 @@
-#include "NXLogPrivate.h"
+﻿#include "NXLogPrivate.h"
 
 #include <QDateTime>
 #include <QDebug>

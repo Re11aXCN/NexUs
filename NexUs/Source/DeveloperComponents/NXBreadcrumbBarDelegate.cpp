@@ -1,4 +1,4 @@
-#include "NXBreadcrumbBarDelegate.h"
+﻿#include "NXBreadcrumbBarDelegate.h"
 
 #include <QPainter>
 
@@ -28,10 +28,12 @@ void NXBreadcrumbBarDelegate::paint(QPainter* painter, const QStyleOptionViewIte
     {
         if (_pPressIndex == index)
         {
+            //鼠标按下
             painter->setPen(NXThemeColor(_themeMode, BasicTextPress));
         }
         else
         {
+            //不为最后一个 且没有被鼠标覆盖
             if (!(option.state & QStyle::State_MouseOver))
             {
                 painter->setPen(NXThemeColor(_themeMode, BasicTextNoFocus));
@@ -44,7 +46,8 @@ void NXBreadcrumbBarDelegate::paint(QPainter* painter, const QStyleOptionViewIte
     }
     else
     {
-        QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+        //分隔符
+        QFont iconFont = QFont("NXAwesome");
         iconFont.setPixelSize(painter->font().pixelSize() * 0.785);
         painter->setFont(iconFont);
         itemRect.setX(itemRect.x() - itemRect.width() * 0.36);

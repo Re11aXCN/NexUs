@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{87434779-0C03-4086-9C41-C35D599F329C}</ProjectGuid>
+    <ProjectGuid>{0ADEA26D-97CD-420D-AC42-DD15BCF89F61}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
@@ -37,12 +37,12 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>6.6.2_msvc2019_64</QtInstall>
-    <QtModules>core;gui;widgets;pdf;pdfwidgets;</QtModules>
+    <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>6.6.2_msvc2019_64</QtInstall>
-    <QtModules>core;gui;widgets;pdf;pdfwidgets;</QtModules>
+    <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -62,6 +62,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutDir>$(SolutionDir)Bin\$(SolutionName)_$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)Bin\Intermediate\$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutDir>$(SolutionDir)Bin\$(SolutionName)_$(Configuration)_$(Platform)\</OutDir>
@@ -69,13 +70,15 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <LanguageStandard>stdcpp23</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)NexUs\Source\include;$(ProjectDir)\Source;$(ProjectDir)\Source\ModelView;$(ProjectDir)\Source\ExamplePage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)NexUs\Source\include;$(SolutionDir)NXPacketIO;$(ProjectDir)\Source;$(ProjectDir)\Source\ModelView;$(ProjectDir)\Source\ExamplePage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BUILD_WITH_NXPACKETIO;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <QtMoc>
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
@@ -86,12 +89,14 @@
       <QtRccDir>.\GeneratedFiles</QtRccDir>
     </QtRcc>
     <QtUic>
-      <QtUicDir>.\GeneratedFiles</QtUicDir>
       <ExecutionDescription>Uic'ing %(Identity)...</ExecutionDescription>
     </QtUic>
+    <QtUic>
+      <QtUicDir>.\GeneratedFiles</QtUicDir>
+    </QtUic>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Bin\$(SolutionName)_$(Configuration)_$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>NexUs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Bin\$(SolutionName)_$(Configuration)_$(Platform);$(SolutionDir)ThirdParty\podofo\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>NexUsd.lib;NXPacketIOd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -102,7 +107,9 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)NexUs\Source\include;$(ProjectDir)\Source;$(ProjectDir)\Source\ModelView;$(ProjectDir)\Source\ExamplePage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)NexUs\Source\include;$(SolutionDir)NXPacketIO;$(ProjectDir)\Source;$(ProjectDir)\Source\ModelView;$(ProjectDir)\Source\ExamplePage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BUILD_WITH_NXPACKETIO;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <QtMoc>
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
@@ -113,12 +120,14 @@
       <QtRccDir>.\GeneratedFiles</QtRccDir>
     </QtRcc>
     <QtUic>
-      <QtUicDir>.\GeneratedFiles</QtUicDir>
       <ExecutionDescription>Uic'ing %(Identity)...</ExecutionDescription>
     </QtUic>
+    <QtUic>
+      <QtUicDir>.\GeneratedFiles</QtUicDir>
+    </QtUic>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Bin\$(SolutionName)_$(Configuration)_$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>NexUs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Bin\$(SolutionName)_$(Configuration)_$(Platform);$(SolutionDir)ThirdParty\podofo\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>NexUs.lib;NXPacketIO.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -150,6 +159,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\mainwindow.cpp" />
+    <ClCompile Include="Source\ModelView\T_IconDelegate.cpp" />
+    <ClCompile Include="Source\ModelView\T_IconModel.cpp" />
+    <ClCompile Include="Source\ModelView\T_ListViewModel.cpp" />
+    <ClCompile Include="Source\ModelView\T_LogModel.cpp" />
+    <ClCompile Include="Source\ModelView\T_TableViewModel.cpp" />
+    <ClCompile Include="Source\ModelView\T_TreeItem.cpp" />
+    <ClCompile Include="Source\ModelView\T_TreeViewModel.cpp" />
     <ClCompile Include="Source\ExamplePage\T_About.cpp" />
     <ClCompile Include="Source\ExamplePage\T_BaseComponents.cpp" />
     <ClCompile Include="Source\ExamplePage\T_BasePage.cpp" />
@@ -168,28 +185,9 @@
     <ClCompile Include="Source\ExamplePage\T_TableView.cpp" />
     <ClCompile Include="Source\ExamplePage\T_TreeView.cpp" />
     <ClCompile Include="Source\ExamplePage\T_UpdateWidget.cpp" />
-    <ClCompile Include="Source\mainwindow.cpp" />
-    <ClCompile Include="Source\ModelView\T_IconDelegate.cpp" />
-    <ClCompile Include="Source\ModelView\T_IconModel.cpp" />
-    <ClCompile Include="Source\ModelView\T_ListViewModel.cpp" />
-    <ClCompile Include="Source\ModelView\T_LogModel.cpp" />
-    <ClCompile Include="Source\ModelView\T_TableViewModel.cpp" />
-    <ClCompile Include="Source\ModelView\T_TreeItem.cpp" />
-    <ClCompile Include="Source\ModelView\T_TreeViewModel.cpp" />
-    <ClCompile Include="Source\PWEditorWindow.cpp" />
-    <ClCompile Include="Source\PWNewPdfTabWidget.cpp" />
     <ClCompile Include="main.cpp" />
-	<QtRcc Include="NexUsExample.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Source\mainwindow.h" />
-    <QtMoc Include="Source\ModelView\T_IconDelegate.h" />
-    <QtMoc Include="Source\ModelView\T_IconModel.h" />
-    <QtMoc Include="Source\ModelView\T_ListViewModel.h" />
-    <QtMoc Include="Source\ModelView\T_LogModel.h" />
-    <QtMoc Include="Source\ModelView\T_TableViewModel.h" />
-    <QtMoc Include="Source\ModelView\T_TreeItem.h" />
-    <QtMoc Include="Source\ModelView\T_TreeViewModel.h" />
     <QtMoc Include="Source\ExamplePage\T_About.h" />
     <QtMoc Include="Source\ExamplePage\T_BaseComponents.h" />
     <QtMoc Include="Source\ExamplePage\T_BasePage.h" />
@@ -200,21 +198,31 @@
     <QtMoc Include="Source\ExamplePage\T_ListView.h" />
     <QtMoc Include="Source\ExamplePage\T_LogWidget.h" />
     <QtMoc Include="Source\ExamplePage\T_Navigation.h" />
-    <ClInclude Include="Source\Core\QBiDirectionalHash.hpp" />
-    <ClInclude Include="Source\ExamplePage\T_NXPacketIO.h" />
-    <QtMoc Include="Source\PWNewPdfTabWidget.h" />
-    <QtMoc Include="Source\PWEditorWindow.h" />
-    <ClInclude Include="Source\ExamplePage\T_NXScreen.h" />
+    <QtMoc Include="Source\ExamplePage\T_NXPacketIO.h" />
+    <QtMoc Include="Source\ExamplePage\T_NXScreen.h" />
     <QtMoc Include="Source\ExamplePage\T_Popup.h" />
     <QtMoc Include="Source\ExamplePage\T_RecvScreen.h" />
     <QtMoc Include="Source\ExamplePage\T_Setting.h" />
     <QtMoc Include="Source\ExamplePage\T_TableView.h" />
     <QtMoc Include="Source\ExamplePage\T_TreeView.h" />
     <QtMoc Include="Source\ExamplePage\T_UpdateWidget.h" />
+    <QtMoc Include="Source\ModelView\T_IconDelegate.h" />
+    <QtMoc Include="Source\ModelView\T_IconModel.h" />
+    <QtMoc Include="Source\ModelView\T_ListViewModel.h" />
+    <QtMoc Include="Source\ModelView\T_LogModel.h" />
+    <QtMoc Include="Source\ModelView\T_TableViewModel.h" />
+    <QtMoc Include="Source\ModelView\T_TreeItem.h" />
+    <QtMoc Include="Source\ModelView\T_TreeViewModel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="NexUsExample.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Source\mainwindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NexUs\NexUs.vcxproj">
-      <Project>{e40f93b2-5d66-4c3f-b952-a407e8b40b84}</Project>
+      <Project>{5b0f1707-797d-421c-8441-846f6be473cf}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

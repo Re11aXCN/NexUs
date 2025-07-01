@@ -2,7 +2,7 @@
 
 #include "NXApplication.h"
 #include "NXLineEdit.h"
-
+#include <QTimer>
 NXLineEditPrivate::NXLineEditPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -40,18 +40,31 @@ void NXLineEditPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
 {
     Q_Q(NXLineEdit);
     _themeMode = themeMode;
-    if (themeMode == NXThemeType::Light)
+    if (q->isVisible())
     {
-        QPalette palette;
-        palette.setColor(QPalette::Text, Qt::black);
-        palette.setColor(QPalette::PlaceholderText, QColor(0x00, 0x00, 0x00, 128));
-        q->setPalette(palette);
+        _changeTheme();
     }
     else
     {
-        QPalette palette;
+        QTimer::singleShot(1, this, [=] {
+            _changeTheme();
+        });
+    }
+}
+
+void NXLineEditPrivate::_changeTheme()
+{
+    Q_Q(NXLineEdit);
+    QPalette palette = q->palette();
+    if (_themeMode == NXThemeType::Light)
+    {
+        palette.setColor(QPalette::Text, Qt::black);
+        palette.setColor(QPalette::PlaceholderText, QColor(0x00, 0x00, 0x00, 128));
+    }
+    else
+    {
         palette.setColor(QPalette::Text, Qt::white);
         palette.setColor(QPalette::PlaceholderText, QColor(0xBA, 0xBA, 0xBA));
-        q->setPalette(palette);
     }
+    q->setPalette(palette);
 }

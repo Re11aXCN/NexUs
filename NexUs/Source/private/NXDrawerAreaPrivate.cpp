@@ -1,4 +1,4 @@
-#include "NXDrawerAreaPrivate.h"
+﻿#include "NXDrawerAreaPrivate.h"
 #include "NXDrawerArea.h"
 
 NXDrawerAreaPrivate::NXDrawerAreaPrivate(QObject* parent)

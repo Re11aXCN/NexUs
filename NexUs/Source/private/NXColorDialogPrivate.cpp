@@ -1,4 +1,4 @@
-#include "NXColorDialogPrivate.h"
+﻿#include "NXColorDialogPrivate.h"
 
 #include <QPainter>
 #include <QSlider>
@@ -13,9 +13,8 @@
 #include "NXLineEdit.h"
 #include "NXText.h"
 NXColorDialogPrivate::NXColorDialogPrivate(QObject* parent)
-    : QObject{parent}//, _pCurrentColor(QColor(0x39, 0xC5, 0xBB))
+    : QObject{parent}
 {
-    
 }
 
 NXColorDialogPrivate::~NXColorDialogPrivate()
@@ -75,6 +74,7 @@ void NXColorDialogPrivate::onColorModeChanged(int index)
 
 void NXColorDialogPrivate::onHtmlEditFocusOut(const QString& text)
 {
+    // 自动补全
     if (text == "#")
     {
         Q_Q(NXColorDialog);
@@ -214,6 +214,7 @@ void NXColorDialogPrivate::_updateHtmlEditValue()
 {
     if (!_htmlEdit->hasFocus())
     {
+        // 非编辑模式下 进行自动补全
         _htmlEdit->setText(_getHex4ChanelValue());
     }
 }
@@ -301,7 +302,7 @@ QString NXColorDialogPrivate::_getHex4ChanelValue() const
     {
         blue.prepend("0");
     }
-    QString alpha = QString::number(_pCurrentColor.alpha(), 16);
+	QString alpha = QString::number(_pCurrentColor.alpha(), 16);
     if (alpha.length() < 2)
     {
         alpha.prepend("0");

@@ -1,4 +1,4 @@
-#include "NXGraphicsScene.h"
+﻿#include "NXGraphicsScene.h"
 
 #include <QDebug>
 #include <QFile>

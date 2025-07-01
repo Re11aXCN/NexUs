@@ -1,4 +1,4 @@
-#include "NXCalendarPicker.h"
+﻿#include "NXCalendarPicker.h"
 
 #include <QHBoxLayout>
 #include <QPainter>
@@ -25,13 +25,13 @@ NXCalendarPicker::NXCalendarPicker(QWidget* parent)
     containerLayout->setContentsMargins(6, 6, 6, 6);
     containerLayout->addWidget(d->_calendar);
     d->_calendarPickerContainer->hide();
-    connect(this, &QPushButton::clicked, d, &NXCalendarPickerPrivate::onCalendarPickerClicked);
+    QObject::connect(this, &QPushButton::clicked, d, &NXCalendarPickerPrivate::onCalendarPickerClicked);
 
-    connect(d->_calendar, &NXCalendar::pSelectedDateChanged, d, &NXCalendarPickerPrivate::onCalendarSelectedDateChanged);
+    QObject::connect(d->_calendar, &NXCalendar::pSelectedDateChanged, d, &NXCalendarPickerPrivate::onCalendarSelectedDateChanged);
     setSelectedDate(QDate::currentDate());
 
     d->_themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXCalendarPicker::~NXCalendarPicker()

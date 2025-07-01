@@ -11,9 +11,9 @@ NXContentDialogPrivate::~NXContentDialogPrivate()
 {
 }
 
-void NXContentDialogPrivate::_doCloseAnimation()
+void NXContentDialogPrivate::_doCloseAnimation(bool isAccept)
 {
     Q_Q(NXContentDialog);
     _maskWidget->doMaskAnimation(0);
-    q->QDialog::close();
+    isAccept ? q->accept() : q->reject();
 }

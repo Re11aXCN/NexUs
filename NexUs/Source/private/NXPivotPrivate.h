@@ -1,4 +1,4 @@
-#ifndef NXPIVOTPRIVATE_H
+﻿#ifndef NXPIVOTPRIVATE_H
 #define NXPIVOTPRIVATE_H
 
 #include <QObject>

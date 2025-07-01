@@ -1,4 +1,4 @@
-#include "NXMenu.h"
+﻿#include "NXMenu.h"
 
 #include <QApplication>
 #include <QCloseEvent>
@@ -18,8 +18,8 @@ NXMenu::NXMenu(QWidget* parent)
     setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
     setObjectName("NXMenu");
-    d->_menuStyle = std::make_shared<NXMenuStyle>(style());
-    setStyle(d->_menuStyle.get());
+    d->_menuStyle = new NXMenuStyle(style());
+    setStyle(d->_menuStyle);
     d->_pAnimationImagePosY = 0;
 }
 
@@ -114,6 +114,7 @@ QAction* NXMenu::addNXIconAction(NXIconType::IconName icon, const QString& text,
     return action;
 }
 
+
 bool NXMenu::isHasParentMenu() const
 {
     return qobject_cast<QMenu*>(parentWidget()) != nullptr;
@@ -174,8 +175,8 @@ void NXMenu::showEvent(QShowEvent* event)
                 move(newPos);
             }
         }
-    }
-    //消除阴影偏移
+    } 
+   //消除阴影偏移
     move(this->pos().x() - 1, this->pos().y());
     if (!d->_animationPix.isNull())
     {

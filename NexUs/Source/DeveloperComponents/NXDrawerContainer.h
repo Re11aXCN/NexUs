@@ -1,5 +1,5 @@
-#ifndef NXFRAMEWORK_NXWIDGETTOOLS_DEVELOPERCOMPONENTS_NXDRAWERCONTAINER_H_
-#define NXFRAMEWORK_NXWIDGETTOOLS_DEVELOPERCOMPONENTS_NXDRAWERCONTAINER_H_
+﻿#ifndef NXFRAMEWORK_NEXUS_DEVELOPERCOMPONENTS_NXDRAWERCONTAINER_H_
+#define NXFRAMEWORK_NEXUS_DEVELOPERCOMPONENTS_NXDRAWERCONTAINER_H_
 
 #include <QWidget>
 
@@ -24,12 +24,14 @@ protected:
     virtual void paintEvent(QPaintEvent* event) override;
 
 private:
-    QGraphicsOpacityEffect* _opacityEffect{nullptr};
     NXThemeType::ThemeMode _themeMode;
+    QGraphicsOpacityEffect* _opacityEffect{nullptr};
     QVBoxLayout* _mainLayout{nullptr};
     QVBoxLayout* _containerLayout{nullptr};
     QWidget* _containerWidget{nullptr};
     QList<QWidget*> _drawerWidgetList;
+
+    int _calculateContainertMinimumHeight() const;
 };
 
-#endif //NXFRAMEWORK_NXWIDGETTOOLS_DEVELOPERCOMPONENTS_NXDRAWERCONTAINER_H_
+#endif //NXFRAMEWORK_NEXUS_DEVELOPERCOMPONENTS_NXDRAWERCONTAINER_H_

@@ -2,7 +2,7 @@
 
 #include "NXCheckBox.h"
 NXCheckBoxPrivate::NXCheckBoxPrivate(QObject* parent)
-    : QObject{ parent }
+	: QObject{ parent }
 {
 }
 

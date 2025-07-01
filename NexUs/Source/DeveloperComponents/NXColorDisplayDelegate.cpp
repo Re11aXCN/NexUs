@@ -21,7 +21,7 @@ void NXColorDisplayDelegate::paint(QPainter* painter, const QStyleOptionViewItem
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing);
     QRectF itemRect = option.rect;
-
+    // 颜色球绘制
     QColor displayColor = index.data(Qt::UserRole).value<QColor>();
     if (displayColor.isValid())
     {
@@ -36,6 +36,7 @@ void NXColorDisplayDelegate::paint(QPainter* painter, const QStyleOptionViewItem
     }
     painter->drawEllipse(itemRect.center(), 10, 10);
 
+    // 覆盖效果绘制
     if (option.state.testFlag(QStyle::State_MouseOver) || option.state.testFlag(QStyle::State_Selected))
     {
         painter->setBrush(Qt::NoBrush);

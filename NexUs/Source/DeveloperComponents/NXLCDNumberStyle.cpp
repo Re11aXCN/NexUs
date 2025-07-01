@@ -1,4 +1,4 @@
-#include "NXLCDNumberStyle.h"
+﻿#include "NXLCDNumberStyle.h"
 #include "NXTheme.h"
 
 #include <QDebug>
@@ -8,7 +8,7 @@ NXLCDNumberStyle::NXLCDNumberStyle(QStyle* style)
 {
     _pIsTransparent = false;
     _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }
@@ -31,12 +31,12 @@ void NXLCDNumberStyle::drawControl(QStyle::ControlElement element, const QStyleO
                 QRect numberRect = option->rect;
                 painter->save();
                 painter->setRenderHints(QPainter::Antialiasing);
-                painter->setPen(Qt::NoPen);
                 // 边框绘制
-                painter->setBrush(NXThemeColor(_themeMode, BasicBorder));
-                painter->drawRoundedRect(numberRect, 6, 6);
-
-                painter->setBrush(NXThemeColor(_themeMode, BasicBase));
+                painter->setPen(NXThemeColor(_themeMode, BasicBorder));
+                painter->setBrush(Qt::NoBrush);
+                painter->drawRoundedRect(numberRect.adjusted(1, 1, -1, -1), 6, 6);
+                painter->setPen(Qt::NoPen);
+                painter->setBrush(NXThemeColor(_themeMode, BasicBaseAlpha));
                 painter->drawRoundedRect(QRectF(numberRect.x() + 1.5, numberRect.y() + 1.5, numberRect.width() - 3, numberRect.height() - 3), 6, 6);
                 painter->restore();
             }

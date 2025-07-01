@@ -1,51 +1,53 @@
 ﻿#include "NXWidget.h"
 
-#include <QApplication>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QStackedLayout>
-#include <QPainter>
-#include <QScreen>
-
 #include "NXApplication.h"
 #include "NXTheme.h"
 #include "private/NXWidgetPrivate.h"
+#include <QApplication>
+#include <QHBoxLayout>
+#include <QPainter>
+#include <QScreen>
+#include <QTimer>
+#include <QVBoxLayout>
 Q_TAKEOVER_NATIVEEVENT_CPP(NXWidget, d_func()->_appBar);
-Q_PROPERTY_CREATE_Q_CPP(NXWidget, QStackedLayout*, ModuleStackedLayout)
-NXWidget::NXWidget(QWidget* parent, const QString& moduleButton4JsonConfigPath)
+NXWidget::NXWidget(QWidget* parent)
     : QWidget{parent}, d_ptr(new NXWidgetPrivate())
 {
     Q_D(NXWidget);
     d->q_ptr = this;
-    resize(500, 500);
+    resize(500, 500); // 默认宽高
     setWindowTitle("NXWidget");
     setObjectName("NXWidget");
-    d->_appBar = new NXAppBar(this, !moduleButton4JsonConfigPath.isEmpty());
-    if (!moduleButton4JsonConfigPath.isEmpty()) {
-       d->_pModuleStackedLayout = new QStackedLayout(this);
-    }
-    d->_appBar->setIsStayTop(false);
+#if (QT_VERSION < QT_VERSION_CHECK(6, 5, 3) || QT_VERSION > QT_VERSION_CHECK(6, 6, 1))
+    setStyleSheet("#NXWidget{background-color:transparent;}");
+#endif
+    // 自定义AppBar
+    d->_appBar = new NXAppBar(this);
+    d->_appBar->setIsStayTop(true);
     d->_appBar->setWindowButtonFlags(NXAppBarType::StayTopButtonHint | NXAppBarType::MinimizeButtonHint | NXAppBarType::MaximizeButtonHint | NXAppBarType::CloseButtonHint);
     QObject::connect(d->_appBar, &NXAppBar::routeBackButtonClicked, this, &NXWidget::routeBackButtonClicked);
     QObject::connect(d->_appBar, &NXAppBar::navigationButtonClicked, this, &NXWidget::navigationButtonClicked);
     QObject::connect(d->_appBar, &NXAppBar::themeChangeButtonClicked, this, &NXWidget::themeChangeButtonClicked);
     QObject::connect(d->_appBar, &NXAppBar::closeButtonClicked, this, &NXWidget::closeButtonClicked);
-    // ä¸»é¢˜
+
+    // 主题
     d->_themeMode = nxTheme->getThemeMode();
     QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
         update();
     });
-    d->_isEnableMica = nxApp->getIsEnableMica();
-    QObject::connect(nxApp, &NXApplication::pIsEnableMicaChanged, this, [=]() {
-        d->_isEnableMica = nxApp->getIsEnableMica();
+
+    d->_windowDisplayMode = nxApp->getWindowDisplayMode();
+    QObject::connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]() {
+        d->_windowDisplayMode = nxApp->getWindowDisplayMode();
         update();
-        });
-    nxApp->syncMica(this);
+    });
+    nxApp->syncWindowDisplayMode(this);
 }
 
 NXWidget::~NXWidget()
 {
+    nxApp->syncWindowDisplayMode(this, false);
 }
 
 void NXWidget::setIsStayTop(bool isStayTop)
@@ -110,6 +112,27 @@ void NXWidget::moveToCenter()
     setGeometry((geometry.left() + geometry.right() - width()) / 2, (geometry.top() + geometry.bottom() - height()) / 2, width(), height());
 }
 
+void NXWidget::setCustomBackgroundColor(const QColor& lightColor, const QColor& darkColor)
+{
+	Q_D(NXWidget);
+	d->_customLightBgColor = lightColor;
+	d->_customDarkBgColor = darkColor;
+	d->_isCustomBackground = true;
+}
+
+std::pair<QColor, QColor> NXWidget::getCustomBackgroundColor() const
+{
+	Q_D(const NXWidget);
+    return std::make_pair(d->_customLightBgColor, d->_customDarkBgColor);
+}
+
+void NXWidget::clearCustomBackgroundColor()
+{
+	Q_D(NXWidget);
+	d->_isCustomBackground = false;
+	update(); // 触发重绘
+}
+
 void NXWidget::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable)
 {
     Q_D(NXWidget);
@@ -136,12 +159,28 @@ NXAppBar* NXWidget::appBar() const
 void NXWidget::paintEvent(QPaintEvent* event)
 {
     Q_D(NXWidget);
-    QPainter painter(this);
-    painter.save();
-    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(NXThemeColor(d->_themeMode, WindowBase));
-    painter.drawRect(rect());
-    painter.restore();
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
+    if (d->_windowDisplayMode != NXApplicationType::WindowDisplayMode::NXMica)
+#else
+    if (d->_windowDisplayMode == NXApplicationType::WindowDisplayMode::Normal)
+#endif
+    {
+        QPainter painter(this);
+        painter.save();
+        painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+        painter.setPen(Qt::NoPen);
+        QColor bgColor;
+		if (d->_isCustomBackground) {
+			bgColor = (d->_themeMode == NXThemeType::Light)
+				? d->_customLightBgColor
+				: d->_customDarkBgColor;
+		}
+		else {
+			bgColor = NXThemeColor(d->_themeMode, WindowBase);
+		}
+	    painter.setBrush(bgColor);
+        painter.drawRect(rect());
+        painter.restore();
+    }
     QWidget::paintEvent(event);
 }

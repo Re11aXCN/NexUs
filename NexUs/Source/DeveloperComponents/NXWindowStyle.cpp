@@ -55,7 +55,7 @@ void NXWindowStyle::drawPrimitive(PrimitiveElement element, const QStyleOption* 
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
         painter->setBrush(option->state.testFlag(QStyle::State_Enabled) ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
-        
+        // 左三角
         int sideLength = 10;
         QRect indicatorRect = option->rect;
         QPainterPath path;
@@ -73,7 +73,7 @@ void NXWindowStyle::drawPrimitive(PrimitiveElement element, const QStyleOption* 
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
         painter->setBrush(option->state.testFlag(QStyle::State_Enabled) ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
-        
+        // 右三角
         int sideLength = 10;
         QRect indicatorRect = option->rect;
         QPainterPath path;
@@ -121,6 +121,7 @@ void NXWindowStyle::drawControl(ControlElement element, const QStyleOption* opti
     {
     case QStyle::CE_RubberBand:
     {
+        // 预览颜色
         QRect rubberBandRect = option->rect;
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
@@ -132,6 +133,7 @@ void NXWindowStyle::drawControl(ControlElement element, const QStyleOption* opti
     }
     case QStyle::CE_TabBarTabShape:
     {
+        // 背景绘制
         if (const QStyleOptionTab* topt = qstyleoption_cast<const QStyleOptionTab*>(option))
         {
             QRect tabRect = topt->rect;
@@ -142,16 +144,19 @@ void NXWindowStyle::drawControl(ControlElement element, const QStyleOption* opti
             {
                 if (topt->state & QStyle::State_Sunken)
                 {
+                    // 选中时点击
                     painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
                 }
                 else
                 {
                     if (topt->state & QStyle::State_MouseOver)
                     {
+                        // 选中时覆盖
                         painter->setBrush(NXThemeColor(_themeMode, BasicSelectedHoverAlpha));
                     }
                     else
                     {
+                        // 选中
                         painter->setBrush(NXThemeColor(_themeMode, BasicSelectedAlpha));
                     }
                 }
@@ -160,17 +165,20 @@ void NXWindowStyle::drawControl(ControlElement element, const QStyleOption* opti
             {
                 if (topt->state & QStyle::State_Sunken)
                 {
+                    // 点击时颜色
                     painter->setBrush(NXThemeColor(_themeMode, BasicSelectedHoverAlpha));
                 }
                 else
                 {
                     if (topt->state & QStyle::State_MouseOver)
                     {
+                        // 覆盖时颜色
                         painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
                     }
                 }
             }
             painter->drawRect(tabRect);
+            // 间隔符绘制
             if (topt->position != QStyleOptionTab::End)
             {
                 painter->setPen(Qt::NoPen);
@@ -183,6 +191,7 @@ void NXWindowStyle::drawControl(ControlElement element, const QStyleOption* opti
     }
     case QStyle::CE_TabBarTabLabel:
     {
+        // 文字绘制
         if (const QStyleOptionTab* topt = qstyleoption_cast<const QStyleOptionTab*>(option))
         {
             painter->save();

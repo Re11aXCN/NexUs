@@ -11,7 +11,7 @@ class NXCheckBoxStyle : public QProxyStyle
     Q_PRIVATE_CREATE(int, CheckBorderRadius)
 public:
     explicit NXCheckBoxStyle(QStyle* style = nullptr);
-    ~NXCheckBoxStyle();
+    ~NXCheckBoxStyle() override;
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     int pixelMetric(PixelMetric metric, const QStyleOption* option = nullptr, const QWidget* widget = nullptr) const override;
 

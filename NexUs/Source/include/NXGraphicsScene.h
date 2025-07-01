@@ -1,4 +1,4 @@
-#ifndef NXGRAPHICSSCENE_H
+﻿#ifndef NXGRAPHICSSCENE_H
 #define NXGRAPHICSSCENE_H
 
 #include <QDataStream>

@@ -1,4 +1,4 @@
-#ifndef NXGRAPHICSLINEITEM_H
+﻿#ifndef NXGRAPHICSLINEITEM_H
 #define NXGRAPHICSLINEITEM_H
 
 #include <QGraphicsPathItem>

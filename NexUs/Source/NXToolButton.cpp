@@ -1,4 +1,4 @@
-#include "NXToolButton.h"
+﻿#include "NXToolButton.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -10,6 +10,37 @@
 #include "NXIcon.h"
 #include "NXMenu.h"
 #include "private/NXToolButtonPrivate.h"
+
+NXAdvancedToolButton::NXAdvancedToolButton(QWidget* parent)
+	: QToolButton(parent)
+{
+
+}
+
+void NXAdvancedToolButton::mouseReleaseEvent(QMouseEvent* event)
+{
+	if (event->button() == Qt::RightButton) {
+		Q_EMIT rightReleased();
+	}
+	else if (event->button() == Qt::MiddleButton) {
+		Q_EMIT middleReleased();
+	}
+	QToolButton::mouseReleaseEvent(event);
+}
+
+void NXAdvancedToolButton::mousePressEvent(QMouseEvent* event)
+{
+	if (event->button() == Qt::RightButton) {
+		Q_EMIT rightPressed();
+	}
+	else if (event->button() == Qt::MiddleButton) {
+		Q_EMIT middlePressed();
+	}
+	QToolButton::mousePressEvent(event);
+}
+
+
+
 NXToolButton::NXToolButton(QWidget* parent)
     : NXAdvancedToolButton(parent), d_ptr(new NXToolButtonPrivate())
 {
@@ -17,8 +48,8 @@ NXToolButton::NXToolButton(QWidget* parent)
     d->q_ptr = this;
     setIconSize(QSize(22, 22));
     setPopupMode(QToolButton::InstantPopup);
-    d->_toolButtonStyle = std::make_shared<NXToolButtonStyle>(style());
-    setStyle(d->_toolButtonStyle.get());
+    d->_toolButtonStyle = new NXToolButtonStyle(style());
+    setStyle(d->_toolButtonStyle);
 }
 
 NXToolButton::~NXToolButton()
@@ -90,7 +121,8 @@ bool NXToolButton::eventFilter(QObject* watched, QEvent* event)
         {
         case QEvent::Show:
         {
-            QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d->_toolButtonStyle.get(), "pExpandIconRotate");
+            //指示器动画
+            QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d->_toolButtonStyle, "pExpandIconRotate");
             QObject::connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
                 update();
             });
@@ -103,10 +135,11 @@ bool NXToolButton::eventFilter(QObject* watched, QEvent* event)
         }
         case QEvent::Hide:
         {
-            QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d->_toolButtonStyle.get(), "pExpandIconRotate");
+            //指示器动画
+            QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d->_toolButtonStyle, "pExpandIconRotate");
             QObject::connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
                 update();
-                });
+            });
             rotateAnimation->setDuration(300);
             rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
             rotateAnimation->setStartValue(d->_toolButtonStyle->getExpandIconRotate());

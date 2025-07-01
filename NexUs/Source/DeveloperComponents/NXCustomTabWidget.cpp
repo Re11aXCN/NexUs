@@ -1,6 +1,7 @@
 ﻿#include "NXCustomTabWidget.h"
 
 #include <QVBoxLayout>
+#include <QVariant>
 
 #include "NXAppBar.h"
 #include "NXTabBar.h"
@@ -46,6 +47,7 @@ NXCustomTabWidget::~NXCustomTabWidget()
     {
         QWidget* closeWidget = _customTabWidget->widget(0);
         NXTabWidget* originTabWidget = closeWidget->property("NXOriginTabWidget").value<NXTabWidget*>();
+
         if (originTabWidget)
         {
             closeWidget->setProperty("CurrentCustomBar", QVariant::fromValue<NXTabBar*>(nullptr));

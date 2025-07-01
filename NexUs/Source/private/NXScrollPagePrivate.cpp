@@ -1,4 +1,4 @@
-#include "NXScrollPagePrivate.h"
+﻿#include "NXScrollPagePrivate.h"
 
 #include <QHBoxLayout>
 #include <QPropertyAnimation>
@@ -19,6 +19,7 @@ NXScrollPagePrivate::~NXScrollPagePrivate()
 
 void NXScrollPagePrivate::onNavigationRouteBack(QVariantMap routeData)
 {
+    // 面包屑
     Q_Q(NXScrollPage);
     QString pageCheckSumKey = routeData.value("NXScrollPageCheckSumKey").toString();
     if (pageCheckSumKey == "Navigation")
@@ -55,7 +56,7 @@ void NXScrollPagePrivate::_switchCentralStackIndex(int targetIndex, int lastInde
     targetWidgetAnimation->setDuration(280);
     if (targetIndex > lastIndex)
     {
-        //瀹革附绮?
+        //左滑
         currentWidgetAnimation->setStartValue(currentWidget->pos());
         currentWidgetAnimation->setEndValue(QPoint(-_centralStackedWidget->width(), 0));
         targetWidgetAnimation->setStartValue(QPoint(_centralStackedWidget->width(), 0));
@@ -63,7 +64,7 @@ void NXScrollPagePrivate::_switchCentralStackIndex(int targetIndex, int lastInde
     }
     else
     {
-        //閸欒櫕绮?
+        //右滑
         currentWidgetAnimation->setStartValue(currentWidget->pos());
         currentWidgetAnimation->setEndValue(QPoint(_centralStackedWidget->width(), 0));
         targetWidgetAnimation->setStartValue(QPoint(-_centralStackedWidget->width(), 0));

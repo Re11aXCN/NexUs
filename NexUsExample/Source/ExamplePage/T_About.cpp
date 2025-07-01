@@ -36,7 +36,7 @@ T_About::T_About(QWidget* parent)
     NXText* supportText = new NXText("Windows支持版本: QT5.12以上\nLinux支持版本: Qt5.14以上", this);
     supportText->setWordWrap(false);
     supportText->setTextPixelSize(14);
-    NXText* contactText = new NXText("作者: 8009963@qq.com\n交流群: 850243692(QQ)", this);
+    NXText* contactText = new NXText("作者: 3056769574@qq.com\n交流群: 850243692(QQ)", this);
     contactText->setWordWrap(false);
     contactText->setTextInteractionFlags(Qt::TextSelectableByMouse);
     contactText->setTextPixelSize(14);

@@ -3,19 +3,18 @@
 
 #include <QObject>
 #include <QModelIndex>
-
 #include "stdafx.h"
 
 class NXModelIndexWidget;
 class NXModelIndexWidgetPrivate : public QObject
 {
-    Q_OBJECT
-    Q_D_CREATE(NXModelIndexWidget)
+	Q_OBJECT
+		Q_D_CREATE(NXModelIndexWidget)
 public:
-    explicit NXModelIndexWidgetPrivate(QObject* parent = nullptr);
-    ~NXModelIndexWidgetPrivate();
+	explicit NXModelIndexWidgetPrivate(QObject* parent = nullptr);
+	~NXModelIndexWidgetPrivate();
 private:
-    QModelIndex _index;
+	QModelIndex _index;
 };
 
 class NXTableView;
@@ -24,12 +23,12 @@ class NXTableViewPrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(NXTableView)
-    Q_PRIVATE_CREATE(std::shared_ptr<NXTableViewStyle>, TableViewStyle)
+	Q_PRIVATE_CREATE(NXTableViewStyle*, TableViewStyle)
+	Q_PRIVATE_CREATE(bool, DrawSelectionBackground)
 
 public:
     explicit NXTableViewPrivate(QObject* parent = nullptr);
     ~NXTableViewPrivate();
-    bool _pDrawSelectionBackground{ true };
 };
 
 #endif // NXTABLEVIEWPRIVATE_H

@@ -1,4 +1,4 @@
-#include "NXKeyBinderPrivate.h"
+﻿#include "NXKeyBinderPrivate.h"
 #include "NXKeyBinder.h"
 #include <QTimer>
 NXKeyBinderPrivate::NXKeyBinderPrivate(QObject* parent)

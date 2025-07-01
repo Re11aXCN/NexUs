@@ -1,4 +1,4 @@
-#include "NXLCDNumber.h"
+﻿#include "NXLCDNumber.h"
 #include "private/NXLCDNumberPrivate.h"
 #include "DeveloperComponents/NXLCDNumberStyle.h"
 #include "NXTheme.h"
@@ -19,12 +19,12 @@ NXLCDNumber::NXLCDNumber(QWidget* parent)
     d->_lcdNumberStyle = new NXLCDNumberStyle();
     setStyle(d->_lcdNumberStyle);
     d->_clockTimer = new QTimer(this);
-    connect(d->_clockTimer, &QTimer::timeout, this, [=]() {
+    QObject::connect(d->_clockTimer, &QTimer::timeout, this, [=]() {
         display(QDateTime::currentDateTime().toString(d->_pAutoClockFormat));
     });
 
     d->onThemeModeChanged(nxTheme->getThemeMode());
-    connect(nxTheme, &NXTheme::themeModeChanged, d, &NXLCDNumberPrivate::onThemeModeChanged);
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXLCDNumberPrivate::onThemeModeChanged);
 }
 
 NXLCDNumber::NXLCDNumber(uint numDigits, QWidget* parent)

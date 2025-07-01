@@ -1,4 +1,4 @@
-#ifndef NXGRAPHICSITEM_H
+﻿#ifndef NXGRAPHICSITEM_H
 #define NXGRAPHICSITEM_H
 
 #include <QGraphicsObject>
@@ -15,11 +15,11 @@ class NX_EXPORT NXGraphicsItem : public QGraphicsObject
     Q_Q_CREATE(NXGraphicsItem)
     Q_PROPERTY_CREATE_Q_H(int, Width)
     Q_PROPERTY_CREATE_Q_H(int, Height)
+    Q_PROPERTY_CREATE_Q_H(int, MaxLinkPortCount)
     Q_PROPERTY_CREATE_Q_H(QImage, ItemImage)
     Q_PROPERTY_CREATE_Q_H(QImage, ItemSelectedImage)
     Q_PROPERTY_CREATE_Q_H(QString, ItemName)
     Q_PROPERTY_CREATE_Q_H(QVariantMap, DataRoutes)
-    Q_PROPERTY_CREATE_Q_H(int, MaxLinkPortCount)
 public:
     explicit NXGraphicsItem(QGraphicsItem* parent = nullptr);
     explicit NXGraphicsItem(int width, int height, QGraphicsItem* parent = nullptr);

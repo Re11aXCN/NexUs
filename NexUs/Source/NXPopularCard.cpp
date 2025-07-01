@@ -1,4 +1,4 @@
-#include "NXPopularCard.h"
+﻿#include "NXPopularCard.h"
 
 #include <QEvent>
 #include <QPainter>
@@ -33,32 +33,34 @@ NXPopularCard::NXPopularCard(QWidget* parent)
     d->_pCardFloatArea = parentWidget();
     d->_floater = new NXPopularCardFloater(this, d, d->_pCardFloatArea);
     d->_floatTimer = new QTimer(this);
-    connect(d->_floatTimer, &QTimer::timeout, d, &NXPopularCardPrivate::_showFloater);
+    QObject::connect(d->_floatTimer, &QTimer::timeout, d, &NXPopularCardPrivate::_showFloater);
 
     d->_themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+        d->_themeMode = themeMode;
+    });
 }
 
 NXPopularCard::~NXPopularCard()
 {
 }
 
-void NXPopularCard::setCardButtontext(QString cardButtonText)
+void NXPopularCard::setCardButtonText(QString cardButtonText)
 {
     Q_D(NXPopularCard);
     if (cardButtonText.isEmpty())
     {
         return;
     }
-    d->_pCardButtontext = cardButtonText;
-    d->_floater->_overButton->setText(d->_pCardButtontext);
-    Q_EMIT pCardButtontextChanged();
+    d->_pCardButtonText = cardButtonText;
+    d->_floater->_overButton->setText(d->_pCardButtonText);
+    Q_EMIT pCardButtonTextChanged();
 }
 
-QString NXPopularCard::getCardButtontext() const
+QString NXPopularCard::getCardButtonText() const
 {
     Q_D(const NXPopularCard);
-    return d->_pCardButtontext;
+    return d->_pCardButtonText;
 }
 
 void NXPopularCard::setCardFloatArea(QWidget* floatArea)
@@ -88,7 +90,9 @@ bool NXPopularCard::event(QEvent* event)
     {
         d->_floatTimer->start(450);
         QPropertyAnimation* hoverAnimation = new QPropertyAnimation(d, "pHoverYOffset");
-        connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
+        QObject::connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+            update();
+        });
         hoverAnimation->setDuration(130);
         hoverAnimation->setStartValue(d->_pHoverYOffset);
         hoverAnimation->setEndValue(6);
@@ -104,7 +108,9 @@ bool NXPopularCard::event(QEvent* event)
     {
         d->_floatTimer->stop();
         QPropertyAnimation* hoverAnimation = new QPropertyAnimation(d, "pHoverYOffset");
-        connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
+        QObject::connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+            update();
+        });
         hoverAnimation->setDuration(130);
         hoverAnimation->setStartValue(d->_pHoverYOffset);
         hoverAnimation->setEndValue(0);
@@ -143,8 +149,7 @@ void NXPopularCard::paintEvent(QPaintEvent* event)
     {
         // 阴影绘制
         painter.setOpacity(d->_pHoverOpacity);
-        QRect shadowRect = rect();
-        shadowRect.adjust(0, 0, 0, -d->_pHoverYOffset);
+        QRect shadowRect = rect().adjusted(0, -d->_pHoverYOffset, 0, -d->_pHoverYOffset);
         nxTheme->drawEffectShadow(&painter, shadowRect, d->_shadowBorderWidth, d->_pBorderRadius);
     }
     QRectF foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth - d->_pHoverYOffset + 1, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);

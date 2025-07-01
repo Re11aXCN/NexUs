@@ -23,21 +23,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="Resources\NexUsExample.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-    <QtUic Include="UI\NexUsExample.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtRcc Include="NexUsExample.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\mainwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\ModelView\T_IconDelegate.cpp">
@@ -115,17 +101,11 @@
     <ClCompile Include="Source\ExamplePage\T_UpdateWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\PWEditorWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\PWNewPdfTabWidget.cpp">
+    <ClCompile Include="Source\mainwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Source\mainwindow.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="Source\ModelView\T_IconDelegate.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -177,6 +157,12 @@
     <QtMoc Include="Source\ExamplePage\T_Navigation.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_NXPacketIO.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_NXScreen.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <QtMoc Include="Source\ExamplePage\T_Popup.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -195,22 +181,13 @@
     <QtMoc Include="Source\ExamplePage\T_UpdateWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Source\PWEditorWindow.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\PWNewPdfTabWidget.h">
+    <QtMoc Include="Source\mainwindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\ExamplePage\T_NXPacketIO.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ExamplePage\T_NXScreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\QBiDirectionalHash.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <QtRcc Include="NexUsExample.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
   </ItemGroup>
 </Project>

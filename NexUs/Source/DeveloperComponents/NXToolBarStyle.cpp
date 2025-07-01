@@ -1,4 +1,4 @@
-#include "NXToolBarStyle.h"
+﻿#include "NXToolBarStyle.h"
 
 #include <QDebug>
 #include <QPainter>
@@ -12,7 +12,7 @@
 NXToolBarStyle::NXToolBarStyle(QStyle* style)
 {
     _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 NXToolBarStyle::~NXToolBarStyle()

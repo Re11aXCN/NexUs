@@ -1,4 +1,4 @@
-#ifndef NXTOOLBUTTONPRIVATE_H
+﻿#ifndef NXTOOLBUTTONPRIVATE_H
 #define NXTOOLBUTTONPRIVATE_H
 
 #include <QObject>
@@ -15,7 +15,7 @@ public:
     ~NXToolButtonPrivate();
 
 private:
-    std::shared_ptr<NXToolButtonStyle> _toolButtonStyle{ nullptr };
+    NXToolButtonStyle* _toolButtonStyle{nullptr};
 };
 
 #endif // NXTOOLBUTTONPRIVATE_H

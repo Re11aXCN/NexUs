@@ -13,6 +13,7 @@
 #include "NXTheme.h"
 #include "NXToggleSwitch.h"
 #include "NXWindow.h"
+#include <QButtonGroup>
 T_Setting::T_Setting(QWidget* parent)
     : T_BasePage(parent)
 {
@@ -62,18 +63,53 @@ T_Setting::T_Setting(QWidget* parent)
     helperText->setWordWrap(false);
     helperText->setTextPixelSize(18);
 
-    _micaSwitchButton = new NXToggleSwitch(this);
+    _normalButton = new NXRadioButton("Normal", this);
+    _elaMicaButton = new NXRadioButton("NXMica", this);
+#ifdef Q_OS_WIN
+    _micaButton = new NXRadioButton("Mica", this);
+    _micaAltButton = new NXRadioButton("Mica-Alt", this);
+    _acrylicButton = new NXRadioButton("Acrylic", this);
+    _dwmBlurnormalButton = new NXRadioButton("Dwm-Blur", this);
+#endif
+    _normalButton->setChecked(true);
+    QButtonGroup* displayButtonGroup = new QButtonGroup(this);
+    displayButtonGroup->addButton(_normalButton, 0);
+    displayButtonGroup->addButton(_elaMicaButton, 1);
+#ifdef Q_OS_WIN
+    displayButtonGroup->addButton(_micaButton, 2);
+    displayButtonGroup->addButton(_micaAltButton, 3);
+    displayButtonGroup->addButton(_acrylicButton, 4);
+    displayButtonGroup->addButton(_dwmBlurnormalButton, 5);
+#endif
+    QObject::connect(displayButtonGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled), this, [=](QAbstractButton* button, bool isToggled) {
+        if (isToggled)
+        {
+            nxApp->setWindowDisplayMode((NXApplicationType::WindowDisplayMode)displayButtonGroup->id(button));
+        }
+    });
+    QObject::connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]() {
+        auto button = displayButtonGroup->button(nxApp->getWindowDisplayMode());
+        NXRadioButton* elaRadioButton = dynamic_cast<NXRadioButton*>(button);
+        if (elaRadioButton)
+        {
+            elaRadioButton->setChecked(true);
+        }
+    });
     NXScrollPageArea* micaSwitchArea = new NXScrollPageArea(this);
     QHBoxLayout* micaSwitchLayout = new QHBoxLayout(micaSwitchArea);
-    NXText* micaSwitchText = new NXText("启用云母效果(跨平台)", this);
+    NXText* micaSwitchText = new NXText("窗口效果", this);
     micaSwitchText->setWordWrap(false);
     micaSwitchText->setTextPixelSize(15);
     micaSwitchLayout->addWidget(micaSwitchText);
     micaSwitchLayout->addStretch();
-    micaSwitchLayout->addWidget(_micaSwitchButton);
-    QObject::connect(_micaSwitchButton, &NXToggleSwitch::toggled, this, [=](bool checked) {
-        nxApp->setIsEnableMica(checked);
-    });
+    micaSwitchLayout->addWidget(_normalButton);
+    micaSwitchLayout->addWidget(_elaMicaButton);
+#ifdef Q_OS_WIN
+    micaSwitchLayout->addWidget(_micaButton);
+    micaSwitchLayout->addWidget(_micaAltButton);
+    micaSwitchLayout->addWidget(_acrylicButton);
+    micaSwitchLayout->addWidget(_dwmBlurnormalButton);
+#endif
 
     _logSwitchButton = new NXToggleSwitch(this);
     NXScrollPageArea* logSwitchArea = new NXScrollPageArea(this);
@@ -112,28 +148,56 @@ T_Setting::T_Setting(QWidget* parent)
     displayModeLayout->addWidget(_compactButton);
     displayModeLayout->addWidget(_maximumButton);
     displayModeLayout->addWidget(_autoButton);
-    QObject::connect(_minimumButton, &NXRadioButton::toggled, this, [=](bool checked) {
-        if (checked)
+
+    QButtonGroup* navigationGroup = new QButtonGroup(this);
+    navigationGroup->addButton(_autoButton, 0);
+    navigationGroup->addButton(_minimumButton, 1);
+    navigationGroup->addButton(_compactButton, 2);
+    navigationGroup->addButton(_maximumButton, 3);
+    QObject::connect(navigationGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled), this, [=](QAbstractButton* button, bool isToggled) {
+        if (isToggled)
         {
-            window->setNavigationBarDisplayMode(NXNavigationType::Minimal);
+            window->setNavigationBarDisplayMode((NXNavigationType::NavigationDisplayMode)navigationGroup->id(button));
         }
     });
-    QObject::connect(_compactButton, &NXRadioButton::toggled, this, [=](bool checked) {
-        if (checked)
+
+    _noneButton = new NXRadioButton("None", this);
+    _popupButton = new NXRadioButton("Popup", this);
+    _popupButton->setChecked(true);
+    _scaleButton = new NXRadioButton("Scale", this);
+    _flipButton = new NXRadioButton("Flip", this);
+    _blurButton = new NXRadioButton("Blur", this);
+    NXScrollPageArea* stackSwitchModeArea = new NXScrollPageArea(this);
+    QHBoxLayout* stackSwitchModeLayout = new QHBoxLayout(stackSwitchModeArea);
+    NXText* stackSwitchModeText = new NXText("堆栈切换模式选择", this);
+    stackSwitchModeText->setWordWrap(false);
+    stackSwitchModeText->setTextPixelSize(15);
+    stackSwitchModeLayout->addWidget(stackSwitchModeText);
+    stackSwitchModeLayout->addStretch();
+    stackSwitchModeLayout->addWidget(_noneButton);
+    stackSwitchModeLayout->addWidget(_popupButton);
+    stackSwitchModeLayout->addWidget(_scaleButton);
+    stackSwitchModeLayout->addWidget(_flipButton);
+    stackSwitchModeLayout->addWidget(_blurButton);
+
+    QButtonGroup* stackSwitchGroup = new QButtonGroup(this);
+    stackSwitchGroup->addButton(_noneButton, 0);
+    stackSwitchGroup->addButton(_popupButton, 1);
+    stackSwitchGroup->addButton(_scaleButton, 2);
+    stackSwitchGroup->addButton(_flipButton, 3);
+    stackSwitchGroup->addButton(_blurButton, 4);
+    QObject::connect(stackSwitchGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled), this, [=](QAbstractButton* button, bool isToggled) {
+        if (isToggled)
         {
-            window->setNavigationBarDisplayMode(NXNavigationType::Compact);
+            window->setStackSwitchMode((NXWindowType::StackSwitchMode)stackSwitchGroup->id(button));
         }
     });
-    QObject::connect(_maximumButton, &NXRadioButton::toggled, this, [=](bool checked) {
-        if (checked)
+    QObject::connect(window, &NXWindow::pStackSwitchModeChanged, this, [=]() {
+        auto button = stackSwitchGroup->button(window->getStackSwitchMode());
+        NXRadioButton* elaRadioButton = dynamic_cast<NXRadioButton*>(button);
+        if (elaRadioButton)
         {
-            window->setNavigationBarDisplayMode(NXNavigationType::Maximal);
-        }
-    });
-    QObject::connect(_autoButton, &NXRadioButton::toggled, this, [=](bool checked) {
-        if (checked)
-        {
-            window->setNavigationBarDisplayMode(NXNavigationType::Auto);
+            elaRadioButton->setChecked(true);
         }
     });
 
@@ -150,6 +214,7 @@ T_Setting::T_Setting(QWidget* parent)
     centerLayout->addWidget(logSwitchArea);
     centerLayout->addWidget(micaSwitchArea);
     centerLayout->addWidget(displayModeArea);
+    centerLayout->addWidget(stackSwitchModeArea);
     centerLayout->addStretch();
     centerLayout->setContentsMargins(0, 0, 0, 0);
     addCentralWidget(centralWidget, true, true, 0);

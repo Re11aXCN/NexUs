@@ -11,22 +11,21 @@ class NXLineEditPrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(NXLineEdit)
-    //Q_PROPERTY_CREATE_D(int, BorderRadius)
     Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
     Q_PROPERTY_CREATE_D(bool, IsClearButtonEnabled)
 public:
     explicit NXLineEditPrivate(QObject* parent = nullptr);
-    ~NXLineEditPrivate();
+    ~NXLineEditPrivate() override;
     Q_INVOKABLE void onWMWindowClickedEvent(QVariantMap data);
     Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
 
 private:
-    NXThemeType::ThemeMode _themeMode;
-
-    qreal _textSpacing{ 0.5 };
+	NXThemeType::ThemeMode _themeMode;
+	qreal _textSpacing{ 0.5 };
     QMargins _paddings;
     NXEvent* _focusEvent{nullptr};
-    std::shared_ptr<NXLineEditStyle> _lineEditStyle{ nullptr };
+    NXLineEditStyle* _lineEditStyle{ nullptr };
+    void _changeTheme();
 };
 
 #endif // NXLINEEDITPRIVATE_H

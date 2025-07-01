@@ -42,14 +42,15 @@ void NXRadioButtonStyle::drawPrimitive(PrimitiveElement element, const QStyleOpt
             {
                 painter->setBrush(NXThemeColor(_themeMode, BasicBase));
             }
-            painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), 7.5, 7.5);
+            painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), 8.5, 8.5);
         }
         else
         {
             painter->setPen(Qt::NoPen);
+            // 外圆形
             painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
             painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), buttonRect.width() / 2, buttonRect.width() / 2);
-            
+            // 内圆形
             painter->setBrush(NXThemeColor(_themeMode, BasicTextInvert));
             if (bopt->state & QStyle::State_Sunken)
             {
@@ -88,11 +89,11 @@ int NXRadioButtonStyle::pixelMetric(PixelMetric metric, const QStyleOption* opti
     {
     case QStyle::PM_ExclusiveIndicatorWidth:
     {
-        return 18;
+        return 20;
     }
     case QStyle::PM_ExclusiveIndicatorHeight:
     {
-        return 18;
+        return 20;
     }
     default:
     {

@@ -1,4 +1,4 @@
-#ifndef NXLOG_H
+﻿#ifndef NXLOG_H
 #define NXLOG_H
 
 #include <QObject>

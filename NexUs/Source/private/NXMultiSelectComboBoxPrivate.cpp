@@ -1,4 +1,4 @@
-#include "NXMultiSelectComboBoxPrivate.h"
+﻿#include "NXMultiSelectComboBoxPrivate.h"
 
 #include <QPropertyAnimation>
 
@@ -26,7 +26,7 @@ void NXMultiSelectComboBoxPrivate::onItemPressed(const QModelIndex& index)
     }
     _refreshCurrentIndexs();
     QPropertyAnimation* markAnimation = new QPropertyAnimation(this, "pExpandMarkWidth");
-    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    QObject::connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         q->update();
     });
     markAnimation->setDuration(300);
@@ -70,6 +70,7 @@ void NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         _selectedTextList = _currentText.split(",", Qt::SkipEmptyParts);
 #else
+        _selectedTextList = _currentText.split(",");
         if (_selectedTextList.count() == 1 && _selectedTextList[0].isEmpty())
         {
             _selectedTextList.clear();

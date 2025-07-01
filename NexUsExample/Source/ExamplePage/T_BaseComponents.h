@@ -13,12 +13,13 @@ class NXSpinBox;
 class NXSlider;
 class NXRadioButton;
 class NXProgressBar;
+class NXProgressRing;
 class T_BaseComponents : public T_BasePage
 {
     Q_OBJECT
 public:
     Q_INVOKABLE explicit T_BaseComponents(QWidget* parent = nullptr);
-    ~T_BaseComponents();
+    ~T_BaseComponents() override;
 
 protected:
     virtual void mouseReleaseEvent(QMouseEvent* event);
@@ -37,6 +38,10 @@ private:
     NXSlider* _slider{nullptr};
     NXRadioButton* _radioButton{nullptr};
     NXProgressBar* _progressBar{nullptr};
+    NXProgressRing* _progressRing{nullptr};
+    NXProgressRing* _progressPercentRing{nullptr};
+    NXProgressRing* _progressBusyRing{nullptr};
+    NXProgressRing* _progressBusyTransparentRing{nullptr};
 };
 
 #endif // T_BASECOMPONENTS_H

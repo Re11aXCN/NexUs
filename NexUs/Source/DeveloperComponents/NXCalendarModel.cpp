@@ -1,4 +1,4 @@
-#include "NXCalendarModel.h"
+﻿#include "NXCalendarModel.h"
 
 NXCalendarModel::NXCalendarModel(QObject* parent)
     : QAbstractListModel{parent}

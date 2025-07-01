@@ -1,4 +1,4 @@
-#include "NXComboBoxStyle.h"
+﻿#include "NXComboBoxStyle.h"
 
 #include <QDebug>
 #include <QPainter>
@@ -11,7 +11,9 @@ NXComboBoxStyle::NXComboBoxStyle(QStyle* style)
     _pExpandIconRotate = 0;
     _pExpandMarkWidth = 0;
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
 }
 
 NXComboBoxStyle::~NXComboBoxStyle()
@@ -23,6 +25,7 @@ void NXComboBoxStyle::drawPrimitive(PrimitiveElement element, const QStyleOption
     switch (element)
     {
     case QStyle::PE_Widget:
+    case QStyle::PE_PanelLineEdit:
     {
         return;
     }
@@ -54,6 +57,7 @@ void NXComboBoxStyle::drawControl(ControlElement element, const QStyleOption* op
     }
     case QStyle::CE_ShapedFrame:
     {
+        //container区域
         if (widget->objectName() == "NXComboBoxContainer")
         {
             QRect viewRect = option->rect;
@@ -70,6 +74,7 @@ void NXComboBoxStyle::drawControl(ControlElement element, const QStyleOption* op
     }
     case QStyle::CE_ItemViewItem:
     {
+        //覆盖高亮
         if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
         {
             int margin = 2;
@@ -87,15 +92,17 @@ void NXComboBoxStyle::drawControl(ControlElement element, const QStyleOption* op
             {
                 if (option->state & QStyle::State_MouseOver)
                 {
+                    // 选中时覆盖
                     painter->setBrush(NXThemeColor(_themeMode, BasicSelectedHoverAlpha));
                     painter->drawPath(path);
                 }
                 else
                 {
+                    // 选中
                     painter->setBrush(NXThemeColor(_themeMode, BasicSelectedAlpha));
                     painter->drawPath(path);
                 }
-
+                //选中Mark
                 painter->setPen(Qt::NoPen);
                 painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
                 painter->drawRoundedRect(QRectF(optionRect.x() + 3, optionRect.y() + optionRect.height() * 0.2, 3, optionRect.height() - +optionRect.height() * 0.4), 2, 2);
@@ -104,10 +111,12 @@ void NXComboBoxStyle::drawControl(ControlElement element, const QStyleOption* op
             {
                 if (option->state & QStyle::State_MouseOver)
                 {
+                    // 覆盖时颜色
                     painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
                     painter->drawPath(path);
                 }
             }
+            // 文字绘制
             painter->setPen(NXThemeColor(_themeMode, BasicText));
             painter->drawText(QRect(option->rect.x() + 15, option->rect.y(), option->rect.width() - 15, option->rect.height()), Qt::AlignVCenter, vopt->text);
             painter->restore();
@@ -128,32 +137,43 @@ void NXComboBoxStyle::drawComplexControl(ComplexControl control, const QStyleOpt
     {
     case QStyle::CC_ComboBox:
     {
+        //主体显示绘制
         if (const QStyleOptionComboBox* copt = qstyleoption_cast<const QStyleOptionComboBox*>(option))
         {
             painter->save();
             painter->setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-
+            //背景绘制
             bool isEnabled = copt->state.testFlag(QStyle::State_Enabled);
             painter->setPen(NXThemeColor(_themeMode, BasicBorder));
-            painter->setBrush(isEnabled ? copt->state.testFlag(QStyle::State_MouseOver) ? NXThemeColor(_themeMode, BasicHover) : NXThemeColor(_themeMode, BasicBase) : NXThemeColor(_themeMode, BasicDisable));
+            painter->setBrush(isEnabled ? (copt->state.testFlag(QStyle::State_HasFocus) && copt->editable)
+                                      ? NXThemeColor(_themeMode, DialogBase)
+                                      : copt->state.testFlag(QStyle::State_MouseOver)
+                                      ? NXThemeColor(_themeMode, BasicHover)
+                                      : NXThemeColor(_themeMode, BasicBase)
+                                        : NXThemeColor(_themeMode, BasicDisable));
             QRect comboBoxRect = copt->rect;
             comboBoxRect.adjust(_shadowBorderWidth, 1, -_shadowBorderWidth, -1);
             painter->drawRoundedRect(comboBoxRect, 3, 3);
-
+            // 底边线绘制
             painter->setPen(NXThemeColor(_themeMode, BasicBaseLine));
             painter->drawLine(comboBoxRect.x() + 3, comboBoxRect.y() + comboBoxRect.height(), comboBoxRect.x() + comboBoxRect.width() - 3, comboBoxRect.y() + comboBoxRect.height());
 
-            QRect textRect = subControlRect(QStyle::CC_ComboBox, copt, QStyle::SC_ScrollBarSubLine, widget);
-            painter->setPen(isEnabled ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
-            painter->drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, copt->currentText);
+            //文字绘制
+            if (!copt->editable)
+            {
+                QRect textRect = subControlRect(QStyle::CC_ComboBox, copt, QStyle::SC_ScrollBarSubLine, widget);
+                painter->setPen(isEnabled ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
+                painter->drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, copt->currentText);
+            }
+            //展开指示器绘制
             painter->setPen(Qt::NoPen);
             painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
             painter->drawRoundedRect(QRectF(comboBoxRect.center().x() - _pExpandMarkWidth, comboBoxRect.y() + comboBoxRect.height() - 3, _pExpandMarkWidth * 2, 3), 2, 2);
-
+            // 展开图标绘制
             QRect expandIconRect = subControlRect(QStyle::CC_ComboBox, copt, QStyle::SC_ScrollBarAddPage, widget);
             if (expandIconRect.isValid())
             {
-                QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+                QFont iconFont = QFont("NXAwesome");
                 iconFont.setPixelSize(17);
                 painter->setFont(iconFont);
                 painter->setPen(isEnabled ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
@@ -184,6 +204,7 @@ QRect NXComboBoxStyle::subControlRect(ComplexControl cc, const QStyleOptionCompl
         {
         case QStyle::SC_ScrollBarSubLine:
         {
+            //文字区域
             QRect textRect = QProxyStyle::subControlRect(cc, opt, sc, widget);
             textRect.setLeft(16);
             textRect.setRight(textRect.right() - 15);
@@ -191,6 +212,7 @@ QRect NXComboBoxStyle::subControlRect(ComplexControl cc, const QStyleOptionCompl
         }
         case QStyle::SC_ScrollBarAddPage:
         {
+            //展开图标区域
             QRect expandIconRect = QProxyStyle::subControlRect(cc, opt, sc, widget);
             expandIconRect.setLeft(expandIconRect.left() - 25);
             return expandIconRect;

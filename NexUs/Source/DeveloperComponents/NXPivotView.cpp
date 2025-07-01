@@ -1,4 +1,4 @@
-#include "NXPivotView.h"
+﻿#include "NXPivotView.h"
 
 #include <QMouseEvent>
 #include <QPainter>
@@ -33,7 +33,7 @@ void NXPivotView::doCurrentIndexChangedAnimation(const QModelIndex& index)
     {
         QRect newIndexRect = visualRect(index);
         QPropertyAnimation* markAnimation = new QPropertyAnimation(this, "pMarkX");
-        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+        QObject::connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
             update();
         });
         markAnimation->setDuration(300);
@@ -61,7 +61,7 @@ void NXPivotView::doCurrentIndexChangedAnimation(const QModelIndex& index)
     {
         QRect newIndexRect = visualRect(model()->index(_pPivotStyle->getCurrentIndex(), 0));
         QPropertyAnimation* markAnimation = new QPropertyAnimation(this, "pMarkX");
-        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+        QObject::connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
             update();
         });
         markAnimation->setDuration(300);

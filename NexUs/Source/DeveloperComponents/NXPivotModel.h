@@ -1,4 +1,4 @@
-#ifndef NXPIVOTMODEL_H
+﻿#ifndef NXPIVOTMODEL_H
 #define NXPIVOTMODEL_H
 
 #include <QAbstractListModel>

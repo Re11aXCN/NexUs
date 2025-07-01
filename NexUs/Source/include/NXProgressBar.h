@@ -1,4 +1,4 @@
-#ifndef NXPROGRESSBAR_H
+﻿#ifndef NXPROGRESSBAR_H
 #define NXPROGRESSBAR_H
 
 #include <QProgressBar>
@@ -12,7 +12,7 @@ class NX_EXPORT NXProgressBar : public QProgressBar
     Q_Q_CREATE(NXProgressBar)
 public:
     explicit NXProgressBar(QWidget* parent = nullptr);
-    ~NXProgressBar();
+    ~NXProgressBar() override;
     void setMinimum(int minimum);
     void setMaximum(int maximum);
 

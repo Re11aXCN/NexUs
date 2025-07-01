@@ -1,5 +1,5 @@
-#ifndef NXFRAMEWORK_NXWIDGETTOOLS_INCLUDE_NXROLLER_H_
-#define NXFRAMEWORK_NXWIDGETTOOLS_INCLUDE_NXROLLER_H_
+﻿#ifndef NXFRAMEWORK_NEXUS_INCLUDE_NXROLLER_H_
+#define NXFRAMEWORK_NEXUS_INCLUDE_NXROLLER_H_
 
 #include "stdafx.h"
 #include <QWidget>
@@ -10,10 +10,10 @@ class NX_EXPORT NXRoller : public QWidget
     Q_OBJECT
     Q_Q_CREATE(NXRoller)
     Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
-    Q_PROPERTY_CREATE_Q_H(QStringList, ItemList)
     Q_PROPERTY_CREATE_Q_H(int, ItemHeight)
     Q_PROPERTY_CREATE_Q_H(int, MaxVisibleItems)
     Q_PROPERTY_CREATE_Q_H(int, CurrentIndex)
+    Q_PROPERTY_CREATE_Q_H(QStringList, ItemList)
 public:
     explicit NXRoller(QWidget* parent = nullptr);
     ~NXRoller() override;
@@ -27,4 +27,4 @@ protected:
     virtual void paintEvent(QPaintEvent* event) override;
 };
 
-#endif //NXFRAMEWORK_NXWIDGETTOOLS_INCLUDE_NXROLLER_H_
+#endif //NXFRAMEWORK_NEXUS_INCLUDE_NXROLLER_H_

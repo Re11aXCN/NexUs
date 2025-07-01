@@ -13,7 +13,9 @@ class NX_EXPORT NXComboBox : public QComboBox
     Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
 public:
     explicit NXComboBox(QWidget* parent = nullptr);
-    ~NXComboBox();
+    ~NXComboBox() override;
+
+    void setEditable(bool editable);
 
 protected:
     virtual void showPopup() override;

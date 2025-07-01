@@ -37,7 +37,9 @@ class NX_EXPORT NXTableView : public QTableView
     Q_Q_CREATE(NXTableView)
     Q_PROPERTY_CREATE_Q_H(int, HeaderMargin)
     Q_PROPERTY_CREATE_Q_H(bool, DrawSelectionBackground)
-
+    Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+    Q_PROPERTY_CREATE_Q_H(bool, IsDrawAlternateRowsEnabled)
+    Q_PROPERTY_CREATE_Q_H(bool, IsSelectionEffectsEnabled)
 public:
     explicit NXTableView(QWidget* parent = nullptr);
     ~NXTableView();

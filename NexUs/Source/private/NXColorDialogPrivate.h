@@ -1,4 +1,4 @@
-#ifndef NXCOLORDIALOGPRIVATE_H
+﻿#ifndef NXCOLORDIALOGPRIVATE_H
 #define NXCOLORDIALOGPRIVATE_H
 
 #include <QModelIndex>
@@ -21,7 +21,6 @@ class NXToolButton;
 class QSlider;
 class QColor;
 class NXColorValueSliderStyle;
-
 class NXColorDialogPrivate : public QObject
 {
     Q_OBJECT
@@ -48,14 +47,14 @@ public:
     Q_SLOT void onRemoveCustomColorButtonClicked();
 
 private:
-    NXThemeType::ThemeMode _themeMode;
+ 	NXThemeType::ThemeMode _themeMode;
     NXAppBar* _appBar{nullptr};
     NXColorPicker* _colorPicker{nullptr};
     NXColorPreview* _colorPreview{nullptr};
     QSlider* _colorValueSlider{nullptr};
     QSlider* _transparencyValueSlider{ nullptr };
-    std::shared_ptr<NXColorValueSliderStyle> _colorValueSliderStyle{nullptr};
-    std::shared_ptr<NXColorValueSliderStyle> _transparencyValueSliderStyle{ nullptr };
+    NXColorValueSliderStyle* _colorValueSliderStyle{nullptr};
+    NXColorValueSliderStyle* _transparencyValueSliderStyle{ nullptr };
     NXLineEdit* _htmlEdit{nullptr};
     NXComboBox* _modeComboBox{nullptr};
     NXLineEdit* _firstEdit{nullptr};

@@ -1,4 +1,4 @@
-#include "NXRollerPrivate.h"
+﻿#include "NXRollerPrivate.h"
 #include <QPropertyAnimation>
 
 NXRollerPrivate::NXRollerPrivate(QObject* parent)

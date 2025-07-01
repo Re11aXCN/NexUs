@@ -1,11 +1,27 @@
-#ifndef NXTOOLBUTTON_H
+﻿#ifndef NXTOOLBUTTON_H
 #define NXTOOLBUTTON_H
 
-#include <NXAdvancedToolButton.h>
+#include <QToolButton>
 
 #include "NXDef.h"
 class NXMenu;
 class NXToolButtonPrivate;
+class NX_EXPORT NXAdvancedToolButton : public QToolButton {
+	Q_OBJECT
+
+public:
+	explicit NXAdvancedToolButton(QWidget* parent = nullptr);
+
+	Q_SIGNAL void rightReleased();
+	Q_SIGNAL void rightPressed();
+	Q_SIGNAL void middleReleased();
+	Q_SIGNAL void middlePressed();
+
+protected:
+	void mouseReleaseEvent(QMouseEvent* event) override;
+	void mousePressEvent(QMouseEvent* event) override;
+};
+
 class NX_EXPORT NXToolButton : public NXAdvancedToolButton
 {
     Q_OBJECT

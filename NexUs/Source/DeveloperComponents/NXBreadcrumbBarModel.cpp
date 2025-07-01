@@ -1,4 +1,4 @@
-#include "NXBreadcrumbBarModel.h"
+﻿#include "NXBreadcrumbBarModel.h"
 
 NXBreadcrumbBarModel::NXBreadcrumbBarModel(QObject* parent)
     : QAbstractListModel{parent}

@@ -1,4 +1,4 @@
-#include "NXListViewStyle.h"
+﻿#include "NXListViewStyle.h"
 
 #include <QPainter>
 #include <QPainterPath>
@@ -11,7 +11,7 @@ NXListViewStyle::NXListViewStyle(QStyle* style)
     _pItemHeight = 35;
     _pIsTransparent = true;
     _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }
@@ -99,7 +99,7 @@ void NXListViewStyle::drawControl(ControlElement element, const QStyleOption* op
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
         painter->setPen(NXThemeColor(_themeMode, PopupBorder));
-        painter->setBrush(_pIsTransparent ? NXThemeColor(_themeMode, BasicBase) : QColor(0xF3, 0xF4, 0xF5));
+        painter->setBrush(_pIsTransparent ? NXThemeColor(_themeMode, BasicBaseAlpha) : QColor(0xF3, 0xF4, 0xF5));
         painter->drawRoundedRect(option->rect.adjusted(1, 1, -1, -1), 3, 3);
         painter->restore();
         return;

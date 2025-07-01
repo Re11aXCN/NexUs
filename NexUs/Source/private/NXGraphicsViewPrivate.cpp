@@ -1,4 +1,4 @@
-#include "NXGraphicsViewPrivate.h"
+﻿#include "NXGraphicsViewPrivate.h"
 
 #include "NXGraphicsView.h"
 #include "NXScrollBar.h"

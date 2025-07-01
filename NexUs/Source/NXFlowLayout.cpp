@@ -1,4 +1,4 @@
-#include "NXFlowLayout.h"
+﻿#include "NXFlowLayout.h"
 
 #include <QPropertyAnimation>
 #include <QWidget>

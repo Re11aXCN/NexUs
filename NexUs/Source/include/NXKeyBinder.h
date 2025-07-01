@@ -1,5 +1,5 @@
-#ifndef NXWIDGETTOOLS_SRC_NXKEYBINDER_H_
-#define NXWIDGETTOOLS_SRC_NXKEYBINDER_H_
+﻿#ifndef NEXUS_SRC_NXKEYBINDER_H_
+#define NEXUS_SRC_NXKEYBINDER_H_
 
 #include "NXDef.h"
 #include <QLabel>
@@ -26,4 +26,4 @@ protected:
     virtual void paintEvent(QPaintEvent* event) override;
 };
 
-#endif//NXWIDGETTOOLS_SRC_NXKEYBINDER_H_
+#endif//NEXUS_SRC_NXKEYBINDER_H_

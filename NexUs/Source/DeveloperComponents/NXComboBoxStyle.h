@@ -11,7 +11,7 @@ class NXComboBoxStyle : public QProxyStyle
     Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
 public:
     explicit NXComboBoxStyle(QStyle* style = nullptr);
-    ~NXComboBoxStyle();
+    ~NXComboBoxStyle() override;
     void drawPrimitive(PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     void drawComplexControl(ComplexControl control, const QStyleOptionComplex* option, QPainter* painter, const QWidget* widget = nullptr) const override;

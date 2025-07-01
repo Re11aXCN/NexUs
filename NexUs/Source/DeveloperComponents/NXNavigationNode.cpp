@@ -1,4 +1,4 @@
-#include "NXNavigationNode.h"
+﻿#include "NXNavigationNode.h"
 
 #include <QUuid>
 
@@ -27,11 +27,11 @@ QString NXNavigationNode::getNodeKey() const
     return _nodeKey;
 }
 
+
 void NXNavigationNode::setNodeTitle(const QString& nodeTitle)
 {
     _nodeTitle = nodeTitle;
 }
-
 QString NXNavigationNode::getNodeTitle() const
 {
     return _nodeTitle;

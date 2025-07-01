@@ -73,3 +73,20 @@
 
 > 1. 修复NavigationNodeClicked/Removed的错误逻辑
 > 1. NXSlider添加的仅按下拖到
+
+------
+
+
+
+## # **Track Record 2**：	Commits on Jun 30, 2025
+
+### 1. Modify Optize1
+
+> 1. 去除先前多个控件不必要的代码，如NXWidget、NXSlider等
+> 2. 优化大部分逻辑
+> 3. 引入NXPacketIO、magic_enum
+>
+> 
+>
+> <u>**目前最稳定版本——Release**</u>
+

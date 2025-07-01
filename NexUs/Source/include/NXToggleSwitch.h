@@ -1,4 +1,4 @@
-#ifndef NXTOGGLESWITCH_H
+﻿#ifndef NXTOGGLESWITCH_H
 #define NXTOGGLESWITCH_H
 
 #include <QWidget>

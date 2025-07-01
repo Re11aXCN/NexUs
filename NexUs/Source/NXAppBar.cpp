@@ -1,4 +1,4 @@
-#include "NXAppBar.h"
+﻿#include "NXAppBar.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -18,28 +18,23 @@
 #include <QScreen>
 #include <QTimer>
 #include <QVBoxLayout>
-#include <QButtonGroup>
 
 #include "NXDef.h"
 #include "NXEventBus.h"
 #include "NXIconButton.h"
 #include "NXTheme.h"
 #include "private/NXAppBarPrivate.h"
-
-Q_PROPERTY_CREATE_Q_CPP(NXAppBar, QBoxLayout*, CustomModuleLayout)
-Q_PROPERTY_CREATE_Q_CPP(NXAppBar, QButtonGroup*, ModuleButtonGroup)
-Q_PROPERTY_CREATE_Q_CPP(NXAppBar, bool, IsCustomModule)
 Q_PROPERTY_CREATE_Q_CPP(NXAppBar, bool, IsStayTop)
 Q_PROPERTY_CREATE_Q_CPP(NXAppBar, bool, IsDefaultClosed)
 Q_PROPERTY_CREATE_Q_CPP(NXAppBar, bool, IsOnlyAllowMinAndClose)
 
-NXAppBar::NXAppBar(QWidget* parent, bool isCustomModule)
+NXAppBar::NXAppBar(QWidget* parent)
     : QWidget{parent}, d_ptr(new NXAppBarPrivate())
 {
     Q_D(NXAppBar);
     d->_buttonFlags = NXAppBarType::RouteBackButtonHint | NXAppBarType::StayTopButtonHint | NXAppBarType::ThemeChangeButtonHint | NXAppBarType::MinimizeButtonHint | NXAppBarType::MaximizeButtonHint | NXAppBarType::CloseButtonHint;
     window()->setAttribute(Qt::WA_Mapped);
-    d->_pAppBarHeight = 50;
+    d->_pAppBarHeight = 45;
     setFixedHeight(d->_pAppBarHeight);
     window()->setContentsMargins(0, this->height(), 0, 0);
     d->q_ptr = this;
@@ -49,22 +44,18 @@ NXAppBar::NXAppBar(QWidget* parent, bool isCustomModule)
     d->_pIsOnlyAllowMinAndClose = false;
     d->_pCustomWidget = nullptr;
     d->_pCustomWidgetMaximumWidth = 550;
-
-    d->_pIsCustomModule = isCustomModule;
-
     window()->installEventFilter(this);
 #ifdef Q_OS_WIN
+    NXWinShadowHelper::getInstance()->initDWMAPI();
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
     window()->setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
-#else
-    window()->setWindowFlags((window()->windowFlags()) | Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
 #endif
 #else
     window()->setWindowFlags((window()->windowFlags()) | Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
 #endif
     setMouseTracking(true);
     setObjectName("NXAppBar");
-    //setStyleSheet("#NXAppBar{background-color:transparent;}");
+    setStyleSheet("#NXAppBar{background-color:transparent;}");
     setAttribute(Qt::WA_TranslucentBackground);
     d->_routeBackButton = new NXToolButton(this);
     d->_routeBackButton->setNXIcon(NXIconType::ArrowLeft);
@@ -86,30 +77,14 @@ NXAppBar::NXAppBar(QWidget* parent, bool isCustomModule)
     d->_stayTopButton = new NXToolButton(this);
     d->_stayTopButton->setNXIcon(NXIconType::ArrowUpToArc);
     d->_stayTopButton->setFixedSize(40, 30);
-    QObject::connect(d->_stayTopButton, &NXIconButton::clicked, this, [=]() { this->setIsStayTop(!this->getIsStayTop()); });
+    QObject::connect(d->_stayTopButton, &NXIconButton::clicked, this, [=]() {
+        this->setIsStayTop(!this->getIsStayTop());
+    });
     QObject::connect(this, &NXAppBar::pIsStayTopChanged, d, &NXAppBarPrivate::onStayTopButtonClicked);
 
-    // 图标
+    //图标
     d->_iconLabel = new QLabel(this);
-    // 标题
-    d->_titleLabel = new NXText(this);
-    // 自定义Module
-    if (d->_pIsCustomModule) {
-        d->_iconLabelLayout = d->_createHLayout(d->_iconLabel);
-        d->_titleLabelLayout = d->_createHLayout(d->_titleLabel);
-        d->_pCustomModuleLayout = new QHBoxLayout();
-        d->_pCustomModuleLayout->setContentsMargins(0, 0, 0, 0);
-        d->_pCustomModuleLayout->setSpacing(0);
-        d->_pCustomModuleLayout->addLayout(d->_iconLabelLayout);
-        d->_pCustomModuleLayout->addLayout(d->_titleLabelLayout);
-
-        d->_pModuleButtonGroup = new QButtonGroup(this);
-    }
-    else {
-        d->_iconLabelLayout = d->_createVLayout(d->_iconLabel);
-        d->_titleLabelLayout = d->_createVLayout(d->_titleLabel);
-    }
-
+    d->_iconLabelLayout = d->_createVLayout(d->_iconLabel);
     if (parent->windowIcon().isNull())
     {
         d->_iconLabel->setVisible(false);
@@ -120,13 +95,16 @@ NXAppBar::NXAppBar(QWidget* parent, bool isCustomModule)
         d->_iconLabelLayout->setContentsMargins(10, 0, 0, 0);
     }
     QObject::connect(parent, &QWidget::windowIconChanged, this, [=](const QIcon& icon) {
-        d->_iconLabel->setPixmap(icon.pixmap(20, 20));
+        d->_iconLabel->setPixmap(icon.pixmap(18, 18));
         d->_iconLabel->setVisible(icon.isNull() ? false : true);
         d->_iconLabelLayout->setContentsMargins(icon.isNull() ? 0 : 10, 0, 0, 0);
     });
 
+    //标题
+    d->_titleLabel = new NXText(this);
     d->_titleLabel->setIsWrapAnywhere(false);
-    d->_titleLabel->setTextPixelSize(15);
+    d->_titleLabel->setTextPixelSize(13);
+    d->_titleLabelLayout = d->_createVLayout(d->_titleLabel);
     if (parent->windowTitle().isEmpty())
     {
         d->_titleLabel->setVisible(false);
@@ -147,7 +125,9 @@ NXAppBar::NXAppBar(QWidget* parent, bool isCustomModule)
     d->_themeChangeButton->setNXIcon(NXIconType::MoonStars);
     d->_themeChangeButton->setFixedSize(40, 30);
     QObject::connect(d->_themeChangeButton, &NXIconButton::clicked, this, &NXAppBar::themeChangeButtonClicked);
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_onxThemeModeChange(themeMode); });
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+        d->_onThemeModeChange(themeMode);
+    });
 
     d->_minButton = new NXToolButton(this);
     d->_minButton->setNXIcon(NXIconType::Dash);
@@ -170,15 +150,8 @@ NXAppBar::NXAppBar(QWidget* parent, bool isCustomModule)
     d->_mainLayout->setSpacing(0);
     d->_mainLayout->addLayout(d->_createVLayout(d->_routeBackButton));
     d->_mainLayout->addLayout(d->_createVLayout(d->_navigationButton));
-    if(d->_pIsCustomModule)
-    {
-        d->_mainLayout->addLayout(d->_pCustomModuleLayout);
-    }
-    else
-    {
-        d->_mainLayout->addLayout(d->_iconLabelLayout);
-        d->_mainLayout->addLayout(d->_titleLabelLayout);
-    }
+    d->_mainLayout->addLayout(d->_iconLabelLayout);
+    d->_mainLayout->addLayout(d->_titleLabelLayout);
     d->_mainLayout->addStretch();
     d->_mainLayout->addStretch();
     d->_mainLayout->addLayout(d->_createVLayout(d->_stayTopButton));
@@ -198,8 +171,7 @@ NXAppBar::NXAppBar(QWidget* parent, bool isCustomModule)
             }
         });
     }
-
-    // 主屏幕变更处理
+    //主屏幕变更处理
     QObject::connect(qApp, &QApplication::primaryScreenChanged, this, [=]() {
         HWND hwnd = (HWND)(d->_currentWinID);
         ::SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
@@ -341,7 +313,6 @@ void NXAppBar::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isE
 
 void NXAppBar::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags)
 {
-    qDebug() << buttonFlags;
     Q_D(NXAppBar);
     d->_buttonFlags = buttonFlags;
     d->_routeBackButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::RouteBackButtonHint));
@@ -351,15 +322,6 @@ void NXAppBar::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags)
     d->_minButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::MinimizeButtonHint));
     d->_maxButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::MaximizeButtonHint));
     d->_closeButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::CloseButtonHint));
-
-    if(d->_pIsCustomModule)
-    {
-        bool showModuleButtons = d->_buttonFlags.testFlag(NXAppBarType::ModuleButtonsHint);
-        for (QAbstractButton* button : d->_pModuleButtonGroup->buttons())
-        {
-            button->setVisible(showModuleButtons);
-        }
-    }
 }
 
 NXAppBarType::ButtonFlags NXAppBar::getWindowButtonFlags() const
@@ -435,7 +397,11 @@ int NXAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, lo
     }
     case WM_NCACTIVATE:
     {
-        *result = TRUE;
+        if (NXWinShadowHelper::getInstance()->isCompositionEnabled())
+        {
+            return 0;
+        }
+        *result = true;
         return 1;
     }
     case WM_SIZE:
@@ -482,7 +448,7 @@ int NXAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, lo
         }
         else
         {
-            /*const LRESULT hitTestResult = ::DefWindowProcW(hwnd, WM_NCCALCSIZE, wParam, lParam);
+            const LRESULT hitTestResult = ::DefWindowProcW(hwnd, WM_NCCALCSIZE, wParam, lParam);
             if ((hitTestResult != HTERROR) && (hitTestResult != HTNOWHERE))
             {
                 *result = static_cast<long>(hitTestResult);
@@ -499,7 +465,7 @@ int NXAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, lo
             }
             geometry = screen->geometry();
 #endif
-            clientRect->top = geometry.top();*/
+            clientRect->top = geometry.top();
         }
         *result = WVR_REDRAW;
         return 1;
@@ -722,7 +688,7 @@ bool NXAppBar::eventFilter(QObject* obj, QEvent* event)
         }
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
         HWND hwnd = (HWND)d->_currentWinID;
-        setShadow(hwnd);
+        NXWinShadowHelper::getInstance()->setWindowShadow(d->_currentWinID);
         DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
         bool hasCaption = (style & WS_CAPTION) == WS_CAPTION;
         if (!hasCaption)

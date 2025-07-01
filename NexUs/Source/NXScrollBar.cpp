@@ -1,4 +1,4 @@
-#include "NXScrollBar.h"
+﻿#include "NXScrollBar.h"
 
 #include <QDebug>
 #include <QPainter>
@@ -24,19 +24,21 @@ NXScrollBar::NXScrollBar(QWidget* parent)
     d->_pTargetMaximum = 0;
     d->_pIsAnimation = false;
     QObject::connect(this, &NXScrollBar::rangeChanged, d, &NXScrollBarPrivate::onRangeChanged);
-    d->_scrollBarStyle = std::make_shared<NXScrollBarStyle>(style());
-    d->_scrollBarStyle->setScrollBar(this);
-    setStyle(d->_scrollBarStyle.get());
-    d->_slideSmoothAnimation = new QPropertyAnimation(this, "value", this);
+    NXScrollBarStyle* scrollBarStyle = new NXScrollBarStyle(style());
+    scrollBarStyle->setScrollBar(this);
+    setStyle(scrollBarStyle);
+    d->_slideSmoothAnimation = new QPropertyAnimation(this, "value");
     d->_slideSmoothAnimation->setEasingCurve(QEasingCurve::OutSine);
     d->_slideSmoothAnimation->setDuration(300);
-    QObject::connect(d->_slideSmoothAnimation, &QPropertyAnimation::finished, this, [=]() { d->_scrollValue = value(); });
+    QObject::connect(d->_slideSmoothAnimation, &QPropertyAnimation::finished, this, [=]() {
+        d->_scrollValue = value();
+    });
 
     d->_expandTimer = new QTimer(this);
     QObject::connect(d->_expandTimer, &QTimer::timeout, this, [=]() {
         d->_expandTimer->stop();
         d->_isExpand = underMouse();
-        d->_scrollBarStyle->startExpandAnimation(d->_isExpand);
+        scrollBarStyle->startExpandAnimation(d->_isExpand);
     });
 }
 

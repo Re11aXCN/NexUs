@@ -1,4 +1,4 @@
-#include "NXMessageButton.h"
+﻿#include "NXMessageButton.h"
 
 #include <QMouseEvent>
 #include <QPainter>
@@ -34,12 +34,11 @@ NXMessageButton::NXMessageButton(QWidget* parent)
     d->_pPositionPolicy = NXMessageBarType::TopRight;
     d->_themeMode = nxTheme->getThemeMode();
     d->_pMessageTargetWidget = parent;
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
-    
-    connect(this, &NXMessageButton::clicked, d, &NXMessageButtonPrivate::_showMessage);
-    connect(this, &NXMessageButton::showMessage, d, &NXMessageButtonPrivate::_showMessage);
+    QObject::connect(this, &NXMessageButton::clicked, d, &NXMessageButtonPrivate::_showMessage);
+    QObject::connect(this, &NXMessageButton::showMessage, d, &NXMessageButtonPrivate::_showMessage);
 }
 
 NXMessageButton::NXMessageButton(const QString& text, QWidget* parent)
@@ -52,7 +51,7 @@ NXMessageButton::~NXMessageButton()
 {
 }
 
-void NXMessageButton::disconnectBuiltInSignalClicked()
+void NXMessageButton::disconnectInternalSignalOfClicked()
 {
     Q_D(NXMessageButton);
     disconnect(this, &NXMessageButton::clicked, d, &NXMessageButtonPrivate::_showMessage);

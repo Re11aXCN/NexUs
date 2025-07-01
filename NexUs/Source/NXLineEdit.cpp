@@ -1,4 +1,4 @@
-#include "NXLineEdit.h"
+﻿#include "NXLineEdit.h"
 
 #include <QClipboard>
 #include <QContextMenuEvent>
@@ -12,29 +12,27 @@
 #include "NXMenu.h"
 #include "NXTheme.h"
 #include "private/NXLineEditPrivate.h"
-//Q_PROPERTY_CREATE_Q_CPP(NXLineEdit, int, BorderRadius)
-
 NXLineEdit::NXLineEdit(QWidget* parent)
     : QLineEdit(parent), d_ptr(new NXLineEditPrivate())
 {
     Q_D(NXLineEdit);
     d->q_ptr = this;
     setObjectName("NXLineEdit");
+    setFixedHeight(35);
     d->_themeMode = nxTheme->getThemeMode();
-    //d->_pBorderRadius = 6;
     d->_pExpandMarkWidth = 0;
     d->_pIsClearButtonEnabled = true;
     setFocusPolicy(Qt::StrongFocus);
-    
+    // 事件总线
     d->_focusEvent = new NXEvent("WMWindowClicked", "onWMWindowClickedEvent", d);
     d->_focusEvent->registerAndInit();
     setMouseTracking(true);
     QFont textFont = font();
     textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
     setFont(textFont);
-    d->_lineEditStyle = std::make_shared<NXLineEditStyle>(style());
-    setStyle(d->_lineEditStyle.get());
-    setStyleSheet("#NXLineEdit{padding-left: 10px;}");
+    d->_lineEditStyle = new NXLineEditStyle(style());
+    setStyle(d->_lineEditStyle);
+    setStyleSheet("#NXLineEdit{background-color:transparent;padding-left: 10px;}");
     d->onThemeChanged(nxTheme->getThemeMode());
     QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXLineEditPrivate::onThemeChanged);
     setVisible(true);
@@ -67,13 +65,13 @@ bool NXLineEdit::getIsClearButtonEnabled() const
 void NXLineEdit::setBorderRadius(int borderRadius)
 {
     Q_D(const NXLineEdit);
-    d->_lineEditStyle.get()->setLineEditBorderRadius(borderRadius);
+    d->_lineEditStyle->setLineEditBorderRadius(borderRadius);
 }
 
 int NXLineEdit::getBorderRadius() const
 {
     Q_D(const NXLineEdit);
-    return d->_lineEditStyle.get()->getLineEditBorderRadius();
+    return d->_lineEditStyle->getLineEditBorderRadius();
 }
 
 void NXLineEdit::setContentsPaddings(int left, int top, int right, int bottom)
@@ -100,6 +98,18 @@ QMargins NXLineEdit::getContentsPaddings() const
     return d->_paddings;
 }
 
+void NXLineEdit::setLineEditIconMargin(int margin)
+{
+    Q_D(NXLineEdit);
+    d->_lineEditStyle->setLineEditIconMargin(margin);
+}
+
+int NXLineEdit::getLineEditIconMargin() const
+{
+    Q_D(const NXLineEdit);
+    return d->_lineEditStyle->getLineEditIconMargin();
+}
+
 void NXLineEdit::focusInEvent(QFocusEvent* event)
 {
     Q_D(NXLineEdit);
@@ -117,7 +127,7 @@ void NXLineEdit::focusInEvent(QFocusEvent* event)
         markAnimation->setDuration(300);
         markAnimation->setEasingCurve(QEasingCurve::InOutSine);
         markAnimation->setStartValue(d->_pExpandMarkWidth);
-        markAnimation->setEndValue(width() / 2 - 6 / 2);
+        markAnimation->setEndValue(width() / 2 - d->_lineEditStyle->getLineEditBorderRadius() / 2);
         markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     }
     QLineEdit::focusInEvent(event);

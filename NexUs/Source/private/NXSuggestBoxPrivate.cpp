@@ -32,7 +32,7 @@ NXSuggestBoxPrivate::~NXSuggestBoxPrivate()
 {
 }
 
-void NXSuggestBoxPrivate::onxThemeModeChanged(NXThemeType::ThemeMode themeMode)
+void NXSuggestBoxPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode)
 {
     _themeMode = themeMode;
     _searchEdit->removeAction(_themeMode == NXThemeType::Light ? _darkSearchAction : _lightSearchAction);
@@ -49,7 +49,7 @@ void NXSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText)
         return;
     }
     QVector<NXSuggestion*> suggestionVector;
-    for (const auto& suggest : _suggestionVector)
+    for (const auto& suggest: _suggestionVector)
     {
         if (suggest->getSuggestText().contains(searchText, _pCaseSensitivity))
         {

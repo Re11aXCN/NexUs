@@ -1,4 +1,4 @@
-#ifndef NXCALENDARMODEL_H
+﻿#ifndef NXCALENDARMODEL_H
 #define NXCALENDARMODEL_H
 
 #include <QAbstractListModel>
@@ -58,11 +58,12 @@ protected:
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
 private:
+    NXCalendarType _displayMode{NXCalendarType::DayMode};
+    int _dayRowCount{0};
     int _offset{0};
     QDate _pMinimumDate;
     QDate _pMaximumDate;
-    NXCalendarType _displayMode{NXCalendarType::DayMode};
-    int _dayRowCount{0};
+
     void _initRowCount();
     int _getCurrentDay(int row) const;
 };

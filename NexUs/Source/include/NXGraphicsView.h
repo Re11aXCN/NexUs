@@ -1,4 +1,4 @@
-#ifndef NXGRAPHICSVIEW_H
+﻿#ifndef NXGRAPHICSVIEW_H
 #define NXGRAPHICSVIEW_H
 
 #include <QGraphicsView>

@@ -1,4 +1,4 @@
-#include "NXPivotModel.h"
+﻿#include "NXPivotModel.h"
 
 NXPivotModel::NXPivotModel(QObject* parent)
     : QAbstractListModel{parent}

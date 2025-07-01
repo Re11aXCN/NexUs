@@ -1,4 +1,4 @@
-#ifndef NXTOOLBARPRIVATE_H
+﻿#ifndef NXTOOLBARPRIVATE_H
 #define NXTOOLBARPRIVATE_H
 #include <QObject>
 

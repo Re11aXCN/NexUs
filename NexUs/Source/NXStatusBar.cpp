@@ -1,4 +1,4 @@
-#include "NXStatusBar.h"
+﻿#include "NXStatusBar.h"
 
 #include <QPainter>
 #include <QTimer>
@@ -7,6 +7,8 @@
 NXStatusBar::NXStatusBar(QWidget* parent)
     : QStatusBar(parent)
 {
+    setObjectName("NXStatusBar");
+    setStyleSheet("#NXStatusBar{background-color:transparent;}");
     setFixedHeight(28);
     setContentsMargins(20, 0, 0, 0);
     setStyle(new NXStatusBarStyle(style()));

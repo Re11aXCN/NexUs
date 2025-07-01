@@ -1,4 +1,4 @@
-#ifndef NXPLAINTEXTEDITSTYLE_H
+﻿#ifndef NXPLAINTEXTEDITSTYLE_H
 #define NXPLAINTEXTEDITSTYLE_H
 
 #include <QProxyStyle>
@@ -10,7 +10,7 @@ class NXPlainTextEditStyle : public QProxyStyle
     Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
 public:
     explicit NXPlainTextEditStyle(QStyle* style = nullptr);
-    ~NXPlainTextEditStyle();
+    ~NXPlainTextEditStyle() override;
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
 
 private:

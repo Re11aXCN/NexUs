@@ -1,4 +1,4 @@
-#include "NXTabWidgetPrivate.h"
+﻿#include "NXTabWidgetPrivate.h"
 
 #include <QApplication>
 #include <QMimeData>
@@ -7,7 +7,6 @@
 #include "DeveloperComponents/NXCustomTabWidget.h"
 #include "NXTabBar.h"
 #include "NXTabWidget.h"
-#include "NXToolButton.h"
 NXTabWidgetPrivate::NXTabWidgetPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -41,6 +40,7 @@ void NXTabWidgetPrivate::onTabDragCreate(QDrag* drag)
     QApplication::sendEvent(mimeData->property("NXTabBarObject").value<NXTabBar*>(), &releaseEvent);
     if (drag->exec() == Qt::IgnoreAction)
     {
+        // 创建新窗口
         NXTabBar* originCustomTabBar = mimeData->property("NXTabBarObject").value<NXTabBar*>();
         if (originCustomTabBar && originCustomTabBar->objectName() == "NXCustomTabBar")
         {

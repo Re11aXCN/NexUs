@@ -8,6 +8,7 @@
 #include <QVector>
 
 #include "NXDef.h"
+
 class NXSuggestion : public QObject
 {
     Q_OBJECT
@@ -37,24 +38,24 @@ class NXSuggestBoxPrivate : public QObject
 public:
     explicit NXSuggestBoxPrivate(QObject* parent = nullptr);
     ~NXSuggestBoxPrivate();
-    Q_SLOT void onxThemeModeChanged(NXThemeType::ThemeMode themeMode);
+    Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode);
     Q_SLOT void onSearchEditTextEdit(const QString& searchText);
     Q_SLOT void onSearchViewClicked(const QModelIndex& index);
 
 private:
-    bool _isExpandAnimationFinished{ true };
-    bool _isCloseAnimationFinished{ true };
-    NXThemeType::ThemeMode _themeMode;
-    QSize _lastSize;
-    QVector<NXSuggestion*> _suggestionVector;
-    QAction* _lightSearchAction{nullptr};
-    QAction* _darkSearchAction{nullptr};
-    NXSuggestBoxSearchViewContainer* _searchViewBaseWidget{nullptr};
-    NXLineEdit* _searchEdit{nullptr};
-    NXSuggestModel* _searchModel{nullptr};
-    NXBaseListView* _searchView{nullptr};
-    NXSuggestDelegate* _searchDelegate{nullptr};
-    QVBoxLayout* _shadowLayout{nullptr}; 
+	bool _isExpandAnimationFinished{ true };
+	bool _isCloseAnimationFinished{ true };
+	NXThemeType::ThemeMode _themeMode;
+	QSize _lastSize;
+	QVector<NXSuggestion*> _suggestionVector;
+	QAction* _lightSearchAction{ nullptr };
+	QAction* _darkSearchAction{ nullptr };
+	NXSuggestBoxSearchViewContainer* _searchViewBaseWidget{ nullptr };
+	NXLineEdit* _searchEdit{ nullptr };
+	NXSuggestModel* _searchModel{ nullptr };
+	NXBaseListView* _searchView{ nullptr };
+	NXSuggestDelegate* _searchDelegate{ nullptr };
+	QVBoxLayout* _shadowLayout{ nullptr };
 
     void _startSizeAnimation(QSize oldSize, QSize newSize);
     void _startExpandAnimation();

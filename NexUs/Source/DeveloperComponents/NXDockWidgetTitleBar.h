@@ -1,4 +1,4 @@
-#ifndef NXDOCKWIDGETTITLEBAR_H
+﻿#ifndef NXDOCKWIDGETTITLEBAR_H
 #define NXDOCKWIDGETTITLEBAR_H
 
 #include <QDockWidget>
