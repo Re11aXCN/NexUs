@@ -57,3 +57,7 @@
 > 6. NXWindow新增navigationNodeToggled信号替换原来的navigationNodeClicked作用，navigationNodeClicked变为点击触发即使node没有page，navigationNodeToggled是进行page切换
 >
 >    新增_currentVisibleWidget获取当前stackedWidget和nodekey、nodetype
+
+### 5. Modify Optize5
+
+> 1. NXNavigationModel、NXNavigationView，drag、drop优化，交换位置符合人的视觉行为习惯，添加颜色提示

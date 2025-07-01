@@ -113,10 +113,7 @@ NXNavigationBar::NXNavigationBar(QWidget* parent)
         });
     connect(d->_navigationView, &NXNavigationView::navigationOpenNewWindow, d, &NXNavigationBarPrivate::onNavigationOpenNewWindow);
     connect(d->_navigationView, &NXNavigationView::navigationCloseCurrentWindow, d, &NXNavigationBarPrivate::onNavigationCloseCurrentWindow);
-    connect(d->_navigationModel, &NXNavigationModel::rowsMoved, this, [=](const QModelIndex& sourceParent, int sourceStart, int sourceEnd, const QModelIndex& destinationParent, int destinationRow) {
-        /*const QModelIndex destinationIndex = d->_navigationModel->index(destinationRow, 0, destinationParent);
-        const QModelIndex sourceIndex = d->_navigationModel->index(sourceEnd - sourceStart + 1, 0, sourceParent);
-        d->onTreeViewClicked(sourceIndex);*/
+    connect(d->_navigationModel, &NXNavigationModel::rowsMoved, this, [=]() {
         d->_initNodeModelIndex(QModelIndex());
         d->_resetNodeSelected();
         });
@@ -195,11 +192,10 @@ void NXNavigationBar::setUserInfoCardSubTitle(const QString& subTitle)
     d->_userCard->setSubTitle(subTitle);
 }
 
-/*template<typename Func>
-inline */void NXNavigationBar::setNavigationPageOpenPolicy(std::function<void(const QString&/*nodeKey*/)>&& openNavigationPageFunc)
+void NXNavigationBar::setNavigationPageOpenPolicy(std::function<void(const QString&/*nodeKey*/)>&& openNavigationPageFunc)
 {
     Q_D(NXNavigationBar);
-    d->_openPageFunc = std::move(openNavigationPageFunc);/*std::forward<Func>(func)*/;
+    d->_openPageFunc = std::move(openNavigationPageFunc);
 }
 
 void NXNavigationBar::setIsLeftButtonPressedToggleNavigation(bool isPressed)
@@ -211,7 +207,7 @@ void NXNavigationBar::setIsLeftButtonPressedToggleNavigation(bool isPressed)
 void NXNavigationBar::setNavigationNodeDragAndDropEnable(bool isEnable)
 {
     Q_D(NXNavigationBar);
-    d->_navigationView->setNavigationNodeDragAndDropEnable(isEnabled);
+    d->_navigationView->setNavigationNodeDragAndDropEnable(isEnable);
 }
 
 NodeOperateReturnTypeWithKey NXNavigationBar::addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome)

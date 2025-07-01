@@ -289,6 +289,11 @@ QStringList NXNavigationModel::removeNavigationNode(const QString& nodeKey)
 }
 
 
+const NXNavigationNode* NXNavigationModel::getRootNode() const
+{
+    return _rootNode;
+}
+
 NXNavigationNode* NXNavigationModel::getNavigationNode(const QString& nodeKey) const
 {
     if (_nodesMap.contains(nodeKey))
@@ -360,80 +365,62 @@ bool NXNavigationModel::canDropMimeData(const QMimeData* data, Qt::DropAction ac
         || _nodesMap.size() <= 1)
         return false;
 
-    return true;// 已经有dropEvent了，这里可以不用再次验证
-    //const QModelIndex targetParentIndex = parent;
-    //const QModelIndex targetIndex = index(row, column, targetParentIndex);
-    //
-    //QByteArray encodedData = data->data("application/x-nxnavigation-node");
-    //QDataStream stream(&encodedData, QIODevice::ReadOnly);
-    //QString nodeKey; stream >> nodeKey;
-    //NXNavigationNode* targetParentNode = targetParentIndex.isValid() ?
-    //    static_cast<NXNavigationNode*>(targetParentIndex.internalPointer()) : _rootNode;
-    ///* NXNavigationNode* targetNode = targetIndex.isValid() ?
-    //    static_cast<NXNavigationNode*>(targetIndex.internalPointer()) : nullptr;*/
-    //NXNavigationNode* draggedNode = _nodesMap.value(nodeKey);
-    //// 展开状态验证，根节点一定是展开状态,expenderNode不能拖拽
-    ///*if (targetNode->getIsExpanderNode() &&
-    //    !targetNode->getIsExpanded()) {
-    //    return  ((targetParentNode->getIsRootNode() ? _rootNode
-    //        : targetParentNode->getParentNode()) == draggedNode->getParentNode());
-    //}*/
-    //
-    //// 类型组合验证
-    //if (targetParentNode->getIsRootNode()) {
-    //    // 根节点接受所有类型
-    //    return true;
-    //}
-    //else if (draggedNode->getIsExpanderNode()) {
-    //    // Expander只能插入到Expander或根节点下
-    //    return targetParentNode->getIsExpanderNode();
-    //}
-    //else {
-    //    // PageNode可以插入到任何Expander下
-    //    return targetParentNode->getIsExpanderNode();
-    //}
+    return true;
 }
 
 bool NXNavigationModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
-    if (!data->hasFormat("application/x-nxnavigation-node")
-        || action != Qt::MoveAction
-        || _nodesMap.size() <= 1)
-        return false;
-
-    int targetRow = row;
-    const QModelIndex targetParentIndex = parent;
-    const QModelIndex targetIndex = index(targetRow, column, targetParentIndex);
-
     QByteArray encodedData = data->data("application/x-nxnavigation-node");
     QDataStream stream(&encodedData, QIODevice::ReadOnly);
     QString nodeKey, nodeTitle;
     stream >> nodeKey >> nodeTitle;
     qDebug() << "nodeKey: " << nodeKey << "\n nodeTitle: " << nodeTitle;
+
     NXNavigationNode* draggedNode = _nodesMap.value(nodeKey);
-    int oldRow = draggedNode->getRow();
-    // pagenode 是0 移到 expandernode 下的第0个节点会被跳出，不对
-    if (!draggedNode || draggedNode->getRow() == targetRow) return false;
+    if (!draggedNode) return false;
+    const QModelIndex targetParentIndex = parent;
+    const QModelIndex targetIndex = index(row, column, targetParentIndex);
 
     NXNavigationNode* targetNode = static_cast<NXNavigationNode*>(targetIndex.internalPointer());
     NXNavigationNode* draggedParentNode = draggedNode->getParentNode();
-    NXNavigationNode* targetParentNode = targetParentIndex.isValid() ?
-        static_cast<NXNavigationNode*>(targetParentIndex.internalPointer()) : _rootNode;
+    NXNavigationNode* targetParentNode = targetIndex.isValid() ? targetNode->getParentNode() : _rootNode;
     const bool isSameParent = (draggedParentNode == targetParentNode);
 
-    // 计算实际插入位置
     int totalRow = targetParentNode->getChildrenNodes().count();
-    int newRow = (targetRow == -1) ? totalRow : targetRow;
-    if (isSameParent && newRow > totalRow - 1) {
-        newRow--;  // 同一父节点下向后移动时的位置修正
+    int targetRow = (row == -1) ? totalRow : row;
+    int draggedRow = draggedNode->getRow();
+
+    // 单个节点移动，上移差1，下移差2（+1）
+    if (isSameParent) {
+        //if (targetRow >= totalRow) targetRow; else 
+        if (draggedRow < targetRow)
+        {
+            if (draggedRow + 1 == targetRow) targetRow++; // 差2纠正
+            else 
+                if(_dropIndicatorPosition == NXNavigationModel::BelowItem) targetRow++; // 差2纠正
+                //else if(_dropIndicatorPosition == NXNavigationModel::AboveItem) targetRow;
+        }
+        else if (draggedRow > targetRow)
+        {
+            if (draggedRow - 1 != targetRow) 
+                if (_dropIndicatorPosition == NXNavigationModel::BelowItem)
+                    targetRow++; //下移一个位置
+        }
     }
-
-    beginMoveRows(draggedParentNode->getModelIndex(), draggedNode->getRow(), draggedNode->getRow(),
-        targetParentIndex, newRow);
+    else {
+        if (_dropIndicatorPosition == NXNavigationModel::BelowItem)
+            targetRow++; //下移一个位置
+    }
+    
+    beginMoveRows(draggedParentNode->getModelIndex(), draggedRow, draggedRow,
+        targetParentIndex, targetRow);
+    if (isSameParent) {
+        if (targetRow >= totalRow || draggedRow < targetRow)
+            targetRow--; //差2纠正，需恢复，确保insert位置正确
+    }
     draggedParentNode->removeChildNode(draggedNode);
-    targetParentNode->insertChildNode(newRow, draggedNode);
-
-    // 递归更新深度
+    targetParentNode->insertChildNode(targetRow, draggedNode);
+    
     std::function<void(NXNavigationNode*, int)> recursiveUpdateDepth =
         [&recursiveUpdateDepth](NXNavigationNode* node, int baseDepth) {
         node->setDepth(baseDepth + 1);
@@ -442,8 +429,17 @@ bool NXNavigationModel::dropMimeData(const QMimeData* data, Qt::DropAction actio
         }
         };
     recursiveUpdateDepth(draggedNode, targetParentNode->getDepth());
-
     endMoveRows();
-
+    //Q_EMIT mineDataDropped(data, draggedNode->getModelIndex(), targetIndex);
     return true;
+}
+
+void NXNavigationModel::setDropIndicatorPosition(DropIndicatorPosition position)
+{
+    _dropIndicatorPosition = position;
+}
+
+NXNavigationModel::DropIndicatorPosition NXNavigationModel::getDropIndicatorPosition() const
+{
+    return _dropIndicatorPosition;
 }

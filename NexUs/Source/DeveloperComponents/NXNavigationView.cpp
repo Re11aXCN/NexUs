@@ -17,6 +17,7 @@
 #include "NXScrollBar.h"
 #include "NXToolTip.h"
 
+QColor gIndicatorColor = NXThemeColor(nxTheme->getThemeMode(), PrimaryNormal);
 NXNavigationView::NXNavigationView(QWidget* parent)
     : QTreeView(parent)
     , _pIsLeftButtonPressedToggleNavigation(false)
@@ -96,20 +97,20 @@ void NXNavigationView::setNavigationNodeDragAndDropEnable(bool isEnable)
 QAbstractItemView::DropIndicatorPosition NXNavigationView::dropIndicatorPositionOverride() const
 {
     if (!_hoveredIndex.isValid()) {
-        return QAbstractItemView::OnViewport; // 当没有有效的索引时，返回 OnViewport
+        return QAbstractItemView::OnViewport; 
     }
 
     QRect itemRect = visualRect(_hoveredIndex);
-    QPoint cursorPos = mapFromGlobal(QCursor::pos()); // 获取鼠标当前的位置
+    QPoint cursorPos = mapFromGlobal(QCursor::pos());
 
     if (cursorPos.y() - 9 < itemRect.top()) {
-        return QAbstractItemView::AboveItem; // 鼠标在节点上方
+        return QAbstractItemView::AboveItem;
     }
     else if (cursorPos.y() + 10 > itemRect.bottom()) {
-        return QAbstractItemView::BelowItem; // 鼠标在节点下方
+        return QAbstractItemView::BelowItem;
     }
     else {
-        return QAbstractItemView::OnItem; // 鼠标在节点内部
+        return QAbstractItemView::OnItem;
     }
 }
 
@@ -195,77 +196,10 @@ void NXNavigationView::mouseReleaseEvent(QMouseEvent* event)
         _navigationStyle->setPressIndex(QModelIndex());
     }
 }
-// dragEnterEvent 触发 canDropMimeData 函数，如果返回 true 则可以接收 dropMimeData，否则不接收。
+
 void NXNavigationView::dragEnterEvent(QDragEnterEvent* event)
 {
     event->setAccepted(event->mimeData()->hasFormat("application/x-nxnavigation-node"));
-}
-
-void NXNavigationView::dropEvent(QDropEvent* event)
-{
-    DropIndicatorPosition dropindicationPos = dropIndicatorPositionOverride();
-    _hoveredIndex = QModelIndex();
-    NXNavigationModel* model = qobject_cast<NXNavigationModel*>(this->model());
-    NXNavigationNode* draggedNode = model->getSelectedNode();
-    const QModelIndex draggedIndex = draggedNode->getModelIndex();
-    const QModelIndex targetIndex = indexAt(event->position().toPoint());
-    const QModelIndex draggedParentIndex = draggedIndex.parent();
-    const QModelIndex targetParentIndex = targetIndex.parent();
-    bool draggedParentIsRootNode = draggedNode->getParentNode()->getIsRootNode();
-    // 禁止与自己的父节点交换
-    if (targetIndex == draggedParentIndex && !draggedParentIsRootNode)
-    {
-        event->ignore();
-        return;
-    }
-    int draggedRow = draggedIndex.row();
-    int targetRow = targetIndex.row();
-    int draggedParentRow = draggedParentIndex.row();
-    int targetParentRow = targetParentIndex.row();
-
-    // 检查目标是否为自身
-    if (draggedIndex == targetIndex) {
-        if (dropindicationPos == QAbstractItemView::AboveItem || dropindicationPos == QAbstractItemView::OnItem) {
-            event->ignore();
-            return;
-        }
-        else if (dropindicationPos == QAbstractItemView::BelowItem) {
-            if ((targetRow += 1) == model->rowCount(targetParentIndex))// 移动到下一个位置，最后一个节点不处理
-            {
-                event->ignore();
-                return;
-            }
-        }
-    }
-
-    QModelIndex previousIndex = model->index(draggedRow - 1, 0, draggedParentIndex);
-    if (previousIndex.isValid() && previousIndex == targetIndex && dropindicationPos == QAbstractItemView::BelowItem) {
-        event->ignore();
-        return; 
-    }
-    //QModelIndex nextIndex = model->index(draggedRow + 1, 0, draggedParentIndex);
-    //if (nextIndex.isValid() && nextIndex == targetIndex && dropindicationPos == QAbstractItemView::AboveItem) {
-    //    event->ignore();
-    //    return;
-    //}
-    if (draggedRow == 0 && dropindicationPos == QAbstractItemView::BelowItem) {
-        // 首节点只能与下方节点交换
-        event->ignore();
-        return;
-    }
-    if ((draggedRow == model->rowCount(targetParentIndex) - 1) && !targetIndex.isValid()) {
-        // 尾节点只能与上方节点交换
-        event->ignore();
-        return;
-    }
-    if (model->canDropMimeData(event->mimeData(), Qt::MoveAction, targetRow, 0, targetParentIndex)) {
-        model->dropMimeData(event->mimeData(), Qt::MoveAction, targetRow, 0, targetParentIndex);
-        event->acceptProposedAction();
-    }
-    else {
-        event->ignore();
-    }
-    viewport()->update();
 }
 
 void NXNavigationView::dragMoveEvent(QDragMoveEvent* event)
@@ -281,9 +215,70 @@ void NXNavigationView::dragMoveEvent(QDragMoveEvent* event)
     }
 
     _hoveredIndex = indexAt(event->position().toPoint());
+
+    DropIndicatorPosition dropindicationPos = dropIndicatorPositionOverride();
+    NXNavigationModel* model = qobject_cast<NXNavigationModel*>(this->model());
+    model->setDropIndicatorPosition(static_cast<NXNavigationModel::DropIndicatorPosition>(dropindicationPos));
+    NXNavigationNode* draggedNode = model->getSelectedNode();
+    const QModelIndex draggedIndex = draggedNode->getModelIndex();
+    const QModelIndex draggedParentIndex = draggedIndex.parent();
+    const QModelIndex draggedPreviousIndex = model->index(draggedIndex.row() - 1, 0, draggedParentIndex);
+    const QModelIndex draggedNextIndex = model->index(draggedIndex.row() + 1, 0, draggedParentIndex);
+
+    const QModelIndex targetIndex = indexAt(event->position().toPoint());
+    const QModelIndex targetParentIndex = targetIndex.parent();
+    if ((draggedIndex == targetIndex)
+        || (draggedPreviousIndex.isValid() && draggedPreviousIndex == targetIndex && dropindicationPos == QAbstractItemView::BelowItem)
+        || (draggedNextIndex.isValid() && draggedNextIndex == targetIndex && dropindicationPos == QAbstractItemView::AboveItem)
+        || ((draggedIndex.row() == model->rowCount(targetParentIndex) - 1) && !targetIndex.isValid())
+        || (targetIndex == draggedParentIndex && !draggedNode->getParentNode()->getIsRootNode())
+        )
+        gIndicatorColor = NXThemeColor(nxTheme->getThemeMode(), BasicText);
+    else
+        if (dropindicationPos == QAbstractItemView::OnItem)
+            gIndicatorColor = nxTheme->getThemeMode() == NXThemeType::ThemeMode::Light ? QColor(0x7D, 0x52, 0x84) : QColor(0x66, 0x3D, 0x74);
+            //QColor(0x7D, 0x52, 0x84)、QColor(0x42, 0x22, 0x56)、QColor(0x9B, 0x8E, 0xA9)、QColor(0x7E, 0x52, 0x7F)、QColor(0x66, 0x3D, 0x74)
+        else
+            gIndicatorColor = NXThemeColor(nxTheme->getThemeMode(), PrimaryNormal);
+
     viewport()->update();
     event->accept();
 }
+
+void NXNavigationView::dropEvent(QDropEvent* event)
+{
+#define IGNORE_EVENT(BOOL) if(BOOL){ event->ignore(); return;}
+    DropIndicatorPosition dropindicationPos = dropIndicatorPositionOverride();
+    _hoveredIndex = QModelIndex();
+    IGNORE_EVENT(dropindicationPos == QAbstractItemView::OnItem);
+    NXNavigationModel* model = qobject_cast<NXNavigationModel*>(this->model());
+    model->setDropIndicatorPosition(static_cast<NXNavigationModel::DropIndicatorPosition>(dropindicationPos));
+    NXNavigationNode* draggedNode = model->getSelectedNode();
+    const QModelIndex draggedIndex = draggedNode->getModelIndex();
+    const QModelIndex draggedParentIndex = draggedIndex.parent();
+    const QModelIndex draggedPreviousIndex = model->index(draggedIndex.row() - 1, 0, draggedParentIndex);
+    const QModelIndex draggedNextIndex = model->index(draggedIndex.row() + 1, 0, draggedParentIndex);
+
+    const QModelIndex targetIndex = indexAt(event->position().toPoint());
+    const QModelIndex targetParentIndex = targetIndex.parent();
+    IGNORE_EVENT(draggedIndex == targetIndex);
+    IGNORE_EVENT(draggedPreviousIndex.isValid() && draggedPreviousIndex == targetIndex && dropindicationPos == QAbstractItemView::BelowItem);
+    IGNORE_EVENT(draggedNextIndex.isValid() && draggedNextIndex == targetIndex && dropindicationPos == QAbstractItemView::AboveItem);
+    IGNORE_EVENT((draggedIndex.row() == model->rowCount(targetParentIndex) - 1) && !targetIndex.isValid());
+    IGNORE_EVENT(targetIndex == draggedParentIndex && !draggedNode->getParentNode()->getIsRootNode());
+
+    int targetRow = targetIndex.row();
+    if (model->canDropMimeData(event->mimeData(), Qt::MoveAction, targetRow, 0, targetParentIndex)) {
+        model->dropMimeData(event->mimeData(), Qt::MoveAction, targetRow, 0, targetParentIndex);
+        event->acceptProposedAction();
+    }
+    else {
+        event->ignore();
+    }
+    //viewport()->update();
+#undef IGNORE_EVENT
+}
+
 
 void NXNavigationView::paintEvent(QPaintEvent* event)
 {
@@ -295,7 +290,7 @@ void NXNavigationView::paintEvent(QPaintEvent* event)
 
     QPainter painter(viewport());
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.setPen(QPen(NXThemeColor(nxTheme->getThemeMode(), PrimaryNormal), 2));
+    painter.setPen(QPen(gIndicatorColor, 2));
 
     switch (dropIndicatorPositionOverride()) {
     case QAbstractItemView::AboveItem: {

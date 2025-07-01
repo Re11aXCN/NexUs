@@ -29,6 +29,7 @@ public:
     NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, const QString& targetExpanderKey, int keyPoints, NXIconType::IconName awesome);
     QStringList removeNavigationNode(const QString& nodeKey);
 
+    const NXNavigationNode* getRootNode() const;
     NXNavigationNode* getNavigationNode(const QString& nodeKey) const;
     QList<NXNavigationNode*> getRootExpanderNodes() const;
     QList<NXNavigationNode*> getRootExpandedNodes() const;
@@ -39,9 +40,16 @@ public:
     virtual QMimeData* mimeData(const QModelIndexList& indexes) const override;
     virtual bool canDropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent) const override;
     virtual bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent) override;
+
+    enum DropIndicatorPosition { OnItem, AboveItem, BelowItem, OnViewport };
+    void setDropIndicatorPosition(DropIndicatorPosition position);
+    DropIndicatorPosition getDropIndicatorPosition() const;
+Q_SIGNALS:
+    void mineDataDropped(const QMimeData* data, const QModelIndex& draggedIndex, const QModelIndex& targetIndex);
 private:
     QMap<QString, NXNavigationNode*> _nodesMap;
     NXNavigationNode* _rootNode{nullptr};
+    DropIndicatorPosition _dropIndicatorPosition{OnViewport};
 };
 
 #endif // NXNAVIGATIONMODEL_H

@@ -219,7 +219,7 @@ void NXWindow::setIsLeftButtonPressedToggleNavigation(bool isPressed)
 void NXWindow::setNavigationNodeDragAndDropEnable(bool isEnable)
 {
     Q_D(NXWindow);
-    d->_navigationBar->setNavigationNodeDragAndDropEnable(isEnabled);
+    d->_navigationBar->setNavigationNodeDragAndDropEnable(isEnable);
 }
 
 void NXWindow::setUserInfoCardVisible(bool isVisible)
