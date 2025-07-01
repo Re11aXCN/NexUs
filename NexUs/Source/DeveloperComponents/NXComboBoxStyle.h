@@ -1,4 +1,4 @@
-#ifndef NXCOMBOBOXSTYLE_H
+﻿#ifndef NXCOMBOBOXSTYLE_H
 #define NXCOMBOBOXSTYLE_H
 
 #include <QProxyStyle>

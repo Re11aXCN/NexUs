@@ -1,4 +1,4 @@
-#ifndef NXWIDGET_H
+﻿#ifndef NXWIDGET_H
 #define NXWIDGET_H
 
 #include <QWidget>

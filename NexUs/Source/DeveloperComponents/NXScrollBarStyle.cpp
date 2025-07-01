@@ -24,7 +24,7 @@ NXScrollBarStyle::~NXScrollBarStyle()
 
 void NXScrollBarStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex* option, QPainter* painter, const QWidget* widget) const
 {
-    //QStyle::SC_ScrollBarGroove QStyle::SC_ScrollBarAddLine   QStyle::SC_ScrollBarSubLine娑撳﹥瀵氱粈鍝勬珤
+    //QStyle::SC_ScrollBarGroove QStyle::SC_ScrollBarAddLine   QStyle::SC_ScrollBarSubLine上指示器
     switch (control)
     {
     case QStyle::CC_ScrollBar:
@@ -37,18 +37,19 @@ void NXScrollBarStyle::drawComplexControl(ComplexControl control, const QStyleOp
             QRect scrollBarRect = sopt->rect;
             if (_pIsExpand)
             {
+                // 背景绘制
                 painter->setOpacity(_pOpacity);
                 painter->setPen(Qt::NoPen);
                 painter->setBrush(NXThemeColor(_themeMode, BasicBase));
                 painter->drawRoundedRect(scrollBarRect, 6, 6);
-                //閹稿洨銇氶崳銊х帛閸?center()閸︺劍顒濇径鍕瑝闁倻鏁?鐎涙ê婀径鏍ф纯鏉堢绐涚€硅棄瀹?闂団偓閹靛濮╃拋锛勭暬
+                //指示器绘制 center()在此处不适用 存在外围边距宽度 需手动计算
                 int sideLength = 8;
                 painter->setBrush(NXThemeColor(_themeMode, ScrollBarHandle));
                 if (sopt->orientation == Qt::Horizontal)
                 {
                     QRect leftIndicatorRect = subControlRect(control, sopt, QStyle::SC_ScrollBarSubLine, widget);
                     QRect rightIndicatorRect = subControlRect(control, sopt, QStyle::SC_ScrollBarAddLine, widget);
-                    
+                    // 左三角
                     qreal centerLeftX = leftIndicatorRect.x() + leftIndicatorRect.width() / 2;
                     qreal centerRightX = rightIndicatorRect.x() + rightIndicatorRect.width() / 2;
                     qreal centerY = leftIndicatorRect.height() / 2;
@@ -58,7 +59,7 @@ void NXScrollBarStyle::drawComplexControl(ComplexControl control, const QStyleOp
                     leftPath.lineTo(centerLeftX + qCos(30 * M_PI / 180.0) * sideLength / 2, centerY - sideLength / 2);
                     leftPath.closeSubpath();
                     painter->drawPath(leftPath);
-
+                    // 右三角
                     QPainterPath rightPath;
                     rightPath.moveTo(centerRightX + qCos(30 * M_PI / 180.0) * sideLength / 2, centerY);
                     rightPath.lineTo(centerRightX - qCos(30 * M_PI / 180.0) * sideLength / 2, centerY + sideLength / 2);
@@ -72,7 +73,7 @@ void NXScrollBarStyle::drawComplexControl(ComplexControl control, const QStyleOp
                     QRect downIndicatorRect = subControlRect(control, sopt, QStyle::SC_ScrollBarAddLine, widget);
                     qreal centerToTop = (sideLength / 2) / qCos(30 * M_PI / 180.0);
                     qreal centerToBottom = (sideLength / 2) * qTan(30 * M_PI / 180.0);
-                    
+                    // 上三角
                     qreal centerX = upIndicatorRect.width() / 2.0;
                     qreal centerUpY = upIndicatorRect.center().y() + 2;
                     qreal centerDownY = downIndicatorRect.center().y() + 2;
@@ -82,7 +83,7 @@ void NXScrollBarStyle::drawComplexControl(ComplexControl control, const QStyleOp
                     upPath.lineTo(centerX - sideLength / 2, centerUpY + centerToBottom);
                     upPath.closeSubpath();
                     painter->drawPath(upPath);
-
+                    // 下三角
                     QPainterPath downPath;
                     downPath.moveTo(centerX, centerDownY + centerToBottom);
                     downPath.lineTo(centerX + sideLength / 2, centerDownY - centerToTop);
@@ -92,7 +93,7 @@ void NXScrollBarStyle::drawComplexControl(ComplexControl control, const QStyleOp
                 }
             }
             painter->setOpacity(1);
-            //濠婃垵娼＄紒妯哄煑
+            //滑块绘制
             QRectF sliderRect = subControlRect(control, sopt, QStyle::SC_ScrollBarSlider, widget);
             painter->setBrush(NXThemeColor(_themeMode, ScrollBarHandle));
             if (sopt->orientation == Qt::Horizontal)

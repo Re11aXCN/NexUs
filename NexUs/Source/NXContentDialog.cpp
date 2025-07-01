@@ -134,19 +134,19 @@ void NXContentDialog::setCentralWidget(QWidget* centralWidget)
     d->_mainLayout->addWidget(d->_buttonWidget);
 }
 
-void NXContentDialog::setLeftButtonText(QString text)
+void NXContentDialog::setLeftButtonText(const QString& text)
 {
     Q_D(NXContentDialog);
     d->_leftButton->setText(text);
 }
 
-void NXContentDialog::setMiddleButtonText(QString text)
+void NXContentDialog::setMiddleButtonText(const QString& text)
 {
     Q_D(NXContentDialog);
     d->_middleButton->setText(text);
 }
 
-void NXContentDialog::setRightButtonText(QString text)
+void NXContentDialog::setRightButtonText(const QString& text)
 {
     Q_D(NXContentDialog);
     d->_rightButton->setText(text);

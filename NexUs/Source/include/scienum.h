@@ -1,4 +1,4 @@
-#ifndef SCIENUM_H
+﻿#ifndef SCIENUM_H
 #define SCIENUM_H
 #include <string>
 namespace scienum {

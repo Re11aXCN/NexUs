@@ -1,4 +1,4 @@
-#include "NXTabWidget.h"
+﻿#include "NXTabWidget.h"
 
 #include <QDrag>
 #include <QMimeData>

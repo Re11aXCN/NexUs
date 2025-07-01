@@ -23,10 +23,11 @@ class NXNavigationNode : public QObject
     bool _isExpanded{ false };
 
 public:
-    explicit NXNavigationNode(QString nodeTitle, NXNavigationNode* parent = nullptr);
+    explicit NXNavigationNode(const QString& nodeTitle, NXNavigationNode* parent = nullptr);
     ~NXNavigationNode();
 
     QString getNodeKey() const;
+    void setNodeTitle(const QString& nodeTitle);
     QString getNodeTitle() const;
 
     void setIsExpanded(bool isExpanded);

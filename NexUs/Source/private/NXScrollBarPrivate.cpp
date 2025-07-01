@@ -1,4 +1,4 @@
-#include "NXScrollBarPrivate.h"
+﻿#include "NXScrollBarPrivate.h"
 
 #include <QApplication>
 #include <QPropertyAnimation>

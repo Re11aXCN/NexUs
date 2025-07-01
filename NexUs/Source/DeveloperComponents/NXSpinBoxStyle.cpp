@@ -113,7 +113,7 @@ void NXSpinBoxStyle::drawComplexControl(ComplexControl control, const QStyleOpti
         }
 
         //濞ｈ濮為崶鐐垼
-        QFont iconFont = QFont("ElaAwesome");
+        QFont iconFont = QFont("NXAwesome");
         iconFont.setPixelSize(17);
         painter->setFont(iconFont);
         painter->setPen(NXThemeColor(_themeMode, BasicText));

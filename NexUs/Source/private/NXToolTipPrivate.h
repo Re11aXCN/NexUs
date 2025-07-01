@@ -1,4 +1,4 @@
-#ifndef NXTOOLTIPPRIVATE_H
+﻿#ifndef NXTOOLTIPPRIVATE_H
 #define NXTOOLTIPPRIVATE_H
 
 #include <QObject>

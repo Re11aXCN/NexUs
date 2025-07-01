@@ -1,4 +1,4 @@
-#include "NXColorDisplayDelegate.h"
+﻿#include "NXColorDisplayDelegate.h"
 
 #include <QColor>
 #include <QPainter>

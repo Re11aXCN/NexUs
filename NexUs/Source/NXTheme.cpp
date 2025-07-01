@@ -1,4 +1,4 @@
-#include "NXTheme.h"
+﻿#include "NXTheme.h"
 
 #include <QPainter>
 #include <QPainterPath>

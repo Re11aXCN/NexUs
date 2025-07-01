@@ -1,4 +1,4 @@
-#include "NXCustomTabWidget.h"
+﻿#include "NXCustomTabWidget.h"
 
 #include <QVBoxLayout>
 

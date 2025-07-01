@@ -22,9 +22,9 @@ public:
     void setContentsPaddings(int left, int top, int right, int bottom);
     QMargins getContentsPaddings() const;
 Q_SIGNALS:
-    Q_SIGNAL void focusIn(QString text);
-    Q_SIGNAL void focusOut(QString text);
-    Q_SIGNAL void wmFocusOut(QString text);
+    Q_SIGNAL void focusIn(const QString& text);
+    Q_SIGNAL void focusOut(const QString& text);
+    Q_SIGNAL void wmFocusOut(const QString& text);
 
 protected:
     void focusInEvent(QFocusEvent* event) override;

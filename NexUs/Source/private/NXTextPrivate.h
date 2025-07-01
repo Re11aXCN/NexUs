@@ -1,4 +1,4 @@
-#ifndef NXTEXTPRIVATE_H
+﻿#ifndef NXTEXTPRIVATE_H
 #define NXTEXTPRIVATE_H
 
 #include <QObject>

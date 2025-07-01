@@ -1,4 +1,4 @@
-#include "NXTableViewPrivate.h"
+﻿#include "NXTableViewPrivate.h"
 
 NXTableViewPrivate::NXTableViewPrivate(QObject* parent)
     : QObject{parent}

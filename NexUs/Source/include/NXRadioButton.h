@@ -1,4 +1,4 @@
-#ifndef NXRADIOBUTTON_H
+﻿#ifndef NXRADIOBUTTON_H
 #define NXRADIOBUTTON_H
 
 #include <QRadioButton>

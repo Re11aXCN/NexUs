@@ -1,4 +1,4 @@
-#include "NXColorDisplayModel.h"
+﻿#include "NXColorDisplayModel.h"
 
 NXColorDisplayModel::NXColorDisplayModel(QObject* parent)
     : QAbstractListModel{parent}

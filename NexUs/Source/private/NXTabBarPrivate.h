@@ -1,4 +1,4 @@
-#ifndef NXTABBARPRIVATE_H
+﻿#ifndef NXTABBARPRIVATE_H
 #define NXTABBARPRIVATE_H
 
 #include <QObject>

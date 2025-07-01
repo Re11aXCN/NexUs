@@ -1,4 +1,4 @@
-#ifndef NXSCROLLBAR_H
+﻿#ifndef NXSCROLLBAR_H
 #define NXSCROLLBAR_H
 
 #include <QAbstractScrollArea>

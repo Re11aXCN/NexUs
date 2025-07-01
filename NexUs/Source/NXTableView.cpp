@@ -1,4 +1,4 @@
-#include "NXTableView.h"
+﻿#include "NXTableView.h"
 
 #include <QHeaderView>
 #include <QMouseEvent>
@@ -67,12 +67,6 @@ QRect NXTableView::getAlignRight(const QRect& cellRect, const QSize& iconSize) c
         iconSize.height());
 }
 
-void NXTableView::setIconSize(const QSize& size)
-{
-    Q_D(NXTableView);
-    d->_pTableViewStyle->setIconSize(size);
-}
-
 void NXTableView::setHeaderFontSize(int size)
 {
     QFont tableHeaderFont = horizontalHeader()->font();
@@ -93,7 +87,13 @@ void NXTableView::setTableFontSize(int size)
     setModelFontSize(size);
 }
 
-void NXTableView::setAdjustTextRect(QMap<int, NXAdjustParams> adjustParamsMap)
+void NXTableView::setHeaderAdjustParam(const QMap<int, NXAdjustParam>& adjustParamMap)
+{
+    Q_D(NXTableView);
+    d->_pTableViewStyle->setHeaderAdjustParam(adjustParamMap);
+}
+
+void NXTableView::setAdjustTextRect(const QMap<int, NXAdjustParam>& adjustParamsMap)
 {
     Q_D(NXTableView);
     d->_pTableViewStyle->setAdjustParams(adjustParamsMap);

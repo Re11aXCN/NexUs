@@ -7,6 +7,7 @@
 #include "DeveloperComponents/NXCustomTabWidget.h"
 #include "NXTabBar.h"
 #include "NXTabWidget.h"
+#include "NXToolButton.h"
 NXTabWidgetPrivate::NXTabWidgetPrivate(QObject* parent)
     : QObject{parent}
 {

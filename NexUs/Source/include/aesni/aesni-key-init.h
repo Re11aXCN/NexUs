@@ -1,4 +1,4 @@
-#ifndef AESNIKEYINIT_H
+﻿#ifndef AESNIKEYINIT_H
 #define AESNIKEYINIT_H
 
 #if defined (__GNUC__)

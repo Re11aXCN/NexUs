@@ -21,7 +21,7 @@ public:
     Q_SLOT void onTabCloseRequested(int index);
 
 private:
-    NXTabBar* _customTabBar{nullptr};
+    NXTabBar* _customTabBar{ nullptr };
 };
 
 #endif // NXTABWIDGETPRIVATE_H

@@ -2,7 +2,7 @@
 
 #include <QUuid>
 
-NXNavigationNode::NXNavigationNode(QString nodeTitle, NXNavigationNode* parent)
+NXNavigationNode::NXNavigationNode(const QString& nodeTitle, NXNavigationNode* parent)
     : QObject(parent)
 {
     _pDepth = 0;
@@ -25,6 +25,11 @@ NXNavigationNode::~NXNavigationNode()
 QString NXNavigationNode::getNodeKey() const
 {
     return _nodeKey;
+}
+
+void NXNavigationNode::setNodeTitle(const QString& nodeTitle)
+{
+    _nodeTitle = nodeTitle;
 }
 
 QString NXNavigationNode::getNodeTitle() const

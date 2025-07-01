@@ -1,4 +1,4 @@
-#ifndef NXSPINBOX_H
+﻿#ifndef NXSPINBOX_H
 #define NXSPINBOX_H
 
 #include <QSpinBox>

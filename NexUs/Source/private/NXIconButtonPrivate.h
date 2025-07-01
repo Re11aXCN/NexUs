@@ -1,4 +1,4 @@
-#ifndef NXICONBUTTONPRIVATE_H
+﻿#ifndef NXICONBUTTONPRIVATE_H
 #define NXICONBUTTONPRIVATE_H
 
 #include <QColor>

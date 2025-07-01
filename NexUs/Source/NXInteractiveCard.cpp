@@ -1,4 +1,4 @@
-#include "NXInteractiveCard.h"
+﻿#include "NXInteractiveCard.h"
 
 #include <QPainter>
 #include <QPainterPath>

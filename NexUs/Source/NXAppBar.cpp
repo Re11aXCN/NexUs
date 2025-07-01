@@ -482,7 +482,7 @@ int NXAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, lo
         }
         else
         {
-            const LRESULT hitTestResult = ::DefWindowProcW(hwnd, WM_NCCALCSIZE, wParam, lParam);
+            /*const LRESULT hitTestResult = ::DefWindowProcW(hwnd, WM_NCCALCSIZE, wParam, lParam);
             if ((hitTestResult != HTERROR) && (hitTestResult != HTNOWHERE))
             {
                 *result = static_cast<long>(hitTestResult);
@@ -499,7 +499,7 @@ int NXAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, lo
             }
             geometry = screen->geometry();
 #endif
-            clientRect->top = geometry.top();
+            clientRect->top = geometry.top();*/
         }
         *result = WVR_REDRAW;
         return 1;

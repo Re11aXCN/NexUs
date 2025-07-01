@@ -1,4 +1,4 @@
-#include "NXToggleSwitchPrivate.h"
+﻿#include "NXToggleSwitchPrivate.h"
 
 #include <QPropertyAnimation>
 

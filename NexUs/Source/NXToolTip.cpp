@@ -1,4 +1,4 @@
-#include "NXToolTip.h"
+﻿#include "NXToolTip.h"
 
 #include <QPainter>
 #include <QVBoxLayout>

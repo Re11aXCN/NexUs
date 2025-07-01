@@ -1,4 +1,4 @@
-#include "NXCentralStackedWidget.h"
+﻿#include "NXCentralStackedWidget.h"
 
 #include <QPainter>
 #include <QPainterPath>

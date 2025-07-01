@@ -153,7 +153,7 @@ void NXComboBoxStyle::drawComplexControl(ComplexControl control, const QStyleOpt
             QRect expandIconRect = subControlRect(QStyle::CC_ComboBox, copt, QStyle::SC_ScrollBarAddPage, widget);
             if (expandIconRect.isValid())
             {
-                QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+                QFont iconFont = QFont(QStringLiteral("NXAwesome"));
                 iconFont.setPixelSize(17);
                 painter->setFont(iconFont);
                 painter->setPen(isEnabled ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));

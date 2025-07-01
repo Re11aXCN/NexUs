@@ -1,4 +1,4 @@
-#include "NXTabBar.h"
+﻿#include "NXTabBar.h"
 
 #include <QApplication>
 #include <QDrag>

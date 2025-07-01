@@ -1,4 +1,4 @@
-#include "NXColorPicker.h"
+﻿#include "NXColorPicker.h"
 
 #include <QMouseEvent>
 #include <QPainter>

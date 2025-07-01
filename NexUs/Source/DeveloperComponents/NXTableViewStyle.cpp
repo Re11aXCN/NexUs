@@ -135,10 +135,6 @@ void NXTableViewStyle::drawControl(ControlElement element, const QStyleOption* o
             QRect headerRect = option->rect;
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
-            if (hopt->section == 0)
-            {
-                headerRect = option->rect.adjusted(45, 0, 0, 0);
-            }
             if (!hopt->text.isEmpty())
             {
                 painter->setPen(NXThemeColor(_themeMode, BasicText));
@@ -147,19 +143,13 @@ void NXTableViewStyle::drawControl(ControlElement element, const QStyleOption* o
             if (!hopt->icon.isNull())
             {
                 QIcon::Mode mode = QIcon::Normal;
-                // if (!(vopt->state.testFlag(QStyle::State_Enabled)))
-                // {
-                //     mode = QIcon::Disabled;
-                // }
-                // else if (vopt->state.testFlag(QStyle::State_Selected))
-                // {
-                //     mode = QIcon::Selected;
-                // }
                 QIcon::State state = hopt->state & QStyle::State_Open ? QIcon::On : QIcon::Off;
                 QRect iconRect = /*option->rect.adjusted(-3, 0, 0, 0)*/proxy()->subElementRect(QStyle::SE_HeaderLabel, hopt, widget);
                 //iconRect.adjust(_horizontalPadding , 0, _horizontalPadding, 0);
-                iconRect.setSize(_pIconSize);
-                iconRect.moveCenter(option->rect.center() - QPoint(option->rect.width() / 2 - iconRect.width() + 3, 0));
+                //iconRect.setSize(_pIconSize);
+                //iconRect.moveCenter(option->rect.center() - QPoint(option->rect.width() / 2 - iconRect.width() + 3, 0));
+                if(_headerAdjustParamMap.contains(hopt->section))
+                    iconRect.adjust(_headerAdjustParamMap[hopt->section].x1, _headerAdjustParamMap[hopt->section].y1, _headerAdjustParamMap[hopt->section].x2, _headerAdjustParamMap[hopt->section].y2);
                 hopt->icon.paint(painter, iconRect, hopt->textAlignment, mode, state);
             }
             painter->restore();
@@ -216,24 +206,22 @@ void NXTableViewStyle::drawControl(ControlElement element, const QStyleOption* o
             QRect textRect = proxy()->subElementRect(SE_ItemViewItemText, vopt, widget);
             int column = vopt->index.column();
             if (_adjustParamsMap.contains(column)) {
-                NXAdjustParams params = _adjustParamsMap[column];
-                textRect.adjust(params.left, params.top, params.right, params.bottom);
+                NXAdjustParam params = _adjustParamsMap[column];
+                textRect.adjust(params.x1, params.y1, params.x2, params.y2);
             }
             if (column == 0)
-            if (vopt->index.column() == 0)
             {
                 iconRect.adjust(_horizontalPadding, 0, _horizontalPadding, 0);
                 textRect.adjust(_horizontalPadding, 0, 0, 0);
                 if (checkRect.isValid())
                 {
                     painter->save();
-                    //閸ョ偓鐖ｇ紒妯哄煑
                     if (vopt->checkState == Qt::Checked)
                     {
                         painter->setPen(Qt::NoPen);
                         painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
                         painter->drawRoundedRect(checkRect, 2, 2);
-                        QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+                        QFont iconFont = QFont(QStringLiteral("NXAwesome"));
                         iconFont.setPixelSize(checkRect.width() * 0.85);
                         painter->setFont(iconFont);
                         painter->setPen(NXThemeColor(NXThemeType::Dark, BasicText));
@@ -317,12 +305,17 @@ int NXTableViewStyle::pixelMetric(PixelMetric metric, const QStyleOption* option
     return QProxyStyle::pixelMetric(metric, option, widget);
 }
 
-void NXTableViewStyle::setAdjustParams(const QMap<int, NXAdjustParams>& adjustParamsMap)
+void NXTableViewStyle::setAdjustParams(const QMap<int, NXAdjustParam>& adjustParamMap)
 {
-    _adjustParamsMap = adjustParamsMap;
+    _adjustParamsMap = adjustParamMap;
 }
 
-QMap<int, NXAdjustParams> NXTableViewStyle::getAdjustParams() const
+void NXTableViewStyle::setHeaderAdjustParam(const QMap<int, NXAdjustParam>& adjustParamMap)
+{
+    _headerAdjustParamMap = adjustParamMap;
+}
+
+QMap<int, NXAdjustParam> NXTableViewStyle::getAdjustParams() const
 {
     return _adjustParamsMap;
 }

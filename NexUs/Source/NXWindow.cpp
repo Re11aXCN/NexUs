@@ -51,11 +51,13 @@ NXWindow::NXWindow(QWidget* parent)
 
     QObject::connect(d->_navigationBar, &NXNavigationBar::userInfoCardClicked, this, &NXWindow::userInfoCardClicked);
     QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeClicked, this, &NXWindow::navigationNodeClicked);
-    QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeClicked, d, &NXWindowPrivate::onNavigationNodeClicked);
-    //鏂板绐楀彛
-    QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeAdded, d, &NXWindowPrivate::onNavigationNodeAdded);
-    connect(d->_navigationBar, &NXNavigationBar::navigationNodeRemoved, d, &NXWindowPrivate::onNavigationNodeRemoved);
-    
+    //QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeClicked, d, &NXWindowPrivate::onNavigationNodeClicked);
+    QObject::connect(this, &NXWindow::navigationNodeClicked, d, &NXWindowPrivate::onNavigationNodeClicked);
+
+    QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeAdded, this, &NXWindow::navigationNodeAdded);
+    QObject::connect(this, &NXWindow::navigationNodeAdded, d, &NXWindowPrivate::onNavigationNodeAdded);
+    QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeRemoved, d, &NXWindowPrivate::onNavigationNodeRemoved);
+
     d->_centerStackedWidget = new NXCentralStackedWidget(this);
     d->_centerStackedWidget->setContentsMargins(0, 0, 0, 0);
     QWidget* centralWidget = new QWidget(this);
@@ -81,7 +83,7 @@ NXWindow::NXWindow(QWidget* parent)
     setStyleSheet("#NXWindow{background-color:transparent;}");
     setStyle(new NXWindowStyle(style()));
 
-    //寤舵椂娓叉煋
+    
     QTimer::singleShot(1, this, [=] {
         QPalette palette = this->palette();
         palette.setBrush(QPalette::Window, NXThemeColor(d->_themeMode, WindowBase));
@@ -224,104 +226,116 @@ void NXWindow::setUserInfoCardPixmap(QPixmap pix)
     d->_navigationBar->setUserInfoCardPixmap(pix);
 }
 
-void NXWindow::setUserInfoCardTitle(QString title)
+void NXWindow::setUserInfoCardTitle(const QString& title)
 {
     Q_D(NXWindow);
     d->_navigationBar->setUserInfoCardTitle(title);
 }
 
-void NXWindow::setUserInfoCardSubTitle(QString subTitle)
+void NXWindow::setUserInfoCardSubTitle(const QString& subTitle)
 {
     Q_D(NXWindow);
     d->_navigationBar->setUserInfoCardSubTitle(subTitle);
 }
 
-NXNavigationType::NodeOperateReturnType NXWindow::addExpanderNode(QString expanderTitle, QString& expanderKey, NXIconType::IconName awesome) const
+NXNavigationType::NodeOperateReturnType NXWindow::setNodeTitle(const QString& nodeTitle, const QString& nodeKey)
 {
-    Q_D(const NXWindow);
-    return d->_navigationBar->addExpanderNode(expanderTitle, expanderKey, awesome);
+    Q_D(NXWindow);
+    return d->_navigationBar->setNodeTitle(nodeTitle, nodeKey);
 }
 
-NXNavigationType::NodeOperateReturnType NXWindow::addExpanderNode(QString expanderTitle, QString& expanderKey, QString targetExpanderKey, NXIconType::IconName awesome) const
+NXNavigationType::NodeOperateReturnType NXWindow::navigationPageNodeSwitch(const QString& targetPageKey)
 {
-    Q_D(const NXWindow);
-    return d->_navigationBar->addExpanderNode(expanderTitle, expanderKey, targetExpanderKey, awesome);
+    Q_D(NXWindow);
+    return d->_navigationBar->navigationPageNodeSwitch(targetPageKey);
 }
 
-NXNavigationType::NodeOperateReturnType NXWindow::addPageNode(QString pageTitle, QWidget* page, NXIconType::IconName awesome) const
+NodeOperateReturnTypeWithKey NXWindow::addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome) const
+{
+    Q_D(const NXWindow);
+    return d->_navigationBar->addExpanderNode(expanderTitle, awesome);
+}
+
+NodeOperateReturnTypeWithKey NXWindow::addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome) const
+{
+    Q_D(const NXWindow);
+    return d->_navigationBar->addExpanderNode(expanderTitle, targetExpanderKey, awesome);
+}
+
+NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, NXIconType::IconName awesome) const
 {
     Q_D(const NXWindow);
     return d->_navigationBar->addPageNode(pageTitle, page, awesome);
 }
 
-NXNavigationType::NodeOperateReturnType NXWindow::addPageNode(QString pageTitle, QWidget* page, QString targetExpanderKey, NXIconType::IconName awesome) const
+NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, NXIconType::IconName awesome) const
 {
     Q_D(const NXWindow);
     return d->_navigationBar->addPageNode(pageTitle, page, targetExpanderKey, awesome);
 }
 
-NXNavigationType::NodeOperateReturnType NXWindow::addPageNode(QString pageTitle, QWidget* page, int keyPoints, NXIconType::IconName awesome) const
+NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, int keyPoints, NXIconType::IconName awesome) const
 {
     Q_D(const NXWindow);
     return d->_navigationBar->addPageNode(pageTitle, page, keyPoints, awesome);
 }
 
-NXNavigationType::NodeOperateReturnType NXWindow::addPageNode(QString pageTitle, QWidget* page, QString targetExpanderKey, int keyPoints, NXIconType::IconName awesome) const
+NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, int keyPoints, NXIconType::IconName awesome) const
 {
     Q_D(const NXWindow);
     return d->_navigationBar->addPageNode(pageTitle, page, targetExpanderKey, keyPoints, awesome);
 }
 
-NXNavigationType::NodeOperateReturnType NXWindow::addFooterNode(QString footerTitle, QString& footerKey, int keyPoints, NXIconType::IconName awesome) const
+NodeOperateReturnTypeWithKey NXWindow::addFooterNode(const QString& footerTitle, int keyPoints, NXIconType::IconName awesome) const
 {
     Q_D(const NXWindow);
-    return d->_navigationBar->addFooterNode(footerTitle, nullptr, footerKey, keyPoints, awesome);
+    return d->_navigationBar->addFooterNode(footerTitle, nullptr, keyPoints, awesome);
 }
 
-NXNavigationType::NodeOperateReturnType NXWindow::addFooterNode(QString footerTitle, QWidget* page, QString& footerKey, int keyPoints, NXIconType::IconName awesome) const
+NodeOperateReturnTypeWithKey NXWindow::addFooterNode(const QString& footerTitle, QWidget* page, int keyPoints, NXIconType::IconName awesome) const
 {
     Q_D(const NXWindow);
-    return d->_navigationBar->addFooterNode(footerTitle, page, footerKey, keyPoints, awesome);
+    return d->_navigationBar->addFooterNode(footerTitle, page, keyPoints, awesome);
 }
 
-bool NXWindow::getNavigationNodeIsExpanded(QString expanderKey) const
+bool NXWindow::getNavigationNodeIsExpanded(const QString& expanderKey) const
 {
     Q_D(const NXWindow);
     return d->_navigationBar->getNavigationNodeIsExpanded(expanderKey);
 }
 
-void NXWindow::expandNavigationNode(QString expanderKey)
+void NXWindow::expandNavigationNode(const QString& expanderKey)
 {
     Q_D(NXWindow);
     d->_navigationBar->expandNavigationNode(expanderKey);
 }
 
-void NXWindow::collpaseNavigationNode(QString expanderKey)
+void NXWindow::collpaseNavigationNode(const QString& expanderKey)
 {
     Q_D(NXWindow);
     d->_navigationBar->collpaseNavigationNode(expanderKey);
 }
 
 
-void NXWindow::removeNavigationNode(QString nodeKey) const
+void NXWindow::removeNavigationNode(const QString& nodeKey) const
 {
     Q_D(const NXWindow);
     d->_navigationBar->removeNavigationNode(nodeKey);
 }
 
-void NXWindow::setNodeKeyPoints(QString nodeKey, int keyPoints)
+void NXWindow::setNodeKeyPoints(const QString& nodeKey, int keyPoints)
 {
     Q_D(NXWindow);
     d->_navigationBar->setNodeKeyPoints(nodeKey, keyPoints);
 }
 
-int NXWindow::getNodeKeyPoints(QString nodeKey) const
+int NXWindow::getNodeKeyPoints(const QString& nodeKey) const
 {
     Q_D(const NXWindow);
     return d->_navigationBar->getNodeKeyPoints(nodeKey);
 }
 
-void NXWindow::navigation(QString pageKey)
+void NXWindow::navigation(const QString& pageKey)
 {
     Q_D(NXWindow);
     d->_navigationBar->navigation(pageKey);

@@ -184,22 +184,18 @@ void NXText::paintEvent(QPaintEvent* event)
     Q_D(NXText);
     if (d->_pNXIcon != NXIconType::None)
     {
-        Q_D(NXText);
         QPainter painter(this);
         painter.save();
-        painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
         painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-        QFont iconFont = QFont("ElaAwesome");
+        QFont iconFont = QFont("NXAwesome");
         iconFont.setPixelSize(this->font().pixelSize());
         painter.setFont(iconFont);
         painter.setPen(NXThemeColor(d->_themeMode, BasicText));
-        painter.drawText(rect(), Qt::AlignLeft | Qt::AlignVCenter | Qt::TextWordWrap | Qt::TextWrapAnywhere, text());
         painter.drawText(rect(), Qt::AlignCenter, QChar((unsigned short)d->_pNXIcon));
         painter.restore();
     }
     else
     {
-        QLabel::paintEvent(event);
         if (wordWrap() && d->_isWrapAnywhere)
         {
             QPainter painter(this);

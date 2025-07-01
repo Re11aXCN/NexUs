@@ -1,4 +1,4 @@
-#ifndef NXSUGGESTDELEGATE_H
+﻿#ifndef NXSUGGESTDELEGATE_H
 #define NXSUGGESTDELEGATE_H
 
 #include <QStyledItemDelegate>

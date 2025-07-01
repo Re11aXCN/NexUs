@@ -1,4 +1,4 @@
-#ifndef NXTHEMEPRIVATE_H
+﻿#ifndef NXTHEMEPRIVATE_H
 #define NXTHEMEPRIVATE_H
 
 #include <QColor>

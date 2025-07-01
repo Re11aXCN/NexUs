@@ -1,4 +1,4 @@
-#ifndef AESNIENCECB_H
+﻿#ifndef AESNIENCECB_H
 #define AESNIENCECB_H
 
 #include <wmmintrin.h>

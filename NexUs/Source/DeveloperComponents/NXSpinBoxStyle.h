@@ -1,4 +1,4 @@
-#ifndef NXSPINBOXSTYLE_H
+﻿#ifndef NXSPINBOXSTYLE_H
 #define NXSPINBOXSTYLE_H
 
 #include <QProxyStyle>

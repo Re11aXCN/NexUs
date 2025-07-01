@@ -1,4 +1,4 @@
-#ifndef NXTABLEVIEWPRIVATE_H
+﻿#ifndef NXTABLEVIEWPRIVATE_H
 #define NXTABLEVIEWPRIVATE_H
 
 #include <QObject>

@@ -13,7 +13,7 @@ NXIcon::~NXIcon()
 
 QIcon NXIcon::getNXIcon(NXIconType::IconName awesome)
 {
-    QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     QPixmap pix(30, 30);
     pix.fill(Qt::transparent);
     QPainter painter;
@@ -30,7 +30,7 @@ QIcon NXIcon::getNXIcon(NXIconType::IconName awesome)
 
 QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, QColor iconColor)
 {
-    QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     QPixmap pix(30, 30);
     pix.fill(Qt::transparent);
     QPainter painter;
@@ -47,7 +47,7 @@ QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, QColor iconColor)
 
 QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize)
 {
-    QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     QPixmap pix(pixelSize, pixelSize);
     pix.fill(Qt::transparent);
     QPainter painter;
@@ -63,7 +63,7 @@ QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize)
 
 QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize, QColor iconColor)
 {
-    QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     QPixmap pix(pixelSize, pixelSize);
     pix.fill(Qt::transparent);
     QPainter painter;
@@ -80,7 +80,7 @@ QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize, QColor icon
 
 QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight)
 {
-    QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     QPixmap pix(fixedWidth, fixedHeight);
     pix.fill(Qt::transparent);
     QPainter painter;
@@ -96,7 +96,7 @@ QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize, int fixedWi
 
 QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight, QColor iconColor)
 {
-    QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     QPixmap pix(fixedWidth, fixedHeight);
     pix.fill(Qt::transparent);
     QPainter painter;

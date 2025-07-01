@@ -15,8 +15,12 @@ public:
     explicit NXMenu(QWidget* parent = nullptr);
     explicit NXMenu(const QString& title, QWidget* parent = nullptr);
     ~NXMenu();
+    void setBorderRadius(int borderRadius);
+    int getBorderRadius() const;
     void setMenuItemHeight(int menuItemHeight);
     int getMenuItemHeight() const;
+    void setAlignParentMenuHeight(bool alignParentMenuHeight);
+    bool getAlignParentMenuHeight() const;
 
     QAction* addMenu(QMenu* menu);
     NXMenu* addMenu(const QString& title);
@@ -26,6 +30,7 @@ public:
     QAction* addNXIconAction(NXIconType::IconName icon, const QString& text);
     QAction* addNXIconAction(NXIconType::IconName icon, const QString& text, const QKeySequence& shortcut);
 
+    bool isHasParentMenu() const;
     bool isHasChildMenu() const;
     bool isHasIcon() const;
 Q_SIGNALS:

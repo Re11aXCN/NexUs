@@ -53,7 +53,7 @@ void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption* opt, 
             p->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
             p->drawRoundedRect(opt->rect, 2, 2);
         }
-        QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+        QFont iconFont = QFont(QStringLiteral("NXAwesome"));
         iconFont.setPixelSize(16);
         p->setFont(iconFont);
         p->setPen(NXThemeColor(_themeMode, BasicText));

@@ -1,4 +1,4 @@
-#ifndef AESNIKEYEXP_H
+﻿#ifndef AESNIKEYEXP_H
 #define AESNIKEYEXP_H
 
 #include <wmmintrin.h>

@@ -80,7 +80,7 @@ void NXCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* op
             if (bopt->state.testFlag(QStyle::State_On))
             {
                 painter->save();
-                QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+                QFont iconFont = QFont(QStringLiteral("NXAwesome"));
                 iconFont.setPixelSize(_pCheckIndicatorWidth * 0.8);
                 painter->setFont(iconFont);
                 painter->drawText(checkRect, Qt::AlignCenter, QChar((unsigned short)NXIconType::Check));
@@ -93,7 +93,7 @@ void NXCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* op
             }
 
             painter->setPen(isEnabled ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
-            QRect textRect(checkRect.right() + 10, checkRect.y(), checkBoxRect.width(), checkRect.height() - 5);
+            QRect textRect(checkRect.right() + 10, checkRect.y(), checkBoxRect.width(), checkRect.height());
             painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, bopt->text);
             painter->restore();
         }

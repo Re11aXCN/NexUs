@@ -1,4 +1,4 @@
-#ifndef NXSCROLLAREAPRIVATE_H
+﻿#ifndef NXSCROLLAREAPRIVATE_H
 #define NXSCROLLAREAPRIVATE_H
 
 #include <QObject>

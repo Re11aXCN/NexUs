@@ -1,4 +1,4 @@
-#ifndef NXFOOTERDELEGATE_H
+﻿#ifndef NXFOOTERDELEGATE_H
 #define NXFOOTERDELEGATE_H
 
 #include <QModelIndex>

@@ -1,4 +1,4 @@
-#ifndef NXADVANCEDTOOLBUTTON_H
+﻿#ifndef NXADVANCEDTOOLBUTTON_H
 #define NXADVANCEDTOOLBUTTON_H
 #include <QToolButton>
 #include "stdafx.h"

@@ -96,7 +96,7 @@ QVariant NXNavigationModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-NXNavigationType::NodeOperateReturnType NXNavigationModel::addExpanderNode(QString expanderTitle, QString& expanderKey, NXIconType::IconName awesome)
+NodeOperateReturnTypeWithKey NXNavigationModel::addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome)
 {
     NXNavigationNode* node = new NXNavigationNode(expanderTitle, _rootNode);
     node->setDepth(1);
@@ -107,24 +107,23 @@ NXNavigationType::NodeOperateReturnType NXNavigationModel::addExpanderNode(QStri
     _rootNode->appendChildNode(node);
     _nodesMap.insert(node->getNodeKey(), node);
     endInsertRows();
-    expanderKey = node->getNodeKey();
-    return NXNavigationType::NodeOperateReturnType::Success;
+    return qMakePair(NXNavigationType::NodeOperateReturnType::Success, node->getNodeKey());
 }
 
-NXNavigationType::NodeOperateReturnType NXNavigationModel::addExpanderNode(QString expanderTitle, QString& expanderKey, QString targetExpanderKey, NXIconType::IconName awesome)
+NodeOperateReturnTypeWithKey NXNavigationModel::addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome)
 {
     if (!_nodesMap.contains(targetExpanderKey))
     {
-        return NXNavigationType::NodeOperateReturnType::TargetNodeInvalid;
+        return qMakePair(NXNavigationType::NodeOperateReturnType::TargetNodeInvalid, QString{});
     }
     NXNavigationNode* parentNode = _nodesMap.value(targetExpanderKey);
     if (!parentNode->getIsExpanderNode())
     {
-        return NXNavigationType::NodeOperateReturnType::TargetNodeTypeError;
+        return qMakePair(NXNavigationType::NodeOperateReturnType::TargetNodeTypeError, QString{});
     }
     if (parentNode->getDepth() > 10)
     {
-        return NXNavigationType::NodeOperateReturnType::TargetNodeDepthLimit;
+        return qMakePair(NXNavigationType::NodeOperateReturnType::TargetNodeDepthLimit, QString{});
     }
     NXNavigationNode* node = new NXNavigationNode(expanderTitle, parentNode);
     node->setDepth(parentNode->getDepth() + 1);
@@ -138,11 +137,10 @@ NXNavigationType::NodeOperateReturnType NXNavigationModel::addExpanderNode(QStri
     parentNode->appendChildNode(node);
     _nodesMap.insert(node->getNodeKey(), node);
     endInsertRows();
-    expanderKey = node->getNodeKey();
-    return NXNavigationType::NodeOperateReturnType::Success;
+    return qMakePair(NXNavigationType::NodeOperateReturnType::Success, node->getNodeKey());
 }
 
-NXNavigationType::NodeOperateReturnType NXNavigationModel::addPageNode(QString pageTitle, QString& pageKey, NXIconType::IconName awesome)
+NodeOperateReturnTypeWithKey NXNavigationModel::addPageNode(const QString& pageTitle, NXIconType::IconName awesome)
 {
     NXNavigationNode* node = new NXNavigationNode(pageTitle, _rootNode);
     node->setAwesome(awesome);
@@ -152,28 +150,27 @@ NXNavigationType::NodeOperateReturnType NXNavigationModel::addPageNode(QString p
     _rootNode->appendChildNode(node);
     _nodesMap.insert(node->getNodeKey(), node);
     endInsertRows();
-    pageKey = node->getNodeKey();
     if (!_pSelectedNode)
     {
         _pSelectedNode = node;
     }
-    return NXNavigationType::NodeOperateReturnType::Success;
+    return qMakePair(NXNavigationType::NodeOperateReturnType::Success, node->getNodeKey());
 }
 
-NXNavigationType::NodeOperateReturnType NXNavigationModel::addPageNode(QString pageTitle, QString& pageKey, QString targetExpanderKey, NXIconType::IconName awesome)
+NodeOperateReturnTypeWithKey NXNavigationModel::addPageNode(const QString& pageTitle, const QString& targetExpanderKey, NXIconType::IconName awesome)
 {
     if (!_nodesMap.contains(targetExpanderKey))
     {
-        return NXNavigationType::NodeOperateReturnType::TargetNodeInvalid;
+        return qMakePair(NXNavigationType::NodeOperateReturnType::TargetNodeInvalid, QString{});
     }
     NXNavigationNode* parentNode = _nodesMap.value(targetExpanderKey);
     if (!parentNode->getIsExpanderNode())
     {
-        return NXNavigationType::NodeOperateReturnType::TargetNodeTypeError;
+        return qMakePair(NXNavigationType::NodeOperateReturnType::TargetNodeTypeError, QString{});
     }
     if (parentNode->getDepth() > 10)
     {
-        return NXNavigationType::NodeOperateReturnType::TargetNodeDepthLimit;
+        return qMakePair(NXNavigationType::NodeOperateReturnType::TargetNodeDepthLimit, QString{});
     }
     NXNavigationNode* node = new NXNavigationNode(pageTitle, parentNode);
     node->setDepth(parentNode->getDepth() + 1);
@@ -186,15 +183,14 @@ NXNavigationType::NodeOperateReturnType NXNavigationModel::addPageNode(QString p
     parentNode->appendChildNode(node);
     _nodesMap.insert(node->getNodeKey(), node);
     endInsertRows();
-    pageKey = node->getNodeKey();
     if (!_pSelectedNode)
     {
         _pSelectedNode = node;
     }
-    return NXNavigationType::NodeOperateReturnType::Success;
+    return qMakePair(NXNavigationType::NodeOperateReturnType::Success, node->getNodeKey());
 }
 
-NXNavigationType::NodeOperateReturnType NXNavigationModel::addPageNode(QString pageTitle, QString& pageKey, int keyPoints, NXIconType::IconName awesome)
+NodeOperateReturnTypeWithKey NXNavigationModel::addPageNode(const QString& pageTitle, int keyPoints, NXIconType::IconName awesome)
 {
     NXNavigationNode* node = new NXNavigationNode(pageTitle, _rootNode);
     node->setAwesome(awesome);
@@ -205,28 +201,27 @@ NXNavigationType::NodeOperateReturnType NXNavigationModel::addPageNode(QString p
     _rootNode->appendChildNode(node);
     _nodesMap.insert(node->getNodeKey(), node);
     endInsertRows();
-    pageKey = node->getNodeKey();
     if (!_pSelectedNode)
     {
         _pSelectedNode = node;
     }
-    return NXNavigationType::NodeOperateReturnType::Success;
+    return qMakePair(NXNavigationType::NodeOperateReturnType::Success, node->getNodeKey());
 }
 
-NXNavigationType::NodeOperateReturnType NXNavigationModel::addPageNode(QString pageTitle, QString& pageKey, QString targetExpanderKey, int keyPoints, NXIconType::IconName awesome)
+NodeOperateReturnTypeWithKey NXNavigationModel::addPageNode(const QString& pageTitle, const QString& targetExpanderKey, int keyPoints, NXIconType::IconName awesome)
 {
     if (!_nodesMap.contains(targetExpanderKey))
     {
-        return NXNavigationType::NodeOperateReturnType::TargetNodeInvalid;
+        return qMakePair(NXNavigationType::NodeOperateReturnType::TargetNodeInvalid, QString{});
     }
     NXNavigationNode* parentNode = _nodesMap.value(targetExpanderKey);
     if (!parentNode->getIsExpanderNode())
     {
-        return NXNavigationType::NodeOperateReturnType::TargetNodeTypeError;
+        return qMakePair(NXNavigationType::NodeOperateReturnType::TargetNodeTypeError, QString{});
     }
     if (parentNode->getDepth() > 10)
     {
-        return NXNavigationType::NodeOperateReturnType::TargetNodeDepthLimit;
+        return qMakePair(NXNavigationType::NodeOperateReturnType::TargetNodeDepthLimit, QString{});
     }
     NXNavigationNode* node = new NXNavigationNode(pageTitle, parentNode);
     node->setDepth(parentNode->getDepth() + 1);
@@ -240,15 +235,14 @@ NXNavigationType::NodeOperateReturnType NXNavigationModel::addPageNode(QString p
     parentNode->appendChildNode(node);
     _nodesMap.insert(node->getNodeKey(), node);
     endInsertRows();
-    pageKey = node->getNodeKey();
     if (!_pSelectedNode)
     {
         _pSelectedNode = node;
     }
-    return NXNavigationType::NodeOperateReturnType::Success;
+    return qMakePair(NXNavigationType::NodeOperateReturnType::Success, node->getNodeKey());
 }
 
-QStringList NXNavigationModel::removeNavigationNode(QString nodeKey)
+QStringList NXNavigationModel::removeNavigationNode(const QString& nodeKey)
 {
     QList<QString> removeKeyList;
     if (!_nodesMap.contains(nodeKey))
@@ -279,7 +273,7 @@ QStringList NXNavigationModel::removeNavigationNode(QString nodeKey)
 }
 
 
-NXNavigationNode* NXNavigationModel::getNavigationNode(QString nodeKey) const
+NXNavigationNode* NXNavigationModel::getNavigationNode(const QString& nodeKey) const
 {
     if (_nodesMap.contains(nodeKey))
     {

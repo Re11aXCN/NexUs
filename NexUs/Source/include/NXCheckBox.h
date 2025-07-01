@@ -1,4 +1,4 @@
-#ifndef NXCHECKBOX_H
+﻿#ifndef NXCHECKBOX_H
 #define NXCHECKBOX_H
 
 #include <QCheckBox>

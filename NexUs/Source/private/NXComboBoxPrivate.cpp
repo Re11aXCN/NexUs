@@ -1,4 +1,4 @@
-#include "NXComboBoxPrivate.h"
+﻿#include "NXComboBoxPrivate.h"
 
 NXComboBoxPrivate::NXComboBoxPrivate(QObject *parent)
     : QObject{parent}

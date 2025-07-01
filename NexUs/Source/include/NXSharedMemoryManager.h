@@ -1,4 +1,4 @@
-#ifndef NX_SHARED_MEMORY_MANAGER_H
+﻿#ifndef NX_SHARED_MEMORY_MANAGER_H
 #define NX_SHARED_MEMORY_MANAGER_H
 #include <QSharedMemory>
 #include "stdafx.h"

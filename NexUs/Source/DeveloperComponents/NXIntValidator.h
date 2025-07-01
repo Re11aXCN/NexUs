@@ -1,4 +1,4 @@
-#ifndef NXINTVALIDATOR_H
+﻿#ifndef NXINTVALIDATOR_H
 #define NXINTVALIDATOR_H
 
 #include <QIntValidator>

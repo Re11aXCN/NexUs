@@ -1,4 +1,4 @@
-#include "NXLineEditPrivate.h"
+﻿#include "NXLineEditPrivate.h"
 
 #include "NXApplication.h"
 #include "NXLineEdit.h"

@@ -95,10 +95,15 @@ void NXNavigationView::onCustomContextMenuRequested(const QPoint& pos)
     {
         NXMenu menu;
         menu.setMenuItemHeight(27);
-        QAction* openAction = menu.addNXIconAction(NXIconType::ObjectGroup, "閸︺劍鏌婄粣妤€褰涙稉顓熷ⅵ瀵偓");
+
+        QAction* openAction = menu.addNXIconAction(NXIconType::ObjectGroup, "在新窗口中打开");
         QObject::connect(openAction, &QAction::triggered, this, [=]() {
             Q_EMIT navigationOpenNewWindow(posNode->getNodeKey());
         });
+        QAction* closeAction = menu.addNXIconAction(NXIconType::FilmSlash, "关闭当前导航窗口");
+        QObject::connect(closeAction, &QAction::triggered, this, [=]() {
+            Q_EMIT navigationCloseCurrentWindow(posNode->getNodeKey());
+            });
         menu.exec(mapToGlobal(pos));
     }
 }

@@ -1,4 +1,4 @@
-#ifndef NXCOLORDISPLAYMODEL_H
+﻿#ifndef NXCOLORDISPLAYMODEL_H
 #define NXCOLORDISPLAYMODEL_H
 
 #include <QAbstractListModel>

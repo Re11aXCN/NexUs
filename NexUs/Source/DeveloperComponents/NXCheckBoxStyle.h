@@ -1,4 +1,4 @@
-#ifndef NXCHECKBOXSTYLE_H
+﻿#ifndef NXCHECKBOXSTYLE_H
 #define NXCHECKBOXSTYLE_H
 
 #include <QProxyStyle>

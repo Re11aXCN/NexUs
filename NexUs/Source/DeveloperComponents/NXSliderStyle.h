@@ -1,4 +1,4 @@
-#ifndef NXSLIDERSTYLE_H
+﻿#ifndef NXSLIDERSTYLE_H
 #define NXSLIDERSTYLE_H
 
 #include <QProxyStyle>

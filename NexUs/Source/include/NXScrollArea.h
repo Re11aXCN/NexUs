@@ -1,4 +1,4 @@
-#ifndef NXSCROLLAREA_H
+﻿#ifndef NXSCROLLAREA_H
 #define NXSCROLLAREA_H
 
 #include <QScrollArea>

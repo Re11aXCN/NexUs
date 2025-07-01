@@ -37,7 +37,7 @@ QVariant NXBreadcrumbBarModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-void NXBreadcrumbBarModel::appendBreadcrumb(QString breadcrumb)
+void NXBreadcrumbBarModel::appendBreadcrumb(const QString& breadcrumb)
 {
     if (!breadcrumb.isEmpty())
     {
@@ -58,7 +58,7 @@ void NXBreadcrumbBarModel::appendBreadcrumb(QString breadcrumb)
     }
 }
 
-void NXBreadcrumbBarModel::removeBreadcrumb(QString breadcrumb)
+void NXBreadcrumbBarModel::removeBreadcrumb(const QString& breadcrumb)
 {
     if (_breadcrumbList.contains(breadcrumb))
     {

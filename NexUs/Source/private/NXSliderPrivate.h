@@ -16,6 +16,8 @@ public:
     ~NXSliderPrivate();
 
 private:
+    bool _alignToNearestTick{ false };
+    QList<int> _tickPositions;
     std::shared_ptr<NXSliderStyle> _sliderStyle{ nullptr };
 };
 

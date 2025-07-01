@@ -25,7 +25,6 @@ NXComboBox::NXComboBox(QWidget* parent)
     d->_comboBoxStyle = std::make_shared<NXComboBoxStyle>(style());
     setStyle(d->_comboBoxStyle.get());
 
-    //璋冪敤view 璁ヽontainer鍒濆鍖?
     setView(new QListView(this));
     QAbstractItemView* comboBoxView = this->view();
     comboBoxView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);

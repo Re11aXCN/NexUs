@@ -1,4 +1,4 @@
-#include "NXAdvancedToolButton.h"
+﻿#include "NXAdvancedToolButton.h"
 #include <QMouseEvent>
 NXAdvancedToolButton::NXAdvancedToolButton(QWidget* parent)
     : QToolButton(parent)

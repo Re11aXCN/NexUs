@@ -1,4 +1,4 @@
-#ifndef NXPUSHBUTTONPRIVATE_H
+﻿#ifndef NXPUSHBUTTONPRIVATE_H
 #define NXPUSHBUTTONPRIVATE_H
 
 #include <QColor>

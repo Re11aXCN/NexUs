@@ -1,4 +1,4 @@
-#include "NXSuggestModel.h"
+﻿#include "NXSuggestModel.h"
 
 NXSuggestModel::NXSuggestModel(QObject* parent)
     : QAbstractListModel{parent}

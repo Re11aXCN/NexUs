@@ -1,4 +1,4 @@
-#ifndef NXCOLORDIALOG_H
+﻿#ifndef NXCOLORDIALOG_H
 #define NXCOLORDIALOG_H
 
 #include <QDialog>

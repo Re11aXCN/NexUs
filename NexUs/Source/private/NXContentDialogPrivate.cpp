@@ -1,4 +1,4 @@
-#include "NXContentDialogPrivate.h"
+﻿#include "NXContentDialogPrivate.h"
 
 #include "NXContentDialog.h"
 #include "DeveloperComponents/NXMaskWidget.h"

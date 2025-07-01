@@ -1,4 +1,4 @@
-#include "NXThemeAnimationWidget.h"
+﻿#include "NXThemeAnimationWidget.h"
 
 #include <QPainter>
 #include <QPainterPath>

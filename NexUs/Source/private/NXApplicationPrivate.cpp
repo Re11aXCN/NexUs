@@ -1,4 +1,4 @@
-#include "NXApplicationPrivate.h"
+﻿#include "NXApplicationPrivate.h"
 #include <QApplication>
 #include <QEvent>
 #include <QImage>

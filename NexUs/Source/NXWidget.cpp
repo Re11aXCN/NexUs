@@ -1,4 +1,4 @@
-#include "NXWidget.h"
+﻿#include "NXWidget.h"
 
 #include <QApplication>
 #include <QVBoxLayout>
@@ -30,7 +30,7 @@ NXWidget::NXWidget(QWidget* parent, const QString& moduleButton4JsonConfigPath)
     QObject::connect(d->_appBar, &NXAppBar::navigationButtonClicked, this, &NXWidget::navigationButtonClicked);
     QObject::connect(d->_appBar, &NXAppBar::themeChangeButtonClicked, this, &NXWidget::themeChangeButtonClicked);
     QObject::connect(d->_appBar, &NXAppBar::closeButtonClicked, this, &NXWidget::closeButtonClicked);
-    // 主题
+    // ä¸»é¢˜
     d->_themeMode = nxTheme->getThemeMode();
     QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;

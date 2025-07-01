@@ -3511,4 +3511,6 @@ enum IconName
 };
 Q_ENUM_CREATE(IconName)
 Q_END_ENUM_CREATE(NXIconType)
+
+using NodeOperateReturnTypeWithKey = QPair<NXNavigationType::NodeOperateReturnType, QString>;
 #endif // UIDEF_H

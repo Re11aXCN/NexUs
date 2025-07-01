@@ -1,4 +1,4 @@
-#include "NXMicaBaseInitObject.h"
+﻿#include "NXMicaBaseInitObject.h"
 
 #include <QImage>
 

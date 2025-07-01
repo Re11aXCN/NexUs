@@ -1,4 +1,4 @@
-#include "NXMenuPrivate.h"
+﻿#include "NXMenuPrivate.h"
 
 #include <QAction>
 #include <QLinearGradient>

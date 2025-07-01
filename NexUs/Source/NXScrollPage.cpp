@@ -52,7 +52,7 @@ NXScrollPage::~NXScrollPage()
 {
 }
 
-void NXScrollPage::addCentralWidget(QWidget* centralWidget, bool isWidgetResizeable, bool isVerticalGrabGesture, qreal mousePressEventDNXy)
+void NXScrollPage::addCentralWidget(QWidget* centralWidget, bool isWidgetResizeable, bool isVerticalGrabGesture, qreal mousePressEventDNXy, Qt::ScrollBarPolicy vScrollBarPolicy, Qt::ScrollBarPolicy hScrollBarPolicy)
 {
     Q_D(NXScrollPage);
     if (!centralWidget)
@@ -70,12 +70,21 @@ void NXScrollPage::addCentralWidget(QWidget* centralWidget, bool isWidgetResizea
     NXScrollArea* scrollArea = new NXScrollArea(this);
     scrollArea->setMouseTracking(true);
     scrollArea->setIsAnimation(Qt::Vertical, true);
+    scrollArea->setIsAnimation(Qt::Horizontal, true);
     scrollArea->setWidgetResizable(isWidgetResizeable);
     scrollArea->setIsGrabGesture(isVerticalGrabGesture, mousePressEventDNXy);
     scrollArea->setIsOverShoot(Qt::Vertical, true);
-    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    NXScrollBar* floatVScrollBar = new NXScrollBar(scrollArea->verticalScrollBar(), scrollArea);
-    floatVScrollBar->setIsAnimation(true);
+    scrollArea->setIsOverShoot(Qt::Horizontal, true);
+    scrollArea->setVerticalScrollBarPolicy(vScrollBarPolicy);
+    scrollArea->setHorizontalScrollBarPolicy(hScrollBarPolicy);
+    //if (vScrollBarPolicy != Qt::ScrollBarAlwaysOff) {
+    //    NXScrollBar* floatVScrollBar = new NXScrollBar(scrollArea->verticalScrollBar(), scrollArea);
+    //    floatVScrollBar->setIsAnimation(true);
+    //}
+    //if (hScrollBarPolicy != Qt::ScrollBarAlwaysOff) {
+    //    NXScrollBar* floatHScrollBar = new NXScrollBar(scrollArea->horizontalScrollBar(), scrollArea);
+    //    floatHScrollBar->setIsAnimation(true);
+    //}
     scrollArea->setWidget(centralWidget);
     centralWidget->setObjectName("NXScrollPage_CentralPage");
     centralWidget->setStyleSheet("#NXScrollPage_CentralPage{background-color:transparent;}");

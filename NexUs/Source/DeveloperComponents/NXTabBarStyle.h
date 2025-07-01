@@ -1,4 +1,4 @@
-#ifndef NXTABBARSTYLE_H
+﻿#ifndef NXTABBARSTYLE_H
 #define NXTABBARSTYLE_H
 
 #include <QProxyStyle>

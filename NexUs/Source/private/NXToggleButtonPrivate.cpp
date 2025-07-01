@@ -1,4 +1,4 @@
-#include "NXToggleButtonPrivate.h"
+﻿#include "NXToggleButtonPrivate.h"
 
 #include "NXTheme.h"
 #include "NXToggleButton.h"

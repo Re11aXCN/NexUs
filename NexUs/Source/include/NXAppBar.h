@@ -1,4 +1,4 @@
-#ifndef NXAPPBAR_H
+﻿#ifndef NXAPPBAR_H
 #define NXAPPBAR_H
 
 #include <QWidget>

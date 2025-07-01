@@ -1,4 +1,4 @@
-#include "NXSuggestBoxPrivate.h"
+﻿#include "NXSuggestBoxPrivate.h"
 
 #include "DeveloperComponents/NXBaseListView.h"
 #include "NXLineEdit.h"

@@ -1,4 +1,4 @@
-#ifndef NXMENUPRIVATE_H
+﻿#ifndef NXMENUPRIVATE_H
 #define NXMENUPRIVATE_H
 
 #include <QObject>

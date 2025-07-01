@@ -1,4 +1,4 @@
-#include "NXColorPreview.h"
+﻿#include "NXColorPreview.h"
 
 #include <QPainter>
 #include <QPainterPath>

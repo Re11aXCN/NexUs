@@ -1,4 +1,4 @@
-#ifndef NXSPINBOXPRIVATE_H
+﻿#ifndef NXSPINBOXPRIVATE_H
 #define NXSPINBOXPRIVATE_H
 
 #include <QObject>

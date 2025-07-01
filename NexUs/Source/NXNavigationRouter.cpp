@@ -1,4 +1,4 @@
-#include "NXNavigationRouter.h"
+﻿#include "NXNavigationRouter.h"
 
 #include "private/NXNavigationRouterPrivate.h"
 

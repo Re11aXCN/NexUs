@@ -20,15 +20,15 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    NXNavigationType::NodeOperateReturnType addExpanderNode(QString expanderTitle, QString& expanderKey, NXIconType::IconName awesome);
-    NXNavigationType::NodeOperateReturnType addExpanderNode(QString expanderTitle, QString& expanderKey, QString targetExpanderKey, NXIconType::IconName awesome);
-    NXNavigationType::NodeOperateReturnType addPageNode(QString pageTitle, QString& pageKey, NXIconType::IconName awesome);
-    NXNavigationType::NodeOperateReturnType addPageNode(QString pageTitle, QString& pageKey, QString targetExpanderKey, NXIconType::IconName awesome);
-    NXNavigationType::NodeOperateReturnType addPageNode(QString pageTitle, QString& pageKey, int keyPoints, NXIconType::IconName awesome);
-    NXNavigationType::NodeOperateReturnType addPageNode(QString pageTitle, QString& pageKey, QString targetExpanderKey, int keyPoints, NXIconType::IconName awesome);
-    QStringList removeNavigationNode(QString nodeKey);
+    NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome);
+    NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome);
+    NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, NXIconType::IconName awesome);
+    NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, const QString& targetExpanderKey, NXIconType::IconName awesome);
+    NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, int keyPoints, NXIconType::IconName awesome);
+    NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, const QString& targetExpanderKey, int keyPoints, NXIconType::IconName awesome);
+    QStringList removeNavigationNode(const QString& nodeKey);
 
-    NXNavigationNode* getNavigationNode(QString nodeKey) const;
+    NXNavigationNode* getNavigationNode(const QString& nodeKey) const;
     QList<NXNavigationNode*> getRootExpanderNodes() const;
     QList<NXNavigationNode*> getRootExpandedNodes() const;
 

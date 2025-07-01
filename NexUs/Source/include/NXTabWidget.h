@@ -1,4 +1,4 @@
-#ifndef NXTABWIDGET_H
+﻿#ifndef NXTABWIDGET_H
 #define NXTABWIDGET_H
 
 #include <QTabWidget>

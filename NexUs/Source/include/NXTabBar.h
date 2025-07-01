@@ -1,4 +1,4 @@
-#ifndef NXTABBAR_H
+﻿#ifndef NXTABBAR_H
 #define NXTABBAR_H
 
 #include <QDrag>

@@ -54,7 +54,7 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, QWidget* parent)
     d->_pIsSelected = false;
     d->_pBorderRadius = 0;
     d->_themeMode = nxTheme->getThemeMode();
-    QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     iconFont.setPixelSize(15);
     this->setFont(iconFont);
     d->_pAwesome = awesome;
@@ -79,7 +79,7 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, int pixelSize, QWidget*
     d->_pIsSelected = false;
     d->_pBorderRadius = 0;
     d->_themeMode = nxTheme->getThemeMode();
-    QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     iconFont.setPixelSize(pixelSize);
     this->setFont(iconFont);
     d->_pAwesome = awesome;
@@ -104,7 +104,7 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, int pixelSize, int fixe
     d->_pIsSelected = false;
     d->_pBorderRadius = 0;
     d->_themeMode = nxTheme->getThemeMode();
-    QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     iconFont.setPixelSize(pixelSize);
     this->setFont(iconFont);
     d->_pAwesome = awesome;

@@ -174,7 +174,7 @@ void NXNavigationStyle::drawControl(ControlElement element, const QStyleOption* 
             if (node->getAwesome() != NXIconType::None)
             {
                 painter->save();
-                QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+                QFont iconFont = QFont(QStringLiteral("NXAwesome"));
                 iconFont.setPixelSize(17);
                 painter->setFont(iconFont);
                 painter->drawText(QRect(itemRect.x(), itemRect.y(), _iconAreaWidth, itemRect.height()), Qt::AlignCenter, QChar((unsigned short)node->getAwesome()));
@@ -204,7 +204,7 @@ void NXNavigationStyle::drawControl(ControlElement element, const QStyleOption* 
                         QRectF expandIconRect(itemRect.right() - _indicatorIconAreaWidth, itemRect.y(), 17, itemRect.height());
 
                         painter->save();
-                        QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+                        QFont iconFont = QFont(QStringLiteral("NXAwesome"));
                         iconFont.setPixelSize(17);
                         painter->setFont(iconFont);
                         painter->translate(expandIconRect.x() + (qreal)expandIconRect.width() / 2, expandIconRect.y() + (qreal)expandIconRect.height() / 2);

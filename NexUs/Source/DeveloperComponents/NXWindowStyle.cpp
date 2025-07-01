@@ -1,4 +1,4 @@
-#include "NXWindowStyle.h"
+﻿#include "NXWindowStyle.h"
 
 #include <QDebug>
 #include <QPainter>

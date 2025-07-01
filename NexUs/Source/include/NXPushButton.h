@@ -1,4 +1,4 @@
-#ifndef NXPUSHBUTTON_H
+﻿#ifndef NXPUSHBUTTON_H
 #define NXPUSHBUTTON_H
 
 #include <QPushButton>

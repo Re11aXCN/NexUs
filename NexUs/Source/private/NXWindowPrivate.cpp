@@ -165,7 +165,7 @@ void NXWindowPrivate::onxThemeModeChanged(NXThemeType::ThemeMode themeMode)
     }
 }
 
-void NXWindowPrivate::onNavigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, QString nodeKey)
+void NXWindowPrivate::onNavigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey)
 {
     QWidget* page = _routeMap.value(nodeKey);
     if (!page)
@@ -192,7 +192,7 @@ void NXWindowPrivate::onNavigationNodeClicked(NXNavigationType::NavigationNodeTy
         });
 }
 
-void NXWindowPrivate::onNavigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page)
+void NXWindowPrivate::onNavigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* page)
 {
     if (nodeType == NXNavigationType::PageNode)
     {
@@ -209,7 +209,7 @@ void NXWindowPrivate::onNavigationNodeAdded(NXNavigationType::NavigationNodeType
     }
 }
 
-void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, QString nodeKey)
+void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey)
 {
     Q_Q(NXWindow);
     if (!_routeMap.contains(nodeKey))
@@ -224,6 +224,7 @@ void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeTy
     {
         q->navigation(currentWidget->property("NXPageKey").toString());
     }
+    page->deleteLater();
 }
 
 qreal NXWindowPrivate::_distance(QPoint point1, QPoint point2)

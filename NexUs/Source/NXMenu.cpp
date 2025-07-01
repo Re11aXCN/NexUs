@@ -33,6 +33,18 @@ NXMenu::~NXMenu()
 {
 }
 
+void NXMenu::setBorderRadius(int borderRadius)
+{
+    Q_D(NXMenu);
+    d->_menuStyle->setBorderRadius(borderRadius);
+}
+
+int NXMenu::getBorderRadius() const
+{
+    Q_D(const NXMenu);
+    return d->_menuStyle->getBorderRadius();
+}
+
 void NXMenu::setMenuItemHeight(int menuItemHeight)
 {
     Q_D(NXMenu);
@@ -43,6 +55,18 @@ int NXMenu::getMenuItemHeight() const
 {
     Q_D(const NXMenu);
     return d->_menuStyle->getMenuItemHeight();
+}
+
+void NXMenu::setAlignParentMenuHeight(bool alignParentMenuHeight)
+{
+    Q_D(NXMenu);
+    d->setAlignParentMenuHeight(alignParentMenuHeight);
+}
+
+bool NXMenu::getAlignParentMenuHeight() const
+{
+    Q_D(const NXMenu);
+    return d->getAlignParentMenuHeight();
 }
 
 QAction* NXMenu::addMenu(QMenu* menu)
@@ -90,6 +114,11 @@ QAction* NXMenu::addNXIconAction(NXIconType::IconName icon, const QString& text,
     return action;
 }
 
+bool NXMenu::isHasParentMenu() const
+{
+    return qobject_cast<QMenu*>(parentWidget()) != nullptr;
+}
+
 bool NXMenu::isHasChildMenu() const
 {
     QList<QAction*> actionList = this->actions();
@@ -133,8 +162,21 @@ void NXMenu::showEvent(QShowEvent* event)
 {
     Q_EMIT menuShow();
     Q_D(NXMenu);
+    if (d->getAlignParentMenuHeight())
+    {
+        if (QMenu* parentMenu = qobject_cast<QMenu*>(parentWidget()))
+        {
+            QList<QAction*> actions = parentMenu->actions();
+            if (!actions.isEmpty()) {
+                QAction* firstAction = actions.first();
+                QPoint parentItemGlobalPos = parentMenu->mapToGlobal(parentMenu->actionGeometry(firstAction).topRight());
+                QPoint newPos(parentItemGlobalPos.x(), parentItemGlobalPos.y() - 9);
+                move(newPos);
+            }
+        }
+    }
     //消除阴影偏移
-    move(this->pos().x() - 6, this->pos().y());
+    move(this->pos().x() - 1, this->pos().y());
     if (!d->_animationPix.isNull())
     {
         d->_animationPix = QPixmap();

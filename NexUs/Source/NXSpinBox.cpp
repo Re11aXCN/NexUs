@@ -56,7 +56,7 @@ void NXSpinBox::contextMenuEvent(QContextMenuEvent* event)
     const uint se = stepEnabled();
     QAction* up = menu->addNXIconAction(NXIconType::Plus, tr("增加"));
     up->setEnabled(se & StepUpEnabled);
-    QAction* down = menu->addNXIconAction(NXIconType::Minus, tr("減少"));
+    QAction* down = menu->addNXIconAction(NXIconType::Minus, tr("减少"));
     down->setEnabled(se & StepDownEnabled);
     menu->addSeparator();
 

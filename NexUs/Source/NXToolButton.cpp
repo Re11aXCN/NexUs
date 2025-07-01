@@ -90,7 +90,6 @@ bool NXToolButton::eventFilter(QObject* watched, QEvent* event)
         {
         case QEvent::Show:
         {
-            //鎸囩ず鍣ㄥ姩鐢?
             QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d->_toolButtonStyle.get(), "pExpandIconRotate");
             QObject::connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
                 update();

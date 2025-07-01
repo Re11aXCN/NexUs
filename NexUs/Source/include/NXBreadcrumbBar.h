@@ -15,14 +15,14 @@ public:
     explicit NXBreadcrumbBar(QWidget* parent = nullptr);
     ~NXBreadcrumbBar();
     void setBreadcrumbList(QStringList breadcrumbList);
-    QStringList appendBreadcrumb(QString breadcrumb);
-    QStringList removeBreadcrumb(QString breadcrumb);
+    QStringList appendBreadcrumb(const QString& breadcrumb);
+    QStringList removeBreadcrumb(const QString& breadcrumb);
 
     int getBreadcrumbListCount() const;
     QStringList getBreadcrumbList() const;
 
 Q_SIGNALS:
-    Q_SIGNAL void breadcrumbClicked(QString breadcrumb, QStringList lastBreadcrumbList);
+    Q_SIGNAL void breadcrumbClicked(const QString& breadcrumb, QStringList lastBreadcrumbList);
 };
 
 #endif // NXBREADCRUMBBAR_H

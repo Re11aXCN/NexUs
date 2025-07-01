@@ -1,4 +1,4 @@
-#include "NXAppBarPrivate.h"
+﻿#include "NXAppBarPrivate.h"
 
 #include "NXToolButton.h"
 #ifdef Q_OS_WIN

@@ -35,11 +35,10 @@ public:
     explicit NXNavigationBarPrivate(QObject* parent = nullptr);
     ~NXNavigationBarPrivate() override;
     Q_SLOT void onNavigationButtonClicked();
-    Q_SLOT void onNavigationOpenNewWindow(QString nodeKey);
-
+    Q_SLOT void onNavigationOpenNewWindow(const QString& nodeKey);
+    Q_SLOT void onNavigationCloseCurrentWindow(const QString& nodeKey);
     Q_INVOKABLE void onNavigationRouteBack(QVariantMap routeData);
 
-    //鏍稿績璺宠浆閫昏緫
     void onTreeViewClicked(const QModelIndex& index, bool isLogRoute = true);
     void onFooterViewClicked(const QModelIndex& index, bool isLogRoute = true);
 

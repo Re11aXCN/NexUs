@@ -1,4 +1,4 @@
-#ifndef NXCOLORPICKER_H
+﻿#ifndef NXCOLORPICKER_H
 #define NXCOLORPICKER_H
 
 #include <QPixmap>

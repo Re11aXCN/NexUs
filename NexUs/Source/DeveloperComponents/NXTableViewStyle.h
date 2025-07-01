@@ -1,17 +1,16 @@
-#ifndef NXTABLEVIEWSTYLE_H
+﻿#ifndef NXTABLEVIEWSTYLE_H
 #define NXTABLEVIEWSTYLE_H
 #include <QModelIndex>
 #include <QProxyStyle>
 
 #include "NXDef.h"
-struct NXAdjustParams;
+struct NXAdjustParam;
 class QStyleOptionViewItem;
 class NXTableViewStyle : public QProxyStyle
 {
     Q_OBJECT
     Q_PROPERTY_CREATE(int, HeaderMargin)
     Q_PROPERTY_CREATE(int, CurrentHoverRow)
-    Q_PROPERTY_CREATE(QSize, IconSize)
 public:
     explicit NXTableViewStyle(QStyle* style = nullptr);
     ~NXTableViewStyle();
@@ -19,12 +18,14 @@ public:
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     int pixelMetric(PixelMetric metric, const QStyleOption* option = nullptr, const QWidget* widget = nullptr) const override;
 
-    void setAdjustParams(const QMap<int, NXAdjustParams>& adjustParamsMap);
-    QMap<int, NXAdjustParams> getAdjustParams() const;
+    void setAdjustParams(const QMap<int, NXAdjustParam>& adjustParamMap);
+    void setHeaderAdjustParam(const QMap<int, NXAdjustParam>& adjustParamMap);
+    QMap<int, NXAdjustParam> getAdjustParams() const;
 private:
     NXThemeType::ThemeMode _themeMode;
     int _horizontalPadding{11};
-    QMap<int, NXAdjustParams> _adjustParamsMap;
+    QMap<int, NXAdjustParam> _adjustParamsMap;
+    QMap<int, NXAdjustParam> _headerAdjustParamMap;
 };
 
 #endif // NXTABLEVIEWSTYLE_H

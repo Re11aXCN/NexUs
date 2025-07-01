@@ -1,4 +1,4 @@
-#include "NXSuggestBoxSearchViewContainer.h"
+﻿#include "NXSuggestBoxSearchViewContainer.h"
 
 #include <QPainter>
 

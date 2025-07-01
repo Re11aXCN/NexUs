@@ -17,7 +17,11 @@ public:
     explicit NXScrollPage(QWidget* parent = nullptr);
     ~NXScrollPage();
 
-    void addCentralWidget(QWidget* centralWidget, bool isWidgetResizeable = true, bool isVerticalGrabGesture = true, qreal mousePressEventDNXy = 0.5);
+    void addCentralWidget(QWidget* centralWidget, bool isWidgetResizeable = true,
+        bool isVerticalGrabGesture = true,
+        qreal mousePressEventDNXy = 0.5,
+        Qt::ScrollBarPolicy vScrollBarPolicy = Qt::ScrollBarAsNeeded,
+        Qt::ScrollBarPolicy hScrollBarPolicy = Qt::ScrollBarAlwaysOff);
 
     void navigation(int widgetIndex, bool isLogRoute = true);
 

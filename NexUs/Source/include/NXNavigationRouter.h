@@ -1,4 +1,4 @@
-#ifndef NXNAVIGATIONROUTER_H
+﻿#ifndef NXNAVIGATIONROUTER_H
 #define NXNAVIGATIONROUTER_H
 
 #include <QObject>

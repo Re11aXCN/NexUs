@@ -1,4 +1,4 @@
-#ifndef NXSUGGESTBOXPRIVATE_H
+﻿#ifndef NXSUGGESTBOXPRIVATE_H
 #define NXSUGGESTBOXPRIVATE_H
 
 #include <QAction>

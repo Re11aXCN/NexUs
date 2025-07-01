@@ -1,4 +1,4 @@
-#include "NXExponentialBlur.h"
+﻿#include "NXExponentialBlur.h"
 
 #include <QPainter>
 #include <QPixmap>

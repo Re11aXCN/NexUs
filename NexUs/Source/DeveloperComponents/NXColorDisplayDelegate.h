@@ -1,4 +1,4 @@
-#ifndef NXCOLORDISPLAYDELEGATE_H
+﻿#ifndef NXCOLORDISPLAYDELEGATE_H
 #define NXCOLORDISPLAYDELEGATE_H
 
 #include <QStyledItemDelegate>

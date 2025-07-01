@@ -106,14 +106,14 @@ void NXBreadcrumbBar::setBreadcrumbList(QStringList breadcrumbList)
     d->_listModel->setBreadcrumbList(breadcrumbList);
 }
 
-QStringList NXBreadcrumbBar::appendBreadcrumb(QString breadcrumb)
+QStringList NXBreadcrumbBar::appendBreadcrumb(const QString& breadcrumb)
 {
     Q_D(NXBreadcrumbBar);
     d->_listModel->appendBreadcrumb(breadcrumb);
     return d->_listModel->getBreadcrumbList();
 }
 
-QStringList NXBreadcrumbBar::removeBreadcrumb(QString breadcrumb)
+QStringList NXBreadcrumbBar::removeBreadcrumb(const QString& breadcrumb)
 {
     Q_D(NXBreadcrumbBar);
     d->_listModel->removeBreadcrumb(breadcrumb);

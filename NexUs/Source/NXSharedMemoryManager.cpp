@@ -38,10 +38,12 @@ bool NXSharedMemoryManager::writeToSharedMemory(const QJsonDocument& doc, const 
 	finalData.append(iv);
 	finalData.append(jsonData);
 
+	// 强制清理旧内存
 	if (m_sharedMemory.isAttached()) {
 		m_sharedMemory.detach();
 	}
 
+	// 计算所需内存大小（数据大小 + 4字节长度头）
 	const qint32 dataSize = finalData.size();
 	const qint32 totalSize = sizeof(qint32) + dataSize;
 	if (!m_sharedMemory.create(totalSize)) {
@@ -60,7 +62,9 @@ bool NXSharedMemoryManager::writeToSharedMemory(const QJsonDocument& doc, const 
 	m_sharedMemory.lock();
 	try {
 		char* dest = static_cast<char*>(m_sharedMemory.data());
+		// 写入长度头
 		qToLittleEndian<qint32>(dataSize, dest);
+		// 写入实际数据
 		memcpy(dest + sizeof(qint32), finalData.constData(), dataSize);
 	}
 	catch (...) {
@@ -93,15 +97,16 @@ QJsonDocument NXSharedMemoryManager::readFromSharedMemory(const QString& key)
 		const char* src = static_cast<const char*>(m_sharedMemory.data());
 		const qint32 dataSize = qFromLittleEndian<qint32>(src);
 		src += sizeof(qint32);
-		encryptedData = QByteArray(src, dataSize); 
+		encryptedData = QByteArray(src, dataSize);  // 包含 IV + 密文
 	}
 	m_sharedMemory.unlock();
 	m_sharedMemory.detach();
 
 	if (encryptedData.size() < 16) {
-		return QJsonDocument();
+		return QJsonDocument();// 数据不完整
 	}
 
+	// 分离 IV 和密文
 	QByteArray iv = encryptedData.left(16);
 	QByteArray cipherText = encryptedData.mid(16);
 

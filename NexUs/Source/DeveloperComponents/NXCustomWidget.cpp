@@ -1,4 +1,4 @@
-#include "NXCustomWidget.h"
+﻿#include "NXCustomWidget.h"
 
 #include <QPainter>
 #include <QVBoxLayout>

@@ -44,7 +44,7 @@ void NXBreadcrumbBarDelegate::paint(QPainter* painter, const QStyleOptionViewIte
     }
     else
     {
-        QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+        QFont iconFont = QFont(QStringLiteral("NXAwesome"));
         iconFont.setPixelSize(painter->font().pixelSize() * 0.785);
         painter->setFont(iconFont);
         itemRect.setX(itemRect.x() - itemRect.width() * 0.36);

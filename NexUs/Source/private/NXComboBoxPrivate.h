@@ -1,4 +1,4 @@
-#ifndef NXCOMBOBOXPRIVATE_H
+﻿#ifndef NXCOMBOBOXPRIVATE_H
 #define NXCOMBOBOXPRIVATE_H
 
 #include <QObject>

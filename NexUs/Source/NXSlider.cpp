@@ -26,3 +26,40 @@ NXSlider::NXSlider(Qt::Orientation orientation, QWidget* parent)
 NXSlider::~NXSlider()
 {
 }
+
+void NXSlider::setAlignToNearestTick(bool alignToNearestTick, const QList<int>& tickPositions)
+{
+    Q_D(NXSlider);
+    d->_tickPositions = tickPositions;
+    d->_alignToNearestTick = alignToNearestTick;
+}
+
+void NXSlider::mousePressEvent(QMouseEvent* event)
+{
+    QSlider::mousePressEvent(event);
+}
+
+void NXSlider::mouseMoveEvent(QMouseEvent* event)
+{
+    QSlider::mouseMoveEvent(event);
+}
+
+void NXSlider::mouseReleaseEvent(QMouseEvent* event)
+{
+    QSlider::mouseReleaseEvent(event);
+    Q_D(NXSlider);
+    if (d->_alignToNearestTick && d->_tickPositions.size() > 0)
+    {
+        int currentValue = value();
+        int closestValue = d->_tickPositions.first();
+        for (int val : d->_tickPositions)
+        {
+            if (qAbs(val - currentValue) < qAbs(closestValue - currentValue)) {
+                closestValue = val;
+            }
+        }
+        if (closestValue != currentValue) {
+            setValue(closestValue);
+        }
+    }
+}

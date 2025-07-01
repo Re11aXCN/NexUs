@@ -1,4 +1,4 @@
-#ifndef NXTHEME_H
+﻿#ifndef NXTHEME_H
 #define NXTHEME_H
 
 #include <QObject>

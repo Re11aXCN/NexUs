@@ -1,4 +1,4 @@
-#ifndef NXRADIOBUTTONSTYLE_H
+﻿#ifndef NXRADIOBUTTONSTYLE_H
 #define NXRADIOBUTTONSTYLE_H
 
 #include <QProxyStyle>

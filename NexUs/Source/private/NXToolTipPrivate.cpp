@@ -1,4 +1,4 @@
-#include "NXToolTipPrivate.h"
+﻿#include "NXToolTipPrivate.h"
 
 #include <QEvent>
 #include <QPropertyAnimation>

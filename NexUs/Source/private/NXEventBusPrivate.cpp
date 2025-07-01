@@ -1,4 +1,4 @@
-#include "NXEventBusPrivate.h"
+﻿#include "NXEventBusPrivate.h"
 
 #include "NXEventBus.h"
 NXEventPrivate::NXEventPrivate(QObject* parent)

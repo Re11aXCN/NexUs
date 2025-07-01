@@ -1,4 +1,4 @@
-#ifndef NXNAVIGATIONSTYLE_H
+﻿#ifndef NXNAVIGATIONSTYLE_H
 #define NXNAVIGATIONSTYLE_H
 #include <QModelIndex>
 #include <QProxyStyle>

@@ -1,4 +1,4 @@
-#include "NXTextPrivate.h"
+﻿#include "NXTextPrivate.h"
 
 #include "NXText.h"
 #include <QTimer>

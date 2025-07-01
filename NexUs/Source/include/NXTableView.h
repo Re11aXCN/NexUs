@@ -1,15 +1,15 @@
-#ifndef NXTABLEVIEW_H
+﻿#ifndef NXTABLEVIEW_H
 #define NXTABLEVIEW_H
 
 #include <QTableView>
 
 #include "stdafx.h"
-struct NXAdjustParams {
-    int left;
-    int top;
-    int right;
-    int bottom;
-    NXAdjustParams(int l = 0, int t = 0, int r = 0, int b = 0) : left(l), top(t), right(r), bottom(b) {}
+struct NXAdjustParam {
+    int x1;
+    int y1;
+    int x2;
+    int y2;
+    NXAdjustParam(int x1 = 0, int y1 = 0, int x2 = 0, int y2 = 0) : x1(x1), y1(y1), x2(x2), y2(y2) {}
 };
 class NXModelIndexWidgetPrivate;
 class NX_EXPORT NXModelIndexWidget : public QWidget
@@ -47,11 +47,13 @@ public:
     QRect getAlignLeft(const QRect& cellRect, const QSize& iconSize)  const;
     QRect getAlignCenter(const QRect& cellRect, const QSize& iconSize)  const;
     QRect getAlignRight(const QRect& cellRect, const QSize& iconSize)  const;
-    void setIconSize(const QSize& size);
+
     void setHeaderFontSize(int size);
     void setModelFontSize(int size);
     void setTableFontSize(int size);
-    void setAdjustTextRect(QMap<int, NXAdjustParams> adjustParamsMap);
+    void setAdjustTextRect(const QMap<int, NXAdjustParam>& adjustParamsMap);
+    void setHeaderAdjustParam(const QMap<int, NXAdjustParam>& adjustParamMap);
+
     void setCurrentHoverRow(int row);
 
 Q_SIGNALS:

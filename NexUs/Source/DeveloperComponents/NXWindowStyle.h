@@ -1,4 +1,4 @@
-#ifndef NXWINDOWSTYLE_H
+﻿#ifndef NXWINDOWSTYLE_H
 #define NXWINDOWSTYLE_H
 
 #include <QProxyStyle>

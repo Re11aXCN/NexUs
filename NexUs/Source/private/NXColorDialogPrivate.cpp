@@ -73,7 +73,7 @@ void NXColorDialogPrivate::onColorModeChanged(int index)
     _updateEditValue();
 }
 
-void NXColorDialogPrivate::onHtmlEditFocusOut(QString text)
+void NXColorDialogPrivate::onHtmlEditFocusOut(const QString& text)
 {
     if (text == "#")
     {

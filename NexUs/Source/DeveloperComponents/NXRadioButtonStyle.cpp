@@ -1,4 +1,4 @@
-#include "NXRadioButtonStyle.h"
+﻿#include "NXRadioButtonStyle.h"
 
 #include <QPainter>
 #include <QPainterPath>

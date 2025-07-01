@@ -1,4 +1,4 @@
-#ifndef AESNIENCCBC_H
+﻿#ifndef AESNIENCCBC_H
 #define AESNIENCCBC_H
 
 #include <chrono>

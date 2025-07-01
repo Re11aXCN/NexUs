@@ -1,4 +1,4 @@
-﻿#include "NXApplication.h"
+#include "NXApplication.h"
 
 #include <QApplication>
 #include <QCursor>
@@ -14,7 +14,7 @@ NXApplication::NXApplication(QObject* parent)
     Q_D(NXApplication);
     d->q_ptr = this;
     d->_pIsEnableMica = false;
-    d->_pMicaImagePath = ":/Resource/Image/MicaBase.png";
+    d->_pMicaImagePath = ":/Resource/MicaBase.png";
     d->_themeMode = nxTheme->getThemeMode();
     QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXApplicationPrivate::onxThemeModeChanged);
 }
@@ -42,7 +42,7 @@ bool NXApplication::getIsEnableMica() const
     Q_D(const NXApplication);
     return d->_pIsEnableMica;
 }
-void NXApplication::setMicaImagePath(QString micaImagePath)
+void NXApplication::setMicaImagePath(const QString& micaImagePath)
 {
     Q_D(NXApplication);
     d->_pMicaImagePath = micaImagePath;
@@ -59,7 +59,7 @@ void NXApplication::init()
 {
     Q_INIT_RESOURCE(NexUs);
     QApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
-    QFontDatabase::addApplicationFont(":/Resource/Font/ElaAwesome.ttf");
+    QFontDatabase::addApplicationFont(":/Resource/Font/NXAwesome.ttf");
     QFontDatabase::addApplicationFont(":/Resource/Font/segoe_slboot_EX.ttf");
     //é»˜è®¤å­—ä½“
     QFont font = qApp->font();

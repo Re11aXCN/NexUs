@@ -1,4 +1,4 @@
-#ifndef NXTOOLBUTTONSTYLE_H
+﻿#ifndef NXTOOLBUTTONSTYLE_H
 #define NXTOOLBUTTONSTYLE_H
 
 #include <QProxyStyle>

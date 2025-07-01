@@ -1,4 +1,4 @@
-#ifndef NXWIDGETPRIVATE_H
+﻿#ifndef NXWIDGETPRIVATE_H
 #define NXWIDGETPRIVATE_H
 
 #include <QObject>

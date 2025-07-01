@@ -1,4 +1,4 @@
-#ifndef NXMASKWIDGET_H
+﻿#ifndef NXMASKWIDGET_H
 #define NXMASKWIDGET_H
 
 #include <QWidget>

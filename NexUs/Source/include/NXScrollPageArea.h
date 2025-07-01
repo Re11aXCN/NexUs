@@ -1,4 +1,4 @@
-#ifndef NXSCROLLPAGEAREA_H
+﻿#ifndef NXSCROLLPAGEAREA_H
 #define NXSCROLLPAGEAREA_H
 
 #include <QWidget>

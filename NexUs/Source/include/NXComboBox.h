@@ -1,4 +1,4 @@
-#ifndef NXCOMBOBOX_H
+﻿#ifndef NXCOMBOBOX_H
 #define NXCOMBOBOX_H
 
 #include <QComboBox>

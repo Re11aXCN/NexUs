@@ -1,4 +1,4 @@
-#include "NXWidgetPrivate.h"
+﻿#include "NXWidgetPrivate.h"
 
 #include "NXWidget.h"
 

@@ -1,4 +1,4 @@
-#include "NXSliderStyle.h"
+﻿#include "NXSliderStyle.h"
 
 #include <QPainter>
 #include <QPropertyAnimation>

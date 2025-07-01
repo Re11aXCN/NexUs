@@ -23,7 +23,7 @@ public:
     void removeSuggestion(const QString& suggestKey);
     void removeSuggestion(int index);
 Q_SIGNALS:
-    Q_SIGNAL void suggestionClicked(QString suggestText, QVariantMap suggestData);
+    Q_SIGNAL void suggestionClicked(const QString& suggestText, QVariantMap suggestData);
 };
 
 #endif // NXSUGGESTBOX_H

@@ -1,4 +1,4 @@
-#include "NXScrollPageArea.h"
+﻿#include "NXScrollPageArea.h"
 
 #include <QGraphicsDropShadowEffect>
 #include <QPainter>

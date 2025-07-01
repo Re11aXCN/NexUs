@@ -17,7 +17,7 @@ NXEvent::NXEvent(QObject* parent)
     d->_pEventName = "";
 }
 
-NXEvent::NXEvent(QString eventName, QString functionName, QObject* parent)
+NXEvent::NXEvent(const QString& eventName, const QString& functionName, QObject* parent)
     : QObject{parent}, d_ptr(new NXEventPrivate())
 {
     Q_D(NXEvent);

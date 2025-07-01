@@ -1,4 +1,4 @@
-#ifndef NXLINEEDITSTYLE_H
+﻿#ifndef NXLINEEDITSTYLE_H
 #define NXLINEEDITSTYLE_H
 
 #include <QProxyStyle>

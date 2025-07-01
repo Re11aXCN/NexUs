@@ -1,4 +1,4 @@
-#ifndef NXICONBUTTON_H
+﻿#ifndef NXICONBUTTON_H
 #define NXICONBUTTON_H
 
 #include <QPushButton>

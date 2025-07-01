@@ -1,4 +1,4 @@
-#ifndef NXCOMBOBOXVIEW_H
+﻿#ifndef NXCOMBOBOXVIEW_H
 #define NXCOMBOBOXVIEW_H
 
 #include <QListView>

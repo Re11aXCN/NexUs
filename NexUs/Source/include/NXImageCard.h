@@ -1,0 +1,25 @@
+#ifndef NXIMAGECARD_H
+#define NXIMAGECARD_H
+
+#include <QWidget>
+
+#include "stdafx.h"
+
+class NXImageCardPrivate;
+class NX_EXPORT NXImageCard : public QWidget
+{
+    Q_OBJECT
+    Q_Q_CREATE(NXImageCard)
+    Q_PROPERTY_CREATE_Q_H(QImage, CardImage);
+    Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+    Q_PROPERTY_CREATE_Q_H(bool, IsPreserveAspectCrop)
+    Q_PROPERTY_CREATE_Q_H(qreal, MaximumAspectRatio)
+public:
+    explicit NXImageCard(QWidget* parent = nullptr);
+    ~NXImageCard();
+
+protected:
+    virtual void paintEvent(QPaintEvent* event) override;
+};
+
+#endif // NXIMAGECARD_H

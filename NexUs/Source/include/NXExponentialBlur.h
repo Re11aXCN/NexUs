@@ -1,4 +1,4 @@
-#ifndef NXEXPONENTIALBLUR_H
+﻿#ifndef NXEXPONENTIALBLUR_H
 #define NXEXPONENTIALBLUR_H
 
 #include <QObject>

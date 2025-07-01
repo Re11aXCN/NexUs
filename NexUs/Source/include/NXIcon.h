@@ -1,4 +1,4 @@
-#ifndef NXICON_H
+﻿#ifndef NXICON_H
 #define NXICON_H
 #include <QIcon>
 

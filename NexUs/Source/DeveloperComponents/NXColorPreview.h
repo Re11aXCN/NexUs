@@ -1,4 +1,4 @@
-#ifndef NXCOLORPREVIEW_H
+﻿#ifndef NXCOLORPREVIEW_H
 #define NXCOLORPREVIEW_H
 
 #include <QWidget>

@@ -1,4 +1,4 @@
-#ifndef NXTOOLTIP_H
+﻿#ifndef NXTOOLTIP_H
 #define NXTOOLTIP_H
 
 #include <QWidget>

@@ -1,4 +1,4 @@
-#include "NXIntValidator.h"
+﻿#include "NXIntValidator.h"
 
 NXIntValidator::NXIntValidator(QObject* parent)
     : QIntValidator{parent}

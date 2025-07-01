@@ -1,4 +1,4 @@
-#ifndef NXAPPBARPRIVATE_H
+﻿#ifndef NXAPPBARPRIVATE_H
 #define NXAPPBARPRIVATE_H
 #include <QObject>
 

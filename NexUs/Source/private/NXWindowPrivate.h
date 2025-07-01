@@ -29,9 +29,9 @@ public:
     Q_SLOT void onxThemeReadyChange();
     Q_SLOT void onDisplayModeChanged();
     Q_SLOT void onxThemeModeChanged(NXThemeType::ThemeMode themeMode);
-    Q_SLOT void onNavigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, QString nodeKey);
-    Q_SLOT void onNavigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page);
-    Q_SLOT void onNavigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, QString nodeKey);
+    Q_SLOT void onNavigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey);
+    Q_SLOT void onNavigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* page);
+    Q_SLOT void onNavigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey);
 
 private:
     bool _isWindowClosing{ false };

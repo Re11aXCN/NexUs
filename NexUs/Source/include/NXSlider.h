@@ -13,6 +13,12 @@ public:
     explicit NXSlider(QWidget* parent = nullptr);
     explicit NXSlider(Qt::Orientation orientation, QWidget* parent = nullptr);
     ~NXSlider();
+
+    void setAlignToNearestTick(bool alignToNearestTick, const QList<int>& tickPositions);
+protected:
+    void mousePressEvent(QMouseEvent* event) override;
+    void mouseMoveEvent(QMouseEvent* event) override;
+    void mouseReleaseEvent(QMouseEvent* event) override;
 };
 
 #endif // NXSLIDER_H

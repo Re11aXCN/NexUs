@@ -169,7 +169,7 @@ void NXFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opti
     if (node->getAwesome() != NXIconType::None)
     {
         painter->save();
-        QFont iconFont = QFont(QStringLiteral("ElaAwesome"));
+        QFont iconFont = QFont(QStringLiteral("NXAwesome"));
         iconFont.setPixelSize(17);
         painter->setFont(iconFont);
         painter->drawText(QRect(itemRect.x(), itemRect.y(), _iconAreaWidth, itemRect.height()), Qt::AlignCenter, QChar((unsigned short)node->getAwesome()));

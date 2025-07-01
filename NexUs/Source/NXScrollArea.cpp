@@ -1,4 +1,4 @@
-#include "NXScrollArea.h"
+﻿#include "NXScrollArea.h"
 
 #include <QScrollBar>
 #include <QScroller>

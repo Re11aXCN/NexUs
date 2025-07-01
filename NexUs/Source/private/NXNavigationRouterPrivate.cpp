@@ -1,4 +1,4 @@
-#include "NXNavigationRouterPrivate.h"
+﻿#include "NXNavigationRouterPrivate.h"
 
 NXNavigationRouterPrivate::NXNavigationRouterPrivate(QObject* parent)
     : QObject{parent}

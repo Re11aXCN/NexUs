@@ -1,4 +1,4 @@
-#include "NXSliderPrivate.h"
+﻿#include "NXSliderPrivate.h"
 
 #include "NXSlider.h"
 

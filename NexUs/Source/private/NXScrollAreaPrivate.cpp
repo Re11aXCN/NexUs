@@ -1,4 +1,4 @@
-#include "NXScrollAreaPrivate.h"
+﻿#include "NXScrollAreaPrivate.h"
 
 #include "NXScrollArea.h"
 

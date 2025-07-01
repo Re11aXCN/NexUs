@@ -1,4 +1,4 @@
-#ifndef NXTOGGLEBUTTON_H
+﻿#ifndef NXTOGGLEBUTTON_H
 #define NXTOGGLEBUTTON_H
 
 #include <QPushButton>

@@ -1,4 +1,4 @@
-#ifndef NXINTERACTIVECARD_H
+﻿#ifndef NXINTERACTIVECARD_H
 #define NXINTERACTIVECARD_H
 
 #include <QPixmap>

@@ -17,7 +17,7 @@ class NX_EXPORT NXEvent : public QObject
 
 public:
     explicit NXEvent(QObject* parent = nullptr);
-    explicit NXEvent(QString eventName, QString functionName, QObject* parent = nullptr);
+    explicit NXEvent(const QString& eventName, const QString& functionName, QObject* parent = nullptr);
     ~NXEvent();
     NXEventBusType::EventBusReturnType registerAndInit();
 };

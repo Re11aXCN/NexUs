@@ -1,4 +1,4 @@
-#ifndef NXWINSHADOWHELPER_H
+﻿#ifndef NXWINSHADOWHELPER_H
 #define NXWINSHADOWHELPER_H
 #include <qglobal.h>
 #ifdef Q_OS_WIN

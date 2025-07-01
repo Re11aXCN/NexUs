@@ -1,4 +1,4 @@
-#ifndef NXAESENCRYPTION_H
+﻿#ifndef NXAESENCRYPTION_H
 #define NXAESENCRYPTION_H
 
 #include <QObject>

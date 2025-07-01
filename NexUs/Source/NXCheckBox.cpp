@@ -1,4 +1,4 @@
-#include "NXCheckBox.h"
+﻿#include "NXCheckBox.h"
 
 #include <optional>
 

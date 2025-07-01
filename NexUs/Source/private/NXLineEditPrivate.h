@@ -1,4 +1,4 @@
-#ifndef NXLINEEDITPRIVATE_H
+﻿#ifndef NXLINEEDITPRIVATE_H
 #define NXLINEEDITPRIVATE_H
 
 #include <QObject>

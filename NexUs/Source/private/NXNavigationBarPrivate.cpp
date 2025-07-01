@@ -42,7 +42,7 @@ void NXNavigationBarPrivate::onNavigationButtonClicked()
     }
 }
 
-void NXNavigationBarPrivate::onNavigationOpenNewWindow(QString nodeKey)
+void NXNavigationBarPrivate::onNavigationOpenNewWindow(const QString& nodeKey)
 {
     Q_Q(NXNavigationBar);
     const QMetaObject* meta = _pageMetaMap.value(nodeKey);
@@ -59,6 +59,17 @@ void NXNavigationBarPrivate::onNavigationOpenNewWindow(QString nodeKey)
         floatWidget->setCentralWidget(widget);
         floatWidget->show();
     }
+}
+
+void NXNavigationBarPrivate::onNavigationCloseCurrentWindow(const QString& nodeKey)
+{
+    Q_Q(NXNavigationBar);
+    const QMetaObject* meta = _pageMetaMap.value(nodeKey);
+    if (!meta)
+    {
+        return;
+    }
+    q->removeNavigationNode(nodeKey);
 }
 
 void NXNavigationBarPrivate::onNavigationRouteBack(QVariantMap routeData)
@@ -320,7 +331,6 @@ void NXNavigationBarPrivate::_expandOrCollpaseExpanderNode(NXNavigationNode* nod
     {
         if (node->getIsHasPageChild())
         {
-            //灞曞紑鑿滃崟
             NXMenu* menu = _compactMenuMap.value(node);
             if (menu)
             {

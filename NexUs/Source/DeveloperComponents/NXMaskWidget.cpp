@@ -1,4 +1,4 @@
-#include "NXMaskWidget.h"
+﻿#include "NXMaskWidget.h"
 
 #include <QPainter>
 #include <QPropertyAnimation>
