@@ -72,3 +72,4 @@
 ### 7. Modify Optize7
 
 > 1. 修复NavigationNodeClicked/Removed的错误逻辑
+> 1. NXSlider添加的仅按下拖到

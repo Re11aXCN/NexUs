@@ -13,7 +13,7 @@ public:
     explicit NXSlider(QWidget* parent = nullptr);
     explicit NXSlider(Qt::Orientation orientation, QWidget* parent = nullptr);
     ~NXSlider();
-
+    void setOnlySlideChangeValue(bool onlySlideChangeValue);
     void setAlignToNearestTick(bool alignToNearestTick, const QList<int>& tickPositions);
 protected:
     void mousePressEvent(QMouseEvent* event) override;

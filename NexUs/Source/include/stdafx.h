@@ -36,6 +36,44 @@ public:                                                                 \
     void set##M(TYPE M);                                                \
     TYPE get##M() const;
 
+// 基本类型属性宏（int/QString等）
+#define Q_PROPERTY_CREATE_BASIC_H(TYPE, M)                     \
+    Q_PROPERTY(TYPE p##M MEMBER _p##M NOTIFY p##M##Changed)  \
+public:                                                      \
+    Q_SIGNAL void p##M##Changed();                           \
+    TYPE get##M() const noexcept { return _p##M; }           \
+    void set##M(TYPE M) noexcept;                            \
+private:                                                     \
+    TYPE _p##M;
+
+// 复杂类型属性宏（自定义类等）
+#define Q_PROPERTY_CREATE_COMPLEX_H(TYPE, M)                   \
+    Q_PROPERTY(TYPE p##M MEMBER _p##M NOTIFY p##M##Changed)  \
+public:                                                      \
+    Q_SIGNAL void p##M##Changed();                           \
+    TYPE get##M() const { return _p##M; }                    \
+    void set##M(TYPE M);                                     \
+private:                                                     \
+    TYPE _p##M;
+
+// 基本类型setter实现
+#define Q_IMPLEMENT_SETTER_BASIC_CPP(CLASS, TYPE, M)             \
+void CLASS::set##M(TYPE M) noexcept                          \
+{                                                            \
+    if (_p##M == M) return;                                  \
+    _p##M = M;                                               \
+    Q_EMIT p##M##Changed();                                    \
+}
+
+// 复杂类型setter实现 
+#define Q_IMPLEMENT_SETTER_COMPLEX_CPP(CLASS, TYPE, M)           \
+void CLASS::set##M(TYPE M)                                   \
+{                                                            \
+    if (_p##M == M) return;                                  \
+    _p##M = M;                                               \
+    Q_EMIT p##M##Changed();                                    \
+}
+
 // Q_D Q_Q指针变量快速创建
 #define Q_PRIVATE_CREATE_Q_H(TYPE, M) \
 public:                               \

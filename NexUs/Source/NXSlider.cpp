@@ -1,6 +1,7 @@
 #include "NXSlider.h"
 
-#include <QEvent>
+#include <QMouseEvent>
+#include <QStyleOptionSlider>
 
 #include "DeveloperComponents/NXSliderStyle.h"
 #include "private/NXSliderPrivate.h"
@@ -27,6 +28,12 @@ NXSlider::~NXSlider()
 {
 }
 
+void NXSlider::setOnlySlideChangeValue(bool onlySlideChangeValue)
+{
+    Q_D(NXSlider);
+    d->_onlySlideChangeValue = onlySlideChangeValue;
+}
+
 void NXSlider::setAlignToNearestTick(bool alignToNearestTick, const QList<int>& tickPositions)
 {
     Q_D(NXSlider);
@@ -36,6 +43,20 @@ void NXSlider::setAlignToNearestTick(bool alignToNearestTick, const QList<int>& 
 
 void NXSlider::mousePressEvent(QMouseEvent* event)
 {
+    
+    if (event->button() == Qt::LeftButton) {
+        Q_D(NXSlider);
+        if (d->_onlySlideChangeValue)
+        {
+            QStyleOptionSlider opt;
+            initStyleOption(&opt);
+            const QRect sliderRect = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+            if (!sliderRect.contains(event->pos())) {
+                event->ignore();
+                return;
+            }
+        }
+    }
     QSlider::mousePressEvent(event);
 }
 

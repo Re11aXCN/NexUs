@@ -1,6 +1,11 @@
-﻿#ifndef SCIENUM_H
+#ifndef SCIENUM_H
 #define SCIENUM_H
 #include <string>
+#include <type_traits>
+#include <ostream>
+#ifdef QT_CORE_LIB
+#include <QDebug>
+#endif
 namespace scienum {
     namespace details {
 
@@ -50,6 +55,7 @@ namespace scienum {
     template <class T, T Beg, T End>
     std::string get_enum_name(T n) {
         std::string s;
+            
         details::static_for<Beg, End + 1>(details::get_enum_name_functor<T>(n, s));
         if (s.empty())
             return "";
@@ -89,6 +95,20 @@ namespace scienum {
         return enum_from_name<T, (T)0, (T)256>(s);
     }
 }
+template <typename T>
+typename std::enable_if<std::is_enum<T>::value, std::ostream&>::type
+operator<<(std::ostream& os, const T& e) {
+    os << static_cast<std::underlying_type<T>::type>(e);
+    return os;
+}
+#if QT_CORE_LIB
+template <typename T>
+typename std::enable_if<std::is_enum<T>::value, QDebug>::type
+operator<<(QDebug dbg, const T& e) {
+    dbg << static_cast<typename std::underlying_type<T>::type>(e);
+    return dbg;
+}
+#endif
 #define GET_ENUM_NAME(x) scienum::get_enum_name(x)
 #define GET_ENUM_FROM_NAME(x, y) scienum::enum_from_name<x>(y)
 #endif // SCIENUM_H
