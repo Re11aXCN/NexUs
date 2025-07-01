@@ -9,7 +9,7 @@
 NXListViewStyle::NXListViewStyle(QStyle* style)
 {
     _pItemHeight = 35;
-    _pIsTransparent = false;
+    _pIsTransparent = true;
     _themeMode = nxTheme->getThemeMode();
     connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
@@ -96,17 +96,12 @@ void NXListViewStyle::drawControl(ControlElement element, const QStyleOption* op
     case QStyle::CE_ShapedFrame:
     {
         // viewport视口外的其他区域背景
-        if (!_pIsTransparent)
-        {
-            QRect frameRect = option->rect;
-            frameRect.adjust(1, 1, -1, -1);
-            painter->save();
-            painter->setRenderHints(QPainter::Antialiasing);
-            painter->setPen(NXThemeColor(_themeMode, PopupBorder));
-            painter->setBrush(NXThemeColor(_themeMode, BasicBase));
-            painter->drawRoundedRect(frameRect, 3, 3);
-            painter->restore();
-        }
+        painter->save();
+        painter->setRenderHints(QPainter::Antialiasing);
+        painter->setPen(NXThemeColor(_themeMode, PopupBorder));
+        painter->setBrush(_pIsTransparent ? NXThemeColor(_themeMode, BasicBase) : QColor(0xF3, 0xF4, 0xF5));
+        painter->drawRoundedRect(option->rect.adjusted(1, 1, -1, -1), 3, 3);
+        painter->restore();
         return;
     }
     case QStyle::CE_ItemViewItem:

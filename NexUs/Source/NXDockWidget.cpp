@@ -47,6 +47,18 @@ NXDockWidget::~NXDockWidget()
 {
 }
 
+void NXDockWidget::resizeEvent(QResizeEvent* event)
+{
+    Q_EMIT dockResized(this->size());
+    QDockWidget::resizeEvent(event);
+}
+
+void NXDockWidget::closeEvent(QCloseEvent* event)
+{
+    Q_EMIT dockClosed();
+    QDockWidget::closeEvent(event);
+}
+
 void NXDockWidget::paintEvent(QPaintEvent* event)
 {
     Q_D(NXDockWidget);

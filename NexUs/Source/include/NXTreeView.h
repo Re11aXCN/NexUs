@@ -3,7 +3,7 @@
 
 #include <QTreeView>
 
-#include "stdafx.h"
+#include "NXDef.h"
 
 class NXTreeViewPrivate;
 class NX_EXPORT NXTreeView : public QTreeView
@@ -15,6 +15,8 @@ class NX_EXPORT NXTreeView : public QTreeView
 public:
     explicit NXTreeView(QWidget* parent = nullptr);
     ~NXTreeView();
+    void setNXIcon(NXIconType::IconName icon);
+
 };
 
 #endif // NXTREEVIEW_H

@@ -40,6 +40,12 @@ NXTreeView::~NXTreeView()
 {
 }
 
+void NXTreeView::setNXIcon(NXIconType::IconName icon)
+{
+    Q_D(NXTreeView);
+    d->_treeViewStyle->setIconName(icon);
+}
+
 void NXTreeView::setItemHeight(int itemHeight)
 {
     Q_D(NXTreeView);

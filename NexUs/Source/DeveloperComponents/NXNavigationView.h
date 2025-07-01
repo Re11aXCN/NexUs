@@ -7,6 +7,7 @@
 class NXScrollBar;
 class NXNavigationStyle;
 class NXToolTip;
+class NXNavigationModel;
 class NXNavigationView : public QTreeView
 {
     Q_OBJECT
@@ -37,6 +38,11 @@ private:
     QModelIndex _hoveredIndex; 
     NXNavigationStyle* _navigationStyle{nullptr};
     NXToolTip* _compactToolTip{ nullptr };
+
+    bool _canProceedWithDragDrop(QAbstractItemView::DropIndicatorPosition dropIndicatorPosition,
+        const QModelIndex& draggedIndex, const QModelIndex& targetIndex,
+        const QModelIndex& draggedPreviousIndex, const QModelIndex& draggedNextIndex,
+        const QModelIndex& targetParentIndex, NXNavigationModel* model);
 };
 
 #endif // NXNAVIGATIONVIEW_H

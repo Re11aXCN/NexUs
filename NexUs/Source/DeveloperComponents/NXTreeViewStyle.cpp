@@ -10,6 +10,7 @@ NXTreeViewStyle::NXTreeViewStyle(QStyle* style)
 {
     _pItemHeight = 35;
     _pHeaderMargin = 5;
+    _pIconName = NXIconType::None;
     _themeMode = nxTheme->getThemeMode();
     connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
@@ -197,17 +198,44 @@ void NXTreeViewStyle::drawControl(ControlElement element, const QStyleOption* op
                 QIcon::State state = vopt->state & QStyle::State_Open ? QIcon::On : QIcon::Off;
                 vopt->icon.paint(painter, iconRect, vopt->decorationAlignment, mode, state);
             }
+            bool isFirst = vopt->state.testFlag(QStyle::State_Selected) && (vopt->viewItemPosition == QStyleOptionViewItem::Beginning || vopt->viewItemPosition == QStyleOptionViewItem::OnlyOne);
             // 文字绘制
             if (!vopt->text.isEmpty())
             {
-                painter->setPen(NXThemeColor(_themeMode, BasicText));
-                painter->drawText(textRect, vopt->displayAlignment, vopt->text);
+                if (_pIconName != NXIconType::None) {
+                    const int lineHeight = textRect.height();
+                    const int iconSize = qMax(16, static_cast<int>(lineHeight * 0.55));
+                    QRect iconRect(vopt->icon.isNull() ? itemRect.left() + 10 : textRect.left(),
+                        textRect.top() + (lineHeight - iconSize) / 2, // 垂直居中
+                        iconSize, iconSize );
+                    QRect adjustedTextRect = vopt->icon.isNull() ? itemRect.adjusted(iconSize + 13, 0, 0, 0) : textRect.adjusted(iconSize + 3, 0, 0, 0);
+                    painter->setPen(isFirst ?
+                        NXThemeColor(_themeMode, PrimaryNormal) :
+                        NXThemeColor(_themeMode, BasicText));
+                    painter->setFont(vopt->font);
+                    painter->drawText(adjustedTextRect,
+                        vopt->displayAlignment | Qt::TextSingleLine,
+                        vopt->text.mid(0, 50)); // 防止长文本溢出
+
+                    QFont iconFont("NXAwesome");
+                    iconFont.setPixelSize(iconSize * 0.8);
+                    painter->setFont(iconFont);
+                    painter->drawText(iconRect,
+                        Qt::AlignCenter,
+                        QChar((unsigned short)_pIconName));
+                }
+                else {
+                    painter->setPen(isFirst ?
+                        NXThemeColor(_themeMode, PrimaryNormal) :
+                        NXThemeColor(_themeMode, BasicText));
+                    painter->drawText(vopt->icon.isNull() ? itemRect.adjusted(15, 0, 0, 0) : textRect, vopt->displayAlignment | Qt::TextSingleLine, vopt->text.mid(0, 50));
+                }
             }
             // 选中特效
             int heightOffset = itemRect.height() / 4;
             painter->setPen(Qt::NoPen);
             painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
-            if (vopt->state.testFlag(QStyle::State_Selected) && (vopt->viewItemPosition == QStyleOptionViewItem::Beginning || vopt->viewItemPosition == QStyleOptionViewItem::OnlyOne))
+            if (isFirst)
             {
                 painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
             }

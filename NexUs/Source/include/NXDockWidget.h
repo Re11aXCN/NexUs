@@ -13,8 +13,11 @@ public:
     explicit NXDockWidget(QWidget* parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
     explicit NXDockWidget(const QString& title, QWidget* parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
     ~NXDockWidget();
-
+    Q_SIGNAL void dockClosed();
+    Q_SIGNAL void dockResized(const QSize& size);
 protected:
+    virtual void resizeEvent(QResizeEvent* event) override;
+    virtual void closeEvent(QCloseEvent* event) override;
     virtual void paintEvent(QPaintEvent* event) override;
 #ifdef Q_OS_WIN
     virtual bool event(QEvent* event) override;

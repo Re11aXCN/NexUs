@@ -9,6 +9,7 @@ class NXTreeViewStyle : public QProxyStyle
     Q_OBJECT
     Q_PROPERTY_CREATE(int, ItemHeight)
     Q_PROPERTY_CREATE(int, HeaderMargin)
+    Q_PROPERTY_CREATE(NXIconType::IconName, IconName)
 public:
     explicit NXTreeViewStyle(QStyle* style = nullptr);
     ~NXTreeViewStyle();

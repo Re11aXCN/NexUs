@@ -1,9 +1,9 @@
-#ifndef UIDEF_H
-#define UIDEF_H
+#ifndef NXDEF_H
+#define NXDEF_H
 
 #include "stdafx.h"
 
-Q_BEGIN_ENUM_CREATE(NXThemeType)
+Q_BEGIN_ENUM_CREATE(NXThemeType, NX_EXPORT)
 enum ThemeMode
 {
     Light = 0x0000,
@@ -57,7 +57,7 @@ enum ThemeColor
 Q_ENUM_CREATE(ThemeColor)
 Q_END_ENUM_CREATE(NXThemeType)
 
-Q_BEGIN_ENUM_CREATE(NXColorSchemeType)
+Q_BEGIN_ENUM_CREATE(NXColorSchemeType, NX_EXPORT)
 enum ColorSchemeType
 {
     Rgba,
@@ -66,7 +66,7 @@ enum ColorSchemeType
 Q_ENUM_CREATE(ColorSchemeType)
 Q_END_ENUM_CREATE(NXColorSchemeType)
 
-Q_BEGIN_ENUM_CREATE(NXAppBarType)
+Q_BEGIN_ENUM_CREATE(NXAppBarType, NX_EXPORT)
 enum ButtonType
 {
     RouteBackButtonHint = 0x0001,
@@ -113,7 +113,7 @@ Q_END_ENUM_CREATE(NXAppBarType)
 Q_DECLARE_OPERATORS_FOR_FLAGS(NXAppBarType::ButtonFlags)
 Q_DECLARE_OPERATORS_FOR_FLAGS(NXAppBarType::WMMouseActionTypes)
 
-Q_BEGIN_ENUM_CREATE(NXTextType)
+Q_BEGIN_ENUM_CREATE(NXTextType, NX_EXPORT)
 enum TextStyle
 {
     NoStyle = 0x0000,
@@ -129,7 +129,7 @@ enum TextStyle
 Q_ENUM_CREATE(TextStyle)
 Q_END_ENUM_CREATE(NXTextType)
 
-Q_BEGIN_ENUM_CREATE(NXNavigationType)
+Q_BEGIN_ENUM_CREATE(NXNavigationType, NX_EXPORT)
 enum NodeOperateReturnType
 {
     Success = 0x0000,
@@ -158,7 +158,7 @@ enum NavigationNodeType
 Q_ENUM_CREATE(NavigationNodeType)
 Q_END_ENUM_CREATE(NXNavigationType)
 
-Q_BEGIN_ENUM_CREATE(NXNavigationRouterType)
+Q_BEGIN_ENUM_CREATE(NXNavigationRouterType, NX_EXPORT)
 enum NavigationRouteType
 {
     Success = 0x0000,
@@ -168,7 +168,7 @@ enum NavigationRouteType
 Q_ENUM_CREATE(NavigationRouteType)
 Q_END_ENUM_CREATE(NXNavigationRouterType)
 
-Q_BEGIN_ENUM_CREATE(NXEventBusType)
+Q_BEGIN_ENUM_CREATE(NXEventBusType, NX_EXPORT)
 enum EventBusReturnType
 {
     Success = 0x0000,
@@ -179,7 +179,7 @@ enum EventBusReturnType
 Q_ENUM_CREATE(EventBusReturnType)
 Q_END_ENUM_CREATE(NXEventBusType)
 
-Q_BEGIN_ENUM_CREATE(NXCardPixType)
+Q_BEGIN_ENUM_CREATE(NXCardPixType, NX_EXPORT)
 enum PixMode
 {
     Default = 0x0000,
@@ -189,7 +189,7 @@ enum PixMode
 Q_ENUM_CREATE(PixMode)
 Q_END_ENUM_CREATE(NXCardPixType)
 
-Q_BEGIN_ENUM_CREATE(NXGraphicsSceneType)
+Q_BEGIN_ENUM_CREATE(NXGraphicsSceneType, NX_EXPORT)
 enum SceneMode
 {
     Default = 0x0000,
@@ -200,7 +200,7 @@ enum SceneMode
 Q_ENUM_CREATE(SceneMode)
 Q_END_ENUM_CREATE(NXGraphicsSceneType)
 
-Q_BEGIN_ENUM_CREATE(NXMessageBarType)
+Q_BEGIN_ENUM_CREATE(NXMessageBarType, NX_EXPORT)
 enum PositionPolicy
 {
     Top = 0x0000,
@@ -224,7 +224,7 @@ enum MessageMode
 Q_ENUM_CREATE(MessageMode)
 Q_END_ENUM_CREATE(NXMessageBarType)
 
-Q_BEGIN_ENUM_CREATE(NXIconType)
+Q_BEGIN_ENUM_CREATE(NXIconType, NX_EXPORT)
 enum IconName
 {
     None = 0x0,
@@ -3513,4 +3513,4 @@ Q_ENUM_CREATE(IconName)
 Q_END_ENUM_CREATE(NXIconType)
 
 using NodeOperateReturnTypeWithKey = QPair<NXNavigationType::NodeOperateReturnType, QString>;
-#endif // UIDEF_H
+#endif // NXDEF_H

@@ -119,21 +119,36 @@ protected:                \
 private:                  \
     Q_DECLARE_PUBLIC(CLASS);
 
-//閺嬫矮濡囩猾璇差嚤閸? 閸忕厧顔怮T5娴ｅ海澧楅張?
+#define Q_BEGIN_ENUM_CREATE_IMPL(_1, _2, NAME, ...) NAME
+#define Q_BEGIN_ENUM_CREATE_ARGS(args) Q_BEGIN_ENUM_CREATE_IMPL args
+#define Q_BEGIN_ENUM_CREATE(...) Q_BEGIN_ENUM_CREATE_ARGS((__VA_ARGS__, Q_BEGIN_ENUM_CREATE_EX, Q_BEGIN_ENUM_CREATE_0))(__VA_ARGS__)
+
+//枚举类导出  兼容QT5低版本
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-#define Q_BEGIN_ENUM_CREATE(CLASS) \
-    namespace CLASS                \
-    {                              \
-    Q_NAMESPACE_EXPORT(NX_EXPORT)
+#define Q_BEGIN_ENUM_CREATE_0(CLASS)            \
+namespace CLASS                                 \
+{                                               \
+Q_NAMESPACE_EXPORT()
+
+#define Q_BEGIN_ENUM_CREATE_EX(CLASS, EXPORT)   \
+namespace CLASS                                 \
+{                                               \
+Q_NAMESPACE_EXPORT(EXPORT)
 
 #define Q_END_ENUM_CREATE(CLASS) }
 
 #define Q_ENUM_CREATE(CLASS) Q_ENUM_NS(CLASS)
 #else
-#define Q_BEGIN_ENUM_CREATE(CLASS)          \
-    class NX_EXPORT CLASS : public QObject \
-    {                                       \
-        Q_OBJECT                            \
+#define Q_BEGIN_ENUM_CREATE_0(CLASS)          \
+    class CLASS : public QObject              \
+    {                                         \
+        Q_OBJECT                              \
+    public:
+
+#define Q_BEGIN_ENUM_CREATE_EX(CLASS, EXPORT) \
+    class EXPORT CLASS : public QObject       \
+    {                                         \
+        Q_OBJECT                              \
     public:
 
 #define Q_END_ENUM_CREATE(CLASS) \
