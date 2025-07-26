@@ -5,7 +5,7 @@
 #include "NXNavigationBar.h"
 #include "NXTheme.h"
 #include "NXWindow.h"
-#include "DeveloperComponents/NXCentralStackedWidget.h"
+#include "NXCentralStackedWidget.h"
 #include "DeveloperComponents/NXThemeAnimationWidget.h"
 #include <QApplication>
 #include <QPropertyAnimation>

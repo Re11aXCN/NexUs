@@ -52,9 +52,6 @@
     <ClCompile Include="Source\DeveloperComponents\NXCalendarTitleModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\DeveloperComponents\NXCentralStackedWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\DeveloperComponents\NXCheckBoxStyle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -553,9 +550,6 @@
     <ClCompile Include="Source\NXScrollPage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\NXScrollPageArea.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\NXSlider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -616,6 +610,21 @@
     <ClCompile Include="Source\NXSharedMemoryManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\NXCentralStackedWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\NXScrollPageArea.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\private\NXShadowGraphicsEffectPrivate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\NXShadowGraphicsEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\NXShadowWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\include\NXGraphicsLineItem.h">
@@ -667,6 +676,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\include\magic_enum\magic_enum_utility.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\include\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -758,9 +770,6 @@
     <QtMoc Include="Source\include\NXTableView.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Source\include\stdafx.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="Source\DeveloperComponents\NXNavigationView.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -786,9 +795,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Source\DeveloperComponents\NXCalendarTitleModel.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\DeveloperComponents\NXCentralStackedWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Source\DeveloperComponents\NXCheckBoxStyle.h">
@@ -957,9 +963,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Source\include\NXContentDialog.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\include\NXDef.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Source\include\NXDockWidget.h">
@@ -1254,6 +1257,21 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Source\private\NXTreeViewPrivate.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\include\NXCentralStackedWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\include\NXDef.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\include\NXShadowGraphicsEffect.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\private\NXShadowGraphicsEffectPrivate.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\include\NXShadowWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

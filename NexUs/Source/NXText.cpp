@@ -8,7 +8,7 @@
 #include "NXTheme.h"
 #include "private/NXTextPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(NXText, bool, IsAllowClick)
-Q_PROPERTY_CREATE_Q_CPP(NXText, NXWidgetBorder::BorderFlags, BorderFlag)
+Q_PROPERTY_CREATE_Q_CPP(NXText, NXWidgetType::BorderFlags, BorderFlag)
 NXText::NXText(QWidget* parent)
     : QLabel(parent), d_ptr(new NXTextPrivate())
 {
@@ -49,7 +49,7 @@ NXText::~NXText()
 {
 }
 
-void NXText::setBorderStyle(int pixelSize, NXWidgetBorder::BorderFlags borderFlag, QColor color)
+void NXText::setBorderStyle(int pixelSize, NXWidgetType::BorderFlags borderFlag, QColor color)
 {
     Q_D(NXText);
     d->_pBorderFlag = borderFlag;
@@ -260,22 +260,22 @@ void NXText::paintEvent(QPaintEvent* event)
 			painter.setPen(QPen(d->_borderColor, d->_borderPx));
 			QFontMetrics fontMetrics(font());
 			int textWidth = fontMetrics.horizontalAdvance(text());
-			if (d->_pBorderFlag & NXWidgetBorder::TopBorder) {
+			if (d->_pBorderFlag & NXWidgetType::TopBorder) {
 				painter.drawLine(QPoint(contentRect.center().x() - textWidth / 2, contentRect.top()),
 					QPoint(contentRect.center().x() + textWidth / 2, contentRect.top()));
 			}
 
-			if (d->_pBorderFlag & NXWidgetBorder::BottomBorder) {
+			if (d->_pBorderFlag & NXWidgetType::BottomBorder) {
 				painter.drawLine(QPoint(contentRect.center().x() - textWidth / 2, contentRect.bottom()),
 					QPoint(contentRect.center().x() + textWidth / 2, contentRect.bottom()));
 			}
 
-			if (d->_pBorderFlag & NXWidgetBorder::LeftBorder) {
+			if (d->_pBorderFlag & NXWidgetType::LeftBorder) {
 				painter.drawLine(QPoint(contentRect.left(), contentRect.center().y() - fontMetrics.height() / 2),
 					QPoint(contentRect.left(), contentRect.center().y() + fontMetrics.height() / 2));
 			}
 
-			if (d->_pBorderFlag & NXWidgetBorder::RightBorder) {
+			if (d->_pBorderFlag & NXWidgetType::RightBorder) {
 				painter.drawLine(QPoint(contentRect.right(), contentRect.center().y() - fontMetrics.height() / 2),
 					QPoint(contentRect.right(), contentRect.center().y() + fontMetrics.height() / 2));
 			}

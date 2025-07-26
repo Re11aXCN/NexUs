@@ -14,14 +14,14 @@ class NX_EXPORT NXText : public QLabel
     Q_PROPERTY_CREATE_Q_H(int, TextPixelSize)
     Q_PROPERTY_CREATE_Q_H(int, TextPointSize)
     Q_PROPERTY_CREATE_Q_H(NXIconType::IconName, NXIcon)
-    Q_PROPERTY_CREATE_Q_H(NXWidgetBorder::BorderFlags, BorderFlag)
+    Q_PROPERTY_CREATE_Q_H(NXWidgetType::BorderFlags, BorderFlag)
 public:
     explicit NXText(QWidget* parent = nullptr);
     explicit NXText(QString text, QWidget* parent = nullptr);
     explicit NXText(QString text, int pixelSize, QWidget* parent = nullptr);
     ~NXText() override;
 
-	void setBorderStyle(int pixelSize, NXWidgetBorder::BorderFlags borderFlag, QColor color);
+	void setBorderStyle(int pixelSize, NXWidgetType::BorderFlags borderFlag, QColor color);
     void setTextStyle(NXTextType::TextStyle textStyle, std::optional<int> pixelSize = std::nullopt, std::optional<QFont::Weight> weight = std::nullopt);
     NXTextType::TextStyle getTextStyle() const;
     Q_SIGNAL void pTextStyleChanged();

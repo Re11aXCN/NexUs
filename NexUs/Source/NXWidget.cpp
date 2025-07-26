@@ -23,7 +23,7 @@ NXWidget::NXWidget(QWidget* parent)
 #endif
     // 自定义AppBar
     d->_appBar = new NXAppBar(this);
-    d->_appBar->setIsStayTop(true);
+    d->_appBar->setIsStayTop(false);
     d->_appBar->setWindowButtonFlags(NXAppBarType::StayTopButtonHint | NXAppBarType::MinimizeButtonHint | NXAppBarType::MaximizeButtonHint | NXAppBarType::CloseButtonHint);
     QObject::connect(d->_appBar, &NXAppBar::routeBackButtonClicked, this, &NXWidget::routeBackButtonClicked);
     QObject::connect(d->_appBar, &NXAppBar::navigationButtonClicked, this, &NXWidget::navigationButtonClicked);

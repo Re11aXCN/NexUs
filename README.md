@@ -90,3 +90,6 @@
 >
 > <u>**目前最稳定版本——Release**</u>
 
+## # **Track Record 3**：	Commits on Jul 8, 2025
+
+> 1. 引入NXShadowGraphicsEffect、NXShadowWidget

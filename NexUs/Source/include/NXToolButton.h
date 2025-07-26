@@ -11,7 +11,7 @@ class NX_EXPORT NXAdvancedToolButton : public QToolButton {
 
 public:
 	explicit NXAdvancedToolButton(QWidget* parent = nullptr);
-
+    virtual ~NXAdvancedToolButton() override = default;
 	Q_SIGNAL void rightReleased();
 	Q_SIGNAL void rightPressed();
 	Q_SIGNAL void middleReleased();

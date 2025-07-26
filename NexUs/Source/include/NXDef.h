@@ -3549,7 +3549,24 @@ enum ColorSchemeType
 Q_ENUM_CREATE(ColorSchemeType)
 Q_END_ENUM_CREATE(NXColorSchemeType)
 
-Q_BEGIN_ENUM_CREATE(NXWidgetBorder, NX_EXPORT)
+Q_BEGIN_ENUM_CREATE(NXWidgetType, NX_EXPORT)
+Q_BEGIN_ENUM_CREATE(BoxShadow, NX_EXPORT)
+enum ProjectionType
+{
+	Inset,
+	Outset,
+};
+Q_ENUM_CREATE(ProjectionType)
+
+enum RotateMode {
+    Rotate45,
+    Rotate135,
+    Rotate225,
+    Rotate315,
+};
+Q_ENUM_CREATE(RotateMode)
+Q_END_ENUM_CREATE(BoxShadow)
+
 enum BorderType
 {
 	NoBorder = 0x0000,
@@ -3561,5 +3578,5 @@ enum BorderType
 };
 Q_ENUM_CREATE(BorderType)
 Q_DECLARE_FLAGS(BorderFlags, BorderType)
-Q_END_ENUM_CREATE(NXWidgetBorder)
+Q_END_ENUM_CREATE(NXWidgetType)
 #endif // NXDEF_H

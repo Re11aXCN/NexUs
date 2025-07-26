@@ -1,4 +1,4 @@
-#ifndef NXCENTRALSTACKEDWIDGET_H
+﻿#ifndef NXCENTRALSTACKEDWIDGET_H
 #define NXCENTRALSTACKEDWIDGET_H
 
 #include <QStackedWidget>
@@ -34,7 +34,8 @@ private:
     NXThemeType::ThemeMode _themeMode;
     bool _isTransparent{false};
     bool _isHasRadius{true};
-    bool _isDrawNewPix{false};    QPixmap _targetStackPix;
+    bool _isDrawNewPix{false};
+    QPixmap _targetStackPix;
     QPixmap _currentStackPix;
     QGraphicsBlurEffect* _blurEffect{nullptr};
 

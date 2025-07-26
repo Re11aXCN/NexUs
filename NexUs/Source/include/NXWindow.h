@@ -64,6 +64,9 @@ public:
 
     void navigation(const QString& pageKey);
     std::tuple<NXNavigationType::NavigationNodeType, QString, QWidget*> currentVisibleWidget() const;
+    int getCurrentNavigationIndex() const;
+    QString getCurrentNavigationPageKey() const;
+
     void setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable = true);
     void setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags);
     NXAppBarType::ButtonFlags getWindowButtonFlags() const;

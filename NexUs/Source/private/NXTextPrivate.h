@@ -16,7 +16,7 @@ class NXTextPrivate : public QObject
 	int _borderPx{ 1 };
     Q_PROPERTY_CREATE_D(NXTextType::TextStyle, TextStyle)
     Q_PROPERTY_CREATE_D(NXIconType::IconName, NXIcon)
-    Q_PROPERTY_CREATE_D(NXWidgetBorder::BorderFlags, BorderFlag)
+    Q_PROPERTY_CREATE_D(NXWidgetType::BorderFlags, BorderFlag)
 	Q_PROPERTY_CREATE_D(bool, IsAllowClick)
 	Q_PROPERTY_CREATE_D(bool, IsWrapAnywhere)
 

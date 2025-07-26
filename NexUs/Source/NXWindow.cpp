@@ -1,4 +1,4 @@
-#include "NXWindow.h"
+﻿#include "NXWindow.h"
 
 #include "NXApplication.h"
 #include "NXEventBus.h"
@@ -6,7 +6,7 @@
 #include "NXNavigationBar.h"
 #include "NXNavigationRouter.h"
 #include "NXTheme.h"
-#include "DeveloperComponents/NXCentralStackedWidget.h"
+#include "NXCentralStackedWidget.h"
 #include "DeveloperComponents/NXWindowStyle.h"
 #include "private/NXAppBarPrivate.h"
 #include "private/NXNavigationBarPrivate.h"
@@ -456,6 +456,18 @@ std::tuple<NXNavigationType::NavigationNodeType, QString, QWidget*> NXWindow::cu
 {
 	Q_D(const NXWindow);
 	return d->_currentVisibleWidget;
+}
+
+int NXWindow::getCurrentNavigationIndex() const
+{
+    Q_D(const NXWindow);
+    return d->_navigationCenterStackedWidget->currentIndex();
+}
+
+QString NXWindow::getCurrentNavigationPageKey() const
+{
+    Q_D(const NXWindow);
+    return d->_navigationCenterStackedWidget->currentWidget()->property("NXPageKey").toString();
 }
 
 void NXWindow::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable)

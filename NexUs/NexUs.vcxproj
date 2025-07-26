@@ -9,12 +9,17 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5B0F1707-797D-421C-8441-846F6BE473CF}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">10.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -25,6 +30,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -45,6 +57,11 @@
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="QtSettings">
+    <QtInstall>6.6.2_msvc2019_64</QtInstall>
+    <QtModules>core;gui;widgets</QtModules>
+    <QtBuildConfig>release</QtBuildConfig>
+  </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
     <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
   </Target>
@@ -58,17 +75,54 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(QtMsBuild)\Qt.props" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutDir>$(SolutionDir)Bin\$(SolutionName)_$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)Bin\Intermediate\$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
-    <TargetName>$(ProjectName)d</TargetName>
+    <TargetName>nexusd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutDir>$(SolutionDir)Bin\$(SolutionName)_$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)Bin\Intermediate\$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+    <TargetName>nexus</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <OutDir>$(SolutionDir)Bin\$(SolutionName)_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(SolutionDir)Bin\Intermediate\$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+    <TargetName>nexus</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <LanguageStandard>stdcpp23</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Source;$(ProjectDir)\Source\include;`$(WindowsSDK_IncludePath)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NX_BUILD_DLL;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <QtMoc>
+      <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
+      <QtMocDir>.\GeneratedFiles\$(ConfigurationName)</QtMocDir>
+    </QtMoc>
+    <QtRcc>
+      <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
+    </QtRcc>
+    <QtRcc>
+      <QtRccDir>.\GeneratedFiles</QtRccDir>
+    </QtRcc>
+    <QtUic>
+      <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
+    </QtUic>
+    <QtUic>
+      <QtUicDir>.\GeneratedFiles</QtUicDir>
+    </QtUic>
+    <Link>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxguid.lib;DXGI.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -135,6 +189,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
+    <ClCompile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <WarningLevel>Level3</WarningLevel>
@@ -217,10 +287,11 @@
     <ClCompile Include="Source\NXAESEncryption.cpp" />
     <ClCompile Include="Source\NXAppBar.cpp" />
     <ClCompile Include="Source\NXApplication.cpp" />
+    <ClCompile Include="Source\NXShadowGraphicsEffect.cpp" />
     <ClCompile Include="Source\NXBreadcrumbBar.cpp" />
     <ClCompile Include="Source\NXCalendar.cpp" />
     <ClCompile Include="Source\NXCalendarPicker.cpp" />
-	<ClCompile Include="Source\NXCentralStackedWidget.cpp" />
+    <ClCompile Include="Source\NXCentralStackedWidget.cpp" />
     <ClCompile Include="Source\NXCheckBox.cpp" />
     <ClCompile Include="Source\NXColorDialog.cpp" />
     <ClCompile Include="Source\NXComboBox.cpp" />
@@ -267,6 +338,7 @@
     <ClCompile Include="Source\NXScrollBar.cpp" />
     <ClCompile Include="Source\NXScrollPage.cpp" />
     <ClCompile Include="Source\NXScrollPageArea.cpp" />
+    <ClCompile Include="Source\NXShadowWidget.cpp" />
     <ClCompile Include="Source\NXSharedMemoryManager.cpp" />
     <ClCompile Include="Source\NXSlider.cpp" />
     <ClCompile Include="Source\NXSpinBox.cpp" />
@@ -288,6 +360,7 @@
     <ClCompile Include="Source\private\NXAcrylicUrlCardPrivate.cpp" />
     <ClCompile Include="Source\private\NXAppBarPrivate.cpp" />
     <ClCompile Include="Source\private\NXApplicationPrivate.cpp" />
+    <ClCompile Include="Source\private\NXShadowGraphicsEffectPrivate.cpp" />
     <ClCompile Include="Source\private\NXBreadcrumbBarPrivate.cpp" />
     <ClCompile Include="Source\private\NXCalendarPickerPrivate.cpp" />
     <ClCompile Include="Source\private\NXCalendarPrivate.cpp" />
@@ -365,10 +438,13 @@
     <ClInclude Include="Source\include\magic_enum\magic_enum_iostream.hpp" />
     <ClInclude Include="Source\include\magic_enum\magic_enum_switch.hpp" />
     <ClInclude Include="Source\include\magic_enum\magic_enum_utility.hpp" />
+    <QtMoc Include="Source\include\NXShadowGraphicsEffect.h" />
+    <QtMoc Include="Source\include\NXShadowWidget.h" />
     <ClInclude Include="Source\include\singleton.h" />
     <ClInclude Include="Source\include\NXIcon.h" />
     <ClInclude Include="Source\include\NXGraphicsLineItem.h" />
     <ClInclude Include="Source\include\stdafx.h" />
+    <QtMoc Include="Source\private\NXShadowGraphicsEffectPrivate.h" />
     <ClInclude Include="Source\private\NXGraphicsLineItemPrivate.h" />
     <QtMoc Include="Source\DeveloperComponents\NXBaseListView.h" />
     <QtMoc Include="Source\DeveloperComponents\NXBreadcrumbBarDelegate.h" />
@@ -436,7 +512,7 @@
     <QtMoc Include="Source\include\NXBreadcrumbBar.h" />
     <QtMoc Include="Source\include\NXCalendar.h" />
     <QtMoc Include="Source\include\NXCalendarPicker.h" />
-	<QtMoc Include="Source\include\NXCentralStackedWidget.h" />
+    <QtMoc Include="Source\include\NXCentralStackedWidget.h" />
     <QtMoc Include="Source\include\NXCheckBox.h" />
     <QtMoc Include="Source\include\NXColorDialog.h" />
     <QtMoc Include="Source\include\NXComboBox.h" />

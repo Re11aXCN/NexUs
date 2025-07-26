@@ -53,6 +53,7 @@ void NXSpinBox::setButtonMode(NXSpinBoxType::ButtonMode buttonMode)
         break;
     }
     }
+    d->onThemeChanged(nxTheme->getThemeMode());
     setFrame(hasFrame());
     Q_EMIT pButtonModeChanged();
 }
