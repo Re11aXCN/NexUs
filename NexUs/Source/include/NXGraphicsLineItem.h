@@ -3,7 +3,7 @@
 
 #include <QGraphicsPathItem>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXGraphicsItem;
 class NXGraphicsLineItemPrivate;
 class NX_EXPORT NXGraphicsLineItem : public QGraphicsPathItem

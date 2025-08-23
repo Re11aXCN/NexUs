@@ -2,7 +2,7 @@
 #define NXBREADCRUMBBAR_H
 #include <QWidget>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXBreadcrumbBarPrivate;
 class NX_EXPORT NXBreadcrumbBar : public QWidget

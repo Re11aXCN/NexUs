@@ -18,4 +18,5 @@ NXSlider::NXSlider(Qt::Orientation orientation, QWidget* parent)
 
 NXSlider::~NXSlider()
 {
+    delete this->style();
 }

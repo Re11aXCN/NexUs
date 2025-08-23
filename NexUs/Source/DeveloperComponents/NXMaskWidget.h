@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXMaskWidget : public QWidget
 {
     Q_OBJECT

@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QDate>
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXCalendarPrivate;
 class NX_EXPORT NXCalendar : public QWidget
 {

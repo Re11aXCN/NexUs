@@ -5,7 +5,7 @@
 #include <QPushButton>
 
 #include "NXDef.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXAcrylicUrlCardPrivate;
 class NX_EXPORT NXAcrylicUrlCard : public QPushButton
 {

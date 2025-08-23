@@ -1,7 +1,7 @@
 ﻿#ifndef NXDEF_H
 #define NXDEF_H
 
-#include "stdafx.h"
+#include "NXProperty.h"
 
 Q_BEGIN_ENUM_CREATE(NXApplicationType)
 enum WindowDisplayMode
@@ -68,6 +68,8 @@ enum ThemeColor
     BasicSelectedAlpha,
     BasicSelectedHoverAlpha,
     StatusDanger,
+    Win10BorderActive,
+    Win10BorderInactive,
 };
 Q_ENUM_CREATE(ThemeColor)
 Q_END_ENUM_CREATE(NXThemeType)
@@ -75,6 +77,7 @@ Q_END_ENUM_CREATE(NXThemeType)
 Q_BEGIN_ENUM_CREATE(NXAppBarType, NX_EXPORT)
 enum ButtonType
 {
+    NoneButtonHint = 0x0000,
     RouteBackButtonHint = 0x0001,
     NavigationButtonHint = 0x0002,
     StayTopButtonHint = 0x0004,

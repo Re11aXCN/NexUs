@@ -3,7 +3,7 @@
 
 #include <QDockWidget>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXDockWidgetPrivate;
 class NX_EXPORT NXDockWidget : public QDockWidget
 {

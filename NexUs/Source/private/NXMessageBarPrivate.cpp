@@ -387,8 +387,8 @@ void NXMessageBarPrivate::_calculateInitialPos(int& startX, int& startY, int& en
     }
     if (endY < _messageBarVerticalTopMargin || endY > q->parentWidget()->height() - _messageBarVerticalBottomMargin - q->minimumHeight())
     {
-        NXMessageBarManager::getInstance()->updateActiveMap(q, false);
-        q->deleteLater();
+        (*_messageBarActiveMap[_policy])[0]->d_ptr->onCloseButtonClicked();
+        _calculateInitialPos(startX, startY, endX, endY);
     }
 }
 

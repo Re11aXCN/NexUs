@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXToolTipPrivate;
 class NX_EXPORT NXToolTip : public QWidget
 {

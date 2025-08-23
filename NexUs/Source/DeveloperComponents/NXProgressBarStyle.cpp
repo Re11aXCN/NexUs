@@ -21,6 +21,18 @@ void NXProgressBarStyle::drawControl(ControlElement element, const QStyleOption*
 {
     switch (element)
     {
+    case QStyle::CE_ProgressBarLabel:
+    {
+        if (const QStyleOptionProgressBar* popt = qstyleoption_cast<const QStyleOptionProgressBar*>(option))
+        {
+            painter->save();
+            painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+            painter->setPen(NXThemeColor(_themeMode, BasicText));
+            painter->drawText(popt->rect, Qt::AlignCenter, popt->text);
+            painter->restore();
+        }
+        return;
+    }
     case QStyle::CE_ProgressBarGroove:
     {
         //背景轨道

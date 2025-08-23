@@ -107,4 +107,10 @@ void NXThemePrivate::_initThemeColor()
     // 状态颜色
     _lightThemeColorList[NXThemeType::StatusDanger] = QColor(0xE8, 0x11, 0x23);
     _darkThemeColorList[NXThemeType::StatusDanger] = QColor(0xE8, 0x11, 0x23);
+
+    // Win10顶部边框颜色
+    _lightThemeColorList[NXThemeType::Win10BorderActive] = QColor(0x6E, 0x6E, 0x6E);
+    _darkThemeColorList[NXThemeType::Win10BorderActive] = QColor(0x33, 0x33, 0x33);
+    _lightThemeColorList[NXThemeType::Win10BorderInactive] = QColor(0xA7, 0xA7, 0xA7);
+    _darkThemeColorList[NXThemeType::Win10BorderInactive] = QColor(0x3D, 0x3D, 0x3D);
 }

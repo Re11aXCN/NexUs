@@ -1,7 +1,8 @@
-#include <QApplication>
+﻿#include <QApplication>
 #include <QScreen>
 
 #include "NXApplication.h"
+#include "NXLog.h"
 #include "mainwindow.h"
 #ifdef Q_OS_WIN
 #include <Windows.h>
@@ -20,6 +21,7 @@ int main(int argc, char* argv[])
 #endif
     QApplication a(argc, argv);
     nxApp->init();
+    //NXLog::getInstance()->initMessageLog(true);
     MainWindow w;
     w.show();
 #ifdef Q_OS_WIN

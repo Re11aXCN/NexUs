@@ -25,6 +25,8 @@ NXProgressBar::NXProgressBar(QWidget* parent)
 
 NXProgressBar::~NXProgressBar()
 {
+    Q_D(NXProgressBar);
+    delete d->_style;
 }
 
 void NXProgressBar::setMinimum(int minimum)

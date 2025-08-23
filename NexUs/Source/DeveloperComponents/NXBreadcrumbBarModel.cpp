@@ -11,7 +11,11 @@ NXBreadcrumbBarModel::~NXBreadcrumbBarModel()
 
 int NXBreadcrumbBarModel::rowCount(const QModelIndex& parent) const
 {
-    return _breadcrumbList.count() * 2 - 1;
+    if (!_breadcrumbList.isEmpty())
+    {
+        return _breadcrumbList.count() * 2 - 1;
+    }
+    return 0;
 }
 
 QVariant NXBreadcrumbBarModel::data(const QModelIndex& index, int role) const

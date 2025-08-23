@@ -54,6 +54,8 @@ NXToolButton::NXToolButton(QWidget* parent)
 
 NXToolButton::~NXToolButton()
 {
+    Q_D(NXToolButton);
+    delete d->_toolButtonStyle;
 }
 
 void NXToolButton::setBorderRadius(int borderRadius)

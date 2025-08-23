@@ -1,7 +1,7 @@
 ﻿#ifndef NX_SHARED_MEMORY_MANAGER_H
 #define NX_SHARED_MEMORY_MANAGER_H
 #include <QSharedMemory>
-#include "stdafx.h"
+#include "NXProperty.h"
 class NX_EXPORT NXSharedMemoryManager : QObject
 {
 	Q_OBJECT

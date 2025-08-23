@@ -4,7 +4,7 @@
 #include <QMenuBar>
 
 #include "NXDef.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXMenu;
 class NX_EXPORT NXMenuBar : public QMenuBar

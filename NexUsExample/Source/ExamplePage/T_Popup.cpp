@@ -1,4 +1,4 @@
-#include "T_Popup.h"
+﻿#include "T_Popup.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -59,10 +59,10 @@ T_Popup::T_Popup(QWidget* parent)
     colorDialogButton->setDarkDefaultColor(_colorDialog->getCurrentColor());
     colorDialogButton->setDarkHoverColor(_colorDialog->getCurrentColor());
     colorDialogButton->setDarkPressColor(_colorDialog->getCurrentColor());
-    QObject::connect(colorDialogButton, &NXPushButton::clicked, this, [=]() {
+    connect(colorDialogButton, &NXPushButton::clicked, this, [=]() {
         _colorDialog->exec();
     });
-    QObject::connect(_colorDialog, &NXColorDialog::colorSelected, this, [=](const QColor& color) {
+    connect(_colorDialog, &NXColorDialog::colorSelected, this, [=](const QColor& color) {
         colorDialogButton->setLightDefaultColor(color);
         colorDialogButton->setLightHoverColor(color);
         colorDialogButton->setLightPressColor(color);
@@ -130,7 +130,7 @@ T_Popup::T_Popup(QWidget* parent)
     NXToggleSwitch* drawerSwitch = new NXToggleSwitch(this);
     NXText* drawerSwitchText = new NXText("关", this);
     drawerSwitchText->setTextPixelSize(15);
-    QObject::connect(drawerSwitch, &NXToggleSwitch::toggled, this, [=](bool toggled) {
+    connect(drawerSwitch, &NXToggleSwitch::toggled, this, [=](bool toggled) {
         if (toggled)
         {
             drawerSwitchText->setText("开");
@@ -142,7 +142,7 @@ T_Popup::T_Popup(QWidget* parent)
             _drawer->collpase();
         }
     });
-    QObject::connect(_drawer, &NXDrawerArea::expandStateChanged, this, [=](bool isExpand) {
+    connect(_drawer, &NXDrawerArea::expandStateChanged, this, [=](bool isExpand) {
         drawerSwitch->setIsToggled(isExpand);
     });
 

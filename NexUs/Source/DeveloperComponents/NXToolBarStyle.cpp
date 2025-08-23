@@ -237,6 +237,7 @@ void NXToolBarStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QStyleO
                                                                              : QIcon::Off);
                 switch (bopt->toolButtonStyle)
                 {
+                case Qt::ToolButtonIconOnly:
                 case Qt::ToolButtonTextBesideIcon:
                 {
                     painter->drawPixmap(QRect(QPoint(iconRect.x(), iconRect.center().y() - iconSize.height() / 2), iconSize), iconPix);

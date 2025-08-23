@@ -4,7 +4,7 @@
 #include <QDrag>
 #include <QTabBar>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXTabBarPrivate;
 class NX_EXPORT NXTabBar : public QTabBar
 {

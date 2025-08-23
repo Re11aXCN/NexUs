@@ -1,7 +1,7 @@
 ﻿#ifndef NXFRAMEWORK_NEXUS_INCLUDE_NXROLLER_H_
 #define NXFRAMEWORK_NEXUS_INCLUDE_NXROLLER_H_
 
-#include "stdafx.h"
+#include "NXProperty.h"
 #include <QWidget>
 
 class NXRollerPrivate;

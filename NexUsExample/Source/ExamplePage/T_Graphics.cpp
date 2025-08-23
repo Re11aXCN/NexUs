@@ -1,4 +1,4 @@
-#include "T_Graphics.h"
+﻿#include "T_Graphics.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>

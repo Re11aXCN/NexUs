@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QPixmap>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXTabBar;
 class NXTabBarPrivate : public QObject
 {

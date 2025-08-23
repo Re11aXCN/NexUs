@@ -32,6 +32,10 @@ void NXApplication::setWindowDisplayMode(NXApplicationType::WindowDisplayMode wi
     {
         return;
     }
+    if (lastDisplayMode == NXApplicationType::NXMica)
+    {
+        d->_resetAllMicaWidget();
+    }
     switch (windowDisplayType)
     {
     case NXApplicationType::Normal:

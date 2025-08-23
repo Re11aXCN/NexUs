@@ -92,4 +92,133 @@
 
 ## # **Track Record 3**：	Commits on Jul 8, 2025
 
+### 1. Modify Optize1
+
 > 1. 引入NXShadowGraphicsEffect、NXShadowWidget
+
+## # **Track Record 4**：	Commits on Aug 22, 2025
+
+
+
+
+
+
+
+# Example替换
+
+同步Ela主仓库的Example之后需要进行以下替换进行适配已修改的代码，才能正确编译
+
+
+
+ELA			替换	NX
+
+Ela	 		替换	NX
+
+T_Ela	 	替换	T_NX
+
+eTheme   替换 	nxTheme
+
+eApp		替换 	nxApp
+
+":/include	替换	":/Resource
+
+
+
+
+
+T_Popup.cpp
+
+getCurrentColorRGB	替换为	getCurrent4ChannelColor
+
+
+
+
+
+T_NXPacketIO.h/.cpp
+
+需要加上前缀逻辑
+
+T_NXPacketIO.h
+
+#include "XIO/NXXIO_PacketRegistry.h"
+#include "Util/UtCallbackHolder.h"
+
+T_NXPacketIO.cpp
+
+#include "XIO/NXXIO_Connection.h"
+#include "XIO/NXXIO_Interface.h"
+#include "XIO/NXXIO_PacketRegistry.h"
+
+然后T_NXPacketIO.h新增header
+#include <QPixmap>
+
+
+
+
+
+mainwindow.h
+
+_elaDxgiKey	替换为	_rootKey
+
+mainwindow.cpp
+
+构造函数新增初始化	_rootKey(getNavigationRootKey())
+
+```cpp
+
+// 旧
+_settingPage = new T_Setting(this);
+... // 替换内容
+_aboutPage->hide();
+
+
+
+// 新
+    addPageNode("HOME", _homePage, NXIconType::House);
+#ifdef Q_OS_WIN
+    // 默认是root 添加一个expander节点
+    auto [type, NXDxgiKey] = addExpanderNode("NXDxgi", NXIconType::TvMusic);
+    addPageNode("NXScreen", _elaScreenPage, NXDxgiKey, 3, NXIconType::ObjectGroup);
+#endif
+    // navigation(elaScreenWidget->property("NXPageKey").toString());
+    addPageNode("NXBaseComponents", _baseComponentsPage, NXIconType::CabinetFiling);
+
+    _viewKey = addExpanderNode("NXView", _rootKey, NXIconType::CameraViewfinder).second;
+    addPageNode("NXListView", _listViewPage, _viewKey, 9, NXIconType::List);
+    addPageNode("NXTableView", _tableViewPage, _viewKey, NXIconType::Table);
+    addPageNode("NXTreeView", _treeViewPage, _viewKey, NXIconType::ListTree);
+    expandNavigationNode(_viewKey);
+
+    addPageNode("NXGraphics", _graphicsPage, 9, NXIconType::Paintbrush);
+    addPageNode("NXCard", _cardPage, NXIconType::Cards);
+    addPageNode("NXNavigation", _navigationPage, NXIconType::LocationArrow);
+    addPageNode("NXPopup", _popupPage, NXIconType::Envelope);
+    addPageNode("NXIcon", _iconPage, 99, NXIconType::FontCase);
+    NodeOperateReturnTypeWithKey returnType1 = addExpanderNode("TEST4", NXIconType::Acorn);
+    NodeOperateReturnTypeWithKey returnType2 = addExpanderNode("TEST5", returnType1.second, NXIconType::Acorn);
+    addPageNode("Third Level", new QWidget(this), returnType2.second, NXIconType::Acorn);
+    addExpanderNode("TEST6", _rootKey, NXIconType::Acorn);
+    addExpanderNode("TEST7", _rootKey, NXIconType::Acorn);
+    addExpanderNode("TEST8", _rootKey, NXIconType::Acorn);
+    addExpanderNode("TEST9", _rootKey, NXIconType::Acorn);
+    addExpanderNode("TEST10", _rootKey, NXIconType::Acorn);
+    addExpanderNode("TEST11", _rootKey, NXIconType::Acorn);
+    addExpanderNode("TEST12", _rootKey, NXIconType::Acorn);
+    addExpanderNode("TEST13", _rootKey, NXIconType::Acorn);
+    addExpanderNode("TEST14", _rootKey, NXIconType::Acorn);
+    addExpanderNode("TEST15", NXIconType::Acorn);
+    addExpanderNode("TEST16", NXIconType::Acorn);
+    addExpanderNode("TEST17", NXIconType::Acorn);
+
+    _aboutKey = addFooterNode("About", nullptr, 0, NXIconType::User).second;
+    _aboutPage = new T_About();
+
+
+// 旧
+    _settingKey = addFooterNode("Setting", _settingPage, 0, NXIconType::GearComplex).second;
+
+// 新
+    _settingKey = addFooterNode("Setting", _settingPage, 0, NXIconType::GearComplex).second;
+
+```
+

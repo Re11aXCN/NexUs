@@ -31,6 +31,8 @@ NXMenu::NXMenu(const QString& title, QWidget* parent)
 
 NXMenu::~NXMenu()
 {
+    Q_D(NXMenu);
+    delete d->_menuStyle;
 }
 
 void NXMenu::setBorderRadius(int borderRadius)

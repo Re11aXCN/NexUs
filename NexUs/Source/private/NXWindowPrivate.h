@@ -1,4 +1,4 @@
-#ifndef NXWINDOWPRIVATE_H
+﻿#ifndef NXWINDOWPRIVATE_H
 #define NXWINDOWPRIVATE_H
 
 #include <QLinearGradient>
@@ -6,7 +6,7 @@
 #include <QObject>
 
 #include "NXDef.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXEvent;
 class NXWindow;
 class NXNavigationBar;

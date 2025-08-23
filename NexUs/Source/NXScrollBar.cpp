@@ -79,6 +79,7 @@ NXScrollBar::NXScrollBar(QScrollBar* originScrollBar, QAbstractScrollArea* paren
 
 NXScrollBar::~NXScrollBar()
 {
+    delete this->style();
 }
 
 bool NXScrollBar::event(QEvent* event)

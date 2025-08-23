@@ -182,3 +182,13 @@ void NXApplicationPrivate::_updateAllMicaWidget()
         }
     }
 }
+
+void NXApplicationPrivate::_resetAllMicaWidget()
+{
+    for (auto widget : _micaWidgetList)
+    {
+        QPalette palette = widget->palette();
+        palette.setBrush(QPalette::Window, Qt::transparent);
+        widget->setPalette(palette);
+    }
+}

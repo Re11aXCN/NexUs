@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QScrollBar>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class QTimer;
 class QPropertyAnimation;
 class NXScrollBar;

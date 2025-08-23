@@ -5,7 +5,7 @@
 #include <QWidget>
 
 #include "NXDef.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXMessageButtonPrivate;
 class NX_EXPORT NXMessageButton : public QPushButton
 {

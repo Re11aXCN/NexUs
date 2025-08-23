@@ -35,6 +35,8 @@ NXLCDNumber::NXLCDNumber(uint numDigits, QWidget* parent)
 
 NXLCDNumber::~NXLCDNumber()
 {
+    Q_D(NXLCDNumber);
+    delete d->_lcdNumberStyle;
 }
 
 void NXLCDNumber::setIsUseAutoClock(bool isUseAutoClock)

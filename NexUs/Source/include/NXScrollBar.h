@@ -4,7 +4,7 @@
 #include <QAbstractScrollArea>
 #include <QScrollBar>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXScrollBarPrivate;
 class NX_EXPORT NXScrollBar : public QScrollBar

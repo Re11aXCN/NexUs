@@ -50,11 +50,10 @@ private:
     T_TableView* _tableViewPage{nullptr};
     T_TreeView* _treeViewPage{nullptr};
     T_About* _aboutPage{nullptr};
-	T_Setting* _settingPage{ nullptr };
-    QString _rootKey{};
-	QString _elaDxgiKey{ "" };
-	QString _viewKey{ "" };
-	QString _aboutKey{ "" };
-	QString _settingKey{ "" };
+    T_Setting* _settingPage{nullptr};
+    QString _rootKey{""};
+    QString _viewKey{""};
+    QString _aboutKey{""};
+    QString _settingKey{""};
 };
 #endif // MAINWINDOW_H

@@ -48,6 +48,7 @@ NXToolBar::NXToolBar(const QString& title, QWidget* parent)
 
 NXToolBar::~NXToolBar()
 {
+    delete this->style();
 }
 
 void NXToolBar::setToolBarSpacing(int spacing)

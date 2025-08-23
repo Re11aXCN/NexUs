@@ -5,7 +5,7 @@
 #include <QMap>
 #include <QStyle>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXFlowLayoutPrivate;
 class NX_EXPORT NXFlowLayout : public QLayout
 {

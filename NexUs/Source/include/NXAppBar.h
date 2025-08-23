@@ -46,7 +46,7 @@
 #else
 #define Q_TAKEOVER_NATIVEEVENT_CPP(CLASS, NXAppBar)
 #endif
-
+class QMenu;
 class NXAppBarPrivate;
 class NX_EXPORT NXAppBar : public QWidget
 {
@@ -60,10 +60,12 @@ class NX_EXPORT NXAppBar : public QWidget
     Q_PROPERTY_CREATE_Q_H(int, CustomWidgetMaximumWidth)
 public:
     explicit NXAppBar(QWidget* parent = nullptr);
-    ~NXAppBar();
+    ~NXAppBar() override;
 
     void setCustomWidget(NXAppBarType::CustomArea customArea, QWidget* customWidget);
     QWidget* getCustomWidget() const;
+    void setCustomMenu(QMenu* customMenu);
+    QMenu* getCustomMenu() const;
 
     void setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable = true);
     void setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags);
@@ -85,9 +87,13 @@ Q_SIGNALS:
     Q_SIGNAL void themeChangeButtonClicked();
     Q_SIGNAL void closeButtonClicked();
     Q_SIGNAL void customWidgetChanged();
+    Q_SIGNAL void customMenuChanged();
 
 protected:
     virtual bool eventFilter(QObject* obj, QEvent* event) override;
+#ifdef Q_OS_WIN
+    virtual void paintEvent(QPaintEvent* event) override;
+#endif
 };
 
 #endif // NXAPPBAR_H

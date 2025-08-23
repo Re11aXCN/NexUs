@@ -4,7 +4,7 @@
 #include <QAbstractListModel>
 #include <QMetaEnum>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class T_IconModel : public QAbstractListModel
 {
     Q_OBJECT

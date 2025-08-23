@@ -3,7 +3,7 @@
 
 #include <QPushButton>
 #include <QDate>
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXCalendarPickerPrivate;
 class NX_EXPORT NXCalendarPicker : public QPushButton
 {

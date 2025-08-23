@@ -4,7 +4,7 @@
 #include <QPixmap>
 #include <QWidget>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXPromotionCard;
 class NXPromotionViewPrivate;
 class NX_EXPORT NXPromotionView : public QWidget

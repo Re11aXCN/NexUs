@@ -26,6 +26,8 @@ NXSpinBox::NXSpinBox(QWidget* parent)
 
 NXSpinBox::~NXSpinBox()
 {
+    Q_D(NXSpinBox);
+    delete d->_style;
 }
 
 void NXSpinBox::setButtonMode(NXSpinBoxType::ButtonMode buttonMode)

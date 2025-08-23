@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QScrollBar>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXScrollBar;
 class NXScrollArea;
 class NXScrollAreaPrivate : public QObject

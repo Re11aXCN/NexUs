@@ -3,7 +3,7 @@
 
 #include <QStatusBar>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NX_EXPORT NXStatusBar : public QStatusBar
 {
     Q_OBJECT

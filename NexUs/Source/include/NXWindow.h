@@ -30,6 +30,8 @@ public:
 
     void setCustomWidget(NXAppBarType::CustomArea customArea, QWidget* customWidget);
     QWidget* getCustomWidget() const;
+    void setCustomMenu(QMenu* customMenu);
+    QMenu* getCustomMenu() const;
  	void setIsLeftButtonPressedToggleNavigation(bool isPressed);
     void setNavigationNodeDragAndDropEnable(bool isEnable);
     void setUserInfoCardVisible(bool isVisible);
@@ -81,6 +83,7 @@ Q_SIGNALS:
     Q_SIGNAL void navigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* widget);
     Q_SIGNAL void navigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey);
     Q_SIGNAL void customWidgetChanged();
+    Q_SIGNAL void customMenuChanged();
     Q_SIGNAL void pageOpenInNewWindow(const QString& nodeKey);
 protected:
     virtual bool eventFilter(QObject* watched, QEvent* event) override;

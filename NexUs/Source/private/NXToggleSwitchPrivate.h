@@ -4,7 +4,7 @@
 #include <QObject>
 
 #include "NXDef.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXToggleSwitch;
 class NXToggleSwitchPrivate : public QObject
 {

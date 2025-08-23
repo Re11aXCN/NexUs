@@ -2,7 +2,7 @@
 #define NXMULTISELECTCOMBOBOX_H
 #include <QComboBox>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXMultiSelectComboBoxPrivate;
 class NX_EXPORT NXMultiSelectComboBox : public QComboBox
 {

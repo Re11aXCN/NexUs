@@ -3,7 +3,7 @@
 
 #include <QGraphicsView>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXGraphicsViewPrivate;
 class NX_EXPORT NXGraphicsView : public QGraphicsView
 {

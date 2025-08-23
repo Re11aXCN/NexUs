@@ -2,7 +2,7 @@
 #define NXPIVOT_H
 #include <QWidget>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXPivotPrivate;
 class NX_EXPORT NXPivot : public QWidget

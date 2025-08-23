@@ -19,7 +19,7 @@ public:
     QSize sizeFromContents(ContentsType type, const QStyleOption* option, const QSize& size, const QWidget* widget) const override;
 
 private:
-    int _iconWidth{ 22 };
+    mutable int _iconWidth{ 0 };
     int _shadowBorderWidth{ 6 };
     NXThemeType::ThemeMode _themeMode;
     mutable bool _isAnyoneItemHasIcon{false};

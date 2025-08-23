@@ -4,7 +4,7 @@
 #include <QObject>
 
 #include "singleton.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXExponentialBlurPrivate;
 class NX_EXPORT NXExponentialBlur : public QObject

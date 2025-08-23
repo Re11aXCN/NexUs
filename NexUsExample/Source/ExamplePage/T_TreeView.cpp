@@ -1,4 +1,4 @@
-#include "T_TreeView.h"
+﻿#include "T_TreeView.h"
 
 #include <QHBoxLayout>
 #include <QHeaderView>
@@ -40,7 +40,7 @@ T_TreeView::T_TreeView(QWidget* parent)
     itemHeightSlider->setValue(350);
     NXText* itemHeightValueText = new NXText("35", this);
     itemHeightValueText->setTextPixelSize(15);
-    QObject::connect(itemHeightSlider, &NXSlider::valueChanged, this, [=](int value) {
+    connect(itemHeightSlider, &NXSlider::valueChanged, this, [=](int value) {
         itemHeightValueText->setText(QString::number(value / 10));
         _treeView->setItemHeight(value / 10);
     });
@@ -58,7 +58,7 @@ T_TreeView::T_TreeView(QWidget* parent)
     headerMarginSlider->setValue(50);
     NXText* headerMarginValueText = new NXText("5", this);
     headerMarginValueText->setTextPixelSize(15);
-    QObject::connect(headerMarginSlider, &NXSlider::valueChanged, this, [=](int value) {
+    connect(headerMarginSlider, &NXSlider::valueChanged, this, [=](int value) {
         headerMarginValueText->setText(QString::number(value / 10));
         _treeView->setHeaderMargin(value / 10);
     });
@@ -76,7 +76,7 @@ T_TreeView::T_TreeView(QWidget* parent)
     indentationSlider->setValue(200);
     NXText* indentationValueText = new NXText("20", this);
     indentationValueText->setTextPixelSize(15);
-    QObject::connect(indentationSlider, &NXSlider::valueChanged, this, [=](int value) {
+    connect(indentationSlider, &NXSlider::valueChanged, this, [=](int value) {
         indentationValueText->setText(QString::number(value / 10));
         _treeView->setIndentation(value / 10);
     });
@@ -91,14 +91,14 @@ T_TreeView::T_TreeView(QWidget* parent)
     expandCollapseLayout->setContentsMargins(0, 0, 0, 0);
     NXPushButton* expandButton = new NXPushButton("展开全部", this);
     expandButton->setFixedWidth(80);
-    QObject::connect(expandButton, &NXPushButton::clicked, this, [=]() {
+    connect(expandButton, &NXPushButton::clicked, this, [=]() {
         _treeView->expandAll();
     });
 
     //收起全部
     NXPushButton* collapseButton = new NXPushButton("收起全部", this);
     collapseButton->setFixedWidth(80);
-    QObject::connect(collapseButton, &NXPushButton::clicked, this, [=]() {
+    connect(collapseButton, &NXPushButton::clicked, this, [=]() {
         _treeView->collapseAll();
     });
     expandCollapseLayout->addWidget(expandButton);

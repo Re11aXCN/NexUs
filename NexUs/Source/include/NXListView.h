@@ -3,7 +3,7 @@
 
 #include <QListView>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXListViewPrivate;
 class NX_EXPORT NXListView : public QListView

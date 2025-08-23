@@ -4,7 +4,7 @@
 #include <QPushButton>
 
 #include "NXDef.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXIconButtonPrivate;
 class NX_EXPORT NXIconButton : public QPushButton
 {

@@ -1,10 +1,10 @@
-#ifndef T_TREEITEM_H
+﻿#ifndef T_TREEITEM_H
 #define T_TREEITEM_H
 
 #include <QModelIndex>
 #include <QObject>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class T_TreeItem : public QObject
 {
     Q_OBJECT

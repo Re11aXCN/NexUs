@@ -224,6 +224,7 @@
     <QtRcc Include="NexUs.qrc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\NXDialog.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXBaseListView.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXBreadcrumbBarDelegate.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXBreadcrumbBarModel.cpp" />
@@ -360,6 +361,7 @@
     <ClCompile Include="Source\private\NXAcrylicUrlCardPrivate.cpp" />
     <ClCompile Include="Source\private\NXAppBarPrivate.cpp" />
     <ClCompile Include="Source\private\NXApplicationPrivate.cpp" />
+    <ClCompile Include="Source\private\NXDialogPrivate.cpp" />
     <ClCompile Include="Source\private\NXShadowGraphicsEffectPrivate.cpp" />
     <ClCompile Include="Source\private\NXBreadcrumbBarPrivate.cpp" />
     <ClCompile Include="Source\private\NXCalendarPickerPrivate.cpp" />
@@ -425,6 +427,7 @@
     <ClCompile Include="Source\private\NXWindowPrivate.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="Source\include\NXDialog.h" />
     <ClInclude Include="Source\include\aesni\aesni-enc-cbc.h" />
     <ClInclude Include="Source\include\aesni\aesni-enc-ecb.h" />
     <ClInclude Include="Source\include\aesni\aesni-key-exp.h" />
@@ -443,8 +446,9 @@
     <ClInclude Include="Source\include\singleton.h" />
     <ClInclude Include="Source\include\NXIcon.h" />
     <ClInclude Include="Source\include\NXGraphicsLineItem.h" />
-    <ClInclude Include="Source\include\stdafx.h" />
+    <QtMoc Include="Source\include\NXProperty.h" />
     <QtMoc Include="Source\private\NXShadowGraphicsEffectPrivate.h" />
+    <QtMoc Include="Source\private\NXDialogPrivate.h" />
     <ClInclude Include="Source\private\NXGraphicsLineItemPrivate.h" />
     <QtMoc Include="Source\DeveloperComponents\NXBaseListView.h" />
     <QtMoc Include="Source\DeveloperComponents\NXBreadcrumbBarDelegate.h" />

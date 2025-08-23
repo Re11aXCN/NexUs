@@ -30,6 +30,7 @@ NXMenuBar::NXMenuBar(QWidget* parent)
 
 NXMenuBar::~NXMenuBar()
 {
+    delete this->style();
 }
 
 QAction* NXMenuBar::addMenu(QMenu* menu)

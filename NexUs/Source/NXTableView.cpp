@@ -33,6 +33,8 @@ NXTableView::NXTableView(QWidget* parent)
 
 NXTableView::~NXTableView()
 {
+    Q_D(NXTableView);
+    delete d->_pTableViewStyle;
 }
 
 void NXTableView::setBorderRadius(int radius) {

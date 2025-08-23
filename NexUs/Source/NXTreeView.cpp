@@ -38,6 +38,8 @@ NXTreeView::NXTreeView(QWidget* parent)
 
 NXTreeView::~NXTreeView()
 {
+    Q_D(NXTreeView);
+    delete d->_treeViewStyle;
 }
 
 void NXTreeView::setNXIcon(NXIconType::IconName icon)

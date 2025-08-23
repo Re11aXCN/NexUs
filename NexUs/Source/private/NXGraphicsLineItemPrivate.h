@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QPointF>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXGraphicsItem;
 class NXGraphicsLineItem;
 class NXGraphicsLineItemPrivate

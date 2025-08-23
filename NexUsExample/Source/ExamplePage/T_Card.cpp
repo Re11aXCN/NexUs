@@ -1,4 +1,4 @@
-#include "T_Card.h"
+﻿#include "T_Card.h"
 
 #include <QVBoxLayout>
 

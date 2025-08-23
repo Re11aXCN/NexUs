@@ -15,7 +15,7 @@ class NX_EXPORT NXWidget : public QWidget
     Q_TAKEOVER_NATIVEEVENT_H
 public:
     explicit NXWidget(QWidget* parent = nullptr);
-    ~NXWidget();
+    ~NXWidget() override;
     void moveToCenter();
 
     void setCustomBackgroundColor(const QColor& lightColor, const QColor& darkColor);

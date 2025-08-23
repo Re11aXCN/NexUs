@@ -4,7 +4,7 @@
 #include <QPixmap>
 #include <QWidget>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXPopularCardPrivate;
 class NX_EXPORT NXPopularCard : public QWidget
 {

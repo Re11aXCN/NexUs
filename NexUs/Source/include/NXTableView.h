@@ -3,7 +3,7 @@
 
 #include <QTableView>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 struct NXAdjustParam {
     int x1;
     int y1;

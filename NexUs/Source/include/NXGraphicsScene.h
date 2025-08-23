@@ -9,7 +9,7 @@
 #include <QPainter>
 
 #include "NXDef.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXGraphicsItem;
 class NXGraphicsScenePrivate;

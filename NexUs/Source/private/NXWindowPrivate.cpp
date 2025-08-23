@@ -110,7 +110,6 @@ void NXWindowPrivate::onThemeReadyChange()
             {
                 nxTheme->setThemeMode(NXThemeType::Light);
             }
-            _animationWidget->setNewWindowBackground(q->grab(q->rect()).toImage());
             _animationWidget->setCenter(centerPos);
             qreal topLeftDis = _distance(centerPos, QPoint(0, 0));
             qreal topRightDis = _distance(centerPos, QPoint(q->width(), 0));
@@ -268,6 +267,7 @@ void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeTy
 void NXWindowPrivate::onNavigationRouteBack(QVariantMap routeData)
 {
     int routeIndex = routeData.value("NXCentralStackIndex").toUInt();
+    _centralStackTargetIndex = routeIndex;
     _centerStackedWidget->doWindowStackSwitch(_pStackSwitchMode, routeIndex, true);
 }
 

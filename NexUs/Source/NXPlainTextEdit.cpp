@@ -40,6 +40,8 @@ NXPlainTextEdit::NXPlainTextEdit(const QString& text, QWidget* parent)
 
 NXPlainTextEdit::~NXPlainTextEdit()
 {
+    Q_D(NXPlainTextEdit);
+    delete d->_style;
 }
 
 void NXPlainTextEdit::focusInEvent(QFocusEvent* event)

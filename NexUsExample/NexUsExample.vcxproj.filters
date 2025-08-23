@@ -23,7 +23,63 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <QtRcc Include="NexUsExample.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\ExamplePage\T_About.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_BaseComponents.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_BasePage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_Card.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_NXPacketIO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_NXScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_Graphics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_Home.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_Icon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_ListView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_LogWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_Navigation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_Popup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_RecvScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_Setting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_TableView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_TreeView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_UpdateWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\ModelView\T_IconDelegate.cpp">
@@ -47,65 +103,68 @@
     <ClCompile Include="Source\ModelView\T_TreeViewModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_About.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_BaseComponents.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_BasePage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_Card.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_Graphics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_Home.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_Icon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_ListView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_LogWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_Navigation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_NXPacketIO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_NXScreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_Popup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_RecvScreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_Setting.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_TableView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_TreeView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ExamplePage\T_UpdateWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\mainwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="Source\ExamplePage\T_About.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_BaseComponents.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_BasePage.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_Card.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_NXPacketIO.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_NXScreen.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_Graphics.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_Home.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_Icon.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_ListView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_LogWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_Navigation.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_Popup.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_RecvScreen.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_Setting.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_TableView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_TreeView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_UpdateWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <QtMoc Include="Source\ModelView\T_IconDelegate.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -127,67 +186,8 @@
     <QtMoc Include="Source\ModelView\T_TreeViewModel.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_About.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_BaseComponents.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_BasePage.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_Card.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_Graphics.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_Home.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_Icon.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_ListView.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_LogWidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_Navigation.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_NXPacketIO.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_NXScreen.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_Popup.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_RecvScreen.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_Setting.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_TableView.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_TreeView.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Source\ExamplePage\T_UpdateWidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="Source\mainwindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
-    <QtRcc Include="NexUsExample.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
   </ItemGroup>
 </Project>

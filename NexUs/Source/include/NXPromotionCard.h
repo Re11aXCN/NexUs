@@ -2,7 +2,7 @@
 #define NXPROMOTIONCARD_H
 #include <QWidget>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXPromotionCardPrivate;
 class NX_EXPORT NXPromotionCard : public QWidget
 {

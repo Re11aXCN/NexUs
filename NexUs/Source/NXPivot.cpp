@@ -76,6 +76,8 @@ NXPivot::NXPivot(QWidget* parent)
 
 NXPivot::~NXPivot()
 {
+    Q_D(NXPivot);
+    delete d->_listStyle;
 }
 
 void NXPivot::appendPivot(const QString& pivotTitle)

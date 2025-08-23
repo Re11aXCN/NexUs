@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXExponentialBlur;
 class NXExponentialBlurPrivate : public QObject

@@ -3,7 +3,7 @@
 
 #include <QComboBox>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXComboBoxPrivate;
 class NX_EXPORT NXComboBox : public QComboBox

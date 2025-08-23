@@ -3,7 +3,7 @@
 
 #include <QScrollArea>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXScrollAreaPrivate;
 class NX_EXPORT NXScrollArea : public QScrollArea

@@ -52,7 +52,9 @@ NXComboBox::NXComboBox(QWidget* parent)
         layout->addWidget(view());
         layout->setContentsMargins(6, 0, 6, 6);
 #ifndef Q_OS_WIN
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         container->setStyleSheet("background-color:transparent;");
+#endif
 #endif
     }
     QComboBox::setMaxVisibleItems(5);
@@ -61,6 +63,8 @@ NXComboBox::NXComboBox(QWidget* parent)
 
 NXComboBox::~NXComboBox()
 {
+    Q_D(NXComboBox);
+    delete d->_comboBoxStyle;
 }
 
 void NXComboBox::setEditable(bool editable)

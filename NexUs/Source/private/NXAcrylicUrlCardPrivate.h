@@ -6,7 +6,7 @@
 #include <QPixmap>
 
 #include "NXDef.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXAcrylicUrlCard;
 class NXAcrylicUrlCardPrivate : public QObject
 {

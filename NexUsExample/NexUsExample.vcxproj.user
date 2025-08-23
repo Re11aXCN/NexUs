@@ -11,4 +11,7 @@
     <QtTouchProperty>
     </QtTouchProperty>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="QtSettings">
+    <QtTouchProperty />
+  </PropertyGroup>
 </Project>

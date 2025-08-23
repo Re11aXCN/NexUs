@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXToggleSwitchPrivate;
 class NX_EXPORT NXToggleSwitch : public QWidget
 {

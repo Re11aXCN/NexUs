@@ -1,11 +1,11 @@
 ﻿#include "NXAppBarPrivate.h"
 
-#include "NXToolButton.h"
 #ifdef Q_OS_WIN
 #include <Windows.h>
 #endif
 #include <QGuiApplication>
 #include <QLabel>
+#include <QMenu>
 #include <QPropertyAnimation>
 #include <QScreen>
 #include <QVBoxLayout>
@@ -15,6 +15,8 @@
 #include "NXIconButton.h"
 #include "NXNavigationBar.h"
 #include "NXText.h"
+#include "NXToolButton.h"
+
 NXAppBarPrivate::NXAppBarPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -87,52 +89,58 @@ void NXAppBarPrivate::_changeMaxButtonAwesome(bool isMaximized)
     }
 }
 
-void NXAppBarPrivate::_showSystemMenu(QPoint point)
+void NXAppBarPrivate::_showAppBarMenu(QPoint point)
 {
     Q_Q(const NXAppBar);
+    if (_pCustomMenu)
+    {
+        _pCustomMenu->exec(point);
+    }
+    else
+    {
 #ifdef Q_OS_WIN
-    QScreen* screen = qApp->screenAt(QCursor::pos());
-    if (!screen)
-    {
-        screen = QGuiApplication::primaryScreen();
-    }
-    if (!screen)
-    {
-        return;
-    }
-    const QPoint origin = screen->geometry().topLeft();
-    auto nativePos = QPointF(QPointF(point - origin) * screen->devicePixelRatio()).toPoint() + origin;
-    HWND hwnd = reinterpret_cast<HWND>(q->window()->winId());
-    const HMENU hMenu = ::GetSystemMenu(hwnd, FALSE);
-    if (q->window()->isMaximized() || q->window()->isFullScreen())
-    {
-        ::EnableMenuItem(hMenu, SC_MOVE, MFS_DISABLED);
-        ::EnableMenuItem(hMenu, SC_RESTORE, MFS_ENABLED);
-    }
-    else
-    {
-        ::EnableMenuItem(hMenu, SC_MOVE, MFS_ENABLED);
-        ::EnableMenuItem(hMenu, SC_RESTORE, MFS_DISABLED);
-    }
-    if (!_pIsFixedSize && !q->window()->isMaximized() && !q->window()->isFullScreen())
-    {
-        ::EnableMenuItem(hMenu, SC_SIZE, MFS_ENABLED);
-        ::EnableMenuItem(hMenu, SC_MAXIMIZE, MFS_ENABLED);
-    }
-    else
-    {
-        ::EnableMenuItem(hMenu, SC_SIZE, MFS_DISABLED);
-        ::EnableMenuItem(hMenu, SC_MAXIMIZE, MFS_DISABLED);
-    }
-    const int result = ::TrackPopupMenu(hMenu, (TPM_RETURNCMD | (QGuiApplication::isRightToLeft() ? TPM_RIGHTALIGN : TPM_LEFTALIGN)), nativePos.x(),
-                                        nativePos.y(), 0, hwnd, nullptr);
-    if (result != FALSE)
-    {
-        ::PostMessageW(hwnd, WM_SYSCOMMAND, result, 0);
-    }
+        QScreen* screen = qApp->screenAt(QCursor::pos());
+        if (!screen)
+        {
+            screen = QGuiApplication::primaryScreen();
+        }
+        if (!screen)
+        {
+            return;
+        }
+        const QPoint origin = screen->geometry().topLeft();
+        auto nativePos = QPointF(QPointF(point - origin) * screen->devicePixelRatio()).toPoint() + origin;
+        HWND hwnd = reinterpret_cast<HWND>(q->window()->winId());
+        const HMENU hMenu = ::GetSystemMenu(hwnd, FALSE);
+        if (q->window()->isMaximized() || q->window()->isFullScreen())
+        {
+            ::EnableMenuItem(hMenu, SC_MOVE, MFS_DISABLED);
+            ::EnableMenuItem(hMenu, SC_RESTORE, MFS_ENABLED);
+        }
+        else
+        {
+            ::EnableMenuItem(hMenu, SC_MOVE, MFS_ENABLED);
+            ::EnableMenuItem(hMenu, SC_RESTORE, MFS_DISABLED);
+        }
+        if (!_pIsFixedSize && !q->window()->isMaximized() && !q->window()->isFullScreen())
+        {
+            ::EnableMenuItem(hMenu, SC_SIZE, MFS_ENABLED);
+            ::EnableMenuItem(hMenu, SC_MAXIMIZE, MFS_ENABLED);
+        }
+        else
+        {
+            ::EnableMenuItem(hMenu, SC_SIZE, MFS_DISABLED);
+            ::EnableMenuItem(hMenu, SC_MAXIMIZE, MFS_DISABLED);
+        }
+        const int result = ::TrackPopupMenu(hMenu, (TPM_RETURNCMD | (QGuiApplication::isRightToLeft() ? TPM_RIGHTALIGN : TPM_LEFTALIGN)), nativePos.x(),
+            nativePos.y(), 0, hwnd, nullptr);
+        if (result != FALSE)
+        {
+            ::PostMessageW(hwnd, WM_SYSCOMMAND, result, 0);
+        }
 #endif
+    }
 }
-
 void NXAppBarPrivate::_updateCursor(int edges)
 {
     Q_Q(const NXAppBar);
@@ -189,6 +197,10 @@ bool NXAppBarPrivate::_containsCursorToItem(QWidget* item)
         {
             return false;
         }
+    }
+    else if (item == _maxButton)
+    {
+        rect.adjust(0, 8, 0, 0);
     }
     if (rect.contains(point))
     {

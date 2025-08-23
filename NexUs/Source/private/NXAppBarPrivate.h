@@ -3,6 +3,7 @@
 #include <QObject>
 
 #include "NXDef.h"
+class QMenu;
 class QLabel;
 class QScreen;
 class QBoxLayout;
@@ -23,7 +24,8 @@ class NXAppBarPrivate : public QObject
     Q_PROPERTY_CREATE_D(bool, IsDefaultClosed)
     Q_PROPERTY_CREATE_D(bool, IsOnlyAllowMinAndClose)
     bool _isHoverMaxButton{ false };
-    Q_PROPERTY_CREATE_D(QWidget*, CustomWidget)
+    Q_PRIVATE_CREATE_D(QWidget*, CustomWidget)
+    Q_PRIVATE_CREATE_D(QMenu*, CustomMenu)
     Q_PROPERTY_CREATE_D(QButtonGroup*, ModuleButtonGroup)
     Q_PROPERTY_CREATE_D(QBoxLayout*, CustomModuleLayout)
     Q_PROPERTY_CREATE_D(int, AppBarHeight)
@@ -40,6 +42,8 @@ private:
     int _lastMinTrackWidth{0};
     int _edges{0};
     int _margins{8};
+    int _win7Margins{ 0 };
+    NXThemeType::ThemeMode _themeMode;
     NXAppBarType::ButtonFlags _buttonFlags;
     qint64 _currentWinID{0};
     quint64 _clickTimer{0};
@@ -59,7 +63,7 @@ private:
     QLabel* _iconLabel{nullptr};
 
     void _changeMaxButtonAwesome(bool isMaximized);
-    void _showSystemMenu(QPoint point);
+    void _showAppBarMenu(QPoint point);
     void _updateCursor(int edges);
     bool _containsCursorToItem(QWidget* item);
     void _onThemeModeChange(NXThemeType::ThemeMode themeMode);

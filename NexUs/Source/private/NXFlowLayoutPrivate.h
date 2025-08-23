@@ -6,7 +6,7 @@
 #include <QObject>
 #include <QStyle>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXFlowLayout;
 class NXFlowLayoutPrivate : public QObject
 {

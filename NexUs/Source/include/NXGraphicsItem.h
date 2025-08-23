@@ -6,7 +6,7 @@
 #include <QObject>
 #include <QPainter>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXGraphicsScene;
 class NXGraphicsItemPrivate;
 class NX_EXPORT NXGraphicsItem : public QGraphicsObject

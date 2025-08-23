@@ -4,7 +4,7 @@
 #include <QWidget>
 
 #include "NXDef.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXMessageBarPrivate;
 class NX_EXPORT NXMessageBar : public QWidget

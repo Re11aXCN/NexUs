@@ -3,7 +3,7 @@
 
 #include <QIntValidator>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXIntValidator : public QIntValidator
 {
     Q_OBJECT

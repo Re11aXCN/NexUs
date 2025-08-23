@@ -6,7 +6,7 @@
 #include <QPointF>
 
 #include "NXGraphicsScene.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXGraphicsItem;
 class NXGraphicsLineItem;
 class NXGraphicsScenePrivate : public QObject

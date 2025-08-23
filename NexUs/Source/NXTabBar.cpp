@@ -22,6 +22,7 @@ NXTabBar::NXTabBar(QWidget* parent)
 
 NXTabBar::~NXTabBar()
 {
+    delete this->style();
 }
 
 void NXTabBar::mousePressEvent(QMouseEvent* event)

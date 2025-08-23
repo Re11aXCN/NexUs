@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXLog;
 class NXLogPrivate : public QObject
 {

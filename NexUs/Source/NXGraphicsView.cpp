@@ -15,6 +15,7 @@ NXGraphicsView::NXGraphicsView(QWidget* parent)
     d->_pMaxTransform = 5;
     d->_pMinTransform = 0.15;
     d->_initStyle();
+    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 }
 
 NXGraphicsView::NXGraphicsView(QGraphicsScene* scene, QWidget* parent)
@@ -25,6 +26,7 @@ NXGraphicsView::NXGraphicsView(QGraphicsScene* scene, QWidget* parent)
     d->_pMaxTransform = 5;
     d->_pMinTransform = 0.15;
     d->_initStyle();
+    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 }
 
 NXGraphicsView::~NXGraphicsView()

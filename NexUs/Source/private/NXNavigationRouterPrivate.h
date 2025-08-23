@@ -4,7 +4,7 @@
 #include <QQueue>
 #include <QVariantMap>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXNavigationRouter;
 class NXNavigationRouterPrivate : public QObject
 {

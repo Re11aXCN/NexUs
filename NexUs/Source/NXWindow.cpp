@@ -113,6 +113,7 @@ NXWindow::NXWindow(QWidget* parent)
 NXWindow::~NXWindow()
 {
     nxApp->syncWindowDisplayMode(this, false);
+    delete this->style();
 }
 
 void NXWindow::setIsStayTop(bool isStayTop)
@@ -164,10 +165,30 @@ int NXWindow::getAppBarHeight() const
     return d->_appBar->getAppBarHeight();
 }
 
+void NXWindow::setCustomWidget(NXAppBarType::CustomArea customArea, QWidget* widget)
+{
+    Q_D(NXWindow);
+    d->_appBar->setCustomWidget(customArea, widget);
+    Q_EMIT customWidgetChanged();
+}
+
 QWidget* NXWindow::getCustomWidget() const
 {
     Q_D(const NXWindow);
     return d->_appBar->getCustomWidget();
+}
+
+void NXWindow::setCustomMenu(QMenu* customMenu)
+{
+    Q_D(NXWindow);
+    d->_appBar->setCustomMenu(customMenu);
+    Q_EMIT customMenuChanged();
+}
+
+QMenu* NXWindow::getCustomMenu() const
+{
+    Q_D(const NXWindow);
+    return d->_appBar->getCustomMenu();
 }
 
 void NXWindow::setCustomWidgetMaximumWidth(int width)
@@ -253,13 +274,6 @@ void NXWindow::moveToCenter()
     auto geometry = qApp->screenAt(this->geometry().center())->geometry();
 #endif
     setGeometry((geometry.left() + geometry.right() - width()) / 2, (geometry.top() + geometry.bottom() - height()) / 2, width(), height());
-}
-
-void NXWindow::setCustomWidget(NXAppBarType::CustomArea customArea, QWidget* widget)
-{
-    Q_D(NXWindow);
-    d->_appBar->setCustomWidget(customArea, widget);
-    Q_EMIT customWidgetChanged();
 }
 
 void NXWindow::setIsNavigationBarEnable(bool isVisible)

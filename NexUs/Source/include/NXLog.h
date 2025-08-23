@@ -4,7 +4,7 @@
 #include <QObject>
 
 #include "singleton.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXLogPrivate;
 class NX_EXPORT NXLog : public QObject

@@ -1,4 +1,4 @@
-#include "T_Navigation.h"
+﻿#include "T_Navigation.h"
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -32,7 +32,7 @@ T_Navigation::T_Navigation(QWidget* parent)
 
     NXPushButton* resetButton = new NXPushButton("还原", this);
     resetButton->setFixedSize(60, 32);
-    QObject::connect(resetButton, &NXPushButton::clicked, this, [=]() {
+    connect(resetButton, &NXPushButton::clicked, this, [=]() {
         _breadcrumbBar->setBreadcrumbList(breadcrumbBarList);
     });
 
@@ -52,6 +52,14 @@ T_Navigation::T_Navigation(QWidget* parent)
     _pivot = new NXPivot(this);
     _pivot->setPivotSpacing(8);
     _pivot->setMarkWidth(75);
+    _pivot->appendPivot("本地歌曲");
+    _pivot->appendPivot("下载歌曲");
+    _pivot->appendPivot("下载视频");
+    _pivot->appendPivot("正在下载");
+    _pivot->appendPivot("本地歌曲");
+    _pivot->appendPivot("下载歌曲");
+    _pivot->appendPivot("下载视频");
+    _pivot->appendPivot("正在下载");
     _pivot->appendPivot("本地歌曲");
     _pivot->appendPivot("下载歌曲");
     _pivot->appendPivot("下载视频");

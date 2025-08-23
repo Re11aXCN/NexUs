@@ -26,6 +26,7 @@ NXCheckBox::NXCheckBox(const QString& text, QWidget* parent)
 
 NXCheckBox::~NXCheckBox()
 {
+    delete this->style();
 }
 
 void NXCheckBox::setTextStyle(NXTextType::TextStyle textStyle, std::optional<int> pixelSize, std::optional<QFont::Weight> weight)

@@ -5,7 +5,7 @@
 #include <QPixmap>
 #include <QPoint>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class QRadialGradient;
 class NXPromotionCard;
 class NXPromotionCardPrivate : public QObject

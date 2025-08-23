@@ -3,7 +3,7 @@
 
 #include <QPushButton>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXToggleButtonPrivate;
 class NX_EXPORT NXToggleButton : public QWidget
 {

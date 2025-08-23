@@ -3,7 +3,7 @@
 
 #include <QPlainTextEdit>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXPlainTextEditPrivate;
 class NX_EXPORT NXPlainTextEdit : public QPlainTextEdit

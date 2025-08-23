@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QModelIndex>
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXModelIndexWidget;
 class NXModelIndexWidgetPrivate : public QObject

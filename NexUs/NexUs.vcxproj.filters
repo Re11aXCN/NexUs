@@ -625,6 +625,12 @@
     <ClCompile Include="Source\NXShadowWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\NXDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\private\NXDialogPrivate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\include\NXGraphicsLineItem.h">
@@ -678,7 +684,7 @@
     <ClInclude Include="Source\include\magic_enum\magic_enum_utility.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\include\stdafx.h">
+    <ClInclude Include="Source\include\NXDef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1262,9 +1268,6 @@
     <QtMoc Include="Source\include\NXCentralStackedWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Source\include\NXDef.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="Source\include\NXShadowGraphicsEffect.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -1272,6 +1275,15 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Source\include\NXShadowWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\include\NXProperty.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\include\NXDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\private\NXDialogPrivate.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

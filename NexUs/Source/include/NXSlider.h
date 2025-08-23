@@ -3,7 +3,7 @@
 
 #include <QSlider>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NX_EXPORT NXSlider : public QSlider
 {
     Q_OBJECT

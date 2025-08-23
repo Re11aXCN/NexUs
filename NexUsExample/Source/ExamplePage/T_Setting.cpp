@@ -1,4 +1,4 @@
-#include "T_Setting.h"
+﻿#include "T_Setting.h"
 
 #include <QDebug>
 #include <QHBoxLayout>
@@ -36,7 +36,7 @@ T_Setting::T_Setting(QWidget* parent)
     themeSwitchLayout->addWidget(themeSwitchText);
     themeSwitchLayout->addStretch();
     themeSwitchLayout->addWidget(_themeComboBox);
-    QObject::connect(_themeComboBox, QOverload<int>::of(&NXComboBox::currentIndexChanged), this, [=](int index) {
+    connect(_themeComboBox, QOverload<int>::of(&NXComboBox::currentIndexChanged), this, [=](int index) {
         if (index == 0)
         {
             nxTheme->setThemeMode(NXThemeType::Light);
@@ -46,7 +46,7 @@ T_Setting::T_Setting(QWidget* parent)
             nxTheme->setThemeMode(NXThemeType::Dark);
         }
     });
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeComboBox->blockSignals(true);
         if (themeMode == NXThemeType::Light)
         {
@@ -81,13 +81,13 @@ T_Setting::T_Setting(QWidget* parent)
     displayButtonGroup->addButton(_acrylicButton, 4);
     displayButtonGroup->addButton(_dwmBlurnormalButton, 5);
 #endif
-    QObject::connect(displayButtonGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled), this, [=](QAbstractButton* button, bool isToggled) {
+    connect(displayButtonGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled), this, [=](QAbstractButton* button, bool isToggled) {
         if (isToggled)
         {
             nxApp->setWindowDisplayMode((NXApplicationType::WindowDisplayMode)displayButtonGroup->id(button));
         }
     });
-    QObject::connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]() {
+    connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]() {
         auto button = displayButtonGroup->button(nxApp->getWindowDisplayMode());
         NXRadioButton* elaRadioButton = dynamic_cast<NXRadioButton*>(button);
         if (elaRadioButton)
@@ -120,7 +120,7 @@ T_Setting::T_Setting(QWidget* parent)
     logSwitchLayout->addWidget(logSwitchText);
     logSwitchLayout->addStretch();
     logSwitchLayout->addWidget(_logSwitchButton);
-    QObject::connect(_logSwitchButton, &NXToggleSwitch::toggled, this, [=](bool checked) {
+    connect(_logSwitchButton, &NXToggleSwitch::toggled, this, [=](bool checked) {
         NXLog::getInstance()->initMessageLog(checked);
         if (checked)
         {
@@ -154,7 +154,7 @@ T_Setting::T_Setting(QWidget* parent)
     navigationGroup->addButton(_minimumButton, 1);
     navigationGroup->addButton(_compactButton, 2);
     navigationGroup->addButton(_maximumButton, 3);
-    QObject::connect(navigationGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled), this, [=](QAbstractButton* button, bool isToggled) {
+    connect(navigationGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled), this, [=](QAbstractButton* button, bool isToggled) {
         if (isToggled)
         {
             window->setNavigationBarDisplayMode((NXNavigationType::NavigationDisplayMode)navigationGroup->id(button));
@@ -186,13 +186,13 @@ T_Setting::T_Setting(QWidget* parent)
     stackSwitchGroup->addButton(_scaleButton, 2);
     stackSwitchGroup->addButton(_flipButton, 3);
     stackSwitchGroup->addButton(_blurButton, 4);
-    QObject::connect(stackSwitchGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled), this, [=](QAbstractButton* button, bool isToggled) {
+    connect(stackSwitchGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled), this, [=](QAbstractButton* button, bool isToggled) {
         if (isToggled)
         {
             window->setStackSwitchMode((NXWindowType::StackSwitchMode)stackSwitchGroup->id(button));
         }
     });
-    QObject::connect(window, &NXWindow::pStackSwitchModeChanged, this, [=]() {
+    connect(window, &NXWindow::pStackSwitchModeChanged, this, [=]() {
         auto button = stackSwitchGroup->button(window->getStackSwitchMode());
         NXRadioButton* elaRadioButton = dynamic_cast<NXRadioButton*>(button);
         if (elaRadioButton)

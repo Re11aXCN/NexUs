@@ -5,7 +5,7 @@
 #include <QPixmap>
 #include <QPoint>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXMenu;
 class NXMenuStyle;
 class NXMenuPrivate : public QObject

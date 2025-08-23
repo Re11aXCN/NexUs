@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXThemeAnimationWidget : public QWidget
 {
     Q_OBJECT
@@ -11,7 +11,6 @@ class NXThemeAnimationWidget : public QWidget
     Q_PROPERTY_CREATE(qreal, EndRadius)
     Q_PROPERTY_CREATE(QPoint, Center)
     Q_PROPERTY_CREATE(QImage, OldWindowBackground)
-    Q_PROPERTY_CREATE(QImage, NewWindowBackground)
 public:
     explicit NXThemeAnimationWidget(QWidget* parent = nullptr);
     ~NXThemeAnimationWidget();

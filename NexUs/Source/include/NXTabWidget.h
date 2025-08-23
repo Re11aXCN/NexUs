@@ -3,7 +3,7 @@
 
 #include <QTabWidget>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXTabWidgetPrivate;
 class NX_EXPORT NXTabWidget : public QTabWidget

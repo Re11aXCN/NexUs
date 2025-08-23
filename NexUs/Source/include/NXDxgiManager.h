@@ -4,7 +4,7 @@
 #include <QWidget>
 #ifdef Q_OS_WIN
 #include "singleton.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXDxgiManagerPrivate;
 class NX_EXPORT NXDxgiManager : public QObject

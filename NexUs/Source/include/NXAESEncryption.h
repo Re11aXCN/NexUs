@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QByteArray>
-#include "stdafx.h"
+#include "NXProperty.h"
 #ifdef __linux__
 #ifndef __LP64__
 #define do_rdtsc _do_rdtsc

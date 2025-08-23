@@ -5,7 +5,7 @@
 #include <QDate>
 #include <QMetaType>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 enum NXCalendarType
 {
     YearMode = 0x0001,

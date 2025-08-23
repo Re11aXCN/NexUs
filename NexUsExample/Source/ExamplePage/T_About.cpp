@@ -1,4 +1,4 @@
-#include "T_About.h"
+﻿#include "T_About.h"
 
 #include <QHBoxLayout>
 #include <QIcon>
@@ -7,7 +7,7 @@
 #include "NXImageCard.h"
 #include "NXText.h"
 T_About::T_About(QWidget* parent)
-    : NXWidget(parent)
+    : NXDialog(parent)
 {
     setWindowTitle("关于..");
     setWindowIcon(QIcon(":/Resource/Image/Moon.jpg"));
@@ -36,7 +36,7 @@ T_About::T_About(QWidget* parent)
     NXText* supportText = new NXText("Windows支持版本: QT5.12以上\nLinux支持版本: Qt5.14以上", this);
     supportText->setWordWrap(false);
     supportText->setTextPixelSize(14);
-    NXText* contactText = new NXText("作者: 3056769574@qq.com\n交流群: 850243692(QQ)", this);
+    NXText* contactText = new NXText("作者: 80985@qq.com\n交流群: 850243692(QQ)", this);
     contactText->setWordWrap(false);
     contactText->setTextInteractionFlags(Qt::TextSelectableByMouse);
     contactText->setTextPixelSize(14);

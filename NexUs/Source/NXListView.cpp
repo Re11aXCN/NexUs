@@ -25,6 +25,8 @@ NXListView::NXListView(QWidget* parent)
 
 NXListView::~NXListView()
 {
+    Q_D(NXListView);
+    delete d->_listViewStyle;
 }
 
 void NXListView::setItemHeight(int itemHeight)

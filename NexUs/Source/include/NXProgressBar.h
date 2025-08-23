@@ -3,7 +3,7 @@
 
 #include <QProgressBar>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXProgressBarPrivate;
 class NX_EXPORT NXProgressBar : public QProgressBar

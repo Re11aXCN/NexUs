@@ -3,7 +3,7 @@
 
 #include <QLCDNumber>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXLCDNumberPrivate;
 class NX_EXPORT NXLCDNumber : public QLCDNumber

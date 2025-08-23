@@ -10,6 +10,8 @@
 class NXDrawerContainer : public QWidget
 {
     Q_OBJECT
+    Q_PROPERTY_CREATE(qreal, Opacity)
+    Q_PRIVATE_CREATE(QPixmap, ContainerPix)
     Q_PRIVATE_CREATE(int, BorderRadius)
 public:
     explicit NXDrawerContainer(QWidget* parent = nullptr);
@@ -25,13 +27,14 @@ protected:
 
 private:
     NXThemeType::ThemeMode _themeMode;
-    QGraphicsOpacityEffect* _opacityEffect{nullptr};
+    bool _isShowBorder{ true };
+
     QVBoxLayout* _mainLayout{nullptr};
     QVBoxLayout* _containerLayout{nullptr};
     QWidget* _containerWidget{nullptr};
     QList<QWidget*> _drawerWidgetList;
 
-    int _calculateContainertMinimumHeight() const;
+    int _calculateContainerMinimumHeight() const;
 };
 
 #endif //NXFRAMEWORK_NEXUS_DEVELOPERCOMPONENTS_NXDRAWERCONTAINER_H_

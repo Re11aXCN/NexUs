@@ -28,6 +28,7 @@ NXRadioButton::NXRadioButton(const QString& text, QWidget* parent)
 
 NXRadioButton::~NXRadioButton()
 {
+    delete this->style();
 }
 void NXRadioButton::setTextStyle(NXTextType::TextStyle textStyle, std::optional<int> pixelSize, std::optional<QFont::Weight> weight)
 {

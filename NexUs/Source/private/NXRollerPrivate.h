@@ -2,7 +2,7 @@
 #define NXFRAMEWORK_NEXUS_PRIVATE_NXROLLERPRIVATE_H_
 
 #include "NXDef.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 #include <QObject>
 #include <QPoint>
 

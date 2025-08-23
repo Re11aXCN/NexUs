@@ -4,7 +4,7 @@
 #include <QVector>
 
 #include "NXDef.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 class NXComboBoxStyle;
 class NXComboBoxView;
 class NXMultiSelectComboBox;

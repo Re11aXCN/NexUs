@@ -1,4 +1,4 @@
-#include "T_UpdateWidget.h"
+﻿#include "T_UpdateWidget.h"
 
 #include <QVBoxLayout>
 
@@ -11,12 +11,12 @@ T_UpdateWidget::T_UpdateWidget(QWidget* parent)
     mainLayout->setSizeConstraint(QLayout::SetMaximumSize);
     mainLayout->setContentsMargins(5, 10, 5, 5);
     mainLayout->setSpacing(4);
-    NXText* updateTitle = new NXText("2025-5-25更新", 15, this);
-    NXText* update1 = new NXText("1、适配原生Mica、Mica-Alt、Acrylic、Dwm-Blur模式", 13, this);
-    NXText* update2 = new NXText("2、优化列表组件的视觉效果", 13, this);
-    NXText* update3 = new NXText("3、修正NXComboBox可编辑模式下不正确的显示状态", 13, this);
-    NXText* update4 = new NXText("4、新增NXProgressRing环形进度条组件", 13, this);
-    NXText* update5 = new NXText("4、QQ交流群: 850243692", 13, this);
+    NXText* updateTitle = new NXText("2025-8-21更新", 15, this);
+    NXText* update1 = new NXText("1、兼容Win7原生无边框、Win10外部无边框", 13, this);
+    NXText* update2 = new NXText("2、优化NXDrawer抽屉组件展开收起效果", 13, this);
+    NXText* update3 = new NXText("3、新增主要堆栈功能和堆栈切换动画支持", 13, this);
+    NXText* update4 = new NXText("4、Linux部分组件体验优化", 13, this);
+    NXText* update5 = new NXText("5、QQ交流群: 850243692", 13, this);
     update1->setIsWrapAnywhere(true);
     update2->setIsWrapAnywhere(true);
     update3->setIsWrapAnywhere(true);

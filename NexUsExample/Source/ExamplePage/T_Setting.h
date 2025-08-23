@@ -1,4 +1,4 @@
-#ifndef T_SETTING_H
+﻿#ifndef T_SETTING_H
 #define T_SETTING_H
 
 #include "T_BasePage.h"

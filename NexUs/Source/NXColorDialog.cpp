@@ -1,5 +1,7 @@
 ﻿#include "NXColorDialog.h"
 
+#include <utility>
+
 #include <QHBoxLayout>
 #include <QPainter>
 #include <QVBoxLayout>
@@ -325,6 +327,9 @@ NXColorDialog::NXColorDialog(const QColor& currentColor, QWidget* parent)
 }
 NXColorDialog::~NXColorDialog()
 {
+    Q_D(NXColorDialog);
+    delete d->_colorValueSlider->style();
+    delete d->_transparencyValueSlider->style();
 }
 
 void NXColorDialog::setCurrentColor(QColor currentColor)

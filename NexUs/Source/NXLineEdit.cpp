@@ -46,6 +46,7 @@ NXLineEdit::NXLineEdit(const QString& text, QWidget* parent)
 
 NXLineEdit::~NXLineEdit()
 {
+    delete this->style();
 }
 
 void NXLineEdit::setIsClearButtonEnabled(bool isClearButtonEnabled)

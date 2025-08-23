@@ -12,13 +12,14 @@ NXPivotView::NXPivotView(QWidget* parent)
     _pMarkX = 0;
     _pMarkWidth = 40;
     _pMarkAnimationWidth = 0;
+    _pCurrentIndex = QModelIndex();
+    _pCurrentIndexRect = QRect();
+    _pIsAnimationFinished = true;
     setObjectName("NXPivotView");
     setStyleSheet("#NXPivotView{background-color:transparent;}");
     setMouseTracking(true);
     setVerticalScrollBar(new NXScrollBar(this));
     setHorizontalScrollBar(new NXScrollBar(this));
-    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    this->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 }
@@ -29,24 +30,29 @@ NXPivotView::~NXPivotView()
 
 void NXPivotView::doCurrentIndexChangedAnimation(const QModelIndex& index)
 {
+    int xOffset = visualRect(_pCurrentIndex).x() - _pCurrentIndexRect.x();
     if (index.row() >= 0)
     {
-        QRect newIndexRect = visualRect(index);
+        _pCurrentIndexRect = visualRect(index);
         QPropertyAnimation* markAnimation = new QPropertyAnimation(this, "pMarkX");
         QObject::connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
             update();
         });
+        QObject::connect(markAnimation, &QPropertyAnimation::finished, this, [=]() {
+            _pIsAnimationFinished = true;
+            update();
+            });
         markAnimation->setDuration(300);
         markAnimation->setEasingCurve(QEasingCurve::InOutSine);
         if (_pPivotStyle->getCurrentIndex() >= 0)
         {
-            markAnimation->setStartValue(_pMarkX);
-            markAnimation->setEndValue(newIndexRect.center().x() - _pMarkWidth / 2);
+            markAnimation->setStartValue(_pMarkX + xOffset);
+            markAnimation->setEndValue(_pCurrentIndexRect.center().x() - _pMarkWidth / 2);
         }
         else
         {
-            markAnimation->setStartValue(newIndexRect.center().x());
-            markAnimation->setEndValue(newIndexRect.center().x() - _pMarkWidth / 2);
+            markAnimation->setStartValue(_pCurrentIndexRect.center().x());
+            markAnimation->setEndValue(_pCurrentIndexRect.center().x() - _pMarkWidth / 2);
 
             QPropertyAnimation* markWidthAnimation = new QPropertyAnimation(this, "pMarkAnimationWidth");
             markWidthAnimation->setDuration(300);
@@ -59,15 +65,19 @@ void NXPivotView::doCurrentIndexChangedAnimation(const QModelIndex& index)
     }
     else
     {
-        QRect newIndexRect = visualRect(model()->index(_pPivotStyle->getCurrentIndex(), 0));
+        _pCurrentIndexRect = visualRect(model()->index(_pPivotStyle->getCurrentIndex(), 0));
         QPropertyAnimation* markAnimation = new QPropertyAnimation(this, "pMarkX");
         QObject::connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
             update();
         });
+        QObject::connect(markAnimation, &QPropertyAnimation::finished, this, [=]() {
+            _pIsAnimationFinished = true;
+            update();
+            });
         markAnimation->setDuration(300);
         markAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        markAnimation->setStartValue(_pMarkX);
-        markAnimation->setEndValue(newIndexRect.center().x());
+        markAnimation->setStartValue(_pCurrentIndexRect.center().x() - _pMarkWidth / 2);
+        markAnimation->setEndValue(_pCurrentIndexRect.center().x());
         markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
         QPropertyAnimation* markWidthAnimation = new QPropertyAnimation(this, "pMarkAnimationWidth");
@@ -77,6 +87,8 @@ void NXPivotView::doCurrentIndexChangedAnimation(const QModelIndex& index)
         markWidthAnimation->setEndValue(0);
         markWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     }
+    _pCurrentIndex = index;
+    _pIsAnimationFinished = false;
     setCurrentIndex(index);
 }
 
@@ -105,7 +117,16 @@ void NXPivotView::paintEvent(QPaintEvent* event)
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::NoPen);
     painter.setBrush(_pPivotStyle->getMarkColor());
-    painter.drawRoundedRect(QRect(_pMarkX, viewPortRect.bottom() - 4, _pMarkAnimationWidth, 3), 3, 3);
+    QRect currentIndexRect = visualRect(_pCurrentIndex);
+    if (_pIsAnimationFinished)
+    {
+        painter.drawRoundedRect(QRect(currentIndexRect.center().x() - _pMarkWidth / 2, viewPortRect.bottom() - 4, _pMarkAnimationWidth, 3), 3, 3);
+    }
+    else
+    {
+        int xOffset = currentIndexRect.x() - _pCurrentIndexRect.x();
+        painter.drawRoundedRect(QRect(_pMarkX + xOffset, viewPortRect.bottom() - 4, _pMarkAnimationWidth, 3), 3, 3);
+    }
     painter.restore();
     QListView::paintEvent(event);
 }

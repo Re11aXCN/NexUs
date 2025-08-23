@@ -1,7 +1,7 @@
 ﻿#ifndef NXFRAMEWORK_NEXUS_INCLUDE_NXDRAWERAREA_H_
 #define NXFRAMEWORK_NEXUS_INCLUDE_NXDRAWERAREA_H_
 
-#include "stdafx.h"
+#include "NXProperty.h"
 #include <QWidget>
 
 class NXDrawerAreaPrivate;

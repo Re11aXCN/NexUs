@@ -8,6 +8,7 @@ class QVBoxLayout;
 class NXPushButton;
 class NXContentDialog;
 class NXMaskWidget;
+class NXAppBar;
 class NXContentDialogPrivate : public QObject
 {
     Q_OBJECT
@@ -22,6 +23,7 @@ private:
     QString _leftButtonText{ "cancel" };
     QString _middleButtonText{ "minimum" };
     QString _rightButtonText{ "exit" };
+    NXAppBar* _appBar{ nullptr };
     NXMaskWidget* _maskWidget{nullptr};
     QWidget* _centralWidget{nullptr};
     QWidget* _buttonWidget{nullptr};

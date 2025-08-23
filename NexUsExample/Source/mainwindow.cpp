@@ -52,23 +52,27 @@ MainWindow::MainWindow(QWidget* parent)
 
     // 拦截默认关闭事件
     _closeDialog = new NXContentDialog(this);
-    QObject::connect(_closeDialog, &NXContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
-    QObject::connect(_closeDialog, &NXContentDialog::middleButtonClicked, this, [=]() {
+    connect(_closeDialog, &NXContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
+    connect(_closeDialog, &NXContentDialog::middleButtonClicked, this, [=]() {
         _closeDialog->close();
         showMinimized();
     });
     this->setIsDefaultClosed(false);
-    QObject::connect(this, &MainWindow::closeButtonClicked, this, [=]() {
+    connect(this, &MainWindow::closeButtonClicked, this, [=]() {
         _closeDialog->exec();
     });
 
     //移动到中心
-    moveToCenter();
+    //moveToCenter();
 
     //  如果你的windows版本低于Win11 调用原生Mica、Mica-Alt、Acrylic 会导致窗口绘制失效  Dwm_Blur仍可使用
     //    nxTheme->setThemeMode(NXThemeType::Dark);
     //    QTimer::singleShot(1, this, [=]() {
     //        nxApp->setWindowDisplayMode(NXApplicationType::Mica);
+    //    });
+
+    //    QTimer::singleShot(1, this, [=]() {
+    //        showFullScreen();
     //    });
 }
 
@@ -79,10 +83,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::initWindow()
 {
+    setFocusPolicy(Qt::StrongFocus);
     // setIsCentralStackedWidgetTransparent(true);
     setWindowIcon(QIcon(":/Resource/Image/Cirno.jpg"));
     resize(1200, 740);
-    // NXLog::getInstance()->initMessageLog(true);
     // nxTheme->setThemeMode(NXThemeType::Dark);
     // setIsNavigationBarEnable(false);
     // setNavigationBarDisplayMode(NXNavigationType::Compact);
@@ -95,11 +99,36 @@ void MainWindow::initWindow()
     // setUserInfoCardVisible(false);
     // setNavigationBarWidth(260);
     NXText* centralStack = new NXText("这是一个主窗口堆栈页面", this);
+    centralStack->setFocusPolicy(Qt::StrongFocus);
     QFont font = centralStack->font();
     font.setPixelSize(32);
     centralStack->setFont(font);
     centralStack->setAlignment(Qt::AlignCenter);
     addCentralWidget(centralStack);
+
+    // 自定义AppBar菜单
+    NXMenu* appBarMenu = new NXMenu(this);
+    appBarMenu->setMenuItemHeight(27);
+    connect(appBarMenu->addAction("跳转到一级主要堆栈"), &QAction::triggered, this, [=]() {
+        setCurrentStackIndex(0);
+    });
+    connect(appBarMenu->addAction("跳转到二级主要堆栈"), &QAction::triggered, this, [=]() {
+        setCurrentStackIndex(1);
+    });
+    connect(appBarMenu->addAction("更改页面切换特效(Scale)"), &QAction::triggered, this, [=]() {
+        setStackSwitchMode(NXWindowType::StackSwitchMode::Scale);
+    });
+    connect(appBarMenu->addNXIconAction(NXIconType::GearComplex, "自定义主窗口设置"), &QAction::triggered, this, [=]() {
+        navigation(_settingKey);
+    });
+    appBarMenu->addSeparator();
+    connect(appBarMenu->addNXIconAction(NXIconType::MoonStars, "更改项目主题"), &QAction::triggered, this, [=]() {
+        nxTheme->setThemeMode(nxTheme->getThemeMode() == NXThemeType::Light ? NXThemeType::Dark : NXThemeType::Light);
+    });
+    connect(appBarMenu->addAction("使用原生菜单"), &QAction::triggered, this, [=]() {
+        setCustomMenu(nullptr);
+    });
+    setCustomMenu(appBarMenu);
 }
 
 void MainWindow::initEdgeLayout()
@@ -240,7 +269,7 @@ void MainWindow::initContent()
 #ifdef Q_OS_WIN
     // 默认是root 添加一个expander节点
     auto [type, NXDxgiKey] = addExpanderNode("NXDxgi", NXIconType::TvMusic);
-	addPageNode("NXScreen", _elaScreenPage, NXDxgiKey, 3, NXIconType::ObjectGroup);
+    addPageNode("NXScreen", _elaScreenPage, NXDxgiKey, 3, NXIconType::ObjectGroup);
 #endif
     // navigation(elaScreenWidget->property("NXPageKey").toString());
     addPageNode("NXBaseComponents", _baseComponentsPage, NXIconType::CabinetFiling);
@@ -276,7 +305,7 @@ void MainWindow::initContent()
     _aboutPage = new T_About();
 
     _aboutPage->hide();
-    QObject::connect(this, &NXWindow::navigationNodeClicked, this, [=](NXNavigationType::NavigationNodeType nodeType, QString nodeKey) {
+    connect(this, &NXWindow::navigationNodeClicked, this, [=](NXNavigationType::NavigationNodeType nodeType, QString nodeKey) {
         if (_aboutKey == nodeKey)
         {
             _aboutPage->setFixedSize(400, 400);
@@ -285,24 +314,24 @@ void MainWindow::initContent()
         }
     });
     _settingKey = addFooterNode("Setting", _settingPage, 0, NXIconType::GearComplex).second;
-    QObject::connect(this, &MainWindow::userInfoCardClicked, this, [=]() {
+    connect(this, &MainWindow::userInfoCardClicked, this, [=]() {
         this->navigation(_homePage->property("NXPageKey").toString());
     });
 #ifdef Q_OS_WIN
-    QObject::connect(_homePage, &T_Home::elaScreenNavigation, this, [=]() {
+    connect(_homePage, &T_Home::elaScreenNavigation, this, [=]() {
         this->navigation(_elaScreenPage->property("NXPageKey").toString());
     });
 #endif
-    QObject::connect(_homePage, &T_Home::elaBaseComponentNavigation, this, [=]() {
+    connect(_homePage, &T_Home::elaBaseComponentNavigation, this, [=]() {
         this->navigation(_baseComponentsPage->property("NXPageKey").toString());
     });
-    QObject::connect(_homePage, &T_Home::elaSceneNavigation, this, [=]() {
+    connect(_homePage, &T_Home::elaSceneNavigation, this, [=]() {
         this->navigation(_graphicsPage->property("NXPageKey").toString());
     });
-    QObject::connect(_homePage, &T_Home::elaIconNavigation, this, [=]() {
+    connect(_homePage, &T_Home::elaIconNavigation, this, [=]() {
         this->navigation(_iconPage->property("NXPageKey").toString());
     });
-    QObject::connect(_homePage, &T_Home::elaCardNavigation, this, [=]() {
+    connect(_homePage, &T_Home::elaCardNavigation, this, [=]() {
         this->navigation(_cardPage->property("NXPageKey").toString());
     });
     qDebug() << "已注册的事件列表" << NXEventBus::getInstance()->getRegisteredEventsName();
@@ -310,22 +339,25 @@ void MainWindow::initContent()
 
 void MainWindow::mouseReleaseEvent(QMouseEvent* event)
 {
-    switch (event->button())
+    if (getCurrentNavigationIndex() != 2)
     {
-    case Qt::BackButton:
-    {
-        this->setCurrentStackIndex(0);
-        break;
-    }
-    case Qt::ForwardButton:
-    {
-        this->setCurrentStackIndex(1);
-        break;
-    }
-    default:
-    {
-        break;
-    }
+        switch (event->button())
+        {
+        case Qt::BackButton:
+        {
+            this->setCurrentStackIndex(0);
+            break;
+        }
+        case Qt::ForwardButton:
+        {
+            this->setCurrentStackIndex(1);
+            break;
+        }
+        default:
+        {
+            break;
+        }
+        }
     }
     NXWindow::mouseReleaseEvent(event);
 }

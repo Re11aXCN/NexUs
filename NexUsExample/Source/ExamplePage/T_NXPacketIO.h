@@ -3,9 +3,9 @@
 
 #include <QObject>
 #if defined(Q_OS_WIN) && defined(BUILD_WITH_NXPACKETIO)
+#include "NXProperty.h"
 #include "XIO/NXXIO_PacketRegistry.h"
 #include "Util/UtCallbackHolder.h"
-#include "stdafx.h"
 #include <QImage>
 #include <QPixmap>
 #include <QMutex>

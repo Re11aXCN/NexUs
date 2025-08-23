@@ -58,7 +58,9 @@ NXMultiSelectComboBox::NXMultiSelectComboBox(QWidget* parent)
         layout->addWidget(view());
         layout->setContentsMargins(6, 0, 6, 6);
 #ifndef Q_OS_WIN
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         container->setStyleSheet("background-color:transparent;");
+#endif
 #endif
     }
     QComboBox::setMaxVisibleItems(5);
@@ -73,6 +75,8 @@ NXMultiSelectComboBox::NXMultiSelectComboBox(QWidget* parent)
 
 NXMultiSelectComboBox::~NXMultiSelectComboBox()
 {
+    Q_D(NXMultiSelectComboBox);
+    delete d->_comboBoxStyle;
 }
 
 void NXMultiSelectComboBox::setCurrentSelection(const QString& selection)

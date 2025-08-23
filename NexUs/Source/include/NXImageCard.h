@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXImageCardPrivate;
 class NX_EXPORT NXImageCard : public QWidget

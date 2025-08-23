@@ -1,4 +1,4 @@
-#include "T_BasePage.h"
+﻿#include "T_BasePage.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -10,7 +10,7 @@
 T_BasePage::T_BasePage(QWidget* parent)
     : NXScrollPage(parent)
 {
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=]() {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=]() {
         if (!parent)
         {
             update();
@@ -58,7 +58,7 @@ void T_BasePage::createCustomWidget(QString desText)
     themeButton->setFixedSize(35, 35);
     themeButton->setIsTransparent(false);
     themeButton->setNXIcon(NXIconType::MoonStars);
-    QObject::connect(themeButton, &NXToolButton::clicked, this, [=]() {
+    connect(themeButton, &NXToolButton::clicked, this, [=]() {
         nxTheme->setThemeMode(nxTheme->getThemeMode() == NXThemeType::Light ? NXThemeType::Dark : NXThemeType::Light);
     });
 

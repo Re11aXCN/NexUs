@@ -3,7 +3,7 @@
 
 #include <QLineEdit>
 
-#include "stdafx.h"
+#include "NXProperty.h"
 
 class NXLineEditPrivate;
 class NX_EXPORT NXLineEdit : public QLineEdit

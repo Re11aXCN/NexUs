@@ -2,7 +2,7 @@
 #define NXDXGIMANAGERPRIVATE_H
 #include <QObject>
 #ifdef Q_OS_WIN
-#include "stdafx.h"
+#include "NXProperty.h"
 #include <QImage>
 class NXDxgi;
 class NXDxgiManager;

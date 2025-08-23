@@ -2,6 +2,7 @@
 
 #include <QPainter>
 #include <QSlider>
+#include <QtMath>
 
 #include "DeveloperComponents/NXBaseListView.h"
 #include "NXColorDialog.h"
@@ -12,6 +13,8 @@
 #include "DeveloperComponents/NXIntValidator.h"
 #include "NXLineEdit.h"
 #include "NXText.h"
+
+static constexpr float INV_255 = 1.0f / 255.0f;
 NXColorDialogPrivate::NXColorDialogPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -24,9 +27,10 @@ NXColorDialogPrivate::~NXColorDialogPrivate()
 void NXColorDialogPrivate::onColorPickerColorChanged(QColor selectedColor)
 {
     Q_Q(NXColorDialog);
-    QColor valueColor = selectedColor.toHsv();
-    valueColor.setHsv(valueColor.hue(), valueColor.saturation(), _colorValueSlider->value(), _transparencyValueSlider->value());
-    _pCurrentColor = valueColor;
+    // float <h, s, v, a> range from 0.0 to 1.0
+    // int <h> range from 0 to 359, <s, v, a> range from 0 to 255
+    selectedColor.setHsvF(selectedColor.hueF(), selectedColor.saturationF(), _colorValueSlider->value() * INV_255, _transparencyValueSlider->value() * INV_255);
+    _pCurrentColor = selectedColor;
     _updateHtmlEditValue();
     _updateEditValue();
     _updateColorPreview();
@@ -38,16 +42,16 @@ void NXColorDialogPrivate::onColorPickerColorChanged(QColor selectedColor)
 void NXColorDialogPrivate::onColorValueSliderChanged(int value)
 {
     Q_Q(NXColorDialog);
-    QColor baseColor = _pCurrentColor.toHsv();
-    baseColor.setHsv(baseColor.hue(), baseColor.saturation(), value, _transparencyValueSlider->value());
+    QColor baseColor = _pCurrentColor;
+    baseColor.setHsvF(baseColor.hueF(), baseColor.saturationF(), value * INV_255, _transparencyValueSlider->value() * INV_255);
     q->setCurrentColor(baseColor);
 }
 
 void NXColorDialogPrivate::onTransparencyValueSliderChanged(int value)
 {
     Q_Q(NXColorDialog);
-    QColor baseColor = _pCurrentColor.toHsv();
-    baseColor.setHsv(baseColor.hue(), baseColor.saturation(), baseColor.value(), value);
+    QColor baseColor = _pCurrentColor;
+    baseColor.setHsvF(baseColor.hueF(), baseColor.saturationF(), baseColor.value() * INV_255, value * INV_255);
     q->setCurrentColor(baseColor);
 }
 

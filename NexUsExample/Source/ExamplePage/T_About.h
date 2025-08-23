@@ -1,9 +1,9 @@
-#ifndef T_ABOUT_H
+﻿#ifndef T_ABOUT_H
 #define T_ABOUT_H
 
-#include <NXWidget.h>
+#include <NXDialog.h>
 
-class T_About : public NXWidget
+class T_About : public NXDialog
 {
     Q_OBJECT
 public:

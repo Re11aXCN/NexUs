@@ -8,7 +8,7 @@
 
 #include "NXDef.h"
 #include "singleton.h"
-#include "stdafx.h"
+#include "NXProperty.h"
 
 enum WorkStatus
 {
