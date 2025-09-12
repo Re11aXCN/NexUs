@@ -23,6 +23,7 @@ public:
     void setNavigationPageOpenPolicy(std::function<void(const QString&/*nodeKey*/)>&& openNavigationPageFunc);
     void setIsLeftButtonPressedToggleNavigation(bool isPressed);
     void setNavigationNodeDragAndDropEnable(bool isEnable);
+    void setToolTipOffset(int offsetX, int offsetY);
 
 	NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome = NXIconType::None);
     NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome = NXIconType::None);
@@ -51,9 +52,11 @@ public:
 Q_SIGNALS:
     Q_SIGNAL void pageOpenInNewWindow(const QString& nodeKey);
     Q_SIGNAL void userInfoCardClicked();
-    Q_SIGNAL void navigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, bool isRouteBack);
-    Q_SIGNAL void navigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* page);
-    Q_SIGNAL void navigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey);
+    Q_SIGNAL void navigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& clickedNodeKey, bool isRouteBack);
+    Q_SIGNAL void navigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, const QString& addedNodeKey, QWidget* page);
+    Q_SIGNAL void navigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString& removedNodeKey);
+    Q_SIGNAL void displayModeChanged(NXNavigationType::NavigationDisplayMode displayMode);
+
 protected:
     virtual void paintEvent(QPaintEvent* event) override;
 };

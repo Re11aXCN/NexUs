@@ -7,7 +7,6 @@
 #include <QHBoxLayout>
 #include <QPainter>
 #include <QScreen>
-#include <QTimer>
 #include <QVBoxLayout>
 Q_TAKEOVER_NATIVEEVENT_CPP(NXDialog, d_func()->_appBar);
 NXDialog::NXDialog(QWidget* parent)
@@ -18,6 +17,9 @@ NXDialog::NXDialog(QWidget* parent)
     resize(500, 500); // 默认宽高
     setWindowTitle("NXDialog");
     setObjectName("NXDialog");
+#ifndef Q_OS_WIN
+    setAttribute(Qt::WA_Hover);
+#endif
 #if (QT_VERSION < QT_VERSION_CHECK(6, 5, 3) || QT_VERSION > QT_VERSION_CHECK(6, 6, 1))
     setStyleSheet("#NXDialog{background-color:transparent;}");
 #endif
@@ -25,20 +27,20 @@ NXDialog::NXDialog(QWidget* parent)
     d->_appBar = new NXAppBar(this);
     d->_appBar->setIsStayTop(true);
     d->_appBar->setWindowButtonFlags(NXAppBarType::StayTopButtonHint | NXAppBarType::MinimizeButtonHint | NXAppBarType::MaximizeButtonHint | NXAppBarType::CloseButtonHint);
-    connect(d->_appBar, &NXAppBar::routeBackButtonClicked, this, &NXDialog::routeBackButtonClicked);
-    connect(d->_appBar, &NXAppBar::navigationButtonClicked, this, &NXDialog::navigationButtonClicked);
-    connect(d->_appBar, &NXAppBar::themeChangeButtonClicked, this, &NXDialog::themeChangeButtonClicked);
-    connect(d->_appBar, &NXAppBar::closeButtonClicked, this, &NXDialog::closeButtonClicked);
+    QObject::connect(d->_appBar, &NXAppBar::routeBackButtonClicked, this, &NXDialog::routeBackButtonClicked);
+    QObject::connect(d->_appBar, &NXAppBar::navigationButtonClicked, this, &NXDialog::navigationButtonClicked);
+    QObject::connect(d->_appBar, &NXAppBar::themeChangeButtonClicked, this, &NXDialog::themeChangeButtonClicked);
+    QObject::connect(d->_appBar, &NXAppBar::closeButtonClicked, this, &NXDialog::closeButtonClicked);
 
     // 主题
     d->_themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
         update();
         });
 
     d->_windowDisplayMode = nxApp->getWindowDisplayMode();
-    connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]() {
+    QObject::connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]() {
         d->_windowDisplayMode = nxApp->getWindowDisplayMode();
         update();
         });

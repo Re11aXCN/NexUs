@@ -206,3 +206,12 @@ void NXComboBox::hidePopup()
         markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     }
 }
+void NXComboBox::paintEvent(QPaintEvent* event)
+{
+    Q_D(NXComboBox);
+    if (lineEdit() && lineEdit()->palette().color(QPalette::Text) != NXThemeColor(d->_themeMode, BasicText))
+    {
+        d->onThemeChanged(d->_themeMode);
+    }
+    QComboBox::paintEvent(event);
+}

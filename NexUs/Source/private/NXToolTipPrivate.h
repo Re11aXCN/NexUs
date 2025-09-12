@@ -2,15 +2,18 @@
 #define NXTOOLTIPPRIVATE_H
 
 #include <QObject>
+#include <QPoint>
 
 #include "NXDef.h"
-class NXToolTip;
 class QVBoxLayout;
+class NXToolTip;
 class NXText;
 class NXToolTipPrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(NXToolTip)
+    Q_PROPERTY_CREATE_D(int, OffSetX)
+    Q_PROPERTY_CREATE_D(int, OffSetY)
     Q_PROPERTY_CREATE_D(int, BorderRadius)
     Q_PROPERTY_CREATE_D(int, DisplayMsec)
     Q_PROPERTY_CREATE_D(int, ShowDelayMsec)
@@ -29,12 +32,12 @@ protected:
 private:
 	NXThemeType::ThemeMode _themeMode;
 	int _shadowBorderWidth{ 6 };
-
+    QPoint _pos;
     NXText* _toolTipText{nullptr};
     QVBoxLayout* _mainLayout{nullptr};
 
     void _doShowAnimation();
-    void _updatePos();
+    void _updatePos(const QPoint& pos);
 };
 
 #endif // NXTOOLTIPPRIVATE_H

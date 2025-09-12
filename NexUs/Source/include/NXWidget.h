@@ -14,12 +14,16 @@ class NX_EXPORT NXWidget : public QWidget
     Q_PROPERTY_CREATE_Q_H(int, AppBarHeight)
     Q_TAKEOVER_NATIVEEVENT_H
 public:
+    struct BackgroundColors {
+        QColor lightColor;
+        QColor darkColor;
+    };
     explicit NXWidget(QWidget* parent = nullptr);
     ~NXWidget() override;
     void moveToCenter();
 
-    void setCustomBackgroundColor(const QColor& lightColor, const QColor& darkColor);
-    std::pair<QColor, QColor> getCustomBackgroundColor() const;
+    void setCustomBackgroundColor(const BackgroundColors& bgColor);
+    BackgroundColors getCustomBackgroundColor() const;
     void clearCustomBackgroundColor();
     void setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable = true);
     void setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags);

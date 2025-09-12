@@ -78,3 +78,13 @@ QAction* NXMenuBar::addNXIconAction(NXIconType::IconName icon, const QString& te
     QMenuBar::addAction(action);
     return action;
 }
+
+QAction* NXMenuBar::addNXIconAction(NXIconType::IconName icon, const QString& text, const QKeySequence& shortcut)
+{
+    QAction* action = new QAction(text, this);
+    action->setShortcut(shortcut);
+    action->setProperty("NXIconType", QChar((unsigned short)icon));
+    action->setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::Broom, 1));
+    QMenuBar::addAction(action);
+    return action;
+}

@@ -138,3 +138,13 @@ void NXPlainTextEdit::contextMenuEvent(QContextMenuEvent* event)
     menu->popup(event->globalPos());
     this->setFocus();
 }
+
+void NXPlainTextEdit::paintEvent(QPaintEvent* event)
+{
+    Q_D(NXPlainTextEdit);
+    if (palette().color(QPalette::Text) != NXThemeColor(d->_themeMode, BasicText))
+    {
+        d->onThemeChanged(d->_themeMode);
+    }
+    QPlainTextEdit::paintEvent(event);
+}

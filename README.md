@@ -9,6 +9,16 @@
 ### 1. Modify Optize1
 
 > 已修改过NXWidget、NXWindow、NXColorDialog、NXTableView等一些基本的UI控件，修改了NXDef.h、stdafx.h宏定义
+>
+> * NXColorDialog：支持Alpha
+>
+> * NXDef.h、stdafx.h（现在为NXProperty.h）：修改代码整体设计(NXProperty.h包含宏、NXDef.h包含枚举)、新增多个宏，修改导出枚举宏设计
+>
+>   注意事项：NXDef.h必须是MOC文件，NXProperty.h不是MOC文件，使用VS2022当修改NXDef.h文件的时候，VS2022会错误的修改文件定义为`<ClInclude Include="Source\include\NXDef.h" />`，你需要进行修改NexUs.vcproj保持为`<QtMoc Include="Source\include\NXDef.h" />`
+>
+> * NXWidget：新增设置自定义亮黑主题背景色，新增接口可以操作NXAppBar
+>
+> * NXWindow：新增接口可以自定义打开窗口逻辑，添加节点方法设计修改，navigationNodeRemoved信号添加
 
 ### 2. Modify Optize2
 
@@ -86,9 +96,6 @@
 > 2. 优化大部分逻辑
 > 3. 引入NXPacketIO、magic_enum
 >
-> 
->
-> <u>**目前最稳定版本——Release**</u>
 
 ## # **Track Record 3**：	Commits on Jul 8, 2025
 
@@ -96,15 +103,82 @@
 
 > 1. 引入NXShadowGraphicsEffect、NXShadowWidget
 
-## # **Track Record 4**：	Commits on Aug 22, 2025
+## # **Track Record 4**：	Commits on Sep 7, 2025
 
+## 1. Modify Optize1
 
+> 1. 影响文件NXWindow.h、NXWindow.cpp、NXWindowPrivate.h
+>
+>    删除currentVisibleWidget()逻辑
+>
+>    删除navigationNodeAdded信号参数
+>
+>    调整navigationNodeRemoved信号和NXWindowPrivate::onNavigationNodeRemoved的逻辑，删除节点后仍旧存在节点窗口就返回当前节点窗口的key（如，有两个节点1、2，当前处在节点2，删除节点2，那么将会返回节点1窗口的key，底层是QMap按照顺序来的）和窗口指针，如果节点已经删完返回rootkey和空指针
+>
+>    调整onNavigationNodeClicked逻辑
+>
+> 2. 调整添加节点的返回值，NodeOperateReturnTypeWithKey从QPair替换为struct
+>
+> 3. 修复开启拖拽移动NXNavigationNode的时候，以下**拖拽情况1**的情况造成程序中断， `qDeleteAll`双重释放了-窗口节点2，不知道为什么？迭代器失效？但是控制台输出的记录顺序正确，已经提示删除了-窗口节点2，范围越界？可能是，调整逻辑不使用qDeleteAll，在`insertChildNode`添加`childNode->setParent(this);`让qt关联生命周期，不进行手动管理
+>
+>    示例：
+>
+>    * **原布局	**				**拖拽情况1**				**拖拽情况2**
+>
+>    根节点 
+>
+>    -窗口节点1				  -窗口节点1				-窗口节点1
+>
+>    -挂载拓展节点1 		 -挂载拓展节点1		-窗口节点2 
+>
+>    --窗口节点2 				-窗口节点2				-挂载拓展节点1
+>
+>    -窗口节点3				  -窗口节点3			    -窗口节点3
+>
+>    4. 导航结点交换逻辑完善，新增支持两个窗口节点直接交换位置
+>
+> 4. 修复  同步 `Ela Commits on Sep 7, 2025` 版本的 NXCustomTabWidget、NXTabWidget、移除窗口逻辑，原版本CMake编译不会出现双重释放情况，但使用VS2022编译后会出现该错误 (错误出现位置 析构~NXTabWidget(), 操作了不该操作被释放的QVariant)
 
+## 2. Modify Optize2
 
+同步作者 ZongChang-Liu 的部分拓展 ElaWidgetTools代码
 
+https://github.com/ZongChang-Liu/ElaWidgetTools/commits/Zongchang_Liu?author=ZongChang-Liu
 
+> 1. 修改NXToggleButton、支持添加 NXIcon，
+>
+>    `NXToggleButton.h、NXToggleButton.cpp、NXToggleButtonPrivate.h`
+>
+> 2. NXToolTip添加显示偏移api,NXSlider添加ToolTip显示值
+>
+>    `NXToolTip.h、NXToolTip.cpp、NXToolTipPrivate.h、NXToolTipPrivate.cpp、NXSlider.h、NXSlider.cpp、NXSliderPrivate.h(新增)、NXSliderPrivate.cpp(新增)`
+>
+> 3. 为NXNavigationBar添加toolTip显示位置接口
+>
+>    `NXNavigationBar.h、NXNavigationBar.cpp、NXNavigationView.h、NXNavigationView.cpp`
+>
+>    修改NXNavigationBar使其更加适合无userCard的显示效果
+>
+>    `NXNavigationBar.cpp`
+>
+>    NXNavigationBar显示模式发生改变时会发送信号
+>
+> 4. 修改mac下NXSpinBox焦点异常显示的bug
+>
+>    `NXSpinBox.cpp`
 
-# Example替换
+# 使用教程
+
+## 安装插件
+
+1. 打开VS2022 -> 扩展 -> 管理扩展 -> 搜索Qt，安装Qt Visual Studio Tools
+
+2. 安装完成打开，扩展 -> Qt VS Tools -> Qt Versions
+3. 点击Add按钮，输入Name和Location（示例：Name输入`6.6.2_msvc2019_64`，Location输入`E:\Qt\6.6.2\msvc2019_64`）
+
+完成上述操作 VS2022应该能够识别Qt路径并能够识别加载对应的HEADERS资源
+
+## Example替换
 
 同步Ela主仓库的Example之后需要进行以下替换进行适配已修改的代码，才能正确编译
 
@@ -183,7 +257,7 @@ _aboutPage->hide();
     // navigation(elaScreenWidget->property("NXPageKey").toString());
     addPageNode("NXBaseComponents", _baseComponentsPage, NXIconType::CabinetFiling);
 
-    _viewKey = addExpanderNode("NXView", _rootKey, NXIconType::CameraViewfinder).second;
+    _viewKey = addExpanderNode("NXView", _rootKey, NXIconType::CameraViewfinder).nodeKey;
     addPageNode("NXListView", _listViewPage, _viewKey, 9, NXIconType::List);
     addPageNode("NXTableView", _tableViewPage, _viewKey, NXIconType::Table);
     addPageNode("NXTreeView", _treeViewPage, _viewKey, NXIconType::ListTree);
@@ -195,8 +269,8 @@ _aboutPage->hide();
     addPageNode("NXPopup", _popupPage, NXIconType::Envelope);
     addPageNode("NXIcon", _iconPage, 99, NXIconType::FontCase);
     NodeOperateReturnTypeWithKey returnType1 = addExpanderNode("TEST4", NXIconType::Acorn);
-    NodeOperateReturnTypeWithKey returnType2 = addExpanderNode("TEST5", returnType1.second, NXIconType::Acorn);
-    addPageNode("Third Level", new QWidget(this), returnType2.second, NXIconType::Acorn);
+    NodeOperateReturnTypeWithKey returnType2 = addExpanderNode("TEST5", returnType1.nodeKey, NXIconType::Acorn);
+    addPageNode("Third Level", new QWidget(this), returnType2.nodeKey, NXIconType::Acorn);
     addExpanderNode("TEST6", _rootKey, NXIconType::Acorn);
     addExpanderNode("TEST7", _rootKey, NXIconType::Acorn);
     addExpanderNode("TEST8", _rootKey, NXIconType::Acorn);
@@ -210,15 +284,14 @@ _aboutPage->hide();
     addExpanderNode("TEST16", NXIconType::Acorn);
     addExpanderNode("TEST17", NXIconType::Acorn);
 
-    _aboutKey = addFooterNode("About", nullptr, 0, NXIconType::User).second;
+    _aboutKey = addFooterNode("About", nullptr, 0, NXIconType::User).nodeKey;
     _aboutPage = new T_About();
 
 
 // 旧
-    _settingKey = addFooterNode("Setting", _settingPage, 0, NXIconType::GearComplex).second;
-
+    addFooterNode("Setting", _settingPage, _settingKey, 0, ElaIconType::GearComplex);
 // 新
-    _settingKey = addFooterNode("Setting", _settingPage, 0, NXIconType::GearComplex).second;
+    _settingKey = addFooterNode("Setting", _settingPage, 0, NXIconType::GearComplex).nodeKey;
 
 ```
 

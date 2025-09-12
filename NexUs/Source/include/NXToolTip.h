@@ -9,6 +9,8 @@ class NX_EXPORT NXToolTip : public QWidget
 {
     Q_OBJECT
     Q_Q_CREATE(NXToolTip)
+    Q_PROPERTY_CREATE_Q_H(int, OffSetX)
+    Q_PROPERTY_CREATE_Q_H(int, OffSetY)
     Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
     Q_PROPERTY_CREATE_Q_H(int, DisplayMsec)
     Q_PROPERTY_CREATE_Q_H(int, ShowDelayMsec)
@@ -19,7 +21,7 @@ public:
     explicit NXToolTip(QWidget* parent = nullptr);
     ~NXToolTip() override;
 
-    void updatePos();
+    void updatePos(const QPoint& pos);
 
 protected:
     virtual void paintEvent(QPaintEvent* event);

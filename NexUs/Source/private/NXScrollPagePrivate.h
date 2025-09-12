@@ -1,7 +1,7 @@
 ﻿#ifndef NXSCROLLPAGEPRIVATE_H
 #define NXSCROLLPAGEPRIVATE_H
 
-#include <QMap>
+#include <QVariantMap>
 #include <QObject>
 
 #include "NXProperty.h"

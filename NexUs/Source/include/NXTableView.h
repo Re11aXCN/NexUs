@@ -11,13 +11,14 @@ struct NXAdjustParam {
     int y2;
     NXAdjustParam(int x1 = 0, int y1 = 0, int x2 = 0, int y2 = 0) : x1(x1), y1(y1), x2(x2), y2(y2) {}
 };
+class NXTableView;
 class NXModelIndexWidgetPrivate;
 class NX_EXPORT NXModelIndexWidget : public QWidget
 {
     Q_OBJECT
     Q_Q_CREATE(NXModelIndexWidget)
 public:
-    explicit NXModelIndexWidget(const QModelIndex& index, QWidget* parent = nullptr);
+    explicit NXModelIndexWidget(const QModelIndex& index, NXTableView* parent = nullptr);
     ~NXModelIndexWidget();
     const QModelIndex& index() const;
     void setIndex(const QModelIndex& index);
@@ -36,8 +37,8 @@ class NX_EXPORT NXTableView : public QTableView
     Q_OBJECT
     Q_Q_CREATE(NXTableView)
     Q_PROPERTY_CREATE_Q_H(int, HeaderMargin)
-    Q_PROPERTY_CREATE_Q_H(bool, DrawSelectionBackground)
     Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+    Q_PROPERTY_CREATE_Q_H(bool, DrawSelectionBackground)
     Q_PROPERTY_CREATE_Q_H(bool, IsDrawAlternateRowsEnabled)
     Q_PROPERTY_CREATE_Q_H(bool, IsSelectionEffectsEnabled)
 public:
@@ -63,19 +64,15 @@ Q_SIGNALS:
     Q_SIGNAL void tableViewHide();
     Q_SIGNAL void currentHoverRowChanged(int row);
     Q_SIGNAL void currentHoverColumnChanged(int column);
-    Q_SIGNAL void mouseRelease(const QModelIndex& index);
-    Q_SIGNAL void mouseMoveOver(const QModelIndex& index);
-    Q_SIGNAL void mouseMoveLeave(const QModelIndex& index);
 
 protected:
     virtual void showEvent(QShowEvent* event) override;
     virtual void hideEvent(QHideEvent* event) override;
+    virtual void leaveEvent(QEvent* event) override;
     virtual void mouseMoveEvent(QMouseEvent* event) override;
     virtual void mousePressEvent(QMouseEvent* event) override;
     virtual void mouseReleaseEvent(QMouseEvent* event) override;
-    virtual void leaveEvent(QEvent* event) override;
 private:
-    void enterIndexWidgetUpdateHoverIndex(const QModelIndex& index);
     friend class NXModelIndexWidget;
 };
 

@@ -8,8 +8,8 @@ class NX_EXPORT NXShadowWidget : public QWidget {
     Q_OBJECT
     Q_PRIVATE_CREATE_COMPLEX_H(QColor, LightColor)
     Q_PRIVATE_CREATE_COMPLEX_H(QColor, DarkColor)
-    Q_PRIVATE_CREATE_COMPLEX_H(NXWidgetType::BoxShadow::RotateMode, RotateMode)
-    Q_PRIVATE_CREATE_COMPLEX_H(NXWidgetType::BoxShadow::ProjectionType, ProjectionType)
+    Q_PRIVATE_CREATE_COMPLEX_H(NXShadowGraphicsEffectType::RotateMode, RotateMode)
+    Q_PRIVATE_CREATE_COMPLEX_H(NXShadowGraphicsEffectType::ProjectionMode, ProjectionMode)
     Q_PRIVATE_CREATE_COMPLEX_H(qreal, Blur)
     Q_PRIVATE_CREATE_COMPLEX_H(qreal, Spread)
     Q_PRIVATE_CREATE_COMPLEX_H(QPointF, LightOffset)

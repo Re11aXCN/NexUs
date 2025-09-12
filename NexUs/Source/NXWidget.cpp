@@ -112,18 +112,18 @@ void NXWidget::moveToCenter()
     setGeometry((geometry.left() + geometry.right() - width()) / 2, (geometry.top() + geometry.bottom() - height()) / 2, width(), height());
 }
 
-void NXWidget::setCustomBackgroundColor(const QColor& lightColor, const QColor& darkColor)
+void NXWidget::setCustomBackgroundColor(const BackgroundColors& bgColor)
 {
 	Q_D(NXWidget);
-	d->_customLightBgColor = lightColor;
-	d->_customDarkBgColor = darkColor;
+	d->_customLightBgColor = bgColor.lightColor;
+	d->_customDarkBgColor = bgColor.darkColor;
 	d->_isCustomBackground = true;
 }
 
-std::pair<QColor, QColor> NXWidget::getCustomBackgroundColor() const
+NXWidget::BackgroundColors NXWidget::getCustomBackgroundColor() const
 {
 	Q_D(const NXWidget);
-    return std::make_pair(d->_customLightBgColor, d->_customDarkBgColor);
+    return { d->_customLightBgColor, d->_customDarkBgColor };
 }
 
 void NXWidget::clearCustomBackgroundColor()

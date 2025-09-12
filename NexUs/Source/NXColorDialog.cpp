@@ -26,7 +26,7 @@ NXColorDialog::NXColorDialog(QWidget* parent)
 {
     Q_D(NXColorDialog);
     d->q_ptr = this;
-    setFixedSize(620, 630); // 默认宽高
+    setFixedSize(600, 600); // 默认宽高
     setObjectName("NXColorDialog");
     setWindowTitle("NXColorDialog");
     setWindowModality(Qt::ApplicationModal);
@@ -308,7 +308,7 @@ NXColorDialog::NXColorDialog(QWidget* parent)
     mainLayout->addLayout(colorPickerTextLayout);
     mainLayout->addSpacing(3);
     mainLayout->addLayout(colorControlLayout);
-    mainLayout->addSpacing(120);
+    mainLayout->addSpacing(80);
     mainLayout->addLayout(colorDisplayLayout);
     mainLayout->addLayout(buttonLayout);
     mainLayout->addStretch();

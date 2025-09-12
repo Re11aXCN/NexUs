@@ -17,11 +17,13 @@ class NXNavigationView : public QTreeView
 public:
     explicit NXNavigationView(QWidget* parent = nullptr);
     ~NXNavigationView() override;
+    NXToolTip* getCompactToolTip() const;
     void navigationNodeStateChange(QVariantMap data);
     void setNavigationNodeDragAndDropEnable(bool isEnable);
     QAbstractItemView::DropIndicatorPosition dropIndicatorPositionOverride() const;
     Q_SLOT void onCustomContextMenuRequested(const QPoint& pos);
 Q_SIGNALS:
+    Q_SIGNAL void navigationPositionSwapped(const QModelIndex& index);
     Q_SIGNAL void navigationClicked(const QModelIndex& index);
     Q_SIGNAL void navigationOpenNewWindow(const QString& nodeKey);
     Q_SIGNAL void navigationCloseCurrentWindow(const QString& nodeKey);

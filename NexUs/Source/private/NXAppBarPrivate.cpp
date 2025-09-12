@@ -35,14 +35,11 @@ void NXAppBarPrivate::onMinButtonClicked()
 void NXAppBarPrivate::onMaxButtonClicked()
 {
     Q_Q(NXAppBar);
-    if (q->window()->isMaximized())
-    {
-        q->window()->showNormal();
-    }
-    else
-    {
-        q->window()->showMaximized();
-    }
+    bool isMaximized = q->window()->isMaximized();
+    isMaximized ? q->window()->showNormal() : q->window()->showMaximized();
+#ifndef Q_OS_WIM
+    _changeMaxButtonAwesome(!isMaximized);
+#endif
 }
 
 void NXAppBarPrivate::onCloseButtonClicked()

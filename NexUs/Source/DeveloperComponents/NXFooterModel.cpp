@@ -35,7 +35,7 @@ NodeOperateReturnTypeWithKey NXFooterModel::addFooterNode(const QString& footerT
 {
     if (_footerNodeList.count() >= 3)
     {
-        return qMakePair(NXNavigationType::FooterUpperLimit, QString{});
+        return { NXNavigationType::FooterUpperLimit, QString{} };
     }
     NXNavigationNode* node = new NXNavigationNode(footerTitle);
     node->setKeyPoints(keyPoints);
@@ -46,7 +46,7 @@ NodeOperateReturnTypeWithKey NXFooterModel::addFooterNode(const QString& footerT
     _footerNodeList.append(node);
     endResetModel();
     node->setModelIndex(this->index(_footerNodeList.count() - 1));
-    return qMakePair(NXNavigationType::Success, node->getNodeKey());
+    return { NXNavigationType::Success, node->getNodeKey() };
 }
 
 int NXFooterModel::getFooterNodeCount() const

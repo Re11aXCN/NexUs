@@ -161,6 +161,10 @@ void NXLineEdit::focusOutEvent(QFocusEvent* event)
 void NXLineEdit::paintEvent(QPaintEvent* event)
 {
     Q_D(NXLineEdit);
+    if (palette().color(QPalette::Text) != NXThemeColor(d->_themeMode, BasicText))
+    {
+        d->onThemeChanged(d->_themeMode);
+    }
     QLineEdit::paintEvent(event);
     QPainter painter(this);
     painter.save();

@@ -6,7 +6,9 @@
 #include <QPropertyAnimation>
 
 #include "NXTheme.h"
+#include "NXIcon.h"
 #include "private/NXToggleButtonPrivate.h"
+Q_PROPERTY_CREATE_Q_CPP(NXToggleButton, bool, IsIconVisible)
 Q_PROPERTY_CREATE_Q_CPP(NXToggleButton, int, BorderRadius)
 Q_PROPERTY_CREATE_Q_CPP(NXToggleButton, QString, Text)
 NXToggleButton::NXToggleButton(QWidget* parent)
@@ -14,6 +16,7 @@ NXToggleButton::NXToggleButton(QWidget* parent)
 {
     Q_D(NXToggleButton);
     d->q_ptr = this;
+    d->_pIsIconVisible = false;
     d->_pBorderRadius = 3;
     d->_themeMode = nxTheme->getThemeMode();
     d->_pToggleAlpha = 0;
@@ -27,6 +30,8 @@ NXToggleButton::NXToggleButton(QWidget* parent)
     QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
+
+    setProperty("NXIconType", QChar((unsigned short)NXIconType::AngleRight));
 }
 
 NXToggleButton::NXToggleButton(QString text, QWidget* parent)
@@ -54,6 +59,12 @@ bool NXToggleButton::getIsToggled() const
 {
     Q_D(const NXToggleButton);
     return d->_isToggled;
+}
+
+void NXToggleButton::setNXIcon(NXIconType::IconName icon)
+{
+    Q_D(NXToggleButton);
+    d->_pAwesome = icon;
 }
 
 bool NXToggleButton::event(QEvent* event)
@@ -148,6 +159,19 @@ void NXToggleButton::paintEvent(QPaintEvent* event)
 
     //文字绘制
     painter.setPen(isEnabled() ? d->_isToggled ? NXThemeColor(d->_themeMode, BasicTextInvert) : NXThemeColor(d->_themeMode, BasicText) : NXThemeColor(d->_themeMode, BasicTextDisable));
-    painter.drawText(foregroundRect, Qt::AlignCenter, d->_pText);
+    if (d->_pIsIconVisible)
+    {
+        painter.setFont(QFont("NXAwesome"));
+        QFontMetrics fm(painter.font());
+        QRect iconRect = foregroundRect.adjusted(0, 3, -foregroundRect.width() / 3 * 2 - 5, 0);
+        painter.drawText(iconRect, Qt::AlignVCenter | Qt::AlignRight, QChar((unsigned short)d->_pAwesome));
+        painter.setFont(QFont("Microsoft YaHei"));
+        QRect textRect = foregroundRect.adjusted(foregroundRect.width() / 3 + 5, 0, 0, 0);
+        painter.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, d->_pText);
+    }
+    else
+    {
+        painter.drawText(foregroundRect, Qt::AlignCenter, d->_pText);
+    }
     painter.restore();
 }

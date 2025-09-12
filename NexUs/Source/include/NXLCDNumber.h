@@ -16,8 +16,13 @@ public:
     explicit NXLCDNumber(QWidget* parent = nullptr);
     explicit NXLCDNumber(uint numDigits, QWidget* parent = nullptr);
     ~NXLCDNumber() override;
+
     void setAutoClockFormat(const QString& format);
     QString getAutoClockFormat() const;
-    Q_SIGNAL void pAutoClockFormatChanged();};
+
+    Q_SIGNAL void pAutoClockFormatChanged();
+protected:
+    virtual void paintEvent(QPaintEvent* event) override;
+};
 
 #endif //NEXUS_NXLCDNUMBER_H

@@ -12,8 +12,8 @@ NXShadowGraphicsEffect::NXShadowGraphicsEffect(QObject* parent /*= nullptr*/)
     d->_pSpread = 0.0;
     d->_pLightColor = NXThemeColor(d->_themeMode, BasicBaseAlpha);
     d->_pDarkColor = NXThemeColor(d->_themeMode, BasicBaseAlpha);
-    d->_pRotateMode = NXWidgetType::BoxShadow::RotateMode::Rotate45;
-    d->_pProjectionType = NXWidgetType::BoxShadow::ProjectionType::Inset;
+    d->_pRotateMode = NXShadowGraphicsEffectType::RotateMode::Rotate45;
+    d->_pProjectionMode = NXShadowGraphicsEffectType::ProjectionMode::Inset;
     d->_pLightOffset = QPointF{ 0.0,0.0 };
     d->_pDarkOffset = QPointF{ 0.0,0.0 };
     /*NXShadowGraphicsEffect* shadow = new NXShadowGraphicsEffect(this);
@@ -22,8 +22,8 @@ NXShadowGraphicsEffect::NXShadowGraphicsEffect(QObject* parent /*= nullptr*/)
     shadow->setDarkColor(Constant::SWITCH_CIRCLE_DARK_SHADOW_COLOR);
     shadow->setLightOffset({ -5,-5 });
     shadow->setDarkOffset({ 5,5 });
-    shadow->setProjectionType(NXWidgetType::BoxShadow::ProjectionType::Outset);
-    shadow->setRotateMode(NXWidgetType::BoxShadow::RotateMode::Rotate45);
+    shadow->setProjectionMode(NXShadowGraphicsEffectType::ProjectionMode::Outset);
+    shadow->setRotateMode(NXShadowGraphicsEffectType::RotateMode::Rotate45);
     setGraphicsEffect(shadow);*/
 }
 
@@ -54,26 +54,26 @@ QPointF NXShadowGraphicsEffect::getLightOffset() const {
     return d->_pLightOffset;
 }
 
-void NXShadowGraphicsEffect::setRotateMode(const NXWidgetType::BoxShadow::RotateMode& mode) {
+void NXShadowGraphicsEffect::setRotateMode(const NXShadowGraphicsEffectType::RotateMode& mode) {
     Q_D(NXShadowGraphicsEffect);
     d->_pRotateMode = mode;
     update();
 }
 
-NXWidgetType::BoxShadow::RotateMode NXShadowGraphicsEffect::getRotateMode() const {
+NXShadowGraphicsEffectType::RotateMode NXShadowGraphicsEffect::getRotateMode() const {
     Q_D(const NXShadowGraphicsEffect);
     return d->_pRotateMode;
 }
 
-void NXShadowGraphicsEffect::setProjectionType(const NXWidgetType::BoxShadow::ProjectionType& type) {
+void NXShadowGraphicsEffect::setProjectionMode(const NXShadowGraphicsEffectType::ProjectionMode& mode) {
     Q_D(NXShadowGraphicsEffect);
-    d->_pProjectionType = type;
+    d->_pProjectionMode = mode;
     update();
 }
 
-NXWidgetType::BoxShadow::ProjectionType NXShadowGraphicsEffect::getProjectionType() const {
+NXShadowGraphicsEffectType::ProjectionMode NXShadowGraphicsEffect::getProjectionMode() const {
     Q_D(const NXShadowGraphicsEffect);
-    return d->_pProjectionType;
+    return d->_pProjectionMode;
 }
 
 void NXShadowGraphicsEffect::setBlur(const qreal& blur) {
@@ -125,7 +125,7 @@ QRectF NXShadowGraphicsEffect::boundingRectFor(const QRectF& rect) const
     Q_D(const NXShadowGraphicsEffect);
     
     // 对于内阴影，不需要扩展边界
-    if (d->_pProjectionType == NXWidgetType::BoxShadow::ProjectionType::Inset) {
+    if (d->_pProjectionMode == NXShadowGraphicsEffectType::ProjectionMode::Inset) {
         return rect.united(rect.translated(0, 0));
     }
     
@@ -148,7 +148,7 @@ void NXShadowGraphicsEffect::draw(QPainter* painter)
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     painter->setPen(Qt::NoPen);
 
-    if (d->_pProjectionType == NXWidgetType::BoxShadow::ProjectionType::Inset) {
+    if (d->_pProjectionMode == NXShadowGraphicsEffectType::ProjectionMode::Inset) {
         d->_drawInsetShadow(painter, pixmap, pos);
     }
     else {

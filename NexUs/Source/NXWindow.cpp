@@ -466,12 +466,6 @@ void NXWindow::navigation(const QString& pageKey)
     d->_navigationBar->navigation(pageKey);
 }
 
-std::tuple<NXNavigationType::NavigationNodeType, QString, QWidget*> NXWindow::currentVisibleWidget() const
-{
-	Q_D(const NXWindow);
-	return d->_currentVisibleWidget;
-}
-
 int NXWindow::getCurrentNavigationIndex() const
 {
     Q_D(const NXWindow);

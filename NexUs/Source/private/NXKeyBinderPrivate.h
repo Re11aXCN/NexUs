@@ -20,7 +20,6 @@ private:
     NXThemeType::ThemeMode _themeMode;
     NXContentDialog* _binderDialog{nullptr};
     NXKeyBinderContainer* _binderContainer{nullptr};
-    void _changeTheme();
 };
 
 #endif //NEXUS_SRC_PRIVATE_NXKEYBINDERPRIVATE_H_

@@ -12,6 +12,7 @@
     </QtTouchProperty>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="QtSettings">
-    <QtTouchProperty />
+    <QtTouchProperty>
+    </QtTouchProperty>
   </PropertyGroup>
 </Project>

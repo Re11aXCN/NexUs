@@ -18,12 +18,13 @@ class NXPivotView : public QListView
     Q_PRIVATE_CREATE(NXPivotStyle*, PivotStyle)
 public:
     explicit NXPivotView(QWidget* parent = nullptr);
-    ~NXPivotView();
+    ~NXPivotView() override;
     void doCurrentIndexChangedAnimation(const QModelIndex& index);
 
 protected:
-    void mouseDoubleClickEvent(QMouseEvent* event) override;
-    void mouseReleaseEvent(QMouseEvent* event) override;
+    virtual void wheelEvent(QWheelEvent* event) override;
+    virtual void mouseDoubleClickEvent(QMouseEvent* event) override;
+    virtual void mouseReleaseEvent(QMouseEvent* event) override;
     virtual void paintEvent(QPaintEvent* event) override;
 };
 

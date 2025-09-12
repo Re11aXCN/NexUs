@@ -10,14 +10,14 @@ class NXCustomTabWidget : public NXCustomWidget
     Q_OBJECT
 public:
     explicit NXCustomTabWidget(QWidget* parent = nullptr);
-    ~NXCustomTabWidget();
-    void addTab(QWidget* widget, QIcon& tabIcon, const QString& tabTitle);
+    ~NXCustomTabWidget() override;
+    void addTab(QWidget* widget, QIcon tabIcon, const QString& tabTitle);
     NXTabBar* getCustomTabBar() const;
     NXTabWidget* getCustomTabWidget() const;
 
 private:
-    NXTabBar* _customTabBar{nullptr};
-    NXTabWidget* _customTabWidget{nullptr};
+    NXTabBar* _customTabBar{ nullptr };
+    NXTabWidget* _customTabWidget{ nullptr };
 };
 
 #endif // NXCUSTOMTABWIDGET_H

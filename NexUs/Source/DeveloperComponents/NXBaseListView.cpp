@@ -26,6 +26,12 @@ NXBaseListView::~NXBaseListView()
 {
 }
 
+void NXBaseListView::wheelEvent(QWheelEvent* event)
+{
+    QListView::wheelEvent(event);
+    event->accept();
+}
+
 void NXBaseListView::mousePressEvent(QMouseEvent* event)
 {
     Q_EMIT mousePress(indexAt(event->pos()));

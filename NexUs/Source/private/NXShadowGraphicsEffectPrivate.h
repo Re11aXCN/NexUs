@@ -17,8 +17,8 @@ class NXShadowGraphicsEffectPrivate : public QObject
     Q_PROPERTY_CREATE_D(QColor, DarkColor)
     Q_PROPERTY_CREATE_D(QPointF, LightOffset)
     Q_PROPERTY_CREATE_D(QPointF, DarkOffset)
-    Q_PROPERTY_CREATE_D(NXWidgetType::BoxShadow::RotateMode, RotateMode)
-    Q_PROPERTY_CREATE_D(NXWidgetType::BoxShadow::ProjectionType, ProjectionType)
+    Q_PROPERTY_CREATE_D(NXShadowGraphicsEffectType::RotateMode, RotateMode)
+    Q_PROPERTY_CREATE_D(NXShadowGraphicsEffectType::ProjectionMode, ProjectionMode)
 public:
     explicit NXShadowGraphicsEffectPrivate(QObject* parent = nullptr);
     ~NXShadowGraphicsEffectPrivate();

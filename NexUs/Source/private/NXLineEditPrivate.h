@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QMargins>
+#include <QVariantMap>
+
 #include "NXDef.h"
 class NXEvent;
 class NXLineEdit;
@@ -25,7 +27,6 @@ private:
     QMargins _paddings;
     NXEvent* _focusEvent{nullptr};
     NXLineEditStyle* _lineEditStyle{ nullptr };
-    void _changeTheme();
 };
 
 #endif // NXLINEEDITPRIVATE_H

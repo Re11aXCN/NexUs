@@ -17,7 +17,7 @@ public:
     explicit NXScrollBar(QWidget* parent = nullptr);
     explicit NXScrollBar(Qt::Orientation orientation, QWidget* parent = nullptr);
     explicit NXScrollBar(QScrollBar* originScrollBar, QAbstractScrollArea* parent = nullptr);
-    ~NXScrollBar();
+    ~NXScrollBar() override;
 
 Q_SIGNALS:
     Q_SIGNAL void rangeAnimationFinished();

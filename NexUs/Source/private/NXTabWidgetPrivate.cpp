@@ -1,14 +1,14 @@
 ﻿#include "NXTabWidgetPrivate.h"
 
-#include <QApplication>
-#include <QMimeData>
-#include <QMouseEvent>
-
 #include "DeveloperComponents/NXCustomTabWidget.h"
 #include "NXTabBar.h"
 #include "NXTabWidget.h"
+#include <QApplication>
+#include <QDebug>
+#include <QMimeData>
+#include <QMouseEvent>
 NXTabWidgetPrivate::NXTabWidgetPrivate(QObject* parent)
-    : QObject{parent}
+    : QObject{ parent }
 {
 }
 
@@ -16,45 +16,54 @@ NXTabWidgetPrivate::~NXTabWidgetPrivate()
 {
 }
 
-void NXTabWidgetPrivate::onTabBarPress(int index)
-{
-}
-
 void NXTabWidgetPrivate::onTabDragCreate(QDrag* drag)
 {
     Q_Q(NXTabWidget);
+    if (!drag || !drag->mimeData()) return;
+        
     QMimeData* mimeData = drag->mimeData();
     mimeData->setProperty("NXTabWidgetObject", QVariant::fromValue(q));
     int index = mimeData->property("TabIndex").toInt();
+    
+    // 验证索引有效性
+    if (index < 0 || index >= q->count()) return;
+        
     QString tabText = q->tabText(index);
     QIcon tabIcon = q->tabIcon(index);
     QWidget* dragWidget = q->widget(index);
-    QVariant originTabWidget = dragWidget->property("NXOriginTabWidget");
-    if (!originTabWidget.isValid())
+    
+    if (!dragWidget) return;
+        
+    QVariant originTabWidgetVariant = dragWidget->property("NXOriginTabWidget");
+    NXTabBar* tabBarObject = mimeData->property("NXTabBarObject").value<NXTabBar*>();
+    if (!originTabWidgetVariant.isValid() && q->objectName() != "NXCustomTabWidget")
     {
         dragWidget->setProperty("NXOriginTabWidget", QVariant::fromValue<NXTabWidget*>(q));
     }
     mimeData->setProperty("DragWidget", QVariant::fromValue(dragWidget));
-    drag->setMimeData(mimeData);
-    QMouseEvent releaseEvent(QEvent::MouseButtonRelease, QPoint(-1, -1), QPoint(-1, -1), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-    QApplication::sendEvent(mimeData->property("NXTabBarObject").value<NXTabBar*>(), &releaseEvent);
+    
+    // 发送鼠标释放事件
+    if (tabBarObject)
+    {
+        QMouseEvent releaseEvent(QEvent::MouseButtonRelease, QPoint(-1, -1), QPoint(-1, -1), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        QApplication::sendEvent(tabBarObject, &releaseEvent);
+    }
     if (drag->exec() == Qt::IgnoreAction)
     {
         // 创建新窗口
-        NXTabBar* originCustomTabBar = mimeData->property("NXTabBarObject").value<NXTabBar*>();
+        NXTabBar* originCustomTabBar = tabBarObject;
         if (originCustomTabBar && originCustomTabBar->objectName() == "NXCustomTabBar")
         {
             originCustomTabBar->removeTab(index);
         }
-        NXTabWidget* originTabWidget = dragWidget->property("NXOriginTabWidget").value<NXTabWidget*>();
-        NXCustomTabWidget* floatWidget = new NXCustomTabWidget(originTabWidget);
+        QWidget* floatParentWidget = originTabWidgetVariant.value<NXTabWidget*>();
+        if (!floatParentWidget)
+        {
+            floatParentWidget = dragWidget->property("NXFloatParentWidget").value<QWidget*>();
+        }
+        NXCustomTabWidget* floatWidget = new NXCustomTabWidget(floatParentWidget);
         NXTabBar* customTabBar = floatWidget->getCustomTabBar();
         dragWidget->setProperty("CurrentCustomBar", QVariant::fromValue<NXTabBar*>(customTabBar));
-        NXTabWidget* customTabWidget = floatWidget->getCustomTabWidget();
-        customTabWidget->d_ptr->_customTabBar = customTabBar;
-        QObject::connect(customTabBar, &NXTabBar::tabBarPress, customTabWidget->d_func(), &NXTabWidgetPrivate::onTabBarPress);
-        QObject::connect(customTabBar, &NXTabBar::tabDragCreate, customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragCreate);
-        QObject::connect(customTabBar, &NXTabBar::tabDragDrop, customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragDrop);
         floatWidget->addTab(dragWidget, tabIcon, tabText);
         floatWidget->show();
         QPoint cursorPoint = QCursor::pos();
@@ -76,10 +85,17 @@ void NXTabWidgetPrivate::onTabDragDrop(const QMimeData* mimeData)
         customTabBar->removeTab(index);
     }
     q->insertTab(dropIndex, dragWidget, tabIcon, tabText);
+    
+    // 如果目标是NXCustomTabWidget，设置相应属性
     if (_customTabBar)
     {
         dragWidget->setProperty("CurrentCustomBar", QVariant::fromValue<NXTabBar*>(_customTabBar));
         _customTabBar->insertTab(dropIndex, tabIcon, tabText);
+    }
+    else
+    {
+        // 如果移动到普通NXTabWidget，清除CustomBar属性
+        dragWidget->setProperty("CurrentCustomBar", QVariant());
     }
 }
 
@@ -88,6 +104,8 @@ void NXTabWidgetPrivate::onTabCloseRequested(int index)
     Q_Q(NXTabWidget);
     QWidget* closeWidget = q->widget(index);
     NXTabWidget* originTabWidget = closeWidget->property("NXOriginTabWidget").value<NXTabWidget*>();
+
+    // 情况1：widget有原始TabWidget且不是当前TabWidget，需要还原回去
     if (originTabWidget && originTabWidget != q)
     {
         NXTabBar* customTabBar = closeWidget->property("CurrentCustomBar").value<NXTabBar*>();
@@ -98,9 +116,22 @@ void NXTabWidgetPrivate::onTabCloseRequested(int index)
         }
         originTabWidget->addTab(closeWidget, q->tabIcon(index), q->tabText(index));
     }
+    // 情况2：NXCustomTabWidget中没有原始TabWidget的widget，直接删除
+    else if (!originTabWidget && q->objectName() == "NXCustomTabWidget")
+    {
+        if (_customTabBar)
+        {
+            _customTabBar->removeTab(index);
+        }
+        q->removeTab(index);
+        _allTabWidgetList.removeAll(closeWidget);
+        closeWidget->deleteLater();
+    }
+    // 情况3：普通TabWidget中的widget或originTabWidget就是当前TabWidget
     else
     {
         q->removeTab(index);
+        _allTabWidgetList.removeAll(closeWidget);
         closeWidget->deleteLater();
     }
 }

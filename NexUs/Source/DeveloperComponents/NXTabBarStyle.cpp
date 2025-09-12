@@ -9,7 +9,9 @@
 NXTabBarStyle::NXTabBarStyle(QStyle* style)
 {
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+        });
 }
 
 NXTabBarStyle::~NXTabBarStyle()
@@ -88,10 +90,7 @@ void NXTabBarStyle::drawControl(ControlElement element, const QStyleOption* opti
             {
                 //选中背景绘制
                 tabRect.setLeft(tabRect.left() - margin);
-                if (topt->position != QStyleOptionTab::End)
-                {
-                    tabRect.setRight(tabRect.right() + margin + 1);
-                }
+                tabRect.setRight(tabRect.right() + margin + 1);
                 painter->setBrush(NXThemeColor(_themeMode, BasicSelectedAlpha));
                 QPainterPath path;
                 path.moveTo(tabRect.x(), tabRect.bottom() + 1);
@@ -106,6 +105,10 @@ void NXTabBarStyle::drawControl(ControlElement element, const QStyleOption* opti
                 path.lineTo(tabRect.x(), tabRect.bottom() + 10);
                 path.closeSubpath();
                 painter->drawPath(path);
+                // 选中绘制
+                painter->setPen(Qt::NoPen);
+                painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
+                painter->drawRoundedRect(QRectF(tabRect.left() + margin + 7, tabRect.y() + 7, 3, tabRect.height() - 14), 2, 2);
             }
             else
             {
@@ -120,14 +123,6 @@ void NXTabBarStyle::drawControl(ControlElement element, const QStyleOption* opti
                 tabRect.setHeight(tabRect.height() + 10);
                 painter->drawRoundedRect(tabRect, 0, 0);
                 tabRect.setHeight(tabRect.height() - 10);
-            }
-
-            //间隔符绘制
-            if (!topt->state.testFlag(QStyle::State_Selected) && topt->position != QStyleOptionTab::End && topt->selectedPosition != QStyleOptionTab::NextIsSelected)
-            {
-                painter->setPen(Qt::NoPen);
-                painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
-                painter->drawRoundedRect(QRectF(tabRect.right() - 3, tabRect.y() + 7, 3, tabRect.height() - 14), 2, 2);
             }
             painter->restore();
             return;
@@ -149,16 +144,16 @@ void NXTabBarStyle::drawControl(ControlElement element, const QStyleOption* opti
                 QRectF iconRect(topt->rect.x() + 15, textRect.center().y() - (qreal)topt->iconSize.height() / 2 + 1, topt->iconSize.width(), topt->iconSize.height());
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
                 QPixmap iconPix = icon.pixmap(topt->iconSize, painter->device()->devicePixelRatio(),
-                                              (topt->state & State_Enabled) ? QIcon::Normal
-                                                                            : QIcon::Disabled,
-                                              (topt->state & State_Selected) ? QIcon::On
-                                                                             : QIcon::Off);
+                    (topt->state & State_Enabled) ? QIcon::Normal
+                    : QIcon::Disabled,
+                    (topt->state & State_Selected) ? QIcon::On
+                    : QIcon::Off);
 #else
                 QPixmap iconPix = icon.pixmap(topt->iconSize,
-                                              (topt->state & State_Enabled) ? QIcon::Normal
-                                                                            : QIcon::Disabled,
-                                              (topt->state & State_Selected) ? QIcon::On
-                                                                             : QIcon::Off);
+                    (topt->state & State_Enabled) ? QIcon::Normal
+                    : QIcon::Disabled,
+                    (topt->state & State_Selected) ? QIcon::On
+                    : QIcon::Off);
 #endif
                 painter->drawPixmap(iconRect.x(), iconRect.y(), iconPix);
             }

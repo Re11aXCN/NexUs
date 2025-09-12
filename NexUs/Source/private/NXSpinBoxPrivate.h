@@ -22,7 +22,6 @@ private:
     NXSpinBoxStyle* _style{nullptr};
     NXThemeType::ThemeMode _themeMode;
     NXMenu* _createStandardContextMenu();
-    void _changeTheme();
 };
 
 #endif // NXSPINBOXPRIVATE_H

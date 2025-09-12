@@ -99,6 +99,9 @@ void NXApplication::init()
     font.setFamily("Microsoft YaHei");
     font.setHintingPreference(QFont::PreferNoHinting);
     qApp->setFont(font);
+#ifdef Q_OS_WIN
+    nxWinHelper->initWinAPI();
+#endif
 }
 
 void NXApplication::syncWindowDisplayMode(QWidget* widget, bool isSync)
@@ -129,9 +132,6 @@ void NXApplication::syncWindowDisplayMode(QWidget* widget, bool isSync)
             {
                 d->_updateMica(widget, false);
             }
-        }
-        else
-        {
         }
         break;
     }

@@ -4,7 +4,7 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/qmetaobject.h>
 
-#ifdef NX_BUILD_DLL
+#ifdef NEXUS_BUILD_LIBRARY
 #define NX_EXPORT Q_DECL_EXPORT
 #else
 #define NX_EXPORT Q_DECL_IMPORT

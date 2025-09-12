@@ -24,9 +24,6 @@ public:
     explicit NXTextPrivate(QObject* parent = nullptr);
     ~NXTextPrivate() override;
     Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
-
-private:
-    void _changeTheme();
 };
 
 #endif // NXTEXTPRIVATE_H

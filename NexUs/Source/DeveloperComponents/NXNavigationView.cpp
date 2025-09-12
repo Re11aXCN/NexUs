@@ -76,10 +76,16 @@ NXNavigationView::NXNavigationView(QWidget* parent)
     QObject::connect(this, &NXNavigationView::customContextMenuRequested, this, &NXNavigationView::onCustomContextMenuRequested);
 
     _compactToolTip = new NXToolTip(this);
+    _compactToolTip->setOffSetX(-105);
 }
 
 NXNavigationView::~NXNavigationView()
 {
+}
+
+NXToolTip* NXNavigationView::getCompactToolTip() const
+{
+    return _compactToolTip;
 }
 
 void NXNavigationView::navigationNodeStateChange(QVariantMap data)
@@ -169,7 +175,7 @@ void NXNavigationView::mouseMoveEvent(QMouseEvent* event)
         }
         NXNavigationNode* posNode = static_cast<NXNavigationNode*>(posIndex.internalPointer());
         _compactToolTip->setToolTip(posNode->getNodeTitle());
-        _compactToolTip->updatePos();
+        _compactToolTip->updatePos(QCursor::pos());
         _compactToolTip->show();
     }
     else
@@ -231,11 +237,16 @@ void NXNavigationView::dragMoveEvent(QDragMoveEvent* event)
     const QModelIndex targetIndex = indexAt(event->position().toPoint());
     const QModelIndex targetParentIndex = targetIndex.parent();
     if (_canProceedWithDragDrop(dropindicationPos, draggedIndex, targetIndex, draggedPreviousIndex, draggedNextIndex, targetParentIndex, model)) {
-        gIndicatorColor = (dropindicationPos == QAbstractItemView::OnItem)
-            ? (nxTheme->getThemeMode() == NXThemeType::ThemeMode::Light
-                ? QColor(0x7D, 0x52, 0x84)
-                : QColor(0x66, 0x3D, 0x74))
-            : NXThemeColor(nxTheme->getThemeMode(), PrimaryNormal);
+        if (dropindicationPos == QAbstractItemView::OnItem) {
+            gIndicatorColor = static_cast<NXNavigationNode*>(targetIndex.internalPointer())->getIsExpanderNode()
+                ? NXThemeColor(nxTheme->getThemeMode(), BasicText)
+                : (nxTheme->getThemeMode() == NXThemeType::ThemeMode::Light
+                    ? QColor(0x7D, 0x52, 0x84)
+                    : QColor(0x66, 0x3D, 0x74));
+        }
+        else {
+            gIndicatorColor = NXThemeColor(nxTheme->getThemeMode(), PrimaryNormal);
+        }
         //QColor(0x7D, 0x52, 0x84)、QColor(0x42, 0x22, 0x56)、QColor(0x9B, 0x8E, 0xA9)、QColor(0x7E, 0x52, 0x7F)、QColor(0x66, 0x3D, 0x74)
     }
     else {
@@ -250,10 +261,11 @@ void NXNavigationView::dropEvent(QDropEvent* event)
 {
     DropIndicatorPosition dropindicationPos = dropIndicatorPositionOverride();
     _hoveredIndex = QModelIndex();
-    if (dropindicationPos == QAbstractItemView::OnItem) {
-        event->ignore();
-        return;
-    }
+
+    const QModelIndex targetIndex = indexAt(event->position().toPoint());
+    const QModelIndex targetParentIndex = targetIndex.parent();
+    NXNavigationNode* targetNode = static_cast<NXNavigationNode*>(targetIndex.internalPointer());
+
     NXNavigationModel* model = qobject_cast<NXNavigationModel*>(this->model());
     model->setDropIndicatorPosition(static_cast<NXNavigationModel::DropIndicatorPosition>(dropindicationPos));
     NXNavigationNode* draggedNode = model->getSelectedNode();
@@ -262,16 +274,24 @@ void NXNavigationView::dropEvent(QDropEvent* event)
     const QModelIndex draggedPreviousIndex = model->index(draggedIndex.row() - 1, 0, draggedParentIndex);
     const QModelIndex draggedNextIndex = model->index(draggedIndex.row() + 1, 0, draggedParentIndex);
 
-    const QModelIndex targetIndex = indexAt(event->position().toPoint());
-    const QModelIndex targetParentIndex = targetIndex.parent();
     if (_canProceedWithDragDrop(dropindicationPos, draggedIndex, targetIndex, draggedPreviousIndex, draggedNextIndex, targetParentIndex, model)) {
-        int targetRow = targetIndex.row();
-        if (model->canDropMimeData(event->mimeData(), Qt::MoveAction, targetRow, 0, targetParentIndex)) {
-            model->dropMimeData(event->mimeData(), Qt::MoveAction, targetRow, 0, targetParentIndex);
+        if (dropindicationPos == QAbstractItemView::OnItem) {
+            if (targetNode->getIsExpanderNode()) {
+                event->ignore(); return;
+            }
+            draggedNode->swapShowInfo(targetNode);
+            model->swapNodes(draggedNode->getNodeKey(), targetNode->getNodeKey());
+            Q_EMIT navigationPositionSwapped(draggedIndex);
+            _navigationStyle->setPressIndex(QModelIndex());
             event->acceptProposedAction();
         }
         else {
-            event->ignore();
+            int targetRow = targetIndex.row();
+            if (!model->canDropMimeData(event->mimeData(), Qt::MoveAction, targetRow, 0, targetParentIndex)) {
+                event->ignore(); return;
+            }
+            model->dropMimeData(event->mimeData(), Qt::MoveAction, targetRow, 0, targetParentIndex);
+            event->acceptProposedAction();
         }
     }
     else {
@@ -332,7 +352,7 @@ bool NXNavigationView::eventFilter(QObject* watched, QEvent* event)
             }
             NXNavigationNode* posNode = static_cast<NXNavigationNode*>(posIndex.internalPointer());
             _compactToolTip->setToolTip(posNode->getNodeTitle());
-            _compactToolTip->updatePos();
+            _compactToolTip->updatePos(QCursor::pos());
             _compactToolTip->show();
         }
         else

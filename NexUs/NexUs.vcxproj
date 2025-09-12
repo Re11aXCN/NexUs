@@ -28,6 +28,7 @@
     <PlatformToolset>v143</PlatformToolset>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
+    <UseDynamicDebugging>false</UseDynamicDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -35,6 +36,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseDynamicDebugging>false</UseDynamicDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -42,6 +44,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseDynamicDebugging>false</UseDynamicDebugging>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
@@ -51,16 +54,19 @@
     <QtInstall>6.6.2_msvc2019_64</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
+    <QtLinkNatvisFile>true</QtLinkNatvisFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>6.6.2_msvc2019_64</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
+    <QtLinkNatvisFile>true</QtLinkNatvisFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="QtSettings">
     <QtInstall>6.6.2_msvc2019_64</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
+    <QtLinkNatvisFile>true</QtLinkNatvisFile>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
     <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
@@ -99,18 +105,28 @@
     <ClCompile>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Source;$(ProjectDir)\Source\include;`$(WindowsSDK_IncludePath)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NX_BUILD_DLL;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Source;$(ProjectDir)Source\include;`$(WindowsSDK_IncludePath)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NEXUS_BUILD_LIBRARY;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UseDynamicDebugging>false</UseDynamicDebugging>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <StructMemberAlignment>8Bytes</StructMemberAlignment>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <QtMoc>
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
       <QtMocDir>.\GeneratedFiles\$(ConfigurationName)</QtMocDir>
+      <CompilerFlavor>msvc</CompilerFlavor>
     </QtMoc>
     <QtRcc>
       <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
     </QtRcc>
     <QtRcc>
       <QtRccDir>.\GeneratedFiles</QtRccDir>
+      <QmlCacheGenerate>true</QmlCacheGenerate>
     </QtRcc>
     <QtUic>
       <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
@@ -120,24 +136,35 @@
     </QtUic>
     <Link>
       <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxguid.lib;DXGI.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <UseDynamicDebugging>false</UseDynamicDebugging>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Source;$(ProjectDir)\Source\include;`$(WindowsSDK_IncludePath)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NX_BUILD_DLL;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Source;$(ProjectDir)Source\include;`$(WindowsSDK_IncludePath)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NEXUS_BUILD_LIBRARY;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UseDynamicDebugging>false</UseDynamicDebugging>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <StructMemberAlignment>8Bytes</StructMemberAlignment>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <QtMoc>
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
       <QtMocDir>.\GeneratedFiles\$(ConfigurationName)</QtMocDir>
+      <CompilerFlavor>msvc</CompilerFlavor>
     </QtMoc>
     <QtRcc>
       <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
     </QtRcc>
     <QtRcc>
       <QtRccDir>.\GeneratedFiles</QtRccDir>
+      <QmlCacheGenerate>true</QmlCacheGenerate>
     </QtRcc>
     <QtUic>
       <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
@@ -147,24 +174,33 @@
     </QtUic>
     <Link>
       <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxguid.lib;DXGI.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <UseDynamicDebugging>false</UseDynamicDebugging>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp23</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Source;$(ProjectDir)\Source\include;`$(WindowsSDK_IncludePath)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NX_BUILD_DLL;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Source;$(ProjectDir)Source\include;`$(WindowsSDK_IncludePath)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NEXUS_BUILD_LIBRARY;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UseDynamicDebugging>false</UseDynamicDebugging>
+      <StringPooling>true</StringPooling>
+      <StructMemberAlignment>8Bytes</StructMemberAlignment>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <QtMoc>
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
       <QtMocDir>.\GeneratedFiles\$(ConfigurationName)</QtMocDir>
+      <CompilerFlavor>msvc</CompilerFlavor>
     </QtMoc>
     <QtRcc>
       <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
     </QtRcc>
     <QtRcc>
       <QtRccDir>.\GeneratedFiles</QtRccDir>
+      <QmlCacheGenerate>true</QmlCacheGenerate>
     </QtRcc>
     <QtUic>
       <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
@@ -174,6 +210,7 @@
     </QtUic>
     <Link>
       <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxguid.lib;DXGI.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <UseDynamicDebugging>false</UseDynamicDebugging>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -410,6 +447,7 @@
     <ClCompile Include="Source\private\NXScrollBarPrivate.cpp" />
     <ClCompile Include="Source\private\NXScrollPageAreaPrivate.cpp" />
     <ClCompile Include="Source\private\NXScrollPagePrivate.cpp" />
+    <ClCompile Include="Source\private\NXSliderPrivate.cpp" />
     <ClCompile Include="Source\private\NXSpinBoxPrivate.cpp" />
     <ClCompile Include="Source\private\NXSuggestBoxPrivate.cpp" />
     <ClCompile Include="Source\private\NXTabBarPrivate.cpp" />
@@ -427,7 +465,6 @@
     <ClCompile Include="Source\private\NXWindowPrivate.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Source\include\NXDialog.h" />
     <ClInclude Include="Source\include\aesni\aesni-enc-cbc.h" />
     <ClInclude Include="Source\include\aesni\aesni-enc-ecb.h" />
     <ClInclude Include="Source\include\aesni\aesni-key-exp.h" />
@@ -441,15 +478,18 @@
     <ClInclude Include="Source\include\magic_enum\magic_enum_iostream.hpp" />
     <ClInclude Include="Source\include\magic_enum\magic_enum_switch.hpp" />
     <ClInclude Include="Source\include\magic_enum\magic_enum_utility.hpp" />
-    <QtMoc Include="Source\include\NXShadowGraphicsEffect.h" />
-    <QtMoc Include="Source\include\NXShadowWidget.h" />
     <ClInclude Include="Source\include\singleton.h" />
     <ClInclude Include="Source\include\NXIcon.h" />
     <ClInclude Include="Source\include\NXGraphicsLineItem.h" />
+    <ClInclude Include="Source\private\NXGraphicsLineItemPrivate.h" />
+    <QtMoc Include="Source\private\NXSliderPrivate.h" />
     <QtMoc Include="Source\include\NXProperty.h" />
+    <QtMoc Include="Source\include\NXDef.h" />
+    <QtMoc Include="Source\include\NXShadowGraphicsEffect.h" />
+    <QtMoc Include="Source\include\NXShadowWidget.h" />
+    <QtMoc Include="Source\include\NXDialog.h" />
     <QtMoc Include="Source\private\NXShadowGraphicsEffectPrivate.h" />
     <QtMoc Include="Source\private\NXDialogPrivate.h" />
-    <ClInclude Include="Source\private\NXGraphicsLineItemPrivate.h" />
     <QtMoc Include="Source\DeveloperComponents\NXBaseListView.h" />
     <QtMoc Include="Source\DeveloperComponents\NXBreadcrumbBarDelegate.h" />
     <QtMoc Include="Source\DeveloperComponents\NXBreadcrumbBarModel.h" />
@@ -521,7 +561,6 @@
     <QtMoc Include="Source\include\NXColorDialog.h" />
     <QtMoc Include="Source\include\NXComboBox.h" />
     <QtMoc Include="Source\include\NXContentDialog.h" />
-    <QtMoc Include="Source\include\NXDef.h" />
     <QtMoc Include="Source\include\NXDockWidget.h" />
     <QtMoc Include="Source\include\NXDoubleSpinBox.h" />
     <QtMoc Include="Source\include\NXDrawerArea.h" />
@@ -644,6 +683,9 @@
     <QtMoc Include="Source\private\NXTreeViewPrivate.h" />
     <QtMoc Include="Source\private\NXWidgetPrivate.h" />
     <QtMoc Include="Source\private\NXWindowPrivate.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="..\qt6.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

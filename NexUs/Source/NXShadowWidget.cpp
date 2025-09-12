@@ -37,22 +37,22 @@ QPointF NXShadowWidget::getLightOffset() const {
     return _pShadowEffect->getLightOffset();
 }
 
-void NXShadowWidget::setRotateMode(const NXWidgetType::BoxShadow::RotateMode& mode) {
+void NXShadowWidget::setRotateMode(const NXShadowGraphicsEffectType::RotateMode& mode) {
     _pShadowEffect->setRotateMode(mode);
     update();
 }
 
-NXWidgetType::BoxShadow::RotateMode NXShadowWidget::getRotateMode() const {
+NXShadowGraphicsEffectType::RotateMode NXShadowWidget::getRotateMode() const {
     return _pShadowEffect->getRotateMode();
 }
 
-void NXShadowWidget::setProjectionType(const NXWidgetType::BoxShadow::ProjectionType& type) {
-    _pShadowEffect->setProjectionType(type);
+void NXShadowWidget::setProjectionMode(const NXShadowGraphicsEffectType::ProjectionMode& mode) {
+    _pShadowEffect->setProjectionMode(mode);
     update();
 }
 
-NXWidgetType::BoxShadow::ProjectionType NXShadowWidget::getProjectionType() const {
-    return _pShadowEffect->getProjectionType();
+NXShadowGraphicsEffectType::ProjectionMode NXShadowWidget::getProjectionMode() const {
+    return _pShadowEffect->getProjectionMode();
 }
 
 void NXShadowWidget::setBlur(const qreal& blur) {
@@ -94,7 +94,7 @@ QColor NXShadowWidget::getDarkColor() const {
 void NXShadowWidget::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
-    if (_pShadowEffect->getProjectionType() == NXWidgetType::BoxShadow::ProjectionType::Outset) {
+    if (_pShadowEffect->getProjectionMode() == NXShadowGraphicsEffectType::ProjectionMode::Outset) {
         if (_pCustomDraw) {
             _pCustomDraw(&painter, this->parentWidget());
         }

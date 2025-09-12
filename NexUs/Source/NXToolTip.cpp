@@ -6,6 +6,8 @@
 #include "NXText.h"
 #include "NXTheme.h"
 #include "private/NXToolTipPrivate.h"
+Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, OffSetX)
+Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, OffSetY)
 Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, BorderRadius)
 Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, DisplayMsec)
 Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, ShowDelayMsec)
@@ -86,10 +88,10 @@ QWidget* NXToolTip::getCustomWidget() const
     return d->_pCustomWidget;
 }
 
-void NXToolTip::updatePos()
+void NXToolTip::updatePos(const QPoint& pos)
 {
     Q_D(NXToolTip);
-    d->_updatePos();
+    d->_updatePos(pos);
 }
 
 void NXToolTip::paintEvent(QPaintEvent* event)

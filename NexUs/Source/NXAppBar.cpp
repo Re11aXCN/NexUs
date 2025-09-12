@@ -17,7 +17,6 @@
 #include <QMouseEvent>
 #include <QPropertyAnimation>
 #include <QScreen>
-#include <QTimer>
 #include <QVBoxLayout>
 
 #include "NXDef.h"
@@ -48,7 +47,6 @@ NXAppBar::NXAppBar(QWidget* parent)
     d->_pCustomWidgetMaximumWidth = 550;
     window()->installEventFilter(this);
 #ifdef Q_OS_WIN
-    nxWinHelper->initWinAPI();
     if (!nxWinHelper->getIsWinVersionGreater10())
     {
         d->_win7Margins = 8;
@@ -102,7 +100,7 @@ NXAppBar::NXAppBar(QWidget* parent)
     }
     QObject::connect(parent, &QWidget::windowIconChanged, this, [=](const QIcon& icon) {
         d->_iconLabel->setPixmap(icon.pixmap(18, 18));
-        d->_iconLabel->setVisible(icon.isNull() ? false : true);
+        d->_iconLabel->setVisible(!icon.isNull());
         d->_iconLabelLayout->setContentsMargins(icon.isNull() ? 0 : 10, 0, 0, 0);
     });
 
@@ -122,7 +120,7 @@ NXAppBar::NXAppBar(QWidget* parent)
     }
     QObject::connect(parent, &QWidget::windowTitleChanged, this, [=](const QString& title) {
         d->_titleLabel->setText(title);
-        d->_titleLabel->setVisible(title.isEmpty() ? false : true);
+        d->_titleLabel->setVisible(!title.isEmpty());
         d->_titleLabelLayout->setContentsMargins(title.isEmpty() ? 0 : 10, 0, 0, 0);
     });
 
@@ -303,7 +301,7 @@ void NXAppBar::setIsFixedSize(bool isFixedSize)
     }
 #else
     bool isVisible = window()->isVisible();
-    window()->setWindowFlags((window()->windowFlags()) | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+    window()->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint | Qt::WindowSystemMenuHint | Qt::WindowFullscreenButtonHint | Qt::WindowSystemMenuHint);
     if (!isFixedSize)
     {
         window()->setWindowFlag(Qt::WindowMaximizeButtonHint);

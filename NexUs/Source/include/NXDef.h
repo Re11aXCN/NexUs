@@ -121,7 +121,7 @@ enum TextStyle
     Title = 0x0005,
     TitleLarge = 0x0006,
     Display = 0x0007,
-	CustomStyle = 0x0008,
+    CustomStyle = 0x0008,
 };
 Q_ENUM_CREATE(TextStyle)
 Q_END_ENUM_CREATE(NXTextType)
@@ -3541,7 +3541,13 @@ enum IconName
 Q_ENUM_CREATE(IconName)
 Q_END_ENUM_CREATE(NXIconType)
 
-using NodeOperateReturnTypeWithKey = QPair<NXNavigationType::NodeOperateReturnType, QString>;
+/*************************************************************************************
+ *
+ * @ Description  : Ela Expand Define
+ *
+ * @ Version      : V1.0
+ * @ Author       : Re11a
+*************************************************************************************/
 
 Q_BEGIN_ENUM_CREATE(NXColorSchemeType, NX_EXPORT)
 enum ColorSchemeType
@@ -3553,13 +3559,26 @@ Q_ENUM_CREATE(ColorSchemeType)
 Q_END_ENUM_CREATE(NXColorSchemeType)
 
 Q_BEGIN_ENUM_CREATE(NXWidgetType, NX_EXPORT)
-Q_BEGIN_ENUM_CREATE(BoxShadow, NX_EXPORT)
-enum ProjectionType
+enum BorderType
 {
-	Inset,
-	Outset,
+    NoBorder = 0x0000,
+    TopBorder = 0x0001,
+    BottomBorder = 0x0002,
+    LeftBorder = 0x0004,
+    RightBorder = 0x0008,
+    AllBorder = TopBorder | BottomBorder | LeftBorder | RightBorder,
 };
-Q_ENUM_CREATE(ProjectionType)
+Q_ENUM_CREATE(BorderType)
+Q_DECLARE_FLAGS(BorderFlags, BorderType)
+Q_END_ENUM_CREATE(NXWidgetType)
+
+Q_BEGIN_ENUM_CREATE(NXShadowGraphicsEffectType, NX_EXPORT)
+enum ProjectionMode
+{
+    Inset,
+    Outset,
+};
+Q_ENUM_CREATE(ProjectionMode)
 
 enum RotateMode {
     Rotate45,
@@ -3568,18 +3587,11 @@ enum RotateMode {
     Rotate315,
 };
 Q_ENUM_CREATE(RotateMode)
-Q_END_ENUM_CREATE(BoxShadow)
+Q_END_ENUM_CREATE(NXShadowGraphicsEffectType)
 
-enum BorderType
-{
-	NoBorder = 0x0000,
-	TopBorder = 0x0001,
-	BottomBorder = 0x0002,
-	LeftBorder = 0x0004,
-	RightBorder = 0x0008,
-	AllBorder = TopBorder | BottomBorder | LeftBorder | RightBorder,
+struct NodeOperateReturnTypeWithKey {
+    NXNavigationType::NodeOperateReturnType nodeOperateReturnType;
+    QString nodeKey{};
 };
-Q_ENUM_CREATE(BorderType)
-Q_DECLARE_FLAGS(BorderFlags, BorderType)
-Q_END_ENUM_CREATE(NXWidgetType)
+
 #endif // NXDEF_H

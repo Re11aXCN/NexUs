@@ -13,12 +13,13 @@ class NX_EXPORT NXPlainTextEdit : public QPlainTextEdit
 public:
     explicit NXPlainTextEdit(QWidget* parent = nullptr);
     explicit NXPlainTextEdit(const QString& text, QWidget* parent = nullptr);
-    virtual ~NXPlainTextEdit();
+    ~NXPlainTextEdit() override;
 
 protected:
     virtual void focusInEvent(QFocusEvent* event) override;
     virtual void focusOutEvent(QFocusEvent* event) override;
     virtual void contextMenuEvent(QContextMenuEvent* event) override;
+    virtual void paintEvent(QPaintEvent* event) override;
 };
 
 #endif // NXPLAINTEXTEDIT_H

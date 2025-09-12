@@ -1,4 +1,4 @@
-<RCC>
+﻿<RCC>
     <qresource prefix="/">
         <file>Resource/Image/control/Acrylic.png</file>
         <file>Resource/Image/control/AnimatedIcon.png</file>

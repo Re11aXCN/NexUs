@@ -48,6 +48,8 @@ public:
     bool getIsChildNode(NXNavigationNode* node) const;
 
     int getRow() const;
+
+    void swapShowInfo(NXNavigationNode* other);
 };
 
 #endif // NXNAVIGATIONNODE_H

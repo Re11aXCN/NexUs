@@ -32,9 +32,10 @@ NXMessageBar::NXMessageBar(NXMessageBarType::PositionPolicy policy, NXMessageBar
     {
     case NXMessageBarType::Success:
     {
-        d->_closeButton->setLightHoverColor(QColor(0xE6, 0xFC, 0xE3));
-        d->_closeButton->setDarkHoverColor(QColor(0xE6, 0xFC, 0xE3));
+        d->_closeButton->setLightHoverColor(QColor(0xCA, 0xDE, 0xC8));
+        d->_closeButton->setDarkHoverColor(QColor(0xCA, 0xDE, 0xC8));
         d->_closeButton->setDarkIconColor(Qt::black);
+        d->_closeButton->setDarkHoverIconColor(Qt::black);
         break;
     }
     case NXMessageBarType::Warning:
@@ -43,20 +44,23 @@ NXMessageBar::NXMessageBar(NXMessageBarType::PositionPolicy policy, NXMessageBar
         d->_closeButton->setDarkHoverColor(QColor(0x5E, 0x4C, 0x22));
         d->_closeButton->setLightIconColor(Qt::white);
         d->_closeButton->setDarkIconColor(Qt::white);
+        d->_closeButton->setLightHoverIconColor(Qt::white);
         break;
     }
     case NXMessageBarType::Information:
     {
-        d->_closeButton->setLightHoverColor(QColor(0xEB, 0xEB, 0xEB));
-        d->_closeButton->setDarkHoverColor(QColor(0xEB, 0xEB, 0xEB));
+        d->_closeButton->setLightHoverColor(QColor(0xDE, 0xDE, 0xDE));
+        d->_closeButton->setDarkHoverColor(QColor(0xDE, 0xDE, 0xDE));
         d->_closeButton->setDarkIconColor(Qt::black);
+        d->_closeButton->setDarkHoverIconColor(Qt::black);
         break;
     }
     case NXMessageBarType::Error:
     {
-        d->_closeButton->setLightHoverColor(QColor(0xF7, 0xE1, 0xE4));
-        d->_closeButton->setDarkHoverColor(QColor(0xF7, 0xE1, 0xE4));
+        d->_closeButton->setLightHoverColor(QColor(0xF2, 0xDD, 0xE0));
+        d->_closeButton->setDarkHoverColor(QColor(0xF2, 0xDD, 0xE0));
         d->_closeButton->setDarkIconColor(Qt::black);
+        d->_closeButton->setDarkHoverIconColor(Qt::black);
         break;
     }
     }

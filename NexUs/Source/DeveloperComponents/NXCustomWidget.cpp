@@ -38,7 +38,6 @@ NXCustomWidget::NXCustomWidget(QWidget* parent)
 NXCustomWidget::~NXCustomWidget()
 {
     nxApp->syncWindowDisplayMode(this, false);
-    Q_EMIT customWidgetClosed();
 }
 
 void NXCustomWidget::setCentralWidget(QWidget* widget)

@@ -100,6 +100,10 @@ void NXKeyBinder::mouseReleaseEvent(QMouseEvent* event)
 void NXKeyBinder::paintEvent(QPaintEvent* event)
 {
     Q_D(NXKeyBinder);
+    if (palette().color(QPalette::WindowText) != NXThemeColor(d->_themeMode, BasicText))
+    {
+        d->onThemeChanged(d->_themeMode);
+    }
     QPainter painter(this);
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);

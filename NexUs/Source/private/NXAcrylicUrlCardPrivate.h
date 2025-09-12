@@ -1,7 +1,6 @@
 ﻿#ifndef NXACRYLICURLCARDPRIVATE_H
 #define NXACRYLICURLCARDPRIVATE_H
 
-#include <QMap>
 #include <QObject>
 #include <QPixmap>
 

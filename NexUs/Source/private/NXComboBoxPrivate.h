@@ -24,8 +24,6 @@ private:
     NXThemeType::ThemeMode _themeMode;
     bool _isAllowHidePopup{false};
     NXComboBoxStyle* _comboBoxStyle{nullptr};
-
-    void _changeTheme(QLineEdit* lineEdit);
 };
 
 #endif // NXCOMBOBOXPRIVATE_H

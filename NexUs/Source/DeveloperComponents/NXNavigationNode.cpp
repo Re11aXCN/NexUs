@@ -19,7 +19,10 @@ NXNavigationNode::NXNavigationNode(const QString& nodeTitle, NXNavigationNode* p
 
 NXNavigationNode::~NXNavigationNode()
 {
-    qDeleteAll(_pChildrenNodes);
+    //qDebug() << std::format("Title: {} Key: {}\n", _nodeTitle.toStdString(), _nodeKey.toStdString());
+    //qDebug() << _nodeTitle + " Prepare to delete " __FUNCTION__ "\n";
+    //qDeleteAll(_pChildrenNodes);
+    //qDebug() << _nodeTitle + " Already delete " __FUNCTION__ "\n";
 }
 
 QString NXNavigationNode::getNodeKey() const
@@ -122,6 +125,7 @@ void NXNavigationNode::insertChildNode(int row, NXNavigationNode* childNode)
     if (row < 0 || row > _pChildrenNodes.count()) return;
     _pChildrenNodes.insert(row, childNode);
     childNode->setParentNode(this);
+    childNode->setParent(this);
 }
 
 bool NXNavigationNode::getIsChildHasKeyPoints() const
@@ -183,4 +187,13 @@ int NXNavigationNode::getRow() const
         return _pParentNode->getChildrenNodes().indexOf(const_cast<NXNavigationNode*>(this));
     }
     return 0;
+}
+
+void NXNavigationNode::swapShowInfo(NXNavigationNode* other) 
+{
+    if(this == other || other == nullptr) return;
+    std::swap(this->_pAwesome, other->_pAwesome);
+    std::swap(this->_pKeyPoints, other->_pKeyPoints);
+    std::swap(this->_nodeTitle, other->_nodeTitle);
+    std::swap(this->_nodeKey, other->_nodeKey);
 }

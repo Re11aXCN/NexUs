@@ -1,7 +1,8 @@
 ﻿#include "NXComboBoxPrivate.h"
 #include "NXComboBox.h"
+#include "NXTheme.h"
+
 #include <QLineEdit>
-#include <QTimer>
 NXComboBoxPrivate::NXComboBoxPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -18,32 +19,9 @@ void NXComboBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
     auto lineEdit = q->lineEdit();
     if (lineEdit)
     {
-        if (q->isVisible())
-        {
-            _changeTheme(lineEdit);
-        }
-        else
-        {
-            QTimer::singleShot(1, this, [=] {
-                _changeTheme(lineEdit);
-            });
-        }
+        QPalette palette = lineEdit->palette();
+        palette.setColor(QPalette::Text, NXThemeColor(_themeMode, BasicText));
+        palette.setColor(QPalette::PlaceholderText, _themeMode == NXThemeType::Light ? QColor(0x00, 0x00, 0x00, 128) : QColor(0xBA, 0xBA, 0xBA));
+        lineEdit->setPalette(palette);
     }
-}
-
-void NXComboBoxPrivate::_changeTheme(QLineEdit* lineEdit)
-{
-    Q_Q(NXComboBox);
-    QPalette palette = lineEdit->palette();
-    if (_themeMode == NXThemeType::Light)
-    {
-        palette.setColor(QPalette::Text, Qt::black);
-        palette.setColor(QPalette::PlaceholderText, QColor(0x00, 0x00, 0x00, 128));
-    }
-    else
-    {
-        palette.setColor(QPalette::Text, Qt::white);
-        palette.setColor(QPalette::PlaceholderText, QColor(0xBA, 0xBA, 0xBA));
-    }
-    lineEdit->setPalette(palette);
 }

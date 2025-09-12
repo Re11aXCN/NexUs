@@ -158,15 +158,6 @@ int NXTableView::getHeaderMargin() const
     return d->_pTableViewStyle->getHeaderMargin();
 }
 
-void NXTableView::enterIndexWidgetUpdateHoverIndex(const QModelIndex& index)
-{
-    Q_D(NXTableView);
-    if (selectionBehavior() == QAbstractItemView::SelectRows)
-    {
-        d->_pTableViewStyle->setCurrentHoverRow(index.row());
-        update();
-    }
-}
 void NXTableView::showEvent(QShowEvent* event)
 {
     Q_EMIT tableViewShow();
@@ -217,7 +208,7 @@ void NXTableView::leaveEvent(QEvent* event)
     QTableView::leaveEvent(event);
 }
 
-NXModelIndexWidget::NXModelIndexWidget(const QModelIndex& index, QWidget* parent)
+NXModelIndexWidget::NXModelIndexWidget(const QModelIndex& index, NXTableView* parent)
     : QWidget(parent), d_ptr(new NXModelIndexWidgetPrivate())
 {
     Q_D(NXModelIndexWidget);
@@ -225,7 +216,10 @@ NXModelIndexWidget::NXModelIndexWidget(const QModelIndex& index, QWidget* parent
     d->_index = index;
     QObject::connect(this, &NXModelIndexWidget::updateIndex, this, [d, parent, this](const QModelIndex& newIndex) {
         d->_index = newIndex;
-        qobject_cast<NXTableView*>(parent)->enterIndexWidgetUpdateHoverIndex(newIndex);
+        if (parent->selectionBehavior() == QAbstractItemView::SelectRows)
+        {
+            parent->setCurrentHoverRow(newIndex.row());
+        }
         });
 }
 

@@ -45,6 +45,8 @@ public:
     enum DropIndicatorPosition { OnItem, AboveItem, BelowItem, OnViewport };
     void setDropIndicatorPosition(DropIndicatorPosition position);
     DropIndicatorPosition getDropIndicatorPosition() const;
+
+    bool swapNodes(const QString& nodeKey1, const QString& nodeKey2);
 Q_SIGNALS:
     void mineDataDropped(const QMimeData* data, const QModelIndex& draggedIndex, const QModelIndex& targetIndex);
 private:

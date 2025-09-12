@@ -1,21 +1,23 @@
 ﻿#include "NXNavigationBarPrivate.h"
 
+#include <QEvent>
 #include <QLayout>
 #include <QPropertyAnimation>
 
 #include "NXApplication.h"
 #include "DeveloperComponents/NXBaseListView.h"
 #include "DeveloperComponents/NXCustomWidget.h"
+#include "DeveloperComponents/NXCustomTabWidget.h"
 #include "DeveloperComponents/NXFooterDelegate.h"
 #include "DeveloperComponents/NXFooterModel.h"
+#include "DeveloperComponents/NXNavigationModel.h"
+#include "DeveloperComponents/NXNavigationNode.h"
+#include "DeveloperComponents/NXNavigationView.h"
 #include "NXIconButton.h"
 #include "NXInteractiveCard.h"
 #include "NXMenu.h"
 #include "NXNavigationBar.h"
-#include "DeveloperComponents/NXNavigationModel.h"
-#include "DeveloperComponents/NXNavigationNode.h"
 #include "NXNavigationRouter.h"
-#include "DeveloperComponents/NXNavigationView.h"
 #include "NXSuggestBox.h"
 #include "NXSuggestBoxPrivate.h"
 #include "NXToolButton.h"
@@ -50,7 +52,8 @@ void NXNavigationBarPrivate::onNavigationOpenNewWindow(const QString& nodeKey)
         _openPageFunc(nodeKey);
         Q_EMIT q->pageOpenInNewWindow(nodeKey);
         return;
-    }    const QMetaObject* meta = _pageMetaMap.value(nodeKey);
+    }
+    const QMetaObject* meta = _pageMetaMap.value(nodeKey);
     if (!meta)
     {
         return;
@@ -58,14 +61,11 @@ void NXNavigationBarPrivate::onNavigationOpenNewWindow(const QString& nodeKey)
     QWidget* widget = static_cast<QWidget*>(meta->newInstance());
     if (widget)
     {
-        _pageNewWindowCountMap[nodeKey] += 1;
-        NXCustomWidget* floatWidget = new NXCustomWidget(q);
-        QObject::connect(floatWidget, &NXCustomWidget::customWidgetClosed, this, [=]() {
-            _pageNewWindowCountMap[nodeKey] -= 1;
-        });
-        floatWidget->setWindowIcon(widget->windowIcon());
-        floatWidget->setWindowTitle(widget->windowTitle());
-        floatWidget->setCentralWidget(widget);
+        widget->setProperty("NXPageKey", nodeKey);
+        widget->setProperty("NXFloatParentWidget", QVariant::fromValue(q));
+        widget->installEventFilter(this);
+        NXCustomTabWidget* floatWidget = new NXCustomTabWidget(q);
+        floatWidget->addTab(widget, widget->windowIcon(), widget->windowTitle());
         floatWidget->show();
         Q_EMIT q->pageOpenInNewWindow(nodeKey);
     }
@@ -246,6 +246,36 @@ void NXNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool 
         }
     }
     Q_EMIT q->navigationNodeClicked(NXNavigationType::FooterNode, node->getNodeKey(), isRouteBack);
+}
+
+bool NXNavigationBarPrivate::eventFilter(QObject* watched, QEvent* event)
+{
+    switch (event->type())
+    {
+    case QEvent::Show:
+    {
+        QString nodeKey = watched->property("NXPageKey").toString();
+        if (!nodeKey.isNull())
+        {
+            _pageNewWindowCountMap[nodeKey] += 1;
+        }
+        break;
+    }
+    case QEvent::HideToParent:
+    {
+        QString nodeKey = watched->property("NXPageKey").toString();
+        if (!nodeKey.isNull())
+        {
+            _pageNewWindowCountMap[nodeKey] -= 1;
+        }
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    return QObject::eventFilter(watched, event);
 }
 
 void NXNavigationBarPrivate::_initNodeModelIndex(const QModelIndex& parentIndex)

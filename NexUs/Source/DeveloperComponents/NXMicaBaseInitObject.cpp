@@ -61,8 +61,8 @@ void NXMicaBaseInitObject::onInitMicaBase(const QImage& img)
             darkImage.setPixel(x, y, qRgb(darkColor.red(), darkColor.green(), darkColor.blue()));
         }
     }
-    _appPrivate->_lightBaseImage = lightImage.copy();
-    _appPrivate->_darkBaseImage = darkImage.copy();
+    _appPrivate->_lightBaseImage = std::move(lightImage);
+    _appPrivate->_darkBaseImage = std::move(darkImage);
     // _appPrivate->_lightBaseImage.save("light.png", "PNG");
     // _appPrivate->_darkBaseImage.save("dark.png", "PNG");
     Q_EMIT initFinished();

@@ -89,6 +89,8 @@ void MainWindow::initWindow()
     resize(1200, 740);
     // nxTheme->setThemeMode(NXThemeType::Dark);
     // setIsNavigationBarEnable(false);
+    setIsLeftButtonPressedToggleNavigation(true);
+    setNavigationNodeDragAndDropEnable(true);
     // setNavigationBarDisplayMode(NXNavigationType::Compact);
     // setWindowButtonFlag(NXAppBarType::MinimizeButtonHint, false);
     setUserInfoCardPixmap(QPixmap(":/Resource/Image/Cirno.jpg"));
@@ -274,7 +276,7 @@ void MainWindow::initContent()
     // navigation(elaScreenWidget->property("NXPageKey").toString());
     addPageNode("NXBaseComponents", _baseComponentsPage, NXIconType::CabinetFiling);
 
-    _viewKey = addExpanderNode("NXView", _rootKey, NXIconType::CameraViewfinder).second;
+    _viewKey = addExpanderNode("NXView", _rootKey, NXIconType::CameraViewfinder).nodeKey;
     addPageNode("NXListView", _listViewPage, _viewKey, 9, NXIconType::List);
     addPageNode("NXTableView", _tableViewPage, _viewKey, NXIconType::Table);
     addPageNode("NXTreeView", _treeViewPage, _viewKey, NXIconType::ListTree);
@@ -286,8 +288,8 @@ void MainWindow::initContent()
     addPageNode("NXPopup", _popupPage, NXIconType::Envelope);
     addPageNode("NXIcon", _iconPage, 99, NXIconType::FontCase);
     NodeOperateReturnTypeWithKey returnType1 = addExpanderNode("TEST4", NXIconType::Acorn);
-    NodeOperateReturnTypeWithKey returnType2 = addExpanderNode("TEST5", returnType1.second, NXIconType::Acorn);
-    addPageNode("Third Level", new QWidget(this), returnType2.second, NXIconType::Acorn);
+    NodeOperateReturnTypeWithKey returnType2 = addExpanderNode("TEST5", returnType1.nodeKey, NXIconType::Acorn);
+    addPageNode("Third Level", new QWidget(this), returnType2.nodeKey, NXIconType::Acorn);
     addExpanderNode("TEST6", _rootKey, NXIconType::Acorn);
     addExpanderNode("TEST7", _rootKey, NXIconType::Acorn);
     addExpanderNode("TEST8", _rootKey, NXIconType::Acorn);
@@ -301,19 +303,18 @@ void MainWindow::initContent()
     addExpanderNode("TEST16", NXIconType::Acorn);
     addExpanderNode("TEST17", NXIconType::Acorn);
 
-    _aboutKey = addFooterNode("About", nullptr, 0, NXIconType::User).second;
+    _aboutKey = addFooterNode("About", nullptr, 0, NXIconType::User).nodeKey;
     _aboutPage = new T_About();
 
     _aboutPage->hide();
     connect(this, &NXWindow::navigationNodeClicked, this, [=](NXNavigationType::NavigationNodeType nodeType, QString nodeKey) {
         if (_aboutKey == nodeKey)
         {
-            _aboutPage->setFixedSize(400, 400);
             _aboutPage->moveToCenter();
             _aboutPage->show();
         }
     });
-    _settingKey = addFooterNode("Setting", _settingPage, 0, NXIconType::GearComplex).second;
+    _settingKey = addFooterNode("Setting", _settingPage, 0, NXIconType::GearComplex).nodeKey;
     connect(this, &MainWindow::userInfoCardClicked, this, [=]() {
         this->navigation(_homePage->property("NXPageKey").toString());
     });

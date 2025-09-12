@@ -20,6 +20,7 @@ NXSpinBox::NXSpinBox(QWidget* parent)
     setStyle(d->_style);
     lineEdit()->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     lineEdit()->setStyleSheet("background-color:transparent;padding-left:10px;padding-bottom:3px;");
+    lineEdit()->setAttribute(Qt::WA_MacShowFocusRect, false);
     d->onThemeChanged(nxTheme->getThemeMode());
     QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXSpinBoxPrivate::onThemeChanged);
 }
@@ -105,6 +106,10 @@ void NXSpinBox::focusOutEvent(QFocusEvent* event)
 void NXSpinBox::paintEvent(QPaintEvent* event)
 {
     Q_D(NXSpinBox);
+    if (palette().color(QPalette::Text) != NXThemeColor(d->_themeMode, BasicText))
+    {
+        d->onThemeChanged(d->_themeMode);
+    }
     QSpinBox::paintEvent(event);
     QPainter painter(this);
     painter.save();

@@ -411,22 +411,22 @@ void NXShadowGraphicsEffectPrivate::_drawInsetShadow(QPainter* painter, const QP
     QPointF maskStartPos = topLeftOffset;
     switch (_pRotateMode)
     {
-    case NXWidgetType::BoxShadow::Rotate45:
+    case NXShadowGraphicsEffectType::Rotate45:
         maskStartPos += _pLightOffset;
         topLeftOffset += _pLightOffset;
         bottomRightOffset += _pDarkOffset;
         break;
-    case NXWidgetType::BoxShadow::Rotate135:
+    case NXShadowGraphicsEffectType::Rotate135:
         maskStartPos += { -_pLightOffset.y(), _pLightOffset.x() };
         topLeftOffset += { -_pDarkOffset.y(), _pLightOffset.x() };
         bottomRightOffset += { -_pLightOffset.y(), _pDarkOffset.x() };
         break;
-    case NXWidgetType::BoxShadow::Rotate225:
+    case NXShadowGraphicsEffectType::Rotate225:
         maskStartPos += { -_pLightOffset.x(), -_pLightOffset.y() };
         topLeftOffset += { -_pDarkOffset.x(), -_pDarkOffset.y() };
         bottomRightOffset += { -_pLightOffset.x(), -_pLightOffset.y() };
         break;
-    case NXWidgetType::BoxShadow::Rotate315:
+    case NXShadowGraphicsEffectType::Rotate315:
         maskStartPos += { _pLightOffset.y(), _pLightOffset.x() };
         topLeftOffset += { _pLightOffset.y(), -_pDarkOffset.x() };
         bottomRightOffset += { _pDarkOffset.y(), -_pLightOffset.x() };
@@ -474,25 +474,25 @@ void NXShadowGraphicsEffectPrivate::_drawOutsetShadow(QPainter* painter, const Q
     // 乘的数字是为了适配正确的坐标
     switch (_pRotateMode)
     {
-    case NXWidgetType::BoxShadow::Rotate45:
+    case NXShadowGraphicsEffectType::Rotate45:
         lightOffset = _pLightOffset;
         darkOffset = _pDarkOffset;
         lightClearRect.adjust(-_pLightOffset.x() + paddingX, -_pLightOffset.y() + paddingY, 0, 0);
         darkClearRect.adjust(0, 0, -_pDarkOffset.x() - paddingX, -_pDarkOffset.y() - paddingY);
         break;
-    case NXWidgetType::BoxShadow::Rotate135:
+    case NXShadowGraphicsEffectType::Rotate135:
         lightOffset = { -_pLightOffset.y(), _pLightOffset.x() };
         darkOffset = { -_pDarkOffset.y(), _pDarkOffset.x() };
         lightClearRect.adjust(0, -_pLightOffset.x() + paddingX, _pLightOffset.y() - paddingY, 0);
         darkClearRect.adjust(_pDarkOffset.y() + paddingY, 0, 0, -_pDarkOffset.x() - paddingX);
         break;
-    case NXWidgetType::BoxShadow::Rotate225:
+    case NXShadowGraphicsEffectType::Rotate225:
         lightOffset = { -_pLightOffset.x(), -_pLightOffset.y() };
         darkOffset = { -_pDarkOffset.x(), -_pDarkOffset.y() };
         lightClearRect.adjust(0, 0, _pLightOffset.x() - paddingX, _pLightOffset.y() - paddingY);
         darkClearRect.adjust(_pDarkOffset.x() + paddingX, _pDarkOffset.y() + paddingY, 0, 0);
         break;
-    case NXWidgetType::BoxShadow::Rotate315:
+    case NXShadowGraphicsEffectType::Rotate315:
         lightOffset = { _pLightOffset.y(), -_pLightOffset.x() };
         darkOffset = { _pDarkOffset.y(), -_pDarkOffset.x() };
         lightClearRect.adjust(-_pLightOffset.y() + paddingY, 0, 0, _pLightOffset.x() - paddingX);
@@ -532,19 +532,19 @@ void NXShadowGraphicsEffectPrivate::_drawOutsetShadow(QPainter* painter, const Q
     QPointF lightOffset, darkOffset;
     switch (_pRotateMode)
     {
-    case NXWidgetType::BoxShadow::Rotate45:
+    case NXShadowGraphicsEffectType::Rotate45:
         lightOffset = _pLightOffset;
         darkOffset = _pDarkOffset;
         break;
-    case NXWidgetType::BoxShadow::Rotate135:
+    case NXShadowGraphicsEffectType::Rotate135:
         lightOffset = { -_pLightOffset.y(), _pLightOffset.x() };
         darkOffset = { -_pDarkOffset.y(), _pDarkOffset.x() };
         break;
-    case NXWidgetType::BoxShadow::Rotate225:
+    case NXShadowGraphicsEffectType::Rotate225:
         lightOffset = { -_pLightOffset.x(), -_pLightOffset.y() };
         darkOffset = { -_pDarkOffset.x(), -_pDarkOffset.y() };
         break;
-    case NXWidgetType::BoxShadow::Rotate315:
+    case NXShadowGraphicsEffectType::Rotate315:
         lightOffset = { _pLightOffset.y(), -_pLightOffset.x() };
         darkOffset = { _pDarkOffset.y(), -_pDarkOffset.x() };
         break;

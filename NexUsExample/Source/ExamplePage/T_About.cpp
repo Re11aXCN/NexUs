@@ -9,6 +9,7 @@
 T_About::T_About(QWidget* parent)
     : NXDialog(parent)
 {
+    setFixedSize(400, 400);
     setWindowTitle("关于..");
     setWindowIcon(QIcon(":/Resource/Image/Moon.jpg"));
     this->setIsFixedSize(true);

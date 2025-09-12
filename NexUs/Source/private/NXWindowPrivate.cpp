@@ -203,20 +203,16 @@ void NXWindowPrivate::onNavigationNodeClicked(NXNavigationType::NavigationNodeTy
 {
     Q_Q(NXWindow);
     QWidget* page = _routeMap.value(nodeKey);
-    if (!page)
-    {
-        // 页脚没有绑定页面
-		Q_EMIT q->navigationNodeClicked(nodeType, nodeKey, nullptr);
-        return;
+    if (page) {
+        int nodeIndex = _navigationCenterStackedWidget->indexOf(page);
+        if (_navigationTargetIndex == nodeIndex || _navigationCenterStackedWidget->count() <= nodeIndex)
+        {
+            return;
+        }
+        _navigationTargetIndex = nodeIndex;
+        _navigationCenterStackedWidget->doWindowStackSwitch(_pStackSwitchMode, nodeIndex, isRouteBack);
     }
-    int nodeIndex = _navigationCenterStackedWidget->indexOf(page);
-    if (_navigationTargetIndex == nodeIndex || _navigationCenterStackedWidget->count() <= nodeIndex)
-    {
-        return;
-    }
-    _navigationTargetIndex = nodeIndex;
-    _navigationCenterStackedWidget->doWindowStackSwitch(_pStackSwitchMode, nodeIndex, isRouteBack);
-	_currentVisibleWidget = { nodeType, nodeKey, page };
+    // 仅允许页脚节点窗口为空，可作为功能按钮使用
 	Q_EMIT q->navigationNodeClicked(nodeType, nodeKey, page);
 }
 
@@ -236,8 +232,6 @@ void NXWindowPrivate::onNavigationNodeAdded(NXNavigationType::NavigationNodeType
             _navigationCenterStackedWidget->addWidget(page);
         }
     }
-    _currentVisibleWidget = { nodeType, nodeKey, page };
-    Q_EMIT q->navigationNodeAdded(nodeType, nodeKey, page);
 }
 
 void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey)
@@ -255,13 +249,12 @@ void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeTy
     {
 		const QString& currentKey = currentWidget->property("NXPageKey").toString();
 		q->navigation(currentKey);
-		_currentVisibleWidget = { nodeType, currentKey, currentWidget };
+        Q_EMIT q->navigationNodeRemoved(nodeType, currentKey, currentWidget);
     }
 	else
 	{
-		_currentVisibleWidget = { nodeType, QString{}, nullptr };
+        Q_EMIT q->navigationNodeRemoved(nodeType, _navigationBar->getNavigationRootKey(), nullptr);
 	}
-	Q_EMIT q->navigationNodeRemoved(nodeType, nodeKey);
 }
 
 void NXWindowPrivate::onNavigationRouteBack(QVariantMap routeData)

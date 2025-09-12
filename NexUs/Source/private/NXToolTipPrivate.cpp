@@ -9,6 +9,8 @@ NXToolTipPrivate::NXToolTipPrivate(QObject* parent)
     : QObject{parent}
 {
     _pOpacity = 1;
+    _pOffSetX = 10;
+    _pOffSetY = 0;
 }
 
 NXToolTipPrivate::~NXToolTipPrivate()
@@ -43,7 +45,7 @@ bool NXToolTipPrivate::eventFilter(QObject* watched, QEvent* event)
     case QEvent::HoverMove:
     case QEvent::MouseMove:
     {
-        _updatePos();
+        _updatePos(_pos);
         break;
     }
     default:
@@ -58,7 +60,7 @@ void NXToolTipPrivate::_doShowAnimation()
 {
     Q_Q(NXToolTip);
     QPoint cursorPoint = QCursor::pos();
-    q->move(cursorPoint.x() + 10, cursorPoint.y());
+    q->move(cursorPoint.x() + _pOffSetX, cursorPoint.y() + _pOffSetY);
     q->show();
     QPropertyAnimation* showAnimation = new QPropertyAnimation(q, "windowOpacity");
     showAnimation->setEasingCurve(QEasingCurve::InOutSine);
@@ -68,12 +70,13 @@ void NXToolTipPrivate::_doShowAnimation()
     showAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXToolTipPrivate::_updatePos()
+void NXToolTipPrivate::_updatePos(const QPoint& pos)
 {
     Q_Q(NXToolTip);
+    _pos = pos;
     if (q->isVisible())
     {
         QPoint cursorPoint = QCursor::pos();
-        q->move(cursorPoint.x() + 10, cursorPoint.y());
+        q->move(_pos.x() + _pOffSetX, _pos.y() + _pOffSetY);
     }
 }

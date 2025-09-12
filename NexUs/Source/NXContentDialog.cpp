@@ -13,7 +13,6 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include <QScreen>
-#include <QTimer>
 #include <QVBoxLayout>
 
 Q_TAKEOVER_NATIVEEVENT_CPP(NXContentDialog, d_func()->_appBar);

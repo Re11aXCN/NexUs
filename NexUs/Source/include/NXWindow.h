@@ -32,6 +32,7 @@ public:
     QWidget* getCustomWidget() const;
     void setCustomMenu(QMenu* customMenu);
     QMenu* getCustomMenu() const;
+
  	void setIsLeftButtonPressedToggleNavigation(bool isPressed);
     void setNavigationNodeDragAndDropEnable(bool isEnable);
     void setUserInfoCardVisible(bool isVisible);
@@ -65,7 +66,6 @@ public:
     int getNodeKeyPoints(const QString& nodeKey) const;
 
     void navigation(const QString& pageKey);
-    std::tuple<NXNavigationType::NavigationNodeType, QString, QWidget*> currentVisibleWidget() const;
     int getCurrentNavigationIndex() const;
     QString getCurrentNavigationPageKey() const;
 
@@ -79,9 +79,8 @@ public:
 Q_SIGNALS:
     Q_SIGNAL void userInfoCardClicked();
     Q_SIGNAL void closeButtonClicked();
-    Q_SIGNAL void navigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* widget);
-    Q_SIGNAL void navigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* widget);
-    Q_SIGNAL void navigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey);
+    Q_SIGNAL void navigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& clickedNodeKey, QWidget* clickedWidget);
+    Q_SIGNAL void navigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString& showNavWidgetNodeKey, QWidget* showNavWidget);
     Q_SIGNAL void customWidgetChanged();
     Q_SIGNAL void customMenuChanged();
     Q_SIGNAL void pageOpenInNewWindow(const QString& nodeKey);

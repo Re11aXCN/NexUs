@@ -12,9 +12,13 @@ class NX_EXPORT NXRadioButton : public QRadioButton
 public:
     explicit NXRadioButton(QWidget* parent = nullptr);
     explicit NXRadioButton(const QString& text, QWidget* parent = nullptr);
-    ~NXRadioButton();
+    ~NXRadioButton() override;
 
     void setTextStyle(NXTextType::TextStyle textStyle, std::optional<int> pixelSize = std::nullopt, std::optional<QFont::Weight> weight = std::nullopt);
-    NXTextType::TextStyle getTextStyle() const;};
+    NXTextType::TextStyle getTextStyle() const;
+
+protected:
+    virtual void paintEvent(QPaintEvent* event) override;
+};
 
 #endif // NXRADIOBUTTON_H

@@ -9,7 +9,6 @@ class QScreen;
 class QBoxLayout;
 class QHBoxLayout;
 class QVBoxLayout;
-class QButtonGroup;
 class NXText;
 class NXAppBar;
 class NXIconButton;
@@ -26,8 +25,6 @@ class NXAppBarPrivate : public QObject
     bool _isHoverMaxButton{ false };
     Q_PRIVATE_CREATE_D(QWidget*, CustomWidget)
     Q_PRIVATE_CREATE_D(QMenu*, CustomMenu)
-    Q_PROPERTY_CREATE_D(QButtonGroup*, ModuleButtonGroup)
-    Q_PROPERTY_CREATE_D(QBoxLayout*, CustomModuleLayout)
     Q_PROPERTY_CREATE_D(int, AppBarHeight)
     Q_PROPERTY_CREATE_D(int, CustomWidgetMaximumWidth)
 public:

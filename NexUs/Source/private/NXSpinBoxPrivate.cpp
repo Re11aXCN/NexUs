@@ -7,7 +7,7 @@
 #include <QClipboard>
 #include <QGuiApplication>
 #include <QLineEdit>
-#include <QTimer>
+
 NXSpinBoxPrivate::NXSpinBoxPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -21,16 +21,10 @@ void NXSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
 {
     Q_Q(NXSpinBox);
     _themeMode = themeMode;
-    if (q->isVisible())
-    {
-        _changeTheme();
-    }
-    else
-    {
-        QTimer::singleShot(1, this, [=] {
-            _changeTheme();
-        });
-    }
+    QPalette palette;
+    palette.setColor(QPalette::Base, Qt::transparent);
+    palette.setColor(QPalette::Text, NXThemeColor(_themeMode, BasicText));
+    q->lineEdit()->setPalette(palette);
 }
 
 NXMenu* NXSpinBoxPrivate::_createStandardContextMenu()
@@ -93,13 +87,4 @@ NXMenu* NXSpinBoxPrivate::_createStandardContextMenu()
     action->setEnabled(!lineEdit->text().isEmpty() && !(lineEdit->selectedText() == lineEdit->text()));
     QObject::connect(action, &QAction::triggered, q, &NXSpinBox::selectAll);
     return menu;
-}
-
-void NXSpinBoxPrivate::_changeTheme()
-{
-    Q_Q(NXSpinBox);
-    QPalette palette;
-    palette.setColor(QPalette::Base, Qt::transparent);
-    palette.setColor(QPalette::Text, NXThemeColor(_themeMode, BasicText));
-    q->lineEdit()->setPalette(palette);
 }

@@ -90,3 +90,13 @@ bool NXLCDNumber::getIsTransparent() const
     Q_D(const NXLCDNumber);
     return d->_lcdNumberStyle->getIsTransparent();
 }
+
+void NXLCDNumber::paintEvent(QPaintEvent* event)
+{
+    Q_D(NXLCDNumber);
+    if (palette().color(QPalette::WindowText) != NXThemeColor(d->_themeMode, BasicText))
+    {
+        d->onThemeModeChanged(d->_themeMode);
+    }
+    QLCDNumber::paintEvent(event);
+}

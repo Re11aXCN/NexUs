@@ -224,6 +224,10 @@ void NXText::leaveEvent(QEvent* event)
 void NXText::paintEvent(QPaintEvent* event)
 {
     Q_D(NXText);
+    if (palette().color(QPalette::WindowText) != NXThemeColor(d->_themeMode, BasicText))
+    {
+        d->onThemeChanged(d->_themeMode);
+    }
     if (d->_pNXIcon != NXIconType::None)
     {
         QPainter painter(this);

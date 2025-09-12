@@ -5,7 +5,6 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QPropertyAnimation>
-#include <QTimer>
 
 #include "NXApplication.h"
 #include "private/NXDockWidgetPrivate.h"

@@ -10,11 +10,12 @@ class NXRadioButtonPrivate : public QObject
     Q_D_CREATE(NXRadioButton)
 public:
     explicit NXRadioButtonPrivate(QObject* parent = nullptr);
-    ~NXRadioButtonPrivate();
+    ~NXRadioButtonPrivate() override;
     Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
 
 private:
     NXTextType::TextStyle _textStyle{ NXTextType::NoStyle };
+    NXThemeType::ThemeMode _themeMode;
 };
 
 #endif // NXRADIOBUTTONPRIVATE_H

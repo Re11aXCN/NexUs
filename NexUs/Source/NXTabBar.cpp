@@ -55,6 +55,7 @@ void NXTabBar::mouseMoveEvent(QMouseEvent* event)
         data->setProperty("QDragObject", QVariant::fromValue(drag));
         drag->setMimeData(data);
         Q_EMIT tabDragCreate(drag);
+        drag->deleteLater();
     }
     QTabBar::mouseMoveEvent(event);
 }
@@ -82,4 +83,10 @@ void NXTabBar::dropEvent(QDropEvent* event)
         Q_EMIT tabDragDrop(data);
     }
     QTabBar::dropEvent(event);
+}
+
+void NXTabBar::wheelEvent(QWheelEvent* event)
+{
+    QTabBar::wheelEvent(event);
+    event->accept();
 }

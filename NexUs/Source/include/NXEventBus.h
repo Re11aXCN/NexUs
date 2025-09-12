@@ -18,7 +18,7 @@ class NX_EXPORT NXEvent : public QObject
 public:
     explicit NXEvent(QObject* parent = nullptr);
     explicit NXEvent(const QString& eventName, const QString& functionName, QObject* parent = nullptr);
-    ~NXEvent();
+    ~NXEvent() override;
     NXEventBusType::EventBusReturnType registerAndInit();
 };
 
@@ -31,7 +31,7 @@ class NX_EXPORT NXEventBus : public QObject
 
 private:
     explicit NXEventBus(QObject* parent = nullptr);
-    ~NXEventBus();
+    ~NXEventBus() override;
 
 public:
     NXEventBusType::EventBusReturnType post(const QString& eventName, const QVariantMap& data = {});

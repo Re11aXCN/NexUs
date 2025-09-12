@@ -190,4 +190,7 @@
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="..\qt6.natvis" />
+  </ItemGroup>
 </Project>

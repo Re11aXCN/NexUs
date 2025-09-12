@@ -109,6 +109,12 @@ void NXPivotView::mouseReleaseEvent(QMouseEvent* event)
     QListView::mouseReleaseEvent(event);
 }
 
+void NXPivotView::wheelEvent(QWheelEvent* event)
+{
+    QListView::wheelEvent(event);
+    event->accept();
+}
+
 void NXPivotView::paintEvent(QPaintEvent* event)
 {
     QPainter painter(viewport());

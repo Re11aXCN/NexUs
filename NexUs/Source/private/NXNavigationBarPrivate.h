@@ -1,7 +1,7 @@
 ﻿#ifndef NXNAVIGATIONBARPRIVATE_H
 #define NXNAVIGATIONBARPRIVATE_H
 
-#include <QMap>
+#include <QVariantMap>
 #include <QObject>
 
 #include "NXDef.h"
@@ -47,6 +47,9 @@ public:
     //核心跳转逻辑
     void onTreeViewClicked(const QModelIndex& index, bool isLogRoute = true, bool isRouteBack = false);
     void onFooterViewClicked(const QModelIndex& index, bool isLogRoute = true, bool isRouteBack = false);
+
+protected:
+    virtual bool eventFilter(QObject* watched, QEvent* event);
 
 private:
  	bool _isShowUserCard{ true };

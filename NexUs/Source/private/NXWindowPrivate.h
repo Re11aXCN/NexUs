@@ -2,7 +2,7 @@
 #define NXWINDOWPRIVATE_H
 
 #include <QLinearGradient>
-#include <QMap>
+#include <QVariantMap>
 #include <QObject>
 
 #include "NXDef.h"
@@ -58,7 +58,6 @@ private:
     NXThemeAnimationWidget* _animationWidget{nullptr};
 
     QMap<QString, QWidget*> _routeMap; // key__nodeKey title可以一致  value__Page
-    std::tuple<NXNavigationType::NavigationNodeType, QString, QWidget*> _currentVisibleWidget{ NXNavigationType::NavigationNodeType::PageNode, QString{}, nullptr };
 
 	qreal _distance(QPoint point1, QPoint point2);
     void _resetWindowLayout(bool isAnimation);

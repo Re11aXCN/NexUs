@@ -114,3 +114,14 @@ NXTextType::TextStyle NXRadioButton::getTextStyle() const
     Q_D(const NXRadioButton);
     return d->_textStyle;
 }
+
+
+void NXRadioButton::paintEvent(QPaintEvent* event)
+{
+    Q_D(NXRadioButton);
+    if (palette().color(QPalette::WindowText) != NXThemeColor(d->_themeMode, BasicText))
+    {
+        d->onThemeChanged(d->_themeMode);
+    }
+    QRadioButton::paintEvent(event);
+}
