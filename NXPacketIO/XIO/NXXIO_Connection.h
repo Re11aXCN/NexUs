@@ -1,4 +1,4 @@
-#ifndef NXXIO_CONNECTION_H
+﻿#ifndef NXXIO_CONNECTION_H
 #define NXXIO_CONNECTION_H
 
 #include "NXPacketIO_Export.h"

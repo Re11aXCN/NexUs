@@ -106,7 +106,7 @@
       <LanguageStandard>stdcpp23</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Source;$(ProjectDir)Source\include;`$(WindowsSDK_IncludePath)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NEXUS_BUILD_LIBRARY;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NEXUS_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseDynamicDebugging>false</UseDynamicDebugging>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -144,7 +144,7 @@
       <LanguageStandard>stdcpp23</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Source;$(ProjectDir)Source\include;`$(WindowsSDK_IncludePath)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NEXUS_BUILD_LIBRARY;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NEXUS_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseDynamicDebugging>false</UseDynamicDebugging>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -182,7 +182,7 @@
       <LanguageStandard>stdcpp23</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Source;$(ProjectDir)Source\include;`$(WindowsSDK_IncludePath)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NEXUS_BUILD_LIBRARY;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NEXUS_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseDynamicDebugging>false</UseDynamicDebugging>
       <StringPooling>true</StringPooling>
       <StructMemberAlignment>8Bytes</StructMemberAlignment>

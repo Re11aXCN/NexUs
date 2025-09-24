@@ -1,0 +1,429 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="NXPacketIO_Export.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="XIO\NXXIO_Connection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="XIO\NXXIO_Packet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="XIO\NXXIO_PacketRegistry.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="XIO\NXXIO_UdpHeader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\UtBinder.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\UtCallback.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\UtCallbackHolder.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\UtCallbackN.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\UtImmutableList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\UtSemaphore.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\UtThread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\UtWallClock.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakConnection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakDefaultHeader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakHeader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakIntTypes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakPacket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakProcessor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakSerialize.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakSerializeFwd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakSerializeImpl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakSerializeTraits.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakSerializeTypes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakSocketIO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakSocketReactor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakTCP_Connector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakTCP_IO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakThreadedIO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakTypeDictionary.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakUDP_IO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO\PakUndefinedPacket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenBuf.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenBufIManaged.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenBufOManaged.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenBufXferI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenBufXferO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenError.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenHostName.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenIConvert.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenIConvertBigEndian.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenIConvertLitEndian.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenIConvertLitEndianInt.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenIConvertLitEndianVax.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenInternetAddress.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenInternetSocketAddress.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenIO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenIODefs.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenIP.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenNetInfo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenNetIO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenOConvert.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenOConvertBigEndian.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenOConvertLitEndian.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenOConvertLitEndianInt.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenOConvertLitEndianVax.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenSocket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenSocketConnection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenSocketIncludes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenSocketManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenSocketSelector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenSocketSet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenSwapEndian.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenTCP_Connection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenTCP_IO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenTCP_Server.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenUDP_Connection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenUDP_IO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GenIO\GenUniqueId.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="XIO\NXXIO_Interface.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="XIO\NXXIO_Connection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="XIO\NXXIO_PacketRegistry.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="XIO\NXXIO_UdpHeader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\UtCallback.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\UtCallbackHolder.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\UtSemaphore.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\UtThread.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\UtWallClock.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO\PakConnection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO\PakDefaultHeader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO\PakI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO\PakO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO\PakPacket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO\PakProcessor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO\PakSerializeTypes.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO\PakSocketIO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO\PakSocketReactor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO\PakTCP_Connector.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO\PakTCP_IO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO\PakThreadedIO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO\PakTypeDictionary.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO\PakUDP_IO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO\PakUndefinedPacket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenBuf.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenBufIManaged.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenBufOManaged.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenBufXferI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenBufXferO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenError.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenHostName.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenIConvert.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenIConvertBigEndian.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenIConvertLitEndian.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenIConvertLitEndianInt.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenIConvertLitEndianVax.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenInternetAddress.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenInternetSocketAddress.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenIO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenIP.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenNetInfo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenNetIO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenOConvert.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenOConvertBigEndian.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenOConvertLitEndian.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenOConvertLitEndianInt.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenOConvertLitEndianVax.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenSocket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenSocketConnection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenSocketManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenSocketSelector.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenSocketSet.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenTCP_Connection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenTCP_IO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenTCP_Server.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenUDP_Connection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenUDP_IO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenIO\GenUniqueId.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="XIO\NXXIO_Interface.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

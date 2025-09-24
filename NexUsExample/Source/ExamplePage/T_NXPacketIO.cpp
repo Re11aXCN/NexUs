@@ -1,6 +1,6 @@
 ﻿#include "T_NXPacketIO.h"
 
-#if defined(Q_OS_WIN) && defined(BUILD_WITH_NXPACKETIO)
+#if defined(Q_OS_WIN) && defined(NXPACKETIO_LIBRARY_ALREADY_BUILT)
 #include "NXDxgiManager.h"
 #include "XIO/NXXIO_Connection.h"
 #include "XIO/NXXIO_Interface.h"

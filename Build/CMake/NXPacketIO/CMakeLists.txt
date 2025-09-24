@@ -1,29 +1,6 @@
-cmake_minimum_required(VERSION 3.5)
+﻿cmake_minimum_required(VERSION 3.5)
 
 project(NXPacketIO VERSION 2.0.0 LANGUAGES CXX)
-
-# 显式设置支持的配置类型（关键修改）
-set(CMAKE_CONFIGURATION_TYPES "Debug;Release;RelWithDebInfo;MinSizeRel" CACHE STRING "" FORCE)
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build" FORCE)
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
-endif()
-
-# 检测平台架构并设置平台后缀
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(PLATFORM_SUFFIX "x64")
-else()
-    set(PLATFORM_SUFFIX "x86")
-endif()
-
-# 设置基础路径
-set(NEXUS_ROOT_DIR "${CMAKE_SOURCE_DIR}/..")
-set(NEXUS_BIN_DIR "${NEXUS_ROOT_DIR}/Bin")
-
-# 配置输出目录（包含平台后缀）
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${NEXUS_BIN_DIR}/${PROJECT_NAME}_$<CONFIG>_${PLATFORM_SUFFIX}")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${NEXUS_BIN_DIR}/${PROJECT_NAME}_$<CONFIG>_${PLATFORM_SUFFIX}")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${NEXUS_BIN_DIR}/${PROJECT_NAME}_$<CONFIG>_${PLATFORM_SUFFIX}")
 
 # 配置中间文件目录（包含平台后缀）
 set(CMAKE_OBJECT_OUTPUT_DIRECTORY "${NEXUS_BIN_DIR}/Intermediate/${PROJECT_NAME}_$<CONFIG>_${PLATFORM_SUFFIX}")
@@ -66,27 +43,27 @@ if (MINGW)
     set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
 endif ()
 if (MSVC)
-    set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
-     # 设置编译器选项：为所有配置生成调试信息
     target_compile_options(${PROJECT_NAME} PRIVATE
-        "$<$<CONFIG:Debug>:/Zi>"
-        "$<$<CONFIG:Release>:/Zi>"
+        "$<$<CONFIG:Debug>:/ZI>"
+        "$<$<CONFIG:Debug>:/Od>"
+        "$<$<CONFIG:Release>:/O2>"
         "$<$<CONFIG:RelWithDebInfo>:/Zi>"
+        "$<$<CONFIG:RelWithDebInfo>:/O2>"
         "$<$<CONFIG:MinSizeRel>:/Zi>"
+        "$<$<CONFIG:MinSizeRel>:/O1>"
     )
     
-    # 设置链接器选项：为所有配置生成调试信息
     target_link_options(${PROJECT_NAME} PRIVATE
         "$<$<CONFIG:Debug>:/DEBUG>"
-        "$<$<CONFIG:Release>:/DEBUG:FULL>"
         "$<$<CONFIG:RelWithDebInfo>:/DEBUG:FULL>"
+        "$<$<CONFIG:Release>:/DEBUG:NONE>"
         "$<$<CONFIG:MinSizeRel>:/DEBUG:FASTLINK>"
     )
     
-    # 设置PDB文件输出位置
     set_target_properties(${PROJECT_NAME} PROPERTIES
+        DEBUG_POSTFIX "d"
         COMPILE_PDB_NAME ${PROJECT_NAME}
-        COMPILE_PDB_NAME_DEBUG ${PROJECT_NAME}d  # 调试版本的PDB名称
+        COMPILE_PDB_NAME_DEBUG ${PROJECT_NAME}d
         COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
     )
 endif ()
@@ -111,28 +88,10 @@ if (WIN32)
     )
 endif ()
 
-# 使用构建后命令将DLL复制到NexUs输出目录
-if(WIN32 AND NOT NXPACKETIO_BUILD_STATIC_LIB)
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory 
-            "${NEXUS_BIN_DIR}/NexUs_$<CONFIG>_${PLATFORM_SUFFIX}"
-        # 复制动态库文件（.dll）
-        COMMAND ${CMAKE_COMMAND} -E copy
-            "$<TARGET_FILE:${PROJECT_NAME}>"
-            "${NEXUS_BIN_DIR}/NexUs_$<CONFIG>_${PLATFORM_SUFFIX}/"
-        # 复制导入库文件（.lib）
-        COMMAND ${CMAKE_COMMAND} -E copy
-            "$<TARGET_LINKER_FILE:${PROJECT_NAME}>"
-            "${NEXUS_BIN_DIR}/NexUs_$<CONFIG>_${PLATFORM_SUFFIX}/"
-        # 复制PDB文件（如果存在）
-        COMMAND ${CMAKE_COMMAND} -E copy
-            "$<TARGET_PDB_FILE:${PROJECT_NAME}>"
-            "${NEXUS_BIN_DIR}/NexUs_$<CONFIG>_${PLATFORM_SUFFIX}/"
-        COMMENT "Copying ${PROJECT_NAME} outputs to NexUs directory"
-    )
+if(COMMAND func_install_target_files)
+    func_install_target_files(${PROJECT_NAME})
 endif()
 
-# 安装配置保持不变（可选）
 install(
     TARGETS ${PROJECT_NAME}
     EXPORT ${PROJECT_NAME}

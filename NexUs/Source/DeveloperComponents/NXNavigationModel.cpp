@@ -5,6 +5,13 @@
 #include <QMimeData>
 #include <QIODevice>
 #include "NXNavigationNode.h"
+static void RecursiveUpdateDepth_(NXNavigationNode* node, int baseDepth)
+{
+    node->setDepth(baseDepth + 1);
+    for (auto child : node->getChildrenNodes()) {
+        RecursiveUpdateDepth_(child, baseDepth + 1);
+    }
+}
 NXNavigationModel::NXNavigationModel(QObject* parent)
     : QAbstractItemModel{parent}
 {
@@ -421,7 +428,8 @@ bool NXNavigationModel::dropMimeData(const QMimeData* data, Qt::DropAction actio
     }
     draggedParentNode->removeChildNode(draggedNode);
     targetParentNode->insertChildNode(targetRow, draggedNode);
-    
+
+    // C++23
     /*auto recursiveUpdateDepth =
         [](this auto&& self, NXNavigationNode* node, int baseDepth) -> void {
         node->setDepth(baseDepth + 1);
@@ -430,6 +438,7 @@ bool NXNavigationModel::dropMimeData(const QMimeData* data, Qt::DropAction actio
         }
         };
     recursiveUpdateDepth(draggedNode, targetParentNode->getDepth());*/
+    RecursiveUpdateDepth_(draggedNode, targetParentNode->getDepth());
     endMoveRows();
     Q_EMIT mineDataDropped(data, draggedNode->getModelIndex(), targetIndex);
     return true;

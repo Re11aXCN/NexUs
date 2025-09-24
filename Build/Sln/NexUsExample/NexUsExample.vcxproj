@@ -105,7 +105,7 @@
     <ClCompile>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)NexUs\Source\include;$(SolutionDir)NXPacketIO;$(ProjectDir)\Source;$(ProjectDir)\Source\ModelView;$(ProjectDir)\Source\ExamplePage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BUILD_WITH_NXPACKETIO;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NXPACKETIO_LIBRARY_ALREADY_BUILT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAsWinRT>false</CompileAsWinRT>
       <StringPooling>true</StringPooling>
       <StructMemberAlignment>8Bytes</StructMemberAlignment>
@@ -147,7 +147,7 @@
     <ClCompile>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)NexUs\Source\include;$(SolutionDir)NXPacketIO;$(ProjectDir)\Source;$(ProjectDir)\Source\ModelView;$(ProjectDir)\Source\ExamplePage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BUILD_WITH_NXPACKETIO;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NXPACKETIO_LIBRARY_ALREADY_BUILT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAsWinRT>false</CompileAsWinRT>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -181,7 +181,7 @@
     <ClCompile>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)NexUs\Source\include;$(SolutionDir)NXPacketIO;$(ProjectDir)\Source;$(ProjectDir)\Source\ModelView;$(ProjectDir)\Source\ExamplePage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BUILD_WITH_NXPACKETIO;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NXPACKETIO_LIBRARY_ALREADY_BUILT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAsWinRT>false</CompileAsWinRT>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -368,6 +368,9 @@
   <ItemGroup>
     <ProjectReference Include="..\NexUs\NexUs.vcxproj">
       <Project>{5b0f1707-797d-421c-8441-846f6be473cf}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\NXPacketIO\NXPacketIO.vcxproj">
+      <Project>{1bcef530-881d-461a-a8dc-1057cec10cdd}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -169,7 +169,7 @@ https://github.com/ZongChang-Liu/ElaWidgetTools/commits/Zongchang_Liu?author=Zon
 
 # 使用教程
 
-## 安装插件
+## 安装插件(如果是使用Sln)
 
 1. 打开VS2022 -> 扩展 -> 管理扩展 -> 搜索Qt，安装Qt Visual Studio Tools
 
@@ -177,6 +177,126 @@ https://github.com/ZongChang-Liu/ElaWidgetTools/commits/Zongchang_Liu?author=Zon
 3. 点击Add按钮，输入Name和Location（示例：Name输入`6.6.2_msvc2019_64`，Location输入`E:\Qt\6.6.2\msvc2019_64`）
 
 完成上述操作 VS2022应该能够识别Qt路径并能够识别加载对应的HEADERS资源
+
+
+
+## 构建选择(Sln、CMake、PreMake(待完善))/项目输出说明
+
+### 动态库、静态库、可执行程序、调试文件
+
+进入Build文件夹，运行对应平台的脚本，即可会自动将构建项目配置拷贝一份到对应位置，然后使用IDE打开即可编译运行
+
+项目 <font color="red">动态库、静态库、可执行程序、调试文件</font>  均输出到 <font color="red">Bin\ <项目名字>_ <构建目标> _ <平台架构></font>
+
+示例路径：`NexUs\Bin\NexUs_RelWithDebInfo_x64`
+
+
+
+### 中间文件
+
+#### 1、obj文件
+
+* **Sln**
+
+Sln构建会在 `Bin目录下` 生成 <font color="red">Intermediate文件夹</font>，然后生成 `<项目名字>_ <构建目标> _ <平台架构>` 文件夹（和上述一致）， 生成 <font color="red">obj文件</font> 均放到此处
+
+示例路径：`NexUs\Bin\Intermediate\NexUs_Release_x64`
+
+* **CMake**
+
+CMake构建的中间文件 未移动/拷贝到 Bin\Intermediate 下，在标准的out文件夹下
+
+示例路径：
+
+mocs_compilation.cpp.obj处在路径：`NexUs\out\build\debug\NexUs\CMakeFiles\NexUs.dir\NexUs_autogen`
+
+其他Q_OBJECT等需要生成MOC的对象路径：`NexUs\out\build\debug\NexUs\CMakeFiles\NexUs.dir\Source`
+
+
+
+#### 2、moc、rcc、uic文件
+
+* **Sln**
+
+Sln构建会在每个具体的项目下生成 <font color="red">GeneratedFiles</font> 文件夹，其中rcc、uic的生成文件对于构建模式不印象其内容，moc文件则会被放到生成的构建文件夹当中，因为不同构建模式可能存在代码优化
+
+示例结构：
+
+> * NexUs\NexUs\GeneratedFiles
+>   * qrc_NexUs.cpp
+>   * RelWithDebInfo
+>     * moc_NXAppBar.cpp
+>     * ...
+>   * Debug
+>     * moc_NXAppBar.cpp
+>     * ...
+>
+> * NexUs\NexUsExample\GeneratedFiles
+>
+>   * qrc_NexUsExample.cpp
+>   * ui_NexUsExample.h
+>
+>   * RelWithDebInfo
+>     * moc_T_About.cpp
+>     * ...
+>
+>   * Debug
+>     * moc_T_About.cpp
+>     * ...
+
+
+
+* **CMake**
+
+CMake生成moc_XXX.cpp文件路径未进行移动，没有GeneratedFiles文件夹，当然你可以进行配置CMakeLists.txt进行操作或者编写脚本移动，笔者这里就不实现了
+
+示例路径：
+
+`NexUs\out\build\debug\NexUs\NexUs_autogen\哈希值`，哈希值有
+
+- 5OPOMGIKHL：库使用基本文件，MOC文件如：moc_NXCheckBox.cpp
+
+* EWIEGA46WW：qrc资源，qrc_NexUs.cpp在目录下
+* MDIJTLMGDY：DeveloperComponents文件夹下内容，MOC文件如：moc_NXBaseListView.cpp
+* S4JZKUS5AE：private文件夹下内容，MOC文件如：moc_NXDoubleSpinBoxPrivate.cpp
+
+`NexUs\out\build\debug\NexUs\NexUs_autogen\mocs_compilation.cpp`（包含了所有moc文件路径）
+
+NexUsExample的路径类似，不再说明
+
+
+
+### 构建速度/输出文件大小
+
+* **Sln**： 编译较慢	在Debug、Release模式下生成的文件比CMake生成稍大一点点，RebWithDebInfo生成则会小一些
+* **CMake**：编译很快 Debug、RebWithDebInfo会拷贝不必要的文件类型`到 Bin 中`，不必要文件类型有`exp、idb、ilk`（Windows下，其他平台没测试）可以删除
+* **PreMake**：可以生成Sln、Makefile、Xcode项目，`当前的lua脚本还没有完全完善和测试`
+
+> Windows (生成Visual Studio项目)：
+>
+> ```
+> BUILD\premake5.exe vs2022
+> ```
+>
+> Linux (生成Makefile)：
+>
+> ```
+> ./BUILD/premake5 gmake2
+> ```
+>
+> macOS (生成Xcode项目)：
+>
+> ```
+> ./BUILD/premake5 xcode4
+> ```
+>
+> 生成的项目文件将支持MSBuild编译（Windows）和GNU编译器（Linux/macOS），实现了完全的跨平台构建支持，当然你可以选择直接使用CMake。
+
+
+
+
+
+
 
 ## Example替换
 

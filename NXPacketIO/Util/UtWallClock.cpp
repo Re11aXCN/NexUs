@@ -1,4 +1,4 @@
-#include "Util/UtWallClock.h"
+﻿#include "Util/UtWallClock.h"
 
 #if _WIN32
 #include <windows.h>

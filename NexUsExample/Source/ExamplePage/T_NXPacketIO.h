@@ -2,7 +2,7 @@
 #define NXFRAMEWORK_NXWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_NXPACKETIO_H_
 
 #include <QObject>
-#if defined(Q_OS_WIN) && defined(BUILD_WITH_NXPACKETIO)
+#if defined(Q_OS_WIN) && defined(NXPACKETIO_LIBRARY_ALREADY_BUILT)
 #include "NXProperty.h"
 #include "XIO/NXXIO_PacketRegistry.h"
 #include "Util/UtCallbackHolder.h"

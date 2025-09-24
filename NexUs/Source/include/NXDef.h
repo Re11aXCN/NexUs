@@ -3,6 +3,10 @@
 
 #include "NXProperty.h"
 
+namespace __NXDefNamespace_MOC {
+    Q_NAMESPACE // 空的命名空间，只是为了触发 moc 处理
+}
+
 Q_BEGIN_ENUM_CREATE(NXApplicationType)
 enum WindowDisplayMode
 {
