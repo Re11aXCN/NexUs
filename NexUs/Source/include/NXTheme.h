@@ -12,9 +12,13 @@ class QPainter;
 class NXThemePrivate;
 class NX_EXPORT NXTheme : public QObject
 {
+#pragma push_macro("DISABLE_COPY")
+#undef DISABLE_COPY
+#define DISABLE_COPY(Class)
+    SINGLETON_CREATE_H(NXTheme)
+#pragma pop_macro("DISABLE_COPY")
     Q_OBJECT
     Q_Q_CREATE(NXTheme)
-    Q_SINGLETON_CREATE_H(NXTheme)
 private:
     explicit NXTheme(QObject* parent = nullptr);
     ~NXTheme();

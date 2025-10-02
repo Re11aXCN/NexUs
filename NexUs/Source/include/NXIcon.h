@@ -6,7 +6,7 @@
 #include "singleton.h"
 class NX_EXPORT NXIcon
 {
-    Q_SINGLETON_CREATE_H(NXIcon)
+    SINGLETON_CREATE_H(NXIcon)
 private:
     explicit NXIcon();
     ~NXIcon();

@@ -2,7 +2,7 @@
 
 #include "private/NXNavigationRouterPrivate.h"
 
-Q_SINGLETON_CREATE_CPP(NXNavigationRouter)
+SINGLETON_CREATE_CPP(NXNavigationRouter)
 Q_PROPERTY_CREATE_Q_CPP(NXNavigationRouter, int, MaxRouteCount)
 NXNavigationRouter::NXNavigationRouter(QObject* parent)
     : QObject{parent}, d_ptr(new NXNavigationRouterPrivate())

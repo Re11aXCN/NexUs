@@ -8,7 +8,7 @@
 #include <QFontDatabase>
 #include <QWidget>
 #include <utility>
-Q_SINGLETON_CREATE_CPP(NXApplication)
+SINGLETON_CREATE_CPP(NXApplication)
 NXApplication::NXApplication(QObject* parent)
     : QObject{parent}, d_ptr(new NXApplicationPrivate())
 {

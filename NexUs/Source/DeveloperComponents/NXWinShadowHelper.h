@@ -18,10 +18,10 @@
 #define nxWinHelper NXWinShadowHelper::getInstance()
 class NXWinShadowHelper : public QObject
 {
+    SINGLETON_CREATE_H(NXWinShadowHelper)
     Q_OBJECT
-        Q_PRIVATE_CREATE(bool, IsWinVersionGreater10)
-        Q_PRIVATE_CREATE(bool, IsWinVersionGreater11)
-        Q_SINGLETON_CREATE(NXWinShadowHelper)
+    Q_PRIVATE_CREATE(bool, IsWinVersionGreater10)
+    Q_PRIVATE_CREATE(bool, IsWinVersionGreater11)
 private:
     explicit NXWinShadowHelper(QObject* parent = nullptr);
     ~NXWinShadowHelper() override;

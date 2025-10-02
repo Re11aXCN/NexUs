@@ -167,6 +167,24 @@ https://github.com/ZongChang-Liu/ElaWidgetTools/commits/Zongchang_Liu?author=Zon
 >
 >    `NXSpinBox.cpp`
 
+## 3. Modify Optize3
+
+> 1. 修改`singleton.h` 单例模式更通用以来标准库，不依赖qt
+>
+> 2. 修改`NXProperty.h`的setter、getter的宏定义，支持普通类型如int、char直接setter、支持QString自定义cvref限定符setter，支持自定义getter返回类型加&限定，支持大类型的setter移动
+>
+>    ```
+>    PROPERTY: 需要和信号关联
+>    PRIVATE: 不需要和信号关联
+>    _H/_CPP: Pimpl版本
+>    _EX_H/_EX_CPP: 自定义setter、getter类型限定符
+>    _MOVE: setter拷贝大数据开销大，可以使用移动，但请你注意该类型必须实现移动构造/赋值或是POD类型，setter时候可以调用std::move传参数，但请注意生命周期
+>    ```
+>
+>    
+
+
+
 # 使用教程
 
 ## 安装插件(如果是使用Sln)

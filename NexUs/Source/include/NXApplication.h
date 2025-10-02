@@ -10,9 +10,13 @@
 class NXApplicationPrivate;
 class NX_EXPORT NXApplication : public QObject
 {
+#pragma push_macro("DISABLE_COPY")
+#undef DISABLE_COPY
+#define DISABLE_COPY(Class)
+    SINGLETON_CREATE_H(NXApplication)
+#pragma pop_macro("DISABLE_COPY")
     Q_OBJECT
     Q_Q_CREATE(NXApplication)
-    Q_SINGLETON_CREATE_H(NXApplication)
     Q_PROPERTY_CREATE_Q_H(NXApplicationType::WindowDisplayMode, WindowDisplayMode)
 private:
     explicit NXApplication(QObject* parent = nullptr);

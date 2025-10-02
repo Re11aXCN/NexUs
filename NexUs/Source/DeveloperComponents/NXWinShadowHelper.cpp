@@ -3,7 +3,7 @@
 #ifdef Q_OS_WIN
 #include <QDebug>
 #include <QWidget>
-
+SINGLETON_CREATE_CPP(NXWinShadowHelper)
 NXWinShadowHelper::NXWinShadowHelper(QObject* parent)
     : QObject(parent)
 {

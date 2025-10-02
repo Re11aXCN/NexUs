@@ -32,7 +32,7 @@ NXShadowGraphicsEffect::~NXShadowGraphicsEffect()
 
 }
 
-void NXShadowGraphicsEffect::setDarkOffset(const QPointF& size) {
+void NXShadowGraphicsEffect::setDarkOffset(QPointF size) {
     Q_D(NXShadowGraphicsEffect);
     d->_pDarkOffset = size;
     update();
@@ -43,7 +43,7 @@ QPointF NXShadowGraphicsEffect::getDarkOffset() const {
     return d->_pDarkOffset;
 }
 
-void NXShadowGraphicsEffect::setLightOffset(const QPointF& size) {
+void NXShadowGraphicsEffect::setLightOffset(QPointF size) {
     Q_D(NXShadowGraphicsEffect);
     d->_pLightOffset = size;
     update();
@@ -54,7 +54,7 @@ QPointF NXShadowGraphicsEffect::getLightOffset() const {
     return d->_pLightOffset;
 }
 
-void NXShadowGraphicsEffect::setRotateMode(const NXShadowGraphicsEffectType::RotateMode& mode) {
+void NXShadowGraphicsEffect::setRotateMode(NXShadowGraphicsEffectType::RotateMode mode) {
     Q_D(NXShadowGraphicsEffect);
     d->_pRotateMode = mode;
     update();
@@ -65,7 +65,7 @@ NXShadowGraphicsEffectType::RotateMode NXShadowGraphicsEffect::getRotateMode() c
     return d->_pRotateMode;
 }
 
-void NXShadowGraphicsEffect::setProjectionMode(const NXShadowGraphicsEffectType::ProjectionMode& mode) {
+void NXShadowGraphicsEffect::setProjectionMode(NXShadowGraphicsEffectType::ProjectionMode mode) {
     Q_D(NXShadowGraphicsEffect);
     d->_pProjectionMode = mode;
     update();
@@ -76,7 +76,7 @@ NXShadowGraphicsEffectType::ProjectionMode NXShadowGraphicsEffect::getProjection
     return d->_pProjectionMode;
 }
 
-void NXShadowGraphicsEffect::setBlur(const qreal& blur) {
+void NXShadowGraphicsEffect::setBlur(qreal blur) {
     Q_D(NXShadowGraphicsEffect);
     d->_pBlur = blur;
     update();
@@ -87,7 +87,7 @@ qreal NXShadowGraphicsEffect::getBlur() const {
     return d->_pBlur;
 }
 
-void NXShadowGraphicsEffect::setSpread(const qreal& spread) {
+void NXShadowGraphicsEffect::setSpread(qreal spread) {
     Q_D(NXShadowGraphicsEffect);
     d->_pSpread = spread;
     update();

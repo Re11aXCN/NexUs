@@ -10,9 +10,13 @@
 class NXNavigationRouterPrivate;
 class NX_EXPORT NXNavigationRouter : public QObject
 {
+#pragma push_macro("DISABLE_COPY")
+#undef DISABLE_COPY
+#define DISABLE_COPY(Class)
+    SINGLETON_CREATE_H(NXNavigationRouter)
+#pragma pop_macro("DISABLE_COPY")
     Q_OBJECT
     Q_Q_CREATE(NXNavigationRouter)
-    Q_SINGLETON_CREATE_H(NXNavigationRouter)
     Q_PROPERTY_CREATE_Q_H(int, MaxRouteCount)
 private:
     explicit NXNavigationRouter(QObject* parent = nullptr);

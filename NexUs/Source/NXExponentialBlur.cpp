@@ -7,7 +7,7 @@
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <cmath>
 #endif
-Q_SINGLETON_CREATE_CPP(NXExponentialBlur)
+SINGLETON_CREATE_CPP(NXExponentialBlur)
 NXExponentialBlur::NXExponentialBlur(QObject* parent)
     : QObject{parent}, d_ptr(new NXExponentialBlurPrivate())
 {

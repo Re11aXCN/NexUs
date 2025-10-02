@@ -4,7 +4,7 @@
 #include <QPainterPath>
 
 #include "private/NXThemePrivate.h"
-Q_SINGLETON_CREATE_CPP(NXTheme)
+SINGLETON_CREATE_CPP(NXTheme)
 NXTheme::NXTheme(QObject* parent)
     : QObject{parent}, d_ptr(new NXThemePrivate())
 {

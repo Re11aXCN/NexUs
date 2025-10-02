@@ -3,7 +3,7 @@
 #include <QVariant>
 
 #include "private/NXEventBusPrivate.h"
-Q_SINGLETON_CREATE_CPP(NXEventBus);
+SINGLETON_CREATE_CPP(NXEventBus);
 Q_PROPERTY_CREATE_Q_CPP(NXEvent, QString, EventName);
 Q_PROPERTY_CREATE_Q_CPP(NXEvent, QString, FunctionName);
 Q_PROPERTY_CREATE_Q_CPP(NXEvent, Qt::ConnectionType, ConnectionType);

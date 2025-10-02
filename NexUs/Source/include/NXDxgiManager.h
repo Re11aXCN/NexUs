@@ -9,10 +9,13 @@
 class NXDxgiManagerPrivate;
 class NX_EXPORT NXDxgiManager : public QObject
 {
+#pragma push_macro("DISABLE_COPY")
+#undef DISABLE_COPY
+#define DISABLE_COPY(Class)
+    SINGLETON_CREATE_H(NXDxgiManager)
+#pragma pop_macro("DISABLE_COPY")
     Q_OBJECT
     Q_Q_CREATE(NXDxgiManager)
-    Q_SINGLETON_CREATE_H(NXDxgiManager);
-
 private:
     explicit NXDxgiManager(QObject* parent = nullptr);
     ~NXDxgiManager();

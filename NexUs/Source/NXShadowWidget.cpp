@@ -19,7 +19,7 @@ void NXShadowWidget::setCustomDraw(std::function<void(QPainter*, QWidget*)> cust
     _pCustomDraw = customDraw;
 }
 
-void NXShadowWidget::setDarkOffset(const QPointF& size) {
+void NXShadowWidget::setDarkOffset(QPointF size) {
     _pShadowEffect->setDarkOffset(size);
     update();
 }
@@ -28,7 +28,7 @@ QPointF NXShadowWidget::getDarkOffset() const {
     return _pShadowEffect->getDarkOffset();
 }
 
-void NXShadowWidget::setLightOffset(const QPointF& size) {
+void NXShadowWidget::setLightOffset(QPointF size) {
     _pShadowEffect->setLightOffset(size);
     update();
 }
@@ -37,7 +37,7 @@ QPointF NXShadowWidget::getLightOffset() const {
     return _pShadowEffect->getLightOffset();
 }
 
-void NXShadowWidget::setRotateMode(const NXShadowGraphicsEffectType::RotateMode& mode) {
+void NXShadowWidget::setRotateMode(NXShadowGraphicsEffectType::RotateMode mode) {
     _pShadowEffect->setRotateMode(mode);
     update();
 }
@@ -46,7 +46,7 @@ NXShadowGraphicsEffectType::RotateMode NXShadowWidget::getRotateMode() const {
     return _pShadowEffect->getRotateMode();
 }
 
-void NXShadowWidget::setProjectionMode(const NXShadowGraphicsEffectType::ProjectionMode& mode) {
+void NXShadowWidget::setProjectionMode(NXShadowGraphicsEffectType::ProjectionMode mode) {
     _pShadowEffect->setProjectionMode(mode);
     update();
 }
@@ -55,7 +55,7 @@ NXShadowGraphicsEffectType::ProjectionMode NXShadowWidget::getProjectionMode() c
     return _pShadowEffect->getProjectionMode();
 }
 
-void NXShadowWidget::setBlur(const qreal& blur) {
+void NXShadowWidget::setBlur(qreal blur) {
     _pShadowEffect->setBlur(blur);
     update();
 }
@@ -64,7 +64,7 @@ qreal NXShadowWidget::getBlur() const {
     return _pShadowEffect->getBlur();
 }
 
-void NXShadowWidget::setSpread(const qreal& spread) {
+void NXShadowWidget::setSpread(qreal spread) {
     _pShadowEffect->setSpread(spread);
     update();
 }

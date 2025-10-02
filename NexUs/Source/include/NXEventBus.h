@@ -25,10 +25,13 @@ public:
 class NXEventBusPrivate;
 class NX_EXPORT NXEventBus : public QObject
 {
+#pragma push_macro("DISABLE_COPY")
+#undef DISABLE_COPY
+#define DISABLE_COPY(Class)
+    SINGLETON_CREATE_H(NXEventBus)
+#pragma pop_macro("DISABLE_COPY")
     Q_OBJECT
     Q_Q_CREATE(NXEventBus)
-    Q_SINGLETON_CREATE_H(NXEventBus);
-
 private:
     explicit NXEventBus(QObject* parent = nullptr);
     ~NXEventBus() override;

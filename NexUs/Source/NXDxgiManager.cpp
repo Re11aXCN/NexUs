@@ -13,7 +13,7 @@
 
 #include "DeveloperComponents/NXDxgi.h"
 #include "private/NXDxgiManagerPrivate.h"
-Q_SINGLETON_CREATE_CPP(NXDxgiManager);
+SINGLETON_CREATE_CPP(NXDxgiManager);
 NXDxgiManager::NXDxgiManager(QObject* parent)
     : QObject{parent}, d_ptr(new NXDxgiManagerPrivate())
 {

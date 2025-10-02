@@ -21,7 +21,7 @@ class NXMessageBar;
 class NXMessageBarManager : public QObject
 {
     Q_OBJECT
-    Q_SINGLETON_CREATE_H(NXMessageBarManager)
+    SINGLETON_CREATE_H(NXMessageBarManager)
 private:
     explicit NXMessageBarManager(QObject* parent = nullptr);
     ~NXMessageBarManager();

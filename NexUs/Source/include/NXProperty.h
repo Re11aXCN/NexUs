@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QtCore/qglobal.h>
 #include <QtCore/qmetaobject.h>
+#include <type_traits>
 
 #ifdef NEXUS_LIBRARY
 #define NX_EXPORT Q_DECL_EXPORT
@@ -10,99 +11,203 @@
 #define NX_EXPORT Q_DECL_IMPORT
 #endif
 
-#define Q_PROPERTY_CREATE(TYPE, M)                          \
-    Q_PROPERTY(TYPE p##M MEMBER _p##M NOTIFY p##M##Changed) \
-public:                                                     \
-    Q_SIGNAL void p##M##Changed();                          \
-    void set##M(TYPE M)                                     \
-    {                                                       \
-        _p##M = M;                                          \
-        Q_EMIT p##M##Changed();                             \
-    }                                                       \
-    TYPE get##M() const                                     \
-    {                                                       \
-        return _p##M;                                       \
-    }                                                       \
-                                                            \
-private:                                                    \
-    TYPE _p##M;
+#if __cplusplus < 202002L
+namespace std {
+template<typename T>
+struct remove_cvref {
+    using type = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+};
 
+template<typename T>
+using remove_cvref_t = typename remove_cvref<T>::type;
+}
+#endif
 
-// Q_D Q_Q普通属性快速创建
-#define Q_PROPERTY_CREATE_Q_H(TYPE, M)                                  \
-    Q_PROPERTY(TYPE p##M READ get##M WRITE set##M NOTIFY p##M##Changed) \
-public:                                                                 \
-    Q_SIGNAL void p##M##Changed();                                      \
-    void set##M(TYPE M);                                                \
-    TYPE get##M() const;
+// PROPERTY: 需要和信号关联
+// PRIVATE: 不需要和信号关联
+// _H/_CPP: Pimpl版本
+// 
+// 基础版本 - 支持自定义setter和getter类型
+#define Q_PROPERTY_CREATE_EX(SET_TYPE, GET_TYPE, M)            \
+    Q_PROPERTY(std::remove_cvref_t<SET_TYPE> p##M MEMBER _p##M NOTIFY p##M##Changed)          \
+public:                                                                \
+    Q_SIGNAL void p##M##Changed();                                     \
+    void set##M(SET_TYPE M)                                            \
+    {                                                                  \
+        _p##M = M;                                                     \
+        Q_EMIT p##M##Changed();                                        \
+    }                                                                  \
+    GET_TYPE get##M() const                                            \
+    {                                                                  \
+        return _p##M;                                                  \
+    }                                                                  \
+                                                                       \
+private:                                                               \
+    std::remove_cvref_t<SET_TYPE> _p##M;
 
-#define Q_PROPERTY_CREATE_BASIC_H(TYPE, M)           \
-    Q_PROPERTY(TYPE p##M MEMBER _p##M READ get##M WRITE set##M NOTIFY p##M##Changed) \
-public:                                              \
-    Q_SIGNAL void p##M##Changed();                   \
-    TYPE get##M() const  { return _p##M; }           \
-    void set##M(TYPE M) ;                            \
-private:                                             \
-    TYPE _p##M;
+#define Q_PRIVATE_CREATE_EX(SET_TYPE, GET_TYPE, M)                     \
+public:                                                                \
+    void set##M(SET_TYPE M)                                            \
+    {                                                                  \
+        _p##M = M;                                                     \
+    }                                                                  \
+    GET_TYPE get##M() const                                            \
+    {                                                                  \
+        return _p##M;                                                  \
+    }                                                                  \
+                                                                       \
+private:                                                               \
+    std::remove_cvref_t<SET_TYPE> _p##M;
 
-#define Q_PROPERTY_CREATE_COMPLEX_H(TYPE, M)           \
-    Q_PROPERTY(TYPE p##M MEMBER _p##M READ get##M WRITE set##M NOTIFY p##M##Changed) \
-public:                                              \
-    Q_SIGNAL void p##M##Changed();                   \
-    TYPE get##M() const  { return _p##M; }           \
-    void set##M(const TYPE& M) ;                            \
-private:                                             \
-    TYPE _p##M;
+// Move版本的基础宏
+#define Q_PROPERTY_MOVE_CREATE_EX(SET_TYPE, GET_TYPE, M)               \
+    static_assert(std::is_same_v<T, std::remove_cvref_t<T>>, "SET_TYPE must be a plain type (no cv, no reference) for move version"); \
+    static_assert(std::is_move_assignable_v<T> && std::is_move_constructible_v<T>, "SET_TYPE must be move assignable and move constructible"); \
+    Q_PROPERTY(SET_TYPE p##M MEMBER _p##M NOTIFY p##M##Changed)        \
+public:                                                                \
+    Q_SIGNAL void p##M##Changed();                                     \
+    void set##M(SET_TYPE M)                                            \
+    {                                                                  \
+        _p##M = std::move(M);                                          \
+        Q_EMIT p##M##Changed();                                        \
+    }                                                                  \
+    GET_TYPE get##M() const                                            \
+    {                                                                  \
+        return _p##M;                                                  \
+    }                                                                  \
+                                                                       \
+private:                                                               \
+    SET_TYPE _p##M;
 
-// Q_D Q_Q指针变量快速创建
-#define Q_PRIVATE_CREATE_COMPLEX_H(TYPE, M) \
-public:                                     \
-    void set##M(const TYPE& M);             \
-    TYPE get##M() const;
+#define Q_PRIVATE_MOVE_CREATE_EX(SET_TYPE, GET_TYPE, M)                \
+    static_assert(std::is_same_v<T, std::remove_cvref_t<T>>, "SET_TYPE must be a plain type (no cv, no reference) for move version"); \
+    static_assert(std::is_move_assignable_v<T> && std::is_move_constructible_v<T>, "SET_TYPE must be move assignable and move constructible"); \
+public:                                                                \
+    void set##M(SET_TYPE M)                                            \
+    {                                                                  \
+        _p##M = std::move(M);                                          \
+    }                                                                  \
+    GET_TYPE get##M() const                                            \
+    {                                                                  \
+        return _p##M;                                                  \
+    }                                                                  \
+                                                                       \
+private:                                                               \
+    SET_TYPE _p##M;
 
-#define Q_PRIVATE_CREATE_Q_H(TYPE, M) \
-public:                               \
-    void set##M(TYPE M);              \
-    TYPE get##M() const;
+// 简化版本 - 保持原有接口，自动推导类型
+#define Q_PROPERTY_CREATE(TYPE, M)                                     \
+    Q_PROPERTY_CREATE_EX(TYPE, TYPE, M)
 
-#define Q_PROPERTY_CREATE_Q_CPP(CLASS, TYPE, M) \
-    void CLASS::set##M(TYPE M)                  \
-    {                                           \
-        Q_D(CLASS);                             \
-        d->_p##M = M;                           \
-        Q_EMIT p##M##Changed();                 \
-    }                                           \
-    TYPE CLASS::get##M() const                  \
-    {                                           \
-        return d_ptr->_p##M;                    \
+#define Q_PRIVATE_CREATE(TYPE, M)                                      \
+    Q_PRIVATE_CREATE_EX(TYPE, TYPE, M)
+
+#define Q_PROPERTY_MOVE_CREATE(TYPE, M)                                \
+    Q_PROPERTY_MOVE_CREATE_EX(TYPE, TYPE, M)
+
+#define Q_PRIVATE_MOVE_CREATE(TYPE, M)                                 \
+    Q_PRIVATE_MOVE_CREATE_EX(TYPE, TYPE, M)
+
+// Pimpl版本 - 支持自定义类型
+#define Q_PROPERTY_CREATE_Q_EX_H(SET_TYPE, GET_TYPE, M)                 \
+    Q_PROPERTY(std::remove_cvref_t<SET_TYPE> p##M READ get##M WRITE set##M NOTIFY p##M##Changed)\
+public:                                                                \
+    Q_SIGNAL void p##M##Changed();                                     \
+    void set##M(SET_TYPE M);                                           \
+    GET_TYPE get##M() const;
+
+#define Q_PRIVATE_CREATE_Q_EX_H(SET_TYPE, GET_TYPE, M)                 \
+public:                                                                \
+    void set##M(SET_TYPE M);                                           \
+    GET_TYPE get##M() const;
+
+#define Q_PROPERTY_CREATE_Q_EX_CPP(CLASS, SET_TYPE, GET_TYPE, M)       \
+    void CLASS::set##M(SET_TYPE M)                                     \
+    {                                                                  \
+        Q_D(CLASS);                                                    \
+        d->_p##M = M;                                                  \
+        Q_EMIT p##M##Changed();                                        \
+    }                                                                  \
+    GET_TYPE CLASS::get##M() const                                     \
+    {                                                                  \
+        return d_ptr->_p##M;                                           \
     }
 
-#define Q_PRIVATE_CREATE_Q_CPP(CLASS, TYPE, M) \
-    void CLASS::set##M(TYPE M)                 \
-    {                                          \
-        Q_D(CLASS);                            \
-        d->_p##M = M;                          \
-    }                                          \
-    TYPE CLASS::get##M() const                 \
-    {                                          \
-        return d_ptr->_p##M;                   \
+#define Q_PRIVATE_CREATE_Q_EX_CPP(CLASS, SET_TYPE, GET_TYPE, M)\
+    void CLASS::set##M(SET_TYPE M)                                     \
+    {                                                                  \
+        Q_D(CLASS);                                                    \
+        d->_p##M = M;                                                  \
+    }                                                                  \
+    GET_TYPE CLASS::get##M() const                                     \
+    {                                                                  \
+        return d_ptr->_p##M;                                           \
     }
 
-#define Q_PUBLIC_CREATE_CHAIN_Q_H(CLASS, TYPE, M) \
-public:                                       \
-    CLASS& set##M(TYPE M);              \
-    TYPE get##M() const;
+// Pimpl版本 - Move支持
+#define Q_PROPERTY_MOVE_CREATE_Q_EX_H(SET_TYPE, GET_TYPE, M)           \
+    static_assert(std::is_same_v<T, std::remove_cvref_t<T>>, "SET_TYPE must be a plain type (no cv, no reference) for move version"); \
+    static_assert(std::is_move_assignable_v<T> && std::is_move_constructible_v<T>, "SET_TYPE must be move assignable and move constructible"); \
+    Q_PROPERTY(SET_TYPE p##M READ get##M WRITE set##M NOTIFY p##M##Changed) \
+public:                                                                \
+    Q_SIGNAL void p##M##Changed();                                     \
+    void set##M(SET_TYPE M);                                           \
+    GET_TYPE get##M() const;
 
-#define Q_PUBLIC_CREATE_CHAIN_Q_CPP(CLASS, TYPE, M) \
-    CLASS& CLASS::set##M(TYPE M)          \
-    {                                           \
-        d->_p##M = M;                             \
-        return *this;                           \
-    }                                           \
-    TYPE CLASS::get##M() const                  \
-    {                                           \
-        return d->_p##M;                    \
+#define Q_PRIVATE_MOVE_CREATE_Q_EX_H(SET_TYPE, GET_TYPE, M)            \
+    static_assert(std::is_same_v<T, std::remove_cvref_t<T>>, "SET_TYPE must be a plain type (no cv, no reference) for move version"); \
+    static_assert(std::is_move_assignable_v<T> && std::is_move_constructible_v<T>, "SET_TYPE must be move assignable and move constructible"); \
+public:                                                                \
+    void set##M(SET_TYPE M);                                           \
+    GET_TYPE get##M() const;
+
+#define Q_PROPERTY_MOVE_CREATE_Q_EX_CPP(CLASS, SET_TYPE, GET_TYPE, M)  \
+    void CLASS::set##M(SET_TYPE M)                                     \
+    {                                                                  \
+        Q_D(CLASS);                                                    \
+        d->_p##M = std::move(M);                                       \
+        Q_EMIT p##M##Changed();                                        \
+    }                                                                  \
+    GET_TYPE CLASS::get##M() const                                     \
+    {                                                                  \
+        return d_ptr->_p##M;                                           \
     }
+
+#define Q_PRIVATE_MOVE_CREATE_Q_EX_CPP(CLASS, SET_TYPE, GET_TYPE, M)   \
+    void CLASS::set##M(SET_TYPE M)                                     \
+    {                                                                  \
+        Q_D(CLASS);                                                    \
+        d->_p##M = std::move(M);                                       \
+    }                                                                  \
+    GET_TYPE CLASS::get##M() const                                     \
+    {                                                                  \
+        return d_ptr->_p##M;                                           \
+    }
+
+// Pimpl简化版本
+#define Q_PROPERTY_CREATE_Q_H(TYPE, M)                                 \
+    Q_PROPERTY_CREATE_Q_EX_H(TYPE, TYPE, M)
+
+#define Q_PRIVATE_CREATE_Q_H(TYPE, M)                                  \
+    Q_PRIVATE_CREATE_Q_EX_H(TYPE, TYPE, M)
+
+#define Q_PROPERTY_CREATE_Q_CPP(CLASS, TYPE, M)                        \
+    Q_PROPERTY_CREATE_Q_EX_CPP(CLASS, TYPE, TYPE, M)
+
+#define Q_PRIVATE_CREATE_Q_CPP(CLASS, TYPE, M)                         \
+    Q_PRIVATE_CREATE_Q_EX_CPP(CLASS, TYPE, TYPE, M)
+
+#define Q_PROPERTY_MOVE_CREATE_Q_H(TYPE, M)                            \
+    Q_PROPERTY_MOVE_CREATE_Q_EX_H(TYPE, TYPE, M)
+
+#define Q_PRIVATE_MOVE_CREATE_Q_H(TYPE, M)                             \
+    Q_PRIVATE_MOVE_CREATE_Q_EX_H(TYPE, TYPE, M)
+
+#define Q_PROPERTY_MOVE_CREATE_Q_CPP(CLASS, TYPE, M)                   \
+    Q_PROPERTY_MOVE_CREATE_Q_EX_CPP(CLASS, TYPE, TYPE, M)
+
+#define Q_PRIVATE_MOVE_CREATE_Q_CPP(CLASS, TYPE, M)                    \
+    Q_PRIVATE_MOVE_CREATE_Q_EX_CPP(CLASS, TYPE, TYPE, M)
 
 #define Q_PROPERTY_CREATE_D(TYPE, M) \
 private:                             \
@@ -112,18 +217,8 @@ private:                             \
 private:                            \
     TYPE _p##M;
 
-#define Q_PRIVATE_CREATE(TYPE, M) \
-public:                           \
-    void set##M(TYPE M)           \
-    {                             \
-        _p##M = M;                \
-    }                             \
-    TYPE get##M() const           \
-    {                             \
-        return _p##M;             \
-    }                             \
-                                  \
-private:                          \
+#define Q_PROPERTY_MOVE_CREATE_D(TYPE, M) \
+private:                                  \
     TYPE _p##M;
 
 #define Q_Q_CREATE(CLASS)                                       \
@@ -133,7 +228,7 @@ protected:                                                      \
                                                                 \
 private:                                                        \
     Q_DISABLE_COPY(CLASS)                                       \
-    Q_DECLARE_PRIVATE(CLASS);
+    Q_DECLARE_PRIVATE(CLASS)
 
 #define Q_D_CREATE(CLASS) \
 protected:                \

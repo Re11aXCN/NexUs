@@ -2,7 +2,7 @@
 
 #include <QPainter>
 #include <QPixmap>
-Q_SINGLETON_CREATE_CPP(NXIcon)
+SINGLETON_CREATE_CPP(NXIcon)
 NXIcon::NXIcon()
 {
 }
