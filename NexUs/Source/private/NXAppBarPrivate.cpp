@@ -62,12 +62,15 @@ void NXAppBarPrivate::onStayTopButtonClicked()
     HWND hwnd = (HWND)_currentWinID;
     ::SetWindowPos(hwnd, _pIsStayTop ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 #else
-    Q_Q(const NXAppBar);
-    bool isVisible = q->window()->isVisible();
-    q->window()->setWindowFlag(Qt::WindowStaysOnTopHint, _pIsStayTop);
-    if (isVisible)
+    Q_Q(NXAppBar);
+    if (q->window()->isVisible())
     {
-        q->window()->show();
+        q->window()->windowHandle()->setFlag(Qt::WindowStaysOnTopHint, _pIsStayTop);
+        q->window()->update();
+    }
+    else
+    {
+        q->window()->setWindowFlag(Qt::WindowStaysOnTopHint, _pIsStayTop);
     }
 #endif
     _stayTopButton->setIsSelected(_pIsStayTop);
@@ -190,7 +193,7 @@ bool NXAppBarPrivate::_containsCursorToItem(QWidget* item)
     QRectF rect = QRectF(item->mapTo(item->window(), QPoint(0, 0)), item->size());
     if (item == q)
     {
-        if (_containsCursorToItem(_routeBackButton) || _containsCursorToItem(_navigationButton) || _containsCursorToItem(_pCustomWidget) || _containsCursorToItem(_stayTopButton) || _containsCursorToItem(_themeChangeButton) || _containsCursorToItem(_minButton) || _containsCursorToItem(_maxButton) || _containsCursorToItem(_closeButton))
+        if (_containsCursorToItem(_routeBackButton) || _containsCursorToItem(_routeForwardButton) || _containsCursorToItem(_navigationButton) || _containsCursorToItem(_pCustomWidget) || _containsCursorToItem(_stayTopButton) || _containsCursorToItem(_themeChangeButton) || _containsCursorToItem(_minButton) || _containsCursorToItem(_maxButton) || _containsCursorToItem(_closeButton))
         {
             return false;
         }

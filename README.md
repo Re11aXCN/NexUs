@@ -103,7 +103,7 @@
 
 > 1. 引入NXShadowGraphicsEffect、NXShadowWidget
 
-## # **Track Record 4**：	Commits on Sep 7, 2025
+## # **Track Record 4**：	Commits on Oct 10, 2025
 
 ## 1. Modify Optize1
 
@@ -181,7 +181,65 @@ https://github.com/ZongChang-Liu/ElaWidgetTools/commits/Zongchang_Liu?author=Zon
 >    _MOVE: setter拷贝大数据开销大，可以使用移动，但请你注意该类型必须实现移动构造/赋值或是POD类型，setter时候可以调用std::move传参数，但请注意生命周期
 >    ```
 >
->    
+> 3. 修改NXTableView、NXNavigationView、NXNavigation，优化已有的IndexWidget和指示器代码逻辑
+>
+> 4. NXTabWidget的双重释放问题Ela已经修复，NXCustomTabWidget、NXTabWidget合并Ela代码
+>
+> 5. NXTabBar版本适配
+>
+> ```NXTabBar.cpp
+> void NXTabBar::dragEnterEvent(QDragEnterEvent* event)
+> {
+>     Q_D(NXTabBar);
+>     if (event->mimeData()->property("DragType").toString() == "NXTabBarDrag")
+>     {
+>         event->acceptProposedAction();
+>         auto mimeData = const_cast<QMimeData*>(event->mimeData());
+>         d->_mimeData = mimeData;
+> #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+>         mimeData->setProperty("TabDropIndex", tabAt(event->position().toPoint()));
+> #else
+>         mimeData->setProperty("TabDropIndex", tabAt(event->pos()));
+> #endif
+>         Q_EMIT tabDragEnter(mimeData);
+>         QTimer::singleShot(10, this, [=]() {
+> #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+>             QPoint pressPos(tabRect(currentIndex()).x() + 110, 0);
+>             QMouseEvent pressEvent(QEvent::MouseButtonPress, pressPos, mapToGlobal(pressPos), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+> #else
+>             QMouseEvent pressEvent(QEvent::MouseButtonPress, QPoint(tabRect(currentIndex()).x() + 110, 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+> #endif
+>             QApplication::sendEvent(this, &pressEvent);
+> #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+>             QPoint movePos(event->position().toPoint().x(), 0);
+>             QMouseEvent moveEvent(QEvent::MouseMove, movePos, mapToGlobal(movePos), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+> #else
+>             QMouseEvent moveEvent(QEvent::MouseMove, QPoint(event->pos().x(), 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+> #endif
+>             QApplication::sendEvent(this, &moveEvent);
+>             });
+>     }
+>     QTabBar::dragEnterEvent(event);
+> }
+> 
+> void NXTabBar::dragMoveEvent(QDragMoveEvent* event)
+> {
+>     Q_D(NXTabBar);
+>     if (event->mimeData()->property("DragType").toString() == "NXTabBarDrag")
+>     {
+> #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+>         QPoint movePos(event->position().toPoint().x(), 0);
+>         QMouseEvent moveEvent(QEvent::MouseMove, movePos, mapToGlobal(movePos), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+> #else
+>         QMouseEvent moveEvent(QEvent::MouseMove, QPoint(event->pos().x(), 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+> #endif
+>         QApplication::sendEvent(this, &moveEvent);
+>     }
+>     QWidget::dragMoveEvent(event);
+> }
+> ```
+>
+> 6. CMake优化生成，可选自动打包和Export导出Ela三方库
 
 
 

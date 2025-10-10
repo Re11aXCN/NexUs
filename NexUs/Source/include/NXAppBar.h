@@ -72,6 +72,7 @@ public:
     NXAppBarType::ButtonFlags getWindowButtonFlags() const;
 
     void setRouteBackButtonEnable(bool isEnable);
+    void setRouteForwardButtonEnable(bool isEnable);
 
     void closeWindow();
 #ifdef Q_OS_WIN
@@ -83,6 +84,7 @@ public:
 #endif
 Q_SIGNALS:
     Q_SIGNAL void routeBackButtonClicked();
+    Q_SIGNAL void routeForwardButtonClicked();
     Q_SIGNAL void navigationButtonClicked();
     Q_SIGNAL void themeChangeButtonClicked();
     Q_SIGNAL void closeButtonClicked();

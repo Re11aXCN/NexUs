@@ -23,10 +23,10 @@
 Q_PROPERTY_CREATE_Q_CPP(NXSuggestBox, int, BorderRadius)
 Q_PROPERTY_CREATE_Q_CPP(NXSuggestBox, Qt::CaseSensitivity, CaseSensitivity)
 NXSuggestBox::NXSuggestBox(QWidget* parent)
-    : QWidget{parent}, d_ptr(new NXSuggestBoxPrivate())
+    : QWidget{ parent }, d_ptr(new NXSuggestBoxPrivate())
 {
     Q_D(NXSuggestBox);
-    setFixedSize(280, 35);
+    QWidget::setFixedSize(280, 35);
     d->q_ptr = this;
     d->_pBorderRadius = 6;
     d->_pCaseSensitivity = Qt::CaseInsensitive;
@@ -38,7 +38,7 @@ NXSuggestBox::NXSuggestBox(QWidget* parent)
     d->_darkSearchAction = new QAction(NXIcon::getInstance()->getNXIcon(NXIconType::MagnifyingGlass, QColor(0xFF, 0xFF, 0xFF)), "Search", this);
 
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXSuggestBoxPrivate::onThemeModeChanged);
+    connect(nxTheme, &NXTheme::themeModeChanged, d, &NXSuggestBoxPrivate::onThemeModeChanged);
     if (d->_themeMode == NXThemeType::Light)
     {
         d->_searchEdit->addAction(d->_lightSearchAction, QLineEdit::TrailingPosition);
@@ -48,13 +48,13 @@ NXSuggestBox::NXSuggestBox(QWidget* parent)
         d->_searchEdit->addAction(d->_darkSearchAction, QLineEdit::TrailingPosition);
     }
 
-    QObject::connect(d->_lightSearchAction, &QAction::triggered, this, [=](bool checked) {
+    connect(d->_lightSearchAction, &QAction::triggered, this, [=](bool checked) {
         //qDebug() << "Search";
-    });
+        });
 
-    QObject::connect(d->_darkSearchAction, &QAction::triggered, this, [=](bool checked) {
+    connect(d->_darkSearchAction, &QAction::triggered, this, [=](bool checked) {
         //qDebug() << "Search";
-    });
+        });
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     mainLayout->setSpacing(0);
     mainLayout->setContentsMargins(0, 0, 0, 0);
@@ -72,14 +72,17 @@ NXSuggestBox::NXSuggestBox(QWidget* parent)
     d->_searchView->setModel(d->_searchModel);
     d->_searchView->setItemDelegate(d->_searchDelegate);
     d->_searchViewBaseWidget->hide();
-    QObject::connect(d->_searchEdit, &NXLineEdit::textEdited, d, &NXSuggestBoxPrivate::onSearchEditTextEdit);
-    QObject::connect(d->_searchEdit, &NXLineEdit::focusIn, d, &NXSuggestBoxPrivate::onSearchEditTextEdit);
-    QObject::connect(d->_searchView, &NXBaseListView::clicked, d, &NXSuggestBoxPrivate::onSearchViewClicked);
+    connect(d->_searchEdit, &NXLineEdit::textEdited, d, &NXSuggestBoxPrivate::onSearchEditTextEdit);
+    connect(d->_searchEdit, &NXLineEdit::focusIn, d, &NXSuggestBoxPrivate::onSearchEditTextEdit);
+    connect(d->_searchView, &NXBaseListView::clicked, d, &NXSuggestBoxPrivate::onSearchViewClicked);
 
     // 焦点事件
-    QObject::connect(d->_searchEdit, &NXLineEdit::wmFocusOut, this, [d]() {
-        d->_startCloseAnimation();
-    });
+    connect(d->_searchEdit, &NXLineEdit::wmFocusOut, this, [=]() {
+        if (!d->_searchView->underMouse())
+        {
+            d->_startCloseAnimation();
+        }
+        });
 }
 
 NXSuggestBox::~NXSuggestBox()
@@ -90,6 +93,25 @@ void NXSuggestBox::setPlaceholderText(const QString& placeholderText)
 {
     Q_D(NXSuggestBox);
     d->_searchEdit->setPlaceholderText(placeholderText);
+}
+
+void NXSuggestBox::setFixedSize(const QSize& size)
+{
+    Q_D(NXSuggestBox);
+    d->_searchEdit->setFixedHeight(size.height());
+    QWidget::setFixedSize(size);
+}
+void NXSuggestBox::setFixedSize(int w, int h)
+{
+    Q_D(NXSuggestBox);
+    d->_searchEdit->setFixedHeight(h);
+    QWidget::setFixedSize(w, h);
+}
+void NXSuggestBox::setFixedHeight(int h)
+{
+    Q_D(NXSuggestBox);
+    d->_searchEdit->setFixedHeight(h);
+    QWidget::setFixedHeight(h);
 }
 
 QString NXSuggestBox::addSuggestion(const QString& suggestText, const QVariantMap& suggestData)
@@ -116,7 +138,7 @@ QString NXSuggestBox::addSuggestion(NXIconType::IconName icon, const QString& su
 void NXSuggestBox::removeSuggestion(const QString& suggestKey)
 {
     Q_D(NXSuggestBox);
-    foreach (auto suggest, d->_suggestionVector)
+    foreach(auto suggest, d->_suggestionVector)
     {
         if (suggest->getSuggestKey() == suggestKey)
         {

@@ -2,9 +2,6 @@
 
 project(NXPacketIO VERSION 2.0.0 LANGUAGES CXX)
 
-# 配置中间文件目录（包含平台后缀）
-set(CMAKE_OBJECT_OUTPUT_DIRECTORY "${NEXUS_BIN_DIR}/Intermediate/${PROJECT_NAME}_$<CONFIG>_${PLATFORM_SUFFIX}")
-
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
 add_definitions(-DNXPACKETIO_LIBRARY)
@@ -64,7 +61,6 @@ if (MSVC)
         DEBUG_POSTFIX "d"
         COMPILE_PDB_NAME ${PROJECT_NAME}
         COMPILE_PDB_NAME_DEBUG ${PROJECT_NAME}d
-        COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
     )
 endif ()
 
@@ -88,44 +84,63 @@ if (WIN32)
     )
 endif ()
 
-if(COMMAND func_install_target_files)
-    func_install_target_files(${PROJECT_NAME})
-endif()
+# 设置安装路径
+set(INSTALL_INCLUDE_DIR include/${PROJECT_NAME})
+set(INSTALL_LIB_DIR lib/${PROJECT_NAME})
+set(INSTALL_BIN_DIR bin/${PROJECT_NAME})
+set(INSTALL_SHARED_DIR shared/${PROJECT_NAME})
 
 install(
     TARGETS ${PROJECT_NAME}
     EXPORT ${PROJECT_NAME}
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
+    ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
+    LIBRARY DESTINATION ${INSTALL_LIB_DIR}
+    RUNTIME DESTINATION ${INSTALL_BIN_DIR}
 )
 
-install(FILES ${ORIGIN_HEADERS} DESTINATION include)
-install(FILES ${XIO_HEADERS} DESTINATION include/XIO)
-install(FILES ${GENIO_HEADERS} DESTINATION include/GenIO)
-install(FILES ${PACKETIO_HEADERS} DESTINATION include/PacketIO)
-install(FILES ${UTIL_HEADERS} DESTINATION include/Util)
+# 安装头文件
+install(FILES ${ORIGIN_HEADERS} DESTINATION ${INSTALL_INCLUDE_DIR})
+install(FILES ${XIO_HEADERS} DESTINATION ${INSTALL_INCLUDE_DIR}/XIO)
+install(FILES ${GENIO_HEADERS} DESTINATION ${INSTALL_INCLUDE_DIR}/GenIO)
+install(FILES ${PACKETIO_HEADERS} DESTINATION ${INSTALL_INCLUDE_DIR}/PacketIO)
+install(FILES ${UTIL_HEADERS} DESTINATION ${INSTALL_INCLUDE_DIR}/Util)
 
-set(INCLUDE_DIRS include)
+# 安装PDB文件（仅Windows MSVC）
+if(MSVC)
+    install(FILES 
+        $<TARGET_PDB_FILE:${PROJECT_NAME}>
+        DESTINATION ${INSTALL_BIN_DIR}
+        CONFIGURATIONS Debug RelWithDebInfo
+    )
+endif()
+
+set(INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/${INSTALL_INCLUDE_DIR})
 set(LIBRARIES ${PROJECT_NAME})
-set(LIB_DIR lib)
+set(LIB_DIR ${CMAKE_INSTALL_PREFIX}/${INSTALL_LIB_DIR})
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     VERSION 2.0.0
     COMPATIBILITY SameMajorVersion
 )
 
 configure_package_config_file(
-    ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in
-    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-    INSTALL_DESTINATION lib/cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    INSTALL_DESTINATION ${INSTALL_SHARED_DIR}
     PATH_VARS INCLUDE_DIRS LIBRARIES LIB_DIR
 )
 
 install(
-    FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake 
-          ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake 
-    DESTINATION lib/cmake
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake 
+          ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake 
+    DESTINATION ${INSTALL_SHARED_DIR}
 )
+
+if (AUTO_INSTALL_AFTER_BUILD)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} --install . --config $<CONFIG>
+        COMMENT "Installing ${PROJECT_NAME}"
+    )
+endif()

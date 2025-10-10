@@ -20,10 +20,9 @@ public:
     NXToolTip* getCompactToolTip() const;
     void navigationNodeStateChange(QVariantMap data);
     void setNavigationNodeDragAndDropEnable(bool isEnable);
-    QAbstractItemView::DropIndicatorPosition dropIndicatorPositionOverride() const;
     Q_SLOT void onCustomContextMenuRequested(const QPoint& pos);
 Q_SIGNALS:
-    Q_SIGNAL void navigationPositionSwapped(const QModelIndex& index);
+    Q_SIGNAL void navigationPositionSwapped(const QModelIndex& from, const QModelIndex& to);
     Q_SIGNAL void navigationClicked(const QModelIndex& index);
     Q_SIGNAL void navigationOpenNewWindow(const QString& nodeKey);
     Q_SIGNAL void navigationCloseCurrentWindow(const QString& nodeKey);
@@ -33,19 +32,21 @@ protected:
     virtual void mouseDoubleClickEvent(QMouseEvent* event) override;
     virtual void mouseReleaseEvent(QMouseEvent* event) override;
     virtual void dragEnterEvent(QDragEnterEvent* event) override;
+    virtual void dragLeaveEvent(QDragLeaveEvent* event) override;
     virtual void dropEvent(QDropEvent* event) override;
     virtual void dragMoveEvent(QDragMoveEvent* event) override;
     virtual void paintEvent(QPaintEvent* event) override;
     virtual bool eventFilter(QObject* watched, QEvent* event) override;
 
 private:
-    QModelIndex _hoveredIndex; 
     NXNavigationStyle* _navigationStyle{nullptr};
     NXToolTip* _compactToolTip{nullptr};
     bool _canProceedWithDragDrop(QAbstractItemView::DropIndicatorPosition dropIndicatorPosition,
         const QModelIndex& draggedIndex, const QModelIndex& targetIndex,
         const QModelIndex& draggedPreviousIndex, const QModelIndex& draggedNextIndex,
         const QModelIndex& targetParentIndex, NXNavigationModel* model);
+    QAbstractItemView::DropIndicatorPosition _dropIndicatorPosition(const QModelIndex& dropTargetIndex) const;
+    void _doCompactToolTip();
 };
 
 #endif // NXNAVIGATIONVIEW_H

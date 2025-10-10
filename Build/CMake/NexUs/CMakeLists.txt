@@ -9,17 +9,6 @@ FILE(GLOB ORIGIN Source/include/*.h Source/*.cpp)
 FILE(GLOB PRIVATE Source/private/*.h Source/private/*.cpp)
 FILE(GLOB DEVELOPER Source/DeveloperComponents/*.h Source/DeveloperComponents/*.cpp)
 
-# 以下内容已 discarded 无需关心
-# 手动生成moc，需要在mocs_compilation.cpp #include moc_NXDef.cpp
-# set(MOC_HEADERS 
-#     ${CMAKE_CURRENT_SOURCE_DIR}/Source/include/NXDef.h
-# )
-# if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-#     qt6_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
-# else()
-#     qt5_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
-# endif()
-
 source_group(include FILES ${ORIGIN})
 source_group(private FILES ${PRIVATE})
 source_group(DeveloperComponents FILES ${DEVELOPER})
@@ -48,13 +37,14 @@ else ()
 endif ()
 
 FILE(GLOB EXPORT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/Source/include/*.h)
+
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Source>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Source/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Source/private>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Source/DeveloperComponents>
-    $<INSTALL_INTERFACE:${PROJECT_NAME}/include>
+    $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>
 )
 
 if (MINGW)
@@ -82,70 +72,86 @@ if (MSVC)
         DEBUG_POSTFIX "d"
         COMPILE_PDB_NAME ${PROJECT_NAME}
         COMPILE_PDB_NAME_DEBUG ${PROJECT_NAME}d
-        COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
     )
 endif ()
 
 if (WIN32)
     target_link_libraries(${PROJECT_NAME} PUBLIC
         Qt${QT_VERSION_MAJOR}::Widgets
+        Qt${QT_VERSION_MAJOR}::WidgetsPrivate
         D3D11
         DXGI
     )
 else ()
     target_link_libraries(${PROJECT_NAME} PUBLIC
         Qt${QT_VERSION_MAJOR}::Widgets
+        Qt${QT_VERSION_MAJOR}::WidgetsPrivate
     )
 endif ()
 
-if(COMMAND func_install_target_files)
-    func_install_target_files(${PROJECT_NAME})
-endif()
+set(INSTALL_INCLUDE_DIR include/${PROJECT_NAME})
+set(INSTALL_LIB_DIR lib/${PROJECT_NAME})
+set(INSTALL_BIN_DIR bin/${PROJECT_NAME})
+set(INSTALL_SHARED_DIR shared/${PROJECT_NAME})
 
+# 安装目标文件
 install(
     TARGETS ${PROJECT_NAME}
     EXPORT ${PROJECT_NAME}
-    ARCHIVE DESTINATION ${PROJECT_NAME}/lib
-    LIBRARY DESTINATION ${PROJECT_NAME}/lib
-    RUNTIME DESTINATION ${PROJECT_NAME}/bin
+    ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
+    LIBRARY DESTINATION ${INSTALL_LIB_DIR}
+    RUNTIME DESTINATION ${INSTALL_BIN_DIR}
 )
-install(TARGETS ${PROJECT_NAME}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/NexUsExample
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/NexUsExample
-)
-if (MSVC AND NOT LIB_TYPE STREQUAL "STATIC")
-    install(
-        FILES $<TARGET_PDB_FILE:${PROJECT_NAME}>
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/NexUsExample OPTIONAL)
-endif ()
 
-install(FILES ${EXPORT_HEADERS} DESTINATION ${PROJECT_NAME}/include)
+# 安装头文件
+install(FILES ${EXPORT_HEADERS} DESTINATION ${INSTALL_INCLUDE_DIR})
 
-set(INCLUDE_DIRS include)
+# 安装PDB文件（仅Windows MSVC）
+if(MSVC)
+    install(FILES 
+        $<TARGET_PDB_FILE:${PROJECT_NAME}>
+        DESTINATION ${INSTALL_BIN_DIR}
+        CONFIGURATIONS Debug RelWithDebInfo
+    )
+endif()
+
+# 设置配置变量
+set(INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/${INSTALL_INCLUDE_DIR})
 set(LIBRARIES ${PROJECT_NAME})
-set(LIB_DIR lib)
+set(LIB_DIR ${CMAKE_INSTALL_PREFIX}/${INSTALL_LIB_DIR})
 
+# 安装导出目标
 install(
     EXPORT ${PROJECT_NAME}
     FILE ${PROJECT_NAME}Targets.cmake
-    DESTINATION ${PROJECT_NAME}/lib/cmake
+    DESTINATION ${INSTALL_SHARED_DIR}
 )
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     VERSION 2.0.0
     COMPATIBILITY SameMajorVersion
 )
 
 configure_package_config_file(
-    ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in
-    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-    INSTALL_DESTINATION lib/cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    INSTALL_DESTINATION ${INSTALL_SHARED_DIR}
     PATH_VARS INCLUDE_DIRS LIBRARIES LIB_DIR
-    INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
 )
 
 install(
-    FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake DESTINATION ${PROJECT_NAME}/lib/cmake
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake 
+          ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake 
+    DESTINATION ${INSTALL_SHARED_DIR}
 )
+
+# 自动安装后构建命令
+if (AUTO_INSTALL_AFTER_BUILD)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} --install "${CMAKE_BINARY_DIR}" --config $<CONFIG>
+        COMMENT "Installing ${PROJECT_NAME} to ${CMAKE_INSTALL_PREFIX}"
+        VERBATIM
+    )
+endif()

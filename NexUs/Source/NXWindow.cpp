@@ -44,13 +44,14 @@ NXWindow::NXWindow(QWidget* parent)
     QObject::connect(d->_appBar, &NXAppBar::routeBackButtonClicked, this, []() {
         NXNavigationRouter::getInstance()->navigationRouteBack();
     });
+    QObject::connect(d->_appBar, &NXAppBar::routeForwardButtonClicked, this, []() {
+        NXNavigationRouter::getInstance()->navigationRouteForward();
+        });
     QObject::connect(d->_appBar, &NXAppBar::closeButtonClicked, this, &NXWindow::closeButtonClicked);
     // 导航栏
     d->_navigationBar = new NXNavigationBar(this);
     // 返回按钮状态变更
-    QObject::connect(NXNavigationRouter::getInstance(), &NXNavigationRouter::navigationRouterStateChanged, this, [d](bool isEnable) {
-        d->_appBar->setRouteBackButtonEnable(isEnable);
-    });
+    connect(NXNavigationRouter::getInstance(), &NXNavigationRouter::navigationRouterStateChanged, d, &NXWindowPrivate::onNavigationRouterStateChanged);
 
     // 转发用户卡片点击信号
     QObject::connect(d->_navigationBar, &NXNavigationBar::userInfoCardClicked, this, &NXWindow::userInfoCardClicked);
@@ -92,7 +93,7 @@ NXWindow::NXWindow(QWidget* parent)
     // 中心堆栈窗口
     d->_centerStackedWidget = new NXCentralStackedWidget(this);
     d->_centerStackedWidget->setIsTransparent(true);
-    d->_centerStackedWidget->addWidget(navigationCentralWidget);
+    d->_centerStackedWidget->getContainerStackedWidget()->addWidget(navigationCentralWidget);
     setCentralWidget(d->_centerStackedWidget);
     setObjectName("NXWindow");
     setStyleSheet("#NXWindow{background-color:transparent;}");
@@ -178,6 +179,19 @@ QWidget* NXWindow::getCustomWidget() const
     return d->_appBar->getCustomWidget();
 }
 
+void NXWindow::setCentralCustomWidget(QWidget* customWidget)
+{
+    Q_D(NXWindow);
+    d->_navigationCenterStackedWidget->setCustomWidget(customWidget);
+    Q_EMIT centralCustomWidgetChanged();
+}
+
+QWidget* NXWindow::getCentralCustomWidget() const
+{
+    Q_D(const NXWindow);
+    return d->_navigationCenterStackedWidget->getCustomWidget();
+}
+
 void NXWindow::setCustomMenu(QMenu* customMenu)
 {
     Q_D(NXWindow);
@@ -245,13 +259,16 @@ int NXWindow::getNavigationBarWidth() const
 void NXWindow::setCurrentStackIndex(int currentStackIndex)
 {
     Q_D(NXWindow);
-    if (currentStackIndex >= d->_centerStackedWidget->count() || currentStackIndex < 0 || currentStackIndex == d->_centralStackTargetIndex) {
+    if (currentStackIndex >= d->_centerStackedWidget->getContainerStackedWidget()->count() || currentStackIndex < 0 || currentStackIndex == d->_centralStackTargetIndex)
+    {
         return;
     }
     d->_centralStackTargetIndex = currentStackIndex;
     QVariantMap routeData;
-    routeData.insert("NXCentralStackIndex", d->_centerStackedWidget->currentIndex());
-    NXNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRouteBack", routeData);
+    int currentCenterStackedWidgetIndex = d->_centerStackedWidget->getContainerStackedWidget()->currentIndex();
+    routeData.insert("NXBackCentralStackIndex", currentCenterStackedWidgetIndex);
+    routeData.insert("NXForwardCentralStackIndex", currentStackIndex);
+    NXNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRoute", routeData);
     d->_centerStackedWidget->doWindowStackSwitch(d->_pStackSwitchMode, currentStackIndex, false);
     Q_EMIT pCurrentStackIndexChanged();
 }
@@ -259,7 +276,7 @@ void NXWindow::setCurrentStackIndex(int currentStackIndex)
 int NXWindow::getCurrentStackIndex() const
 {
     Q_D(const NXWindow);
-    return d->_centerStackedWidget->currentIndex();
+    return d->_centerStackedWidget->getContainerStackedWidget()->currentIndex();
 }
 
 void NXWindow::moveToCenter()
@@ -326,10 +343,16 @@ void NXWindow::setUserInfoCardSubTitle(const QString& subTitle)
     d->_navigationBar->setUserInfoCardSubTitle(subTitle);
 }
 
-NXNavigationType::NodeOperateReturnType NXWindow::setNodeTitle(const QString& nodeTitle, const QString& nodeKey)
+NXNavigationType::NodeOperateReturnType NXWindow::setNavigationNodeTitle(const QString& nodeTitle, const QString& nodeKey)
 {
     Q_D(NXWindow);
-    return d->_navigationBar->setNodeTitle(nodeTitle, nodeKey);
+    return d->_navigationBar->setNavigationNodeTitle(nodeTitle, nodeKey);
+}
+
+QString NXWindow::getNavigationNodeTitle(const QString& nodeKey) const
+{
+    Q_D(const NXWindow);
+    return d->_navigationBar->getNavigationNodeTitle(nodeKey);
 }
 
 NXNavigationType::NodeOperateReturnType NXWindow::navigationPageNodeSwitch(const QString& targetPageKey)
@@ -356,28 +379,48 @@ NodeOperateReturnTypeWithKey NXWindow::addExpanderNode(const QString& expanderTi
     return d->_navigationBar->addExpanderNode(expanderTitle, targetExpanderKey, awesome);
 }
 
-NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, NXIconType::IconName awesome) const
+NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, NXIconType::IconName awesome)
 {
-    Q_D(const NXWindow);
-    return d->_navigationBar->addPageNode(pageTitle, page, awesome);
+    Q_D(NXWindow);
+    NodeOperateReturnTypeWithKey returnData = d->_navigationBar->addPageNode(pageTitle, page, awesome);
+    if (returnData.nodeOperateReturnType == NXNavigationType::Success)
+    {
+        d->_pageMetaMap.insert(page->property("NXPageKey").toString(), page->metaObject());
+    }
+    return returnData;
 }
 
-NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, NXIconType::IconName awesome) const
+NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, NXIconType::IconName awesome)
 {
-    Q_D(const NXWindow);
-    return d->_navigationBar->addPageNode(pageTitle, page, targetExpanderKey, awesome);
+    Q_D(NXWindow);
+    NodeOperateReturnTypeWithKey returnData = d->_navigationBar->addPageNode(pageTitle, page, targetExpanderKey, awesome);
+    if (returnData.nodeOperateReturnType == NXNavigationType::Success)
+    {
+        d->_pageMetaMap.insert(page->property("NXPageKey").toString(), page->metaObject());
+    }
+    return returnData;
 }
 
-NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, int keyPoints, NXIconType::IconName awesome) const
+NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, int keyPoints, NXIconType::IconName awesome)
 {
-    Q_D(const NXWindow);
-    return d->_navigationBar->addPageNode(pageTitle, page, keyPoints, awesome);
+    Q_D(NXWindow);
+    NodeOperateReturnTypeWithKey returnData = d->_navigationBar->addPageNode(pageTitle, page, keyPoints, awesome);
+    if (returnData.nodeOperateReturnType == NXNavigationType::Success)
+    {
+        d->_pageMetaMap.insert(page->property("NXPageKey").toString(), page->metaObject());
+    }
+    return returnData;
 }
 
-NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, int keyPoints, NXIconType::IconName awesome) const
+NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, int keyPoints, NXIconType::IconName awesome)
 {
-    Q_D(const NXWindow);
-    return d->_navigationBar->addPageNode(pageTitle, page, targetExpanderKey, keyPoints, awesome);
+    Q_D(NXWindow);
+    NodeOperateReturnTypeWithKey returnData = d->_navigationBar->addPageNode(pageTitle, page, targetExpanderKey, keyPoints, awesome);
+    if (returnData.nodeOperateReturnType == NXNavigationType::Success)
+    {
+        d->_pageMetaMap.insert(page->property("NXPageKey").toString(), page->metaObject());
+    }
+    return returnData;
 }
 
 NodeOperateReturnTypeWithKey NXWindow::addFooterNode(const QString& footerTitle, int keyPoints, NXIconType::IconName awesome) const
@@ -386,10 +429,15 @@ NodeOperateReturnTypeWithKey NXWindow::addFooterNode(const QString& footerTitle,
     return d->_navigationBar->addFooterNode(footerTitle, nullptr, keyPoints, awesome);
 }
 
-NodeOperateReturnTypeWithKey NXWindow::addFooterNode(const QString& footerTitle, QWidget* page, int keyPoints, NXIconType::IconName awesome) const
+NodeOperateReturnTypeWithKey NXWindow::addFooterNode(const QString& footerTitle, QWidget* page, int keyPoints, NXIconType::IconName awesome)
 {
-    Q_D(const NXWindow);
-    return d->_navigationBar->addFooterNode(footerTitle, page, keyPoints, awesome);
+    Q_D(NXWindow);
+    NodeOperateReturnTypeWithKey returnData = d->_navigationBar->addFooterNode(footerTitle, page, keyPoints, awesome);
+    if (page && returnData.nodeOperateReturnType == NXNavigationType::Success)
+    {
+        d->_pageMetaMap.insert(page->property("NXPageKey").toString(), page->metaObject());
+    }
+    return returnData;
 }
 
 void NXWindow::addCentralWidget(QWidget* centralWidget)
@@ -399,17 +447,17 @@ void NXWindow::addCentralWidget(QWidget* centralWidget)
     {
         return;
     }
-    d->_centerStackedWidget->addWidget(centralWidget);
+    d->_centerStackedWidget->getContainerStackedWidget()->addWidget(centralWidget);
 }
 
 QWidget* NXWindow::getCentralWidget(int index) const
 {
     Q_D(const NXWindow);
-    if (index >= d->_centerStackedWidget->count() || index < 1)
+    if (index >= d->_centerStackedWidget->getContainerStackedWidget()->count() || index < 1)
     {
         return nullptr;
     }
-    return d->_centerStackedWidget->widget(index);
+    return d->_centerStackedWidget->getContainerStackedWidget()->widget(index);
 }
 
 QString NXWindow::getNavigationRootKey() const
@@ -430,10 +478,10 @@ void NXWindow::expandNavigationNode(const QString& expanderKey)
     d->_navigationBar->expandNavigationNode(expanderKey);
 }
 
-void NXWindow::collpaseNavigationNode(const QString& expanderKey)
+void NXWindow::collapseNavigationNode(const QString& expanderKey)
 {
     Q_D(NXWindow);
-    d->_navigationBar->collpaseNavigationNode(expanderKey);
+    d->_navigationBar->collapseNavigationNode(expanderKey);
 }
 
 void NXWindow::removeNavigationNode(const QString& nodeKey) const
@@ -447,6 +495,30 @@ int NXWindow::getPageOpenInNewWindowCount(const QString& nodeKey) const
     Q_D(const NXWindow);
     return d->_navigationBar->getPageOpenInNewWindowCount(nodeKey);
 }
+
+void NXWindow::backtrackNavigationNode(const QString& nodeKey) 
+{
+    Q_D(NXWindow);
+    const QMetaObject* meta = d->_pageMetaMap.value(nodeKey);
+    if (!meta)
+    {
+        return;
+    }
+    QWidget* widget = dynamic_cast<QWidget*>(meta->newInstance());
+    if (widget)
+    {
+        auto originWidget = d->_routeMap[nodeKey];
+        int currentIndex = d->_navigationCenterStackedWidget->getContainerStackedWidget()->currentIndex();
+        int originIndex = d->_navigationCenterStackedWidget->getContainerStackedWidget()->indexOf(originWidget);
+        widget->setProperty("NXPageKey", nodeKey);
+        d->_routeMap[nodeKey] = widget;
+        d->_navigationCenterStackedWidget->getContainerStackedWidget()->insertWidget(originIndex, widget);
+        d->_navigationCenterStackedWidget->getContainerStackedWidget()->setCurrentIndex(currentIndex);
+        d->_navigationCenterStackedWidget->getContainerStackedWidget()->removeWidget(originWidget);
+        originWidget->deleteLater();
+    }
+}
+
 
 void NXWindow::setNodeKeyPoints(const QString& nodeKey, int keyPoints)
 {
@@ -469,13 +541,13 @@ void NXWindow::navigation(const QString& pageKey)
 int NXWindow::getCurrentNavigationIndex() const
 {
     Q_D(const NXWindow);
-    return d->_navigationCenterStackedWidget->currentIndex();
+    return d->_navigationCenterStackedWidget->getContainerStackedWidget()->currentIndex();
 }
 
 QString NXWindow::getCurrentNavigationPageKey() const
 {
     Q_D(const NXWindow);
-    return d->_navigationCenterStackedWidget->currentWidget()->property("NXPageKey").toString();
+    return d->_navigationCenterStackedWidget->getContainerStackedWidget()->currentWidget()->property("NXPageKey").toString();
 }
 
 void NXWindow::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable)

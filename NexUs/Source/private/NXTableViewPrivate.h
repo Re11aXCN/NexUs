@@ -14,7 +14,7 @@ public:
 	explicit NXModelIndexWidgetPrivate(QObject* parent = nullptr);
 	~NXModelIndexWidgetPrivate();
 private:
-	QModelIndex _index;
+	QModelIndex _pIndex;
 };
 
 class NXTableView;

@@ -100,10 +100,6 @@ if (MSVC)
     )
 endif ()
 
-if(COMMAND func_install_target_files)
-    func_install_target_files(${PROJECT_NAME})
-endif()
-
 if (${QT_VERSION} VERSION_LESS 6.1.0)
     set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.${PROJECT_NAME})
 endif ()
@@ -113,39 +109,24 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
-    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}"
-    VS_DEBUGGER_COMMAND "${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/${PROJECT_NAME}.exe"
+    VS_DEBUGGER_WORKING_DIRECTORY "${NEXUS_BIN_DIR}"
+    VS_DEBUGGER_COMMAND "${NEXUS_BIN_DIR}/${PROJECT_NAME}.exe"
 )
 
 if (QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(${PROJECT_NAME})
 endif ()
 
-include(GNUInstallDirs)
-install(TARGETS ${PROJECT_NAME}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
-)
-if (MSVC)
-    install(
-        FILES $<TARGET_PDB_FILE:${PROJECT_NAME}>
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME} OPTIONAL)
-endif ()
+option(PACKAGE_NEXUSEXAMPLE "Package NexUsExample" OFF)
 find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${QT_SDK_DIR}/bin")
-if (WIN32)
-    install(CODE "
-    if(EXISTS \"${WINDEPLOYQT_EXECUTABLE}\" AND NOT EXISTS \"${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/platforms\")
-        execute_process(
-            COMMAND \"${CMAKE_COMMAND}\" -E env PATH=\"${QT_SDK_DIR}/bin\"
-                \"${WINDEPLOYQT_EXECUTABLE}\"
-                \"$<TARGET_FILE_DIR:${PROJECT_NAME}>/$<TARGET_FILE_NAME:${PROJECT_NAME}>\"
-                --dir \"${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}\"
+if (WIN32 AND WINDEPLOYQT_EXECUTABLE AND PACKAGE_NEXUSEXAMPLE)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND "${WINDEPLOYQT_EXECUTABLE}"
+                "$<TARGET_FILE:${PROJECT_NAME}>"
                 --no-compiler-runtime
                 --no-system-d3d-compiler
                 --no-opengl-sw
-                --verbose 1
-        )
-    endif()"
+        COMMENT "Running windeployqt for ${PROJECT_NAME}"
+        VERBATIM
     )
 endif ()
-

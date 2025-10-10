@@ -52,19 +52,19 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>6.6.2_msvc2019_64</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;widgets-private</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
     <QtLinkNatvisFile>true</QtLinkNatvisFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>6.6.2_msvc2019_64</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;widgets-private</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
     <QtLinkNatvisFile>true</QtLinkNatvisFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="QtSettings">
     <QtInstall>6.6.2_msvc2019_64</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;widgets-private</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
     <QtLinkNatvisFile>true</QtLinkNatvisFile>
   </PropertyGroup>

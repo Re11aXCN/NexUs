@@ -77,16 +77,16 @@ void NXDrawerArea::expand()
 {
     Q_D(NXDrawerArea);
     d->_drawerHeader->setIsExpand(true);
-    d->_drawerHeader->doExpandOrCollpaseAnimation();
+    d->_drawerHeader->doExpandOrCollapseAnimation();
     d->_drawerContainer->doDrawerAnimation(true);
     Q_EMIT expandStateChanged(true);
 }
 
-void NXDrawerArea::collpase()
+void NXDrawerArea::collapse()
 {
     Q_D(NXDrawerArea);
     d->_drawerHeader->setIsExpand(false);
-    d->_drawerHeader->doExpandOrCollpaseAnimation();
+    d->_drawerHeader->doExpandOrCollapseAnimation();
     d->_drawerContainer->doDrawerAnimation(false);
     Q_EMIT expandStateChanged(false);
 }

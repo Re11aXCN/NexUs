@@ -4,11 +4,13 @@
 
 NXNavigationNode::NXNavigationNode(const QString& nodeTitle, NXNavigationNode* parent)
     : QObject(parent)
+    , _pNodeKey(QString{})
 {
     _pDepth = 0;
     _pKeyPoints = 0;
-    _nodeKey = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
-    _nodeTitle = nodeTitle;
+    _pNodeKey = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
+    _pNodeTitle = nodeTitle;
+    _pIsExpanded = false;
     _pIsRootNode = false;
     _pIsFooterNode = false;
     _pIsHasFooterPage = false;
@@ -19,36 +21,26 @@ NXNavigationNode::NXNavigationNode(const QString& nodeTitle, NXNavigationNode* p
 
 NXNavigationNode::~NXNavigationNode()
 {
-    //qDebug() << std::format("Title: {} Key: {}\n", _nodeTitle.toStdString(), _nodeKey.toStdString());
-    //qDebug() << _nodeTitle + " Prepare to delete " __FUNCTION__ "\n";
+    //qDebug() << std::format("Title: {} Key: {}\n", _pNodeTitle.toStdString(), _pNodeKey.toStdString());
+    //qDebug() << _pNodeTitle + " Prepare to delete " __FUNCTION__ "\n";
     //qDeleteAll(_pChildrenNodes);
-    //qDebug() << _nodeTitle + " Already delete " __FUNCTION__ "\n";
+    //qDebug() << _pNodeTitle + " Already delete " __FUNCTION__ "\n";
 }
 
 QString NXNavigationNode::getNodeKey() const
 {
-    return _nodeKey;
-}
-
-
-void NXNavigationNode::setNodeTitle(const QString& nodeTitle)
-{
-    _nodeTitle = nodeTitle;
-}
-QString NXNavigationNode::getNodeTitle() const
-{
-    return _nodeTitle;
+    return _pNodeKey;
 }
 
 void NXNavigationNode::setIsExpanded(bool isExpanded)
 {
-    _isExpanded = isExpanded;
+    _pIsExpanded = isExpanded;
     setChildVisible(isExpanded);
 }
 
 bool NXNavigationNode::getIsExpanded() const
 {
-    return _isExpanded;
+    return _pIsExpanded;
 }
 
 void NXNavigationNode::setChildVisible(bool isVisible)
@@ -189,11 +181,11 @@ int NXNavigationNode::getRow() const
     return 0;
 }
 
-void NXNavigationNode::swapShowInfo(NXNavigationNode* other) 
+void NXNavigationNode::swapVisual(NXNavigationNode* other)
 {
     if(this == other || other == nullptr) return;
     std::swap(this->_pAwesome, other->_pAwesome);
     std::swap(this->_pKeyPoints, other->_pKeyPoints);
-    std::swap(this->_nodeTitle, other->_nodeTitle);
-    std::swap(this->_nodeKey, other->_nodeKey);
+    std::swap(this->_pNodeTitle, other->_pNodeTitle);
+    std::swap(this->_pNodeKey, other->_pNodeKey);
 }

@@ -20,16 +20,14 @@ class NXNavigationNode : public QObject
     Q_PROPERTY_CREATE(bool, IsHasFooterPage)
     Q_PROPERTY_CREATE(bool, IsExpanderNode)
     Q_PROPERTY_CREATE(bool, IsVisible)
-    bool _isExpanded{ false };
-    QString _nodeKey{};
-    QString _nodeTitle{};
+    Q_PROPERTY_CREATE_D(bool, IsExpanded)
+    Q_PROPERTY_CREATE_D(QString, NodeKey)
+    Q_PROPERTY_CREATE_EX(const QString&, QString, NodeTitle)
 public:
     explicit NXNavigationNode(const QString& nodeTitle, NXNavigationNode* parent = nullptr);
-    ~NXNavigationNode();
+    ~NXNavigationNode() override;
 
     QString getNodeKey() const;
-    void setNodeTitle(const QString& nodeTitle);
-    QString getNodeTitle() const;
 
     void setIsExpanded(bool isExpanded);
     bool getIsExpanded() const;
@@ -49,7 +47,7 @@ public:
 
     int getRow() const;
 
-    void swapShowInfo(NXNavigationNode* other);
+    void swapVisual(NXNavigationNode* other);
 };
 
 #endif // NXNAVIGATIONNODE_H

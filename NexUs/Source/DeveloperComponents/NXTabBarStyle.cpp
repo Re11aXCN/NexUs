@@ -8,6 +8,7 @@
 #include "NXTheme.h"
 NXTabBarStyle::NXTabBarStyle(QStyle* style)
 {
+    _pTabSize = QSize(220, 35);
     _themeMode = nxTheme->getThemeMode();
     QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
@@ -77,6 +78,15 @@ void NXTabBarStyle::drawControl(ControlElement element, const QStyleOption* opti
     int topRadius = 7;
     switch (element)
     {
+    case QStyle::CE_TabBarTab:
+    {
+        if (const QStyleOptionTab* topt = qstyleoption_cast<const QStyleOptionTab*>(option))
+        {
+            drawControl(CE_TabBarTabShape, topt, painter, widget);
+            drawControl(CE_TabBarTabLabel, topt, painter, widget);
+            return;
+        }
+    }
     case QStyle::CE_TabBarTabShape:
     {
         //背景绘制
@@ -91,7 +101,7 @@ void NXTabBarStyle::drawControl(ControlElement element, const QStyleOption* opti
                 //选中背景绘制
                 tabRect.setLeft(tabRect.left() - margin);
                 tabRect.setRight(tabRect.right() + margin + 1);
-                painter->setBrush(NXThemeColor(_themeMode, BasicSelectedAlpha));
+                painter->setBrush(NXThemeColor(_themeMode, BasicSelectedHover));
                 QPainterPath path;
                 path.moveTo(tabRect.x(), tabRect.bottom() + 1);
                 path.arcTo(QRectF(tabRect.x() - margin, tabRect.bottom() - margin * 2 + 1, margin * 2, margin * 2), -90, 90);
@@ -114,7 +124,7 @@ void NXTabBarStyle::drawControl(ControlElement element, const QStyleOption* opti
             {
                 if (topt->state.testFlag(QStyle::State_MouseOver))
                 {
-                    painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
+                    painter->setBrush(NXThemeColor(_themeMode, BasicHover));
                 }
                 else
                 {
@@ -180,7 +190,7 @@ QSize NXTabBarStyle::sizeFromContents(ContentsType type, const QStyleOption* opt
     {
     case CT_TabBarTab:
     {
-        return QSize(220, 35);
+        return _pTabSize;
     }
     default:
     {
@@ -196,6 +206,8 @@ QRect NXTabBarStyle::subElementRect(SubElement element, const QStyleOption* opti
     {
     case QStyle::SE_TabBarScrollLeftButton:
     case QStyle::SE_TabBarScrollRightButton:
+    case QStyle::SE_TabBarTearIndicatorLeft:
+    case QStyle::SE_TabBarTearIndicatorRight:
     {
         return QRect();
     }

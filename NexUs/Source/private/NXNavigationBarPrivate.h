@@ -16,7 +16,6 @@ class NXNavigationNode;
 class NXNavigationModel;
 class NXNavigationView;
 class NXNavigationStyle;
-class NXNavigationDelegate;
 class NXSuggestBox;
 class NXInteractiveCard;
 
@@ -42,7 +41,7 @@ public:
     Q_SLOT void onNavigationButtonClicked();
     Q_SLOT void onNavigationOpenNewWindow(const QString& nodeKey);
     Q_SLOT void onNavigationCloseCurrentWindow(const QString& nodeKey);
-    Q_INVOKABLE void onNavigationRouteBack(QVariantMap routeData);
+    Q_INVOKABLE void onNavigationRoute(QVariantMap routeData);
 
     //核心跳转逻辑
     void onTreeViewClicked(const QModelIndex& index, bool isLogRoute = true, bool isRouteBack = false);
@@ -80,7 +79,7 @@ private:
     void _initNodeModelIndex(const QModelIndex& parentIndex);
     void _resetNodeSelected();
     void _expandSelectedNodeParent();
-    void _expandOrCollpaseExpanderNode(NXNavigationNode* node, bool isExpand);
+    void _expandOrCollapseExpanderNode(NXNavigationNode* node, bool isExpand);
 
     void _addStackedPage(QWidget* page, QString pageKey);
     void _addFooterPage(QWidget* page, QString footKey);

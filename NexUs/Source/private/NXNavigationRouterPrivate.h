@@ -1,7 +1,7 @@
 ﻿#ifndef NXNAVIGATIONROUTERPRIVATE_H
 #define NXNAVIGATIONROUTERPRIVATE_H
 #include <QObject>
-#include <QQueue>
+#include <QVector>
 #include <QVariantMap>
 
 #include "NXProperty.h"
@@ -16,7 +16,8 @@ public:
     ~NXNavigationRouterPrivate() override;
 
 private:
-    QQueue<QVariantMap> _routeQueue;
+    int _currentIndex{ -1 };
+    QVector<QVariantMap> _routeList;
 };
 
 #endif // NXNAVIGATIONROUTERPRIVATE_H

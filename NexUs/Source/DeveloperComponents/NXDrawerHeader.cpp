@@ -44,7 +44,7 @@ void NXDrawerHeader::setHeaderWidget(QWidget* widget)
     _headerWidget = widget;
 }
 
-void NXDrawerHeader::doExpandOrCollpaseAnimation()
+void NXDrawerHeader::doExpandOrCollapseAnimation()
 {
     QPropertyAnimation* rotateAnimation = new QPropertyAnimation(this, "pExpandIconRotate");
     QObject::connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
@@ -94,7 +94,7 @@ void NXDrawerHeader::mouseReleaseEvent(QMouseEvent* event)
         _isPressed = false;
         _pIsExpand = !_pIsExpand;
         //指示器动画
-        doExpandOrCollpaseAnimation();
+        doExpandOrCollapseAnimation();
         Q_EMIT drawerHeaderClicked(_pIsExpand);
     }
     QWidget::mouseReleaseEvent(event);

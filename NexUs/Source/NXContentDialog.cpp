@@ -158,6 +158,12 @@ void NXContentDialog::close()
     d->_doCloseAnimation(false);
 }
 
+NXAppBar* NXContentDialog::appBar() const
+{
+    Q_D(const NXContentDialog);
+    return d->_appBar;
+}
+
 void NXContentDialog::showEvent(QShowEvent* event)
 {
     Q_D(NXContentDialog);

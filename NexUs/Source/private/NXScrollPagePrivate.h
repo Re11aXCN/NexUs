@@ -20,7 +20,7 @@ class NXScrollPagePrivate : public QObject
 public:
     explicit NXScrollPagePrivate(QObject* parent = nullptr);
     ~NXScrollPagePrivate();
-    Q_INVOKABLE void onNavigationRouteBack(QVariantMap routeData);
+    Q_INVOKABLE void onNavigationRoute(QVariantMap routeData);
 
 private:
     QHBoxLayout* _pageTitleLayout{nullptr};

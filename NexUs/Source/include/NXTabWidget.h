@@ -11,7 +11,9 @@ class NX_EXPORT NXTabWidget : public QTabWidget
 {
     Q_OBJECT
     Q_Q_CREATE(NXTabWidget)
-    Q_PROPERTY_CREATE(bool, IsTabTransparent);
+    Q_PROPERTY_CREATE_Q_H(bool, IsTabTransparent);
+    Q_PROPERTY_CREATE_Q_H(bool, IsContainerAcceptDrops);
+    Q_PROPERTY_CREATE_Q_H(QSize, TabSize)
 
 public:
     explicit NXTabWidget(QWidget* parent = nullptr);

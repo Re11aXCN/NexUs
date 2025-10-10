@@ -1,4 +1,4 @@
-#include "NXCustomTabWidget.h"
+﻿#include "NXCustomTabWidget.h"
 
 #include "NXAppBar.h"
 #include "NXTabBar.h"
@@ -6,22 +6,26 @@
 #include "private/NXTabWidgetPrivate.h"
 #include <QDebug>
 #include <QMimeData>
+#include <QTimer>
 #include <QVBoxLayout>
 #include <QVariant>
 NXCustomTabWidget::NXCustomTabWidget(QWidget* parent)
     : NXCustomWidget(parent)
 {
+    _pIsFinished = false;
     resize(700, 500);
     setWindowTitle("");
 #ifndef Q_OS_WIN
     setAttribute(Qt::WA_Hover);
 #endif
+    setMouseTracking(true);
     setWindowIcon(QIcon());
     _customTabWidget = new NXTabWidget(this);
     _customTabWidget->setIsTabTransparent(true);
     _customTabWidget->setObjectName("NXCustomTabWidget");
     QTabBar* originTabBar = _customTabWidget->tabBar();
     originTabBar->hide();
+    setAcceptDrops(true);
     _customTabBar = new NXTabBar(this);
     _customTabBar->setObjectName("NXCustomTabBar");
     QObject::connect(_customTabBar, &NXTabBar::tabMoved, this, [=](int from, int to) {
@@ -33,7 +37,8 @@ NXCustomTabWidget::NXCustomTabWidget(QWidget* parent)
     QObject::connect(_customTabWidget, &NXTabWidget::currentChanged, this, [=](int index) {
         if (index == -1)
         {
-            close();
+            _pIsFinished = true;
+            hide();
         }
         });
     QObject::connect(_customTabBar, &NXTabBar::tabCloseRequested, originTabBar, &QTabBar::tabCloseRequested);
@@ -41,7 +46,8 @@ NXCustomTabWidget::NXCustomTabWidget(QWidget* parent)
     _customTabWidget->d_ptr->_customTabBar = _customTabBar;
     QObject::connect(_customTabBar, &NXTabBar::tabDragCreate, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragCreate);
     QObject::connect(_customTabBar, &NXTabBar::tabDragDrop, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragDrop);
-
+    QObject::connect(_customTabBar, &NXTabBar::tabDragEnter, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragEnter);
+    QObject::connect(_customTabBar, &NXTabBar::tabDragLeave, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragLeave);
     QWidget* customWidget = new QWidget(this);
     QVBoxLayout* customLayout = new QVBoxLayout(customWidget);
     customLayout->setContentsMargins(10, 0, 10, 0);
@@ -57,11 +63,11 @@ NXCustomTabWidget::~NXCustomTabWidget()
     {
         QWidget* closeWidget = _customTabWidget->widget(0);
         NXTabWidget* originTabWidget = closeWidget->property("NXOriginTabWidget").value<NXTabWidget*>();
-
         if (originTabWidget)
         {
             closeWidget->setProperty("CurrentCustomBar", QVariant::fromValue<NXTabBar*>(nullptr));
             originTabWidget->addTab(closeWidget, _customTabWidget->tabIcon(0), _customTabWidget->tabText(0));
+            originTabWidget->setCurrentWidget(closeWidget);
         }
         else
         {

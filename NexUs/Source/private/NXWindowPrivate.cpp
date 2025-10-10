@@ -204,8 +204,8 @@ void NXWindowPrivate::onNavigationNodeClicked(NXNavigationType::NavigationNodeTy
     Q_Q(NXWindow);
     QWidget* page = _routeMap.value(nodeKey);
     if (page) {
-        int nodeIndex = _navigationCenterStackedWidget->indexOf(page);
-        if (_navigationTargetIndex == nodeIndex || _navigationCenterStackedWidget->count() <= nodeIndex)
+        int nodeIndex = _navigationCenterStackedWidget->getContainerStackedWidget()->indexOf(page);
+        if (_navigationTargetIndex == nodeIndex || _navigationCenterStackedWidget->getContainerStackedWidget()->count() <= nodeIndex)
         {
             return;
         }
@@ -222,14 +222,14 @@ void NXWindowPrivate::onNavigationNodeAdded(NXNavigationType::NavigationNodeType
     if (nodeType == NXNavigationType::PageNode)
     {
         _routeMap.insert(nodeKey, page);
-        _navigationCenterStackedWidget->addWidget(page);
+        _navigationCenterStackedWidget->getContainerStackedWidget()->addWidget(page);
     }
     else
     {
         _routeMap.insert(nodeKey, page);
         if (page)
         {
-            _navigationCenterStackedWidget->addWidget(page);
+            _navigationCenterStackedWidget->getContainerStackedWidget()->addWidget(page);
         }
     }
 }
@@ -241,10 +241,11 @@ void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeTy
     {
         return;
     }
+    _pageMetaMap.remove(nodeKey);
     QWidget* page = _routeMap.take(nodeKey);
-    _navigationCenterStackedWidget->removeWidget(page);
+    _navigationCenterStackedWidget->getContainerStackedWidget()->removeWidget(page);
     page->deleteLater();
-    QWidget* currentWidget = _navigationCenterStackedWidget->currentWidget();
+    QWidget* currentWidget = _navigationCenterStackedWidget->getContainerStackedWidget()->currentWidget();
     if (currentWidget)
     {
 		const QString& currentKey = currentWidget->property("NXPageKey").toString();
@@ -257,11 +258,51 @@ void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeTy
 	}
 }
 
-void NXWindowPrivate::onNavigationRouteBack(QVariantMap routeData)
+void NXWindowPrivate::onNavigationRouterStateChanged(NXNavigationRouterType::RouteMode routeMode)
 {
-    int routeIndex = routeData.value("NXCentralStackIndex").toUInt();
+    switch (routeMode)
+    {
+    case NXNavigationRouterType::BackValid:
+    {
+        _appBar->setRouteBackButtonEnable(true);
+        break;
+    }
+    case NXNavigationRouterType::BackInvalid:
+    {
+        _appBar->setRouteBackButtonEnable(false);
+        break;
+    }
+    case NXNavigationRouterType::ForwardValid:
+    {
+        _appBar->setRouteForwardButtonEnable(true);
+        break;
+    }
+    case NXNavigationRouterType::ForwardInvalid:
+    {
+        _appBar->setRouteForwardButtonEnable(false);
+        break;
+    }
+    }
+}
+
+void NXWindowPrivate::onNavigationRoute(QVariantMap routeData)
+{
+    Q_Q(NXWindow);
+    int routeIndex = -1;
     _centralStackTargetIndex = routeIndex;
-    _centerStackedWidget->doWindowStackSwitch(_pStackSwitchMode, routeIndex, true);
+    bool isRouteBack = routeData.value("NXRouteBackMode").toBool();
+    if (isRouteBack)
+    {
+        routeIndex = routeData.value("NXBackCentralStackIndex").toUInt();
+    }
+    else
+    {
+        routeIndex = routeData.value("NXForwardCentralStackIndex").toUInt();
+    }
+    if (routeIndex != _centerStackedWidget->getContainerStackedWidget()->currentIndex())
+    {
+        _centerStackedWidget->doWindowStackSwitch(_pStackSwitchMode, routeIndex, isRouteBack);
+    }
 }
 
 qreal NXWindowPrivate::_distance(QPoint point1, QPoint point2)

@@ -15,9 +15,9 @@ class NX_EXPORT NXContentDialog : public QDialog
 public:
     explicit NXContentDialog(QWidget* parent);
     ~NXContentDialog() override;
-    Q_SLOT virtual void onLeftButtonClicked();
-    Q_SLOT virtual void onMiddleButtonClicked();
-    Q_SLOT virtual void onRightButtonClicked();
+    Q_SLOT void onLeftButtonClicked();
+    Q_SLOT void onMiddleButtonClicked();
+    Q_SLOT void onRightButtonClicked();
     void setCentralWidget(QWidget* centralWidget);
 
     void setLeftButtonText(const QString& text);
@@ -25,6 +25,7 @@ public:
     void setRightButtonText(const QString& text);
 
     void close();
+    NXAppBar* appBar() const;
 Q_SIGNALS:
     Q_SIGNAL void leftButtonClicked();
     Q_SIGNAL void middleButtonClicked();

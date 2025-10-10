@@ -58,10 +58,11 @@ void NXNavigationBarPrivate::onNavigationOpenNewWindow(const QString& nodeKey)
     {
         return;
     }
-    QWidget* widget = static_cast<QWidget*>(meta->newInstance());
+    QWidget* widget = dynamic_cast<QWidget*>(meta->newInstance());
     if (widget)
     {
         widget->setProperty("NXPageKey", nodeKey);
+        widget->setProperty("IsMetaWidget", true);
         widget->setProperty("NXFloatParentWidget", QVariant::fromValue(q));
         widget->installEventFilter(this);
         NXCustomTabWidget* floatWidget = new NXCustomTabWidget(q);
@@ -80,11 +81,12 @@ void NXNavigationBarPrivate::onNavigationCloseCurrentWindow(const QString& nodeK
         return;
     }
     q->removeNavigationNode(nodeKey);
-}void NXNavigationBarPrivate::onNavigationRouteBack(QVariantMap routeData)
+}void NXNavigationBarPrivate::onNavigationRoute(QVariantMap routeData)
 {
     Q_Q(NXNavigationBar);
-    QString pageKey = routeData.value("NXPageKey").toString();
-    q->navigation(pageKey, false, true);
+    bool isRouteBack = routeData.value("NXRouteBackMode").toBool();
+    QString pageKey = isRouteBack ? routeData.value("NXBackPageKey").toString() : routeData.value("NXForwardPageKey").toString();
+    q->navigation(pageKey, false, isRouteBack);
 }
 
 void NXNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool isLogRoute, bool isRouteBack)
@@ -99,7 +101,7 @@ void NXNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool is
         }
         if (node->getIsExpanderNode())
         {
-            _expandOrCollpaseExpanderNode(node, !_navigationView->isExpanded(index));
+            _expandOrCollapseExpanderNode(node, !_navigationView->isExpanded(index));
         }
         else
         {
@@ -115,20 +117,21 @@ void NXNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool is
                 if (isLogRoute)
                 {
                     QVariantMap routeData = QVariantMap();
-                    QString pageKey;
+                    QString backPageKey;
                     if (selectedNode)
                     {
-                        pageKey.append(selectedNode->getNodeKey());
+                        backPageKey = selectedNode->getNodeKey();
                     }
                     else
                     {
                         if (_footerModel->getSelectedNode())
                         {
-                            pageKey.append(_footerModel->getSelectedNode()->getNodeKey());
+                            backPageKey = _footerModel->getSelectedNode()->getNodeKey();
                         }
                     }
-                    routeData.insert("NXPageKey", pageKey);
-                    NXNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRouteBack", routeData);
+                    routeData.insert("NXBackPageKey", backPageKey);
+                    routeData.insert("NXForwardPageKey", node->getNodeKey());
+                    NXNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRoute", routeData);
                 }
                 //Q_EMIT q->navigationNodeClicked(NXNavigationType::PageNode, node->getNodeKey(), isRouteBack);
 
@@ -205,20 +208,21 @@ void NXNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool 
         if (isLogRoute && node->getIsHasFooterPage())
         {
             QVariantMap routeData = QVariantMap();
-            QString pageKey;
+            QString backPageKey;
             if (selectedNode)
             {
-                pageKey.append(selectedNode->getNodeKey());
+                backPageKey = selectedNode->getNodeKey();
             }
             else
             {
                 if (_navigationModel->getSelectedNode())
                 {
-                    pageKey.append(_navigationModel->getSelectedNode()->getNodeKey());
+                    backPageKey = _navigationModel->getSelectedNode()->getNodeKey();
                 }
             }
-            routeData.insert("NXPageKey", pageKey);
-            NXNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRouteBack", routeData);
+            routeData.insert("NXBackPageKey", backPageKey);
+            routeData.insert("NXForwardPageKey", node->getNodeKey());
+            NXNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRoute", routeData);
         }
         //Q_EMIT q->navigationNodeClicked(NXNavigationType::FooterNode, node->getNodeKey(), isRouteBack);
 
@@ -369,7 +373,7 @@ void NXNavigationBarPrivate::_expandSelectedNodeParent()
     }
 }
 
-void NXNavigationBarPrivate::_expandOrCollpaseExpanderNode(NXNavigationNode* node, bool isExpand)
+void NXNavigationBarPrivate::_expandOrCollapseExpanderNode(NXNavigationNode* node, bool isExpand)
 {
     if (_currentDisplayMode == NXNavigationType::Compact)
     {
@@ -418,7 +422,6 @@ void NXNavigationBarPrivate::_addStackedPage(QWidget* page, QString pageKey)
     Q_EMIT q->navigationNodeAdded(NXNavigationType::PageNode, pageKey, page);
     NXNavigationNode* node = _navigationModel->getNavigationNode(pageKey);
     QVariantMap suggestData;
-    suggestData.insert("NXNodeType", "Stacked");
     suggestData.insert("NXPageKey", pageKey);
     QString suggestKey = _navigationSuggestBox->addSuggestion(node->getAwesome(), node->getNodeTitle(), suggestData);
     _suggestKeyMap.insert(pageKey, suggestKey);
@@ -435,7 +438,6 @@ void NXNavigationBarPrivate::_addFooterPage(QWidget* page, QString footKey)
     _footerView->setFixedHeight(40 * _footerModel->getFooterNodeCount());
     NXNavigationNode* node = _footerModel->getNavigationNode(footKey);
     QVariantMap suggestData;
-    suggestData.insert("NXNodeType", "Footer");
     suggestData.insert("NXPageKey", footKey);
     QString suggestKey = _navigationSuggestBox->addSuggestion(node->getAwesome(), node->getNodeTitle(), suggestData);
     _suggestKeyMap.insert(footKey, suggestKey);

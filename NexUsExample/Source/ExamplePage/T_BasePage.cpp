@@ -7,6 +7,7 @@
 #include "NXText.h"
 #include "NXTheme.h"
 #include "NXToolButton.h"
+#include "NXWindow.h"
 T_BasePage::T_BasePage(QWidget* parent)
     : NXScrollPage(parent)
 {
@@ -16,6 +17,7 @@ T_BasePage::T_BasePage(QWidget* parent)
             update();
         }
     });
+    setContentsMargins(20, 5, 0, 0);
 }
 
 T_BasePage::~T_BasePage()
@@ -62,12 +64,26 @@ void T_BasePage::createCustomWidget(QString desText)
         nxTheme->setThemeMode(nxTheme->getThemeMode() == NXThemeType::Light ? NXThemeType::Dark : NXThemeType::Light);
     });
 
+    NXToolButton* backtrackButton = new NXToolButton(this);
+    backtrackButton->setFixedSize(35, 35);
+    backtrackButton->setIsTransparent(false);
+    backtrackButton->setNXIcon(NXIconType::Timer);
+    connect(backtrackButton, &NXToolButton::clicked, this, [=]() {
+        NXWindow* window = dynamic_cast<NXWindow*>(this->window());
+        if (window)
+        {
+            window->backtrackNavigationNode(property("NXPageKey").toString());
+        }
+    });
+
     QHBoxLayout* buttonLayout = new QHBoxLayout();
     buttonLayout->addWidget(documentationButton);
     buttonLayout->addSpacing(5);
     buttonLayout->addWidget(sourceButton);
     buttonLayout->addStretch();
     buttonLayout->addWidget(themeButton);
+    buttonLayout->addSpacing(5);
+    buttonLayout->addWidget(backtrackButton);
     buttonLayout->addSpacing(15);
 
     NXText* descText = new NXText(this);

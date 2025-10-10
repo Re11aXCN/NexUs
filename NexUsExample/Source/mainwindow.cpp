@@ -1,17 +1,16 @@
 ﻿#include "mainwindow.h"
 
-#include <QDebug>
-#include <QGraphicsView>
-#include <QHBoxLayout>
-
 #include "NXContentDialog.h"
 #include "NXDockWidget.h"
 #include "NXEventBus.h"
 #include "NXLog.h"
 #include "NXMenu.h"
 #include "NXMenuBar.h"
+#include "NXNavigationRouter.h"
 #include "NXProgressBar.h"
+#include "NXProgressRing.h"
 #include "NXStatusBar.h"
+#include "NXSuggestBox.h"
 #include "NXText.h"
 #include "NXTheme.h"
 #include "NXToolBar.h"
@@ -24,6 +23,9 @@
 #include "T_Setting.h"
 #include "T_TableView.h"
 #include "T_TreeView.h"
+#include <QDebug>
+#include <QGraphicsView>
+#include <QHBoxLayout>
 #include <QMouseEvent>
 #ifdef Q_OS_WIN
 #include "NXApplication.h"
@@ -89,8 +91,6 @@ void MainWindow::initWindow()
     resize(1200, 740);
     // nxTheme->setThemeMode(NXThemeType::Dark);
     // setIsNavigationBarEnable(false);
-    setIsLeftButtonPressedToggleNavigation(true);
-    setNavigationNodeDragAndDropEnable(true);
     // setNavigationBarDisplayMode(NXNavigationType::Compact);
     // setWindowButtonFlag(NXAppBarType::MinimizeButtonHint, false);
     setUserInfoCardPixmap(QPixmap(":/Resource/Image/Cirno.jpg"));
@@ -102,9 +102,7 @@ void MainWindow::initWindow()
     // setNavigationBarWidth(260);
     NXText* centralStack = new NXText("这是一个主窗口堆栈页面", this);
     centralStack->setFocusPolicy(Qt::StrongFocus);
-    QFont font = centralStack->font();
-    font.setPixelSize(32);
-    centralStack->setFont(font);
+    centralStack->setTextPixelSize(32);
     centralStack->setAlignment(Qt::AlignCenter);
     addCentralWidget(centralStack);
 
@@ -131,6 +129,67 @@ void MainWindow::initWindow()
         setCustomMenu(nullptr);
     });
     setCustomMenu(appBarMenu);
+
+    // 堆栈独立自定义窗口
+    QWidget* centralCustomWidget = new QWidget(this);
+    QHBoxLayout* centralCustomWidgetLayout = new QHBoxLayout(centralCustomWidget);
+    centralCustomWidgetLayout->setContentsMargins(13, 15, 9, 6);
+    NXToolButton* leftButton = new NXToolButton(this);
+    leftButton->setNXIcon(NXIconType::AngleLeft);
+    leftButton->setEnabled(false);
+    connect(leftButton, &NXToolButton::clicked, this, [=]() {
+        NXNavigationRouter::getInstance()->navigationRouteBack();
+    });
+    NXToolButton* rightButton = new NXToolButton(this);
+    rightButton->setNXIcon(NXIconType::AngleRight);
+    rightButton->setEnabled(false);
+    connect(rightButton, &NXToolButton::clicked, this, [=]() {
+        NXNavigationRouter::getInstance()->navigationRouteForward();
+    });
+    connect(NXNavigationRouter::getInstance(), &NXNavigationRouter::navigationRouterStateChanged, this, [=](NXNavigationRouterType::RouteMode routeMode) {
+        switch (routeMode)
+        {
+        case NXNavigationRouterType::BackValid:
+        {
+            leftButton->setEnabled(true);
+            break;
+        }
+        case NXNavigationRouterType::BackInvalid:
+        {
+            leftButton->setEnabled(false);
+            break;
+        }
+        case NXNavigationRouterType::ForwardValid:
+        {
+            rightButton->setEnabled(true);
+            break;
+        }
+        case NXNavigationRouterType::ForwardInvalid:
+        {
+            rightButton->setEnabled(false);
+            break;
+        }
+        }
+    });
+    NXSuggestBox* centralStackSuggest = new NXSuggestBox(this);
+    centralStackSuggest->setFixedHeight(32);
+    centralStackSuggest->setPlaceholderText("搜索关键字");
+
+    NXText* progressBusyRingText = new NXText("系统运行中", this);
+    progressBusyRingText->setTextPixelSize(15);
+
+    NXProgressRing* progressBusyRing = new NXProgressRing(this);
+    progressBusyRing->setBusyingWidth(4);
+    progressBusyRing->setFixedSize(28, 28);
+    progressBusyRing->setIsBusying(true);
+
+    centralCustomWidgetLayout->addWidget(leftButton);
+    centralCustomWidgetLayout->addWidget(rightButton);
+    centralCustomWidgetLayout->addWidget(centralStackSuggest);
+    centralCustomWidgetLayout->addStretch();
+    centralCustomWidgetLayout->addWidget(progressBusyRingText);
+    centralCustomWidgetLayout->addWidget(progressBusyRing);
+    setCentralCustomWidget(centralCustomWidget);
 }
 
 void MainWindow::initEdgeLayout()

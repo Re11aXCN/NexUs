@@ -15,7 +15,7 @@ public:
     ~NXDrawerHeader() override;
 
     void setHeaderWidget(QWidget* widget);
-    void doExpandOrCollpaseAnimation();
+    void doExpandOrCollapseAnimation();
 Q_SIGNALS:
     Q_SIGNAL void drawerHeaderClicked(bool isExpand);
 

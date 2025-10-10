@@ -6,7 +6,6 @@
 #include <QObject>
 
 #include "NXDef.h"
-#include "NXProperty.h"
 class NXEvent;
 class NXWindow;
 class NXNavigationBar;
@@ -33,8 +32,8 @@ public:
     Q_SLOT void onNavigationNodeClicked(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, bool isRouteBack);
     Q_SLOT void onNavigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget* page);
     Q_SLOT void onNavigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey);
-    Q_INVOKABLE void onNavigationRouteBack(QVariantMap routeData);
-
+    Q_SLOT void onNavigationRouterStateChanged(NXNavigationRouterType::RouteMode routeMode);
+    Q_INVOKABLE void onNavigationRoute(QVariantMap routeData);
 private:
 	bool _isWindowClosing{ false };
 	bool _isNavigationDisplayModeChanged{ false };
@@ -57,6 +56,7 @@ private:
     QHBoxLayout* _centerLayout{nullptr};
     NXThemeAnimationWidget* _animationWidget{nullptr};
 
+    QMap<QString, const QMetaObject*> _pageMetaMap;
     QMap<QString, QWidget*> _routeMap; // key__nodeKey title可以一致  value__Page
 
 	qreal _distance(QPoint point1, QPoint point2);

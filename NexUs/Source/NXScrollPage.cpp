@@ -31,8 +31,9 @@ NXScrollPage::NXScrollPage(QWidget* parent)
             d->_navigationTargetIndex = widgetIndex;
             QVariantMap routeData = QVariantMap();
             routeData.insert("NXScrollPageCheckSumKey", "BreadcrumbClicked");
-            routeData.insert("LastBreadcrumbList", lastBreadcrumbList);
-            NXNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRouteBack", routeData);
+            routeData.insert("NXBackBreadcrumbList", lastBreadcrumbList);
+            routeData.insert("NXForwardBreadcrumbList", d->_breadcrumbBar->getBreadcrumbList());
+            NXNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRoute", routeData);
         }
     });
     d->_pageTitleLayout = new QHBoxLayout();
@@ -43,6 +44,7 @@ NXScrollPage::NXScrollPage(QWidget* parent)
     d->_centralStackedWidget->setContentsMargins(0, 0, 0, 0);
 
     d->_mainLayout = new QVBoxLayout(this);
+    d->_mainLayout->setSpacing(0);
     d->_mainLayout->setContentsMargins(0, 0, 0, 0);
     d->_mainLayout->addLayout(d->_pageTitleLayout);
     d->_mainLayout->addWidget(d->_centralStackedWidget);
@@ -117,15 +119,17 @@ void NXScrollPage::navigation(int widgetIndex, bool isLogRoute)
     }
     d->_switchCentralStackIndex(widgetIndex, d->_navigationTargetIndex);
     d->_navigationTargetIndex = widgetIndex;
+    QString pagetTitle = d->_centralWidgetMap.key(widgetIndex);
     if (isLogRoute)
     {
         QVariantMap routeData = QVariantMap();
         routeData.insert("NXScrollPageCheckSumKey", "Navigation");
         QStringList breadcrumbList = d->_breadcrumbBar->getBreadcrumbList();
-        routeData.insert("NXPageTitle", breadcrumbList.last());
-        NXNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRouteBack", routeData);
+        routeData.insert("NXBackPageTitle", breadcrumbList.last());
+        routeData.insert("NXForwardPageTitle", pagetTitle);
+        NXNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRoute", routeData);
     }
-    d->_breadcrumbBar->appendBreadcrumb(d->_centralWidgetMap.key(widgetIndex));
+    d->_breadcrumbBar->appendBreadcrumb(pagetTitle);
 }
 
 void NXScrollPage::setPageTitleSpacing(int spacing)

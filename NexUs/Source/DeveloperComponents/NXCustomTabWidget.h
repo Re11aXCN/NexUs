@@ -8,6 +8,7 @@ class NXTabWidget;
 class NXCustomTabWidget : public NXCustomWidget
 {
     Q_OBJECT
+    Q_PROPERTY_CREATE(bool, IsFinished)
 public:
     explicit NXCustomTabWidget(QWidget* parent = nullptr);
     ~NXCustomTabWidget() override;

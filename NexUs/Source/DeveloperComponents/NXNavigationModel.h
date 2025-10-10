@@ -42,17 +42,12 @@ public:
     virtual bool canDropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent) const override;
     virtual bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent) override;
 
-    enum DropIndicatorPosition { OnItem, AboveItem, BelowItem, OnViewport };
-    void setDropIndicatorPosition(DropIndicatorPosition position);
-    DropIndicatorPosition getDropIndicatorPosition() const;
-
     bool swapNodes(const QString& nodeKey1, const QString& nodeKey2);
 Q_SIGNALS:
     void mineDataDropped(const QMimeData* data, const QModelIndex& draggedIndex, const QModelIndex& targetIndex);
 private:
     QMap<QString, NXNavigationNode*> _nodesMap;
     NXNavigationNode* _rootNode{nullptr};
-    DropIndicatorPosition _dropIndicatorPosition{OnViewport};
 };
 
 #endif // NXNAVIGATIONMODEL_H

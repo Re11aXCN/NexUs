@@ -37,17 +37,18 @@ public:
     QString getNavigationRootKey() const;
     bool getNavigationNodeIsExpanded(const QString& expanderKey) const;
     void expandNavigationNode(const QString& expanderKey);
-    void collpaseNavigationNode(const QString& expanderKey);
+    void collapseNavigationNode(const QString& expanderKey);
     void removeNavigationNode(const QString& nodeKey);
 
     void setNodeKeyPoints(const QString& nodeKey, int keyPoints);
     int getNodeKeyPoints(const QString& nodeKey) const;
+    NXNavigationType::NodeOperateReturnType setNavigationNodeTitle(const QString& nodeTitle, const QString& nodeKey);
+    QString getNavigationNodeTitle(const QString& nodeKey) const;
 
     void navigation(const QString& pageKey, bool isLogClicked = true, bool isRouteBack = false);
     void setDisplayMode(NXNavigationType::NavigationDisplayMode displayMode, bool isAnimation = true);
     int getPageOpenInNewWindowCount(const QString& nodeKey) const;
 
-	NXNavigationType::NodeOperateReturnType setNodeTitle(const QString& nodeTitle, const QString& nodeKey);
     Q_SLOT NXNavigationType::NodeOperateReturnType navigationPageNodeSwitch(const QString& targetPageNodeKey);
 Q_SIGNALS:
     Q_SIGNAL void pageOpenInNewWindow(const QString& nodeKey);

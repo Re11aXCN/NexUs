@@ -9,9 +9,10 @@
 NXTableViewStyle::NXTableViewStyle(QStyle* style)
 {
     _pHeaderMargin = 6;
-    _pCurrentHoverRow = -1;
+    _pCurrentHoverIndex = QModelIndex();
     _pIsDrawAlternateRowsEnabled = true;
     _pIsSelectionEffectsEnabled = true;
+    _pIsHoverEffectsEnabled = true;
     _pBorderRadius = 3;
     _themeMode = nxTheme->getThemeMode();
     QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
@@ -44,7 +45,7 @@ void NXTableViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
             QAbstractItemView::SelectionBehavior selectionBehavior = tabView->selectionBehavior();
             if (selectionBehavior == QAbstractItemView::SelectRows)
             {
-                if (vopt->index.row() == _pCurrentHoverRow)
+                if (_pIsHoverEffectsEnabled && vopt->index.row() == _pCurrentHoverIndex.row())
                 {
                     painter->setPen(Qt::NoPen);
                     painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
@@ -53,7 +54,7 @@ void NXTableViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
             }
             else
             {
-                if (vopt->state.testFlag(QStyle::State_Selected) || vopt->state.testFlag(QStyle::State_MouseOver))
+                if (_pIsHoverEffectsEnabled && (vopt->state.testFlag(QStyle::State_Selected) || vopt->state.testFlag(QStyle::State_MouseOver)))
                 {
                     painter->setPen(Qt::NoPen);
                     painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
@@ -75,9 +76,8 @@ void NXTableViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
 			const NXTableView* tabView = qobject_cast<const NXTableView*>(widget);
             if (vopt->state & QStyle::State_Selected)
             {
-                if (tabView && !tabView->getDrawSelectionBackground())
-                {
-                    painter->setBrush(QColor(0, 0, 0, 0)); 
+                if (tabView && !_pIsSelectionEffectsEnabled) {
+                    painter->setBrush(QColor(0, 0, 0, 0));
                     painter->drawRect(itemRect);
                 }
                 else
@@ -151,8 +151,10 @@ void NXTableViewStyle::drawControl(ControlElement element, const QStyleOption* o
                 //iconRect.adjust(_horizontalPadding , 0, _horizontalPadding, 0);
                 //iconRect.setSize(_pIconSize);
                 //iconRect.moveCenter(option->rect.center() - QPoint(option->rect.width() / 2 - iconRect.width() + 3, 0));
-                if(_headerAdjustParamMap.contains(hopt->section))
-                    iconRect.adjust(_headerAdjustParamMap[hopt->section].x1, _headerAdjustParamMap[hopt->section].y1, _headerAdjustParamMap[hopt->section].x2, _headerAdjustParamMap[hopt->section].y2);
+                if (auto it = _headerAdjusts.find(hopt->section); it != _headerAdjusts.end()) {
+                    const auto& fourCoords = it.value();
+                    iconRect.adjust(std::get<0>(fourCoords), std::get<1>(fourCoords), std::get<2>(fourCoords), std::get<3>(fourCoords));
+                }
                 hopt->icon.paint(painter, iconRect, hopt->textAlignment, mode, state);
             }           
 			painter->restore();
@@ -213,9 +215,9 @@ void NXTableViewStyle::drawControl(ControlElement element, const QStyleOption* o
             QRect iconRect = proxy()->subElementRect(SE_ItemViewItemDecoration, vopt, widget);
             QRect textRect = proxy()->subElementRect(SE_ItemViewItemText, vopt, widget);
             int column = vopt->index.column();
-            if (_adjustParamsMap.contains(column)) {
-                NXAdjustParam params = _adjustParamsMap[column];
-                textRect.adjust(params.x1, params.y1, params.x2, params.y2);
+            if (auto it = _adjusts.find(column); it != _adjusts.end()) {
+                const auto& fourCoords = it.value();
+                textRect.adjust(std::get<0>(fourCoords), std::get<1>(fourCoords), std::get<2>(fourCoords), std::get<3>(fourCoords));
             }
             if (column == 0)
             {
@@ -274,18 +276,21 @@ void NXTableViewStyle::drawControl(ControlElement element, const QStyleOption* o
                 painter->setPen(NXThemeColor(_themeMode, BasicText));
                 painter->drawText(textRect, vopt->displayAlignment, vopt->text);
             }
-            if (_pIsSelectionEffectsEnabled) {
-				// 选中特效
-				int heightOffset = itemRect.height() / 4;
-				painter->setPen(Qt::NoPen);
-				painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
-				if (vopt->state.testFlag(QStyle::State_Selected))
-				{
-					if (selectionBehavior == QAbstractItemView::SelectRows && vopt->index.column() == 0)
-					{
-						painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
-					}
-				}
+            // 选中特效
+            int heightOffset = itemRect.height() / 4;
+            painter->setPen(Qt::NoPen);
+            painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
+            if (vopt->state.testFlag(QStyle::State_Selected))
+            {
+                if (selectionBehavior == QAbstractItemView::SelectRows && vopt->index.column() == 0)
+                {
+                    painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
+                }
+                else if (selectionBehavior == QAbstractItemView::SelectItems)
+                {
+                    int barWidth = itemRect.width() * 0.8;
+                    painter->drawRoundedRect(QRectF(itemRect.x() + (itemRect.width() - barWidth) / 2, itemRect.y() + 3, barWidth, 3), 1.5, 1.5);
+                }
             }
             painter->restore();
         }
@@ -316,17 +321,12 @@ int NXTableViewStyle::pixelMetric(PixelMetric metric, const QStyleOption* option
     return QProxyStyle::pixelMetric(metric, option, widget);
 }
 
-void NXTableViewStyle::setAdjustParams(const QMap<int, NXAdjustParam>& adjustParamMap)
+void NXTableViewStyle::adjustHeaderColumnIconRect(const QHash<int, coords>& adjusts)
 {
-    _adjustParamsMap = adjustParamMap;
+    _headerAdjusts = adjusts;
 }
 
-void NXTableViewStyle::setHeaderAdjustParam(const QMap<int, NXAdjustParam>& adjustParamMap)
+void NXTableViewStyle::adjustColummTextRect(const QHash<int, coords>& adjusts)
 {
-    _headerAdjustParamMap = adjustParamMap;
-}
-
-QMap<int, NXAdjustParam> NXTableViewStyle::getAdjustParams() const
-{
-    return _adjustParamsMap;
+    _adjusts = adjusts;
 }

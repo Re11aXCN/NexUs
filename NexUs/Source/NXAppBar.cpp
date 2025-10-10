@@ -32,7 +32,7 @@ NXAppBar::NXAppBar(QWidget* parent)
     : QWidget{parent}, d_ptr(new NXAppBarPrivate())
 {
     Q_D(NXAppBar);
-    d->_buttonFlags = NXAppBarType::RouteBackButtonHint | NXAppBarType::StayTopButtonHint | NXAppBarType::ThemeChangeButtonHint | NXAppBarType::MinimizeButtonHint | NXAppBarType::MaximizeButtonHint | NXAppBarType::CloseButtonHint;
+    d->_buttonFlags = NXAppBarType::RouteBackButtonHint | NXAppBarType::RouteForwardButtonHint | NXAppBarType::StayTopButtonHint | NXAppBarType::ThemeChangeButtonHint | NXAppBarType::MinimizeButtonHint | NXAppBarType::MaximizeButtonHint | NXAppBarType::CloseButtonHint;
     window()->setAttribute(Qt::WA_Mapped);
     d->_pAppBarHeight = 45;
     setFixedHeight(d->_pAppBarHeight);
@@ -63,10 +63,15 @@ NXAppBar::NXAppBar(QWidget* parent)
     setAttribute(Qt::WA_TranslucentBackground);
     d->_routeBackButton = new NXToolButton(this);
     d->_routeBackButton->setNXIcon(NXIconType::ArrowLeft);
-    d->_routeBackButton->setFixedSize(40, 30);
+    d->_routeBackButton->setFixedSize(35, 30);
     d->_routeBackButton->setEnabled(false);
     // 路由跳转
     QObject::connect(d->_routeBackButton, &NXIconButton::clicked, this, &NXAppBar::routeBackButtonClicked);
+    d->_routeForwardButton = new NXToolButton(this);
+    d->_routeForwardButton->setNXIcon(NXIconType::ArrowRight);
+    d->_routeForwardButton->setFixedSize(35, 30);
+    d->_routeForwardButton->setEnabled(false);
+    QObject::connect(d->_routeForwardButton, &NXToolButton::clicked, this, &NXAppBar::routeForwardButtonClicked);
 
     // 导航栏展开按钮
     d->_navigationButton = new NXToolButton(this);
@@ -75,13 +80,13 @@ NXAppBar::NXAppBar(QWidget* parent)
     d->_navigationButton->setObjectName("NavigationButton");
     d->_navigationButton->setVisible(false);
     // 展开导航栏
-    QObject::connect(d->_navigationButton, &NXIconButton::clicked, this, &NXAppBar::navigationButtonClicked);
+    QObject::connect(d->_navigationButton, &NXToolButton::clicked, this, &NXAppBar::navigationButtonClicked);
 
     // 设置置顶
     d->_stayTopButton = new NXToolButton(this);
     d->_stayTopButton->setNXIcon(NXIconType::ArrowUpToArc);
     d->_stayTopButton->setFixedSize(40, 30);
-    QObject::connect(d->_stayTopButton, &NXIconButton::clicked, this, [=]() {
+    QObject::connect(d->_stayTopButton, &NXToolButton::clicked, this, [=]() {
         this->setIsStayTop(!this->getIsStayTop());
     });
     QObject::connect(this, &NXAppBar::pIsStayTopChanged, d, &NXAppBarPrivate::onStayTopButtonClicked);
@@ -128,7 +133,7 @@ NXAppBar::NXAppBar(QWidget* parent)
     d->_themeChangeButton = new NXToolButton(this);
     d->_themeChangeButton->setNXIcon(NXIconType::MoonStars);
     d->_themeChangeButton->setFixedSize(40, 30);
-    QObject::connect(d->_themeChangeButton, &NXIconButton::clicked, this, &NXAppBar::themeChangeButtonClicked);
+    QObject::connect(d->_themeChangeButton, &NXToolButton::clicked, this, &NXAppBar::themeChangeButtonClicked);
     QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_onThemeModeChange(themeMode);
     });
@@ -136,12 +141,12 @@ NXAppBar::NXAppBar(QWidget* parent)
     d->_minButton = new NXToolButton(this);
     d->_minButton->setNXIcon(NXIconType::Dash);
     d->_minButton->setFixedSize(40, 30);
-    QObject::connect(d->_minButton, &NXIconButton::clicked, d, &NXAppBarPrivate::onMinButtonClicked);
+    QObject::connect(d->_minButton, &NXToolButton::clicked, d, &NXAppBarPrivate::onMinButtonClicked);
     d->_maxButton = new NXToolButton(this);
     d->_maxButton->setIconSize(QSize(18, 18));
     d->_maxButton->setNXIcon(NXIconType::Square);
     d->_maxButton->setFixedSize(40, 30);
-    QObject::connect(d->_maxButton, &NXIconButton::clicked, d, &NXAppBarPrivate::onMaxButtonClicked);
+    QObject::connect(d->_maxButton, &NXToolButton::clicked, d, &NXAppBarPrivate::onMaxButtonClicked);
     d->_closeButton = new NXIconButton(NXIconType::Xmark, 18, 40, 30, this);
     d->_closeButton->setLightHoverColor(QColor(0xE8, 0x11, 0x23));
     d->_closeButton->setDarkHoverColor(QColor(0xE8, 0x11, 0x23));
@@ -153,6 +158,7 @@ NXAppBar::NXAppBar(QWidget* parent)
     d->_mainLayout->setContentsMargins(0, 0, 0, 0);
     d->_mainLayout->setSpacing(0);
     d->_mainLayout->addLayout(d->_createVLayout(d->_routeBackButton));
+    d->_mainLayout->addLayout(d->_createVLayout(d->_routeForwardButton));
     d->_mainLayout->addLayout(d->_createVLayout(d->_navigationButton));
     d->_mainLayout->addLayout(d->_iconLabelLayout);
     d->_mainLayout->addLayout(d->_titleLabelLayout);
@@ -228,17 +234,17 @@ void NXAppBar::setCustomWidget(NXAppBarType::CustomArea customArea, QWidget* wid
     {
     case NXAppBarType::LeftArea:
     {
-        d->_mainLayout->insertWidget(4, widget);
+        d->_mainLayout->insertWidget(5, widget);
         break;
     }
     case NXAppBarType::MiddleArea:
     {
-        d->_mainLayout->insertWidget(5, widget);
+        d->_mainLayout->insertWidget(6, widget);
         break;
     }
     case NXAppBarType::RightArea:
     {
-        d->_mainLayout->insertWidget(6, widget);
+        d->_mainLayout->insertWidget(7, widget);
         break;
     }
     }
@@ -340,6 +346,7 @@ void NXAppBar::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags)
     if (d->_buttonFlags.testFlag(NXAppBarType::NoneButtonHint))
     {
         d->_routeBackButton->setVisible(false);
+        d->_routeForwardButton->setVisible(false);
         d->_navigationButton->setVisible(false);
         d->_stayTopButton->setVisible(false);
         d->_themeChangeButton->setVisible(false);
@@ -350,6 +357,7 @@ void NXAppBar::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags)
     else
     {
         d->_routeBackButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::RouteBackButtonHint));
+        d->_routeForwardButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::RouteForwardButtonHint));
         d->_navigationButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::NavigationButtonHint));
         d->_stayTopButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::StayTopButtonHint));
         d->_themeChangeButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::ThemeChangeButtonHint));
@@ -368,6 +376,12 @@ void NXAppBar::setRouteBackButtonEnable(bool isEnable)
 {
     Q_D(NXAppBar);
     d->_routeBackButton->setEnabled(isEnable);
+}
+
+void NXAppBar::setRouteForwardButtonEnable(bool isEnable)
+{
+    Q_D(NXAppBar);
+    d->_routeForwardButton->setEnabled(isEnable);
 }
 
 void NXAppBar::closeWindow()

@@ -11,10 +11,10 @@ T_UpdateWidget::T_UpdateWidget(QWidget* parent)
     mainLayout->setSizeConstraint(QLayout::SetMaximumSize);
     mainLayout->setContentsMargins(5, 10, 5, 5);
     mainLayout->setSpacing(4);
-    NXText* updateTitle = new NXText("2025-8-21更新", 15, this);
-    NXText* update1 = new NXText("1、兼容Win7原生无边框、Win10外部无边框", 13, this);
-    NXText* update2 = new NXText("2、优化NXDrawer抽屉组件展开收起效果", 13, this);
-    NXText* update3 = new NXText("3、新增主要堆栈功能和堆栈切换动画支持", 13, this);
+    NXText* updateTitle = new NXText("2025-10-9更新", 15, this);
+    NXText* update1 = new NXText("1、NXTabWidget功能重做", 13, this);
+    NXText* update2 = new NXText("2、新增双向路由跳转功能", 13, this);
+    NXText* update3 = new NXText("3、新增主要堆栈自定义窗口支持", 13, this);
     NXText* update4 = new NXText("4、Linux部分组件体验优化", 13, this);
     NXText* update5 = new NXText("5、QQ交流群: 850243692", 13, this);
     update1->setIsWrapAnywhere(true);

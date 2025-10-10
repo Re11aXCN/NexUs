@@ -4,32 +4,36 @@
 #include <QTableView>
 
 #include "NXProperty.h"
-struct NXAdjustParam {
-    int x1;
-    int y1;
-    int x2;
-    int y2;
-    NXAdjustParam(int x1 = 0, int y1 = 0, int x2 = 0, int y2 = 0) : x1(x1), y1(y1), x2(x2), y2(y2) {}
-};
+
 class NXTableView;
 class NXModelIndexWidgetPrivate;
 class NX_EXPORT NXModelIndexWidget : public QWidget
 {
     Q_OBJECT
     Q_Q_CREATE(NXModelIndexWidget)
+    Q_PROPERTY_CREATE_Q_H(const QModelIndex&, Index)
 public:
+    explicit NXModelIndexWidget(NXTableView* parent = nullptr);
     explicit NXModelIndexWidget(const QModelIndex& index, NXTableView* parent = nullptr);
     ~NXModelIndexWidget();
-    const QModelIndex& index() const;
-    void setIndex(const QModelIndex& index);
+
+    bool isValid() const;
+    int row() const;
+    int column() const;
 Q_SIGNALS:
-    Q_SIGNAL void updateIndex(const QModelIndex& index);
-    Q_SIGNAL void entered();
-    Q_SIGNAL void leaved();
+    void entered();
+    void leaved();
+    void clicked();
+    void doubleClicked();
+    void indexChanged(const QModelIndex& newIndex);
 protected:
     virtual void enterEvent(QEnterEvent* event) override;
     virtual void leaveEvent(QEvent* event) override;
-    virtual void mousePressEvent(QMouseEvent* event);
+    virtual void mousePressEvent(QMouseEvent* event) override;
+    virtual void mouseReleaseEvent(QMouseEvent* event) override;
+    virtual void mouseDoubleClickEvent(QMouseEvent* event) override;
+    virtual void paintEvent(QPaintEvent* event) override;
+    virtual bool event(QEvent* event) override;
 };
 class NXTableViewPrivate;
 class NX_EXPORT NXTableView : public QTableView
@@ -38,32 +42,34 @@ class NX_EXPORT NXTableView : public QTableView
     Q_Q_CREATE(NXTableView)
     Q_PROPERTY_CREATE_Q_H(int, HeaderMargin)
     Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
-    Q_PROPERTY_CREATE_Q_H(bool, DrawSelectionBackground)
     Q_PROPERTY_CREATE_Q_H(bool, IsDrawAlternateRowsEnabled)
     Q_PROPERTY_CREATE_Q_H(bool, IsSelectionEffectsEnabled)
+    Q_PROPERTY_CREATE_Q_H(bool, IsHoverEffectsEnabled)
+
 public:
+    using coords = std::tuple<int, int, int, int>;
     explicit NXTableView(QWidget* parent = nullptr);
     ~NXTableView();
     void setIndexWidget(const QModelIndex& index, QWidget* widget);
     QWidget* indexWidget(const QModelIndex& index) const;
 
-    QRect getAlignLeft(const QRect& cellRect, const QSize& iconSize)  const;
-    QRect getAlignCenter(const QRect& cellRect, const QSize& iconSize)  const;
-    QRect getAlignRight(const QRect& cellRect, const QSize& iconSize)  const;
+    void setHorizontalHeaderFontSize(int pixelSize);
+    void setVerticalHeaderFontSize(int pixelSize);
+    void setFontSize(int pixelSize);
 
-    void setHeaderFontSize(int size);
-    void setModelFontSize(int size);
-    void setTableFontSize(int size);
-    void setAdjustTextRect(const QMap<int, NXAdjustParam>& adjustParamsMap);
-    void setHeaderAdjustParam(const QMap<int, NXAdjustParam>& adjustParamMap);
+    void adjustHeaderColumnIconRect(const QHash<int, coords>& adjusts);
+    void adjustColummTextRect(const QHash<int, coords>& adjusts);
 
-    void setCurrentHoverRow(int row);
+    QList<NXModelIndexWidget*> getIndexWidgets() const;
+    NXModelIndexWidget* getIndexWidget(const QModelIndex& index) const;
+    //void updateIndexWidgets();
 
 Q_SIGNALS:
     Q_SIGNAL void tableViewShow();
     Q_SIGNAL void tableViewHide();
-    Q_SIGNAL void currentHoverRowChanged(int row);
-    Q_SIGNAL void currentHoverColumnChanged(int column);
+    Q_SIGNAL void currentHoverIndexChanged(const QModelIndex& index);
+    void indexWidgetAdded(NXModelIndexWidget* widget);
+    void indexWidgetRemoved(NXModelIndexWidget* widget);
 
 protected:
     virtual void showEvent(QShowEvent* event) override;
@@ -72,6 +78,10 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent* event) override;
     virtual void mousePressEvent(QMouseEvent* event) override;
     virtual void mouseReleaseEvent(QMouseEvent* event) override;
+    /*
+    virtual void rowsInserted(const QModelIndex& parent, int start, int end) override;
+    virtual void rowsAboutToBeRemoved(const QModelIndex& parent, int start, int end) override;
+    virtual void reset() override;*/
 private:
     friend class NXModelIndexWidget;
 };

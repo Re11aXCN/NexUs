@@ -79,6 +79,8 @@ void NXThemePrivate::_initThemeColor()
     _darkThemeColorList[NXThemeType::BasicHover] = QColor(0x40, 0x40, 0x40);
     _lightThemeColorList[NXThemeType::BasicPress] = QColor(0xF7, 0xF7, 0xF7);
     _darkThemeColorList[NXThemeType::BasicPress] = QColor(0x3A, 0x3A, 0x3A);
+    _lightThemeColorList[NXThemeType::BasicSelectedHover] = QColor(0xEB, 0xEB, 0xEB);
+    _darkThemeColorList[NXThemeType::BasicSelectedHover] = QColor(0x38, 0x38, 0x38);
     _lightThemeColorList[NXThemeType::BasicBaseLine] = QColor(0xD1, 0xD1, 0xD1);
     _darkThemeColorList[NXThemeType::BasicBaseLine] = QColor(0x45, 0x45, 0x45);
     _lightThemeColorList[NXThemeType::BasicHemline] = QColor(0x86, 0x86, 0x86);

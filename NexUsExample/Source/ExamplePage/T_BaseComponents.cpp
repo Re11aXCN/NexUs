@@ -161,7 +161,7 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     _checkBox = new NXCheckBox("CheckBox", this);
     NXScrollPageArea* checkBoxArea = new NXScrollPageArea(this);
     QHBoxLayout* checkBoxLayout = new QHBoxLayout(checkBoxArea);
-    NXText* checkBoxText = new NXText("NXCheckBox", this);
+    NXText* checkBoxText = new NXText("NXcheckBox", this);
     checkBoxText->setTextPixelSize(15);
     checkBoxLayout->addWidget(checkBoxText);
     checkBoxLayout->addWidget(_checkBox);

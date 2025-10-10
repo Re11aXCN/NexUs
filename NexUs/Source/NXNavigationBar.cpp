@@ -88,23 +88,7 @@ NXNavigationBar::NXNavigationBar(QWidget* parent)
 
     // 搜索跳转
     QObject::connect(d->_navigationSuggestBox, &NXSuggestBox::suggestionClicked, this, [=](const QString& suggestText, QVariantMap suggestData) {
-        NXNavigationNode* node = nullptr;
-        if (suggestData.value("NXNodeType").toString() == "Stacked")
-        {
-            node = d->_navigationModel->getNavigationNode(suggestData.value("NXPageKey").toString());
-            if (node)
-            {
-                d->onTreeViewClicked(node->getModelIndex());
-            }
-        }
-        else
-        {
-            node = d->_footerModel->getNavigationNode(suggestData.value("NXPageKey").toString());
-            if (node)
-            {
-                d->onFooterViewClicked(node->getModelIndex());
-            }
-        }
+        navigation(suggestData.value("NXPageKey").toString());
     });
 
     // 导航模型
@@ -115,8 +99,8 @@ NXNavigationBar::NXNavigationBar(QWidget* parent)
     QObject::connect(d->_navigationView, &NXNavigationView::navigationClicked, this, [=](const QModelIndex& index) {
         d->onTreeViewClicked(index);
     });
-    QObject::connect(d->_navigationView, &NXNavigationView::navigationPositionSwapped, this, [=](const QModelIndex& index) {
-        d->onTreeViewClicked(index, false);
+    QObject::connect(d->_navigationView, &NXNavigationView::navigationPositionSwapped, this, [=](const QModelIndex& from, const QModelIndex& to) {
+        d->onTreeViewClicked(from, false);
         });
     QObject::connect(d->_navigationView, &NXNavigationView::navigationOpenNewWindow, d, &NXNavigationBarPrivate::onNavigationOpenNewWindow);
     QObject::connect(d->_navigationView, &NXNavigationView::navigationCloseCurrentWindow, d, &NXNavigationBarPrivate::onNavigationCloseCurrentWindow);
@@ -399,7 +383,7 @@ NodeOperateReturnTypeWithKey NXNavigationBar::addFooterNode(const QString& foote
 
 NodeOperateReturnTypeWithKey NXNavigationBar::addFooterNode(const QString& footerTitle, QWidget* page, int keyPoints, NXIconType::IconName awesome)
 {
-    NodeOperateReturnTypeWithKey returnType = d_ptr->_footerModel->addFooterNode(footerTitle, page ? true : false, keyPoints, awesome);
+    NodeOperateReturnTypeWithKey returnType = d_ptr->_footerModel->addFooterNode(footerTitle, page != nullptr, keyPoints, awesome);
     if (returnType.nodeOperateReturnType == NXNavigationType::Success)
     {
         d_ptr->_addFooterPage(page, returnType.nodeKey);
@@ -432,11 +416,11 @@ void NXNavigationBar::expandNavigationNode(const QString& expanderKey)
     {
         return;
     }
-    d->_expandOrCollpaseExpanderNode(node, true);
+    d->_expandOrCollapseExpanderNode(node, true);
     d->_resetNodeSelected();
 }
 
-void NXNavigationBar::collpaseNavigationNode(const QString& expanderKey)
+void NXNavigationBar::collapseNavigationNode(const QString& expanderKey)
 {
     Q_D(NXNavigationBar);
     NXNavigationNode* node = d->_navigationModel->getNavigationNode(expanderKey);
@@ -444,7 +428,7 @@ void NXNavigationBar::collpaseNavigationNode(const QString& expanderKey)
     {
         return;
     }
-    d->_expandOrCollpaseExpanderNode(node, false);
+    d->_expandOrCollapseExpanderNode(node, false);
     d->_resetNodeSelected();
 }
 
@@ -526,6 +510,37 @@ int NXNavigationBar::getNodeKeyPoints(const QString& nodeKey) const
     return node->getKeyPoints();
 }
 
+NXNavigationType::NodeOperateReturnType NXNavigationBar::setNavigationNodeTitle(const QString& nodeTitle, const QString& nodeKey)
+{
+    Q_D(NXNavigationBar);
+    NXNavigationNode* node = d->_navigationModel->getNavigationNode(nodeKey);
+    if (!node)
+    {
+        node = d->_footerModel->getNavigationNode(nodeKey);
+    }
+    if (node)
+    {
+        node->setNodeTitle(nodeTitle);
+        update();
+        return NXNavigationType::Success;
+    }
+    else
+    {
+        return NXNavigationType::TargetNodeInvalid;
+    }
+}
+
+QString NXNavigationBar::getNavigationNodeTitle(const QString& nodeKey) const
+{
+    Q_D(const NXNavigationBar);
+    NXNavigationNode* node = d->_navigationModel->getNavigationNode(nodeKey);
+    if (!node)
+    {
+        node = d->_footerModel->getNavigationNode(nodeKey);
+    }
+    return node == nullptr ? QString{} : node->getNodeTitle();
+}
+
 void NXNavigationBar::navigation(const QString& pageKey, bool isLogClicked, bool isRouteBack)
 {
     Q_D(NXNavigationBar);
@@ -560,25 +575,6 @@ void NXNavigationBar::setDisplayMode(NXNavigationType::NavigationDisplayMode dis
     d->_doComponentAnimation(displayMode, isAnimation);
     d->_raiseNavigationBar();
     Q_EMIT displayModeChanged(displayMode);
-}
-
-NXNavigationType::NodeOperateReturnType NXNavigationBar::setNodeTitle(const QString& nodeTitle, const QString& nodeKey)
-{
-    Q_D(NXNavigationBar);
-    NXNavigationNode* node = d->_navigationModel->getNavigationNode(nodeKey);
-    if (!node)
-    {
-        node = d->_footerModel->getNavigationNode(nodeKey);
-    }
-    if (node)
-    {
-        node->setNodeTitle(nodeTitle);
-        return NXNavigationType::Success;
-    }
-    else
-    {
-        return NXNavigationType::TargetNodeInvalid;
-    }
 }
 
 NXNavigationType::NodeOperateReturnType NXNavigationBar::navigationPageNodeSwitch(const QString& targetPageNodeKey)

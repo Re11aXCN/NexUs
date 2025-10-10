@@ -378,6 +378,8 @@ bool NXNavigationModel::canDropMimeData(const QMimeData* data, Qt::DropAction ac
 
 bool NXNavigationModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
+    enum DropIndicatorPosition { OnItem, AboveItem, BelowItem, OnViewport };
+
     QByteArray encodedData = data->data("application/x-nxnavigation-node");
     QDataStream stream(&encodedData, QIODevice::ReadOnly);
     QString nodeKey, nodeTitle;
@@ -386,8 +388,10 @@ bool NXNavigationModel::dropMimeData(const QMimeData* data, Qt::DropAction actio
 
     NXNavigationNode* draggedNode = _nodesMap.value(nodeKey);
     if (!draggedNode) return false;
-    const QModelIndex targetParentIndex = parent;
-    const QModelIndex targetIndex = index(row, column, targetParentIndex);
+
+    const QModelIndex& targetIndex = property("NXDropTargetIndex").value<QModelIndex>();
+    if(!targetIndex.isValid()) return false;
+    DropIndicatorPosition dropindicationPos = property("NXDropIndicatorPosition").value<DropIndicatorPosition>();
 
     NXNavigationNode* targetNode = static_cast<NXNavigationNode*>(targetIndex.internalPointer());
     NXNavigationNode* draggedParentNode = draggedNode->getParentNode();
@@ -405,23 +409,23 @@ bool NXNavigationModel::dropMimeData(const QMimeData* data, Qt::DropAction actio
         {
             if (draggedRow + 1 == targetRow) targetRow++; // 差2纠正
             else 
-                if(_dropIndicatorPosition == NXNavigationModel::BelowItem) targetRow++; // 差2纠正
+                if(dropindicationPos == DropIndicatorPosition::BelowItem) targetRow++; // 差2纠正
                 //else if(_dropIndicatorPosition == NXNavigationModel::AboveItem) targetRow;
         }
         else if (draggedRow > targetRow)
         {
             if (draggedRow - 1 != targetRow) 
-                if (_dropIndicatorPosition == NXNavigationModel::BelowItem)
+                if (dropindicationPos == DropIndicatorPosition::BelowItem)
                     targetRow++; //下移一个位置
         }
     }
     else {
-        if (_dropIndicatorPosition == NXNavigationModel::BelowItem)
+        if (dropindicationPos == DropIndicatorPosition::BelowItem)
             targetRow++; //下移一个位置
     }
     
     beginMoveRows(draggedParentNode->getModelIndex(), draggedRow, draggedRow,
-        targetParentIndex, targetRow);
+        parent, targetRow);
     if (isSameParent) {
         if (targetRow >= totalRow || draggedRow < targetRow)
             targetRow--; //差2纠正，需恢复，确保insert位置正确
@@ -442,16 +446,6 @@ bool NXNavigationModel::dropMimeData(const QMimeData* data, Qt::DropAction actio
     endMoveRows();
     Q_EMIT mineDataDropped(data, draggedNode->getModelIndex(), targetIndex);
     return true;
-}
-
-void NXNavigationModel::setDropIndicatorPosition(DropIndicatorPosition position)
-{
-    _dropIndicatorPosition = position;
-}
-
-NXNavigationModel::DropIndicatorPosition NXNavigationModel::getDropIndicatorPosition() const
-{
-    return _dropIndicatorPosition;
 }
 
 bool NXNavigationModel::swapNodes(const QString& nodeKey1, const QString& nodeKey2)

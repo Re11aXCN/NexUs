@@ -75,8 +75,6 @@ NXNavigationView::NXNavigationView(QWidget* parent)
     setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, &NXNavigationView::customContextMenuRequested, this, &NXNavigationView::onCustomContextMenuRequested);
 
-    _compactToolTip = new NXToolTip(this);
-    _compactToolTip->setOffSetX(-105);
 }
 
 NXNavigationView::~NXNavigationView()
@@ -101,14 +99,12 @@ void NXNavigationView::setNavigationNodeDragAndDropEnable(bool isEnable)
     setDragDropMode(isEnable ? QAbstractItemView::InternalMove : QAbstractItemView::NoDragDrop);
 }
 
-QAbstractItemView::DropIndicatorPosition NXNavigationView::dropIndicatorPositionOverride() const
+QAbstractItemView::DropIndicatorPosition NXNavigationView::_dropIndicatorPosition(const QModelIndex& dropTargetIndex) const
 {
-    if (!_hoveredIndex.isValid()) {
-        return QAbstractItemView::OnViewport; 
-    }
+    if (!dropTargetIndex.isValid()) return QAbstractItemView::OnViewport;
 
-    QRect itemRect = visualRect(_hoveredIndex);
-    QPoint cursorPos = mapFromGlobal(QCursor::pos());
+    const QRect& itemRect = visualRect(dropTargetIndex);
+    const QPoint& cursorPos = mapFromGlobal(QCursor::pos());
 
     if (cursorPos.y() - 9 < itemRect.top()) {
         return QAbstractItemView::AboveItem;
@@ -165,23 +161,7 @@ void NXNavigationView::mousePressEvent(QMouseEvent* event)
 
 void NXNavigationView::mouseMoveEvent(QMouseEvent* event)
 {
-    if (_pNavigationBarPrivate->_currentDisplayMode == NXNavigationType::NavigationDisplayMode::Compact)
-    {
-        QModelIndex posIndex = indexAt(event->pos());
-        if (!posIndex.isValid())
-        {
-            _compactToolTip->hide();
-            return;
-        }
-        NXNavigationNode* posNode = static_cast<NXNavigationNode*>(posIndex.internalPointer());
-        _compactToolTip->setToolTip(posNode->getNodeTitle());
-        _compactToolTip->updatePos(QCursor::pos());
-        _compactToolTip->show();
-    }
-    else
-    {
-        _compactToolTip->hide();
-    }
+    _doCompactToolTip();
     QTreeView::mouseMoveEvent(event);
 }
 
@@ -211,6 +191,15 @@ void NXNavigationView::dragEnterEvent(QDragEnterEvent* event)
     event->setAccepted(event->mimeData()->hasFormat("application/x-nxnavigation-node"));
 }
 
+void NXNavigationView::dragLeaveEvent(QDragLeaveEvent* event)
+{
+    NXNavigationModel* model = qobject_cast<NXNavigationModel*>(this->model());
+    model->setProperty("NXDropTargetIndex", QModelIndex());
+    model->setProperty("NXDropIndicatorPosition", DropIndicatorPosition::OnViewport);
+    viewport()->update();
+    event->accept();
+}
+
 void NXNavigationView::dragMoveEvent(QDragMoveEvent* event)
 {
     //QTreeView::dragMoveEvent(event);
@@ -218,25 +207,25 @@ void NXNavigationView::dragMoveEvent(QDragMoveEvent* event)
     // 但是对于PageNode来说，不会触发QStyle::PE_IndicatorItemViewItemDrop，
     // 且当前点击拖拽的PageNode，触发dropIndicatorPosition()Above和Below时效果不好
     // 所以这里需要重写dragMoveEvent，自定义dropIndicatorPosition方法和绘制指示器
+    NXNavigationModel* model = qobject_cast<NXNavigationModel*>(this->model());
     if (!event->mimeData()->hasFormat("application/x-nxnavigation-node")) {
         event->ignore();
         return;
     }
+    const QModelIndex& targetIndex = indexAt(event->position().toPoint());
+    const QModelIndex& targetParentIndex = targetIndex.parent();
+    DropIndicatorPosition dropindicationPos = _dropIndicatorPosition(targetIndex);
+    model->setProperty("NXDropTargetIndex", targetIndex);
+    model->setProperty("NXDropIndicatorPosition", dropindicationPos);
 
-    _hoveredIndex = indexAt(event->position().toPoint());
-
-    DropIndicatorPosition dropindicationPos = dropIndicatorPositionOverride();
-    NXNavigationModel* model = qobject_cast<NXNavigationModel*>(this->model());
-    model->setDropIndicatorPosition(static_cast<NXNavigationModel::DropIndicatorPosition>(dropindicationPos));
     NXNavigationNode* draggedNode = model->getSelectedNode();
-    const QModelIndex draggedIndex = draggedNode->getModelIndex();
-    const QModelIndex draggedParentIndex = draggedIndex.parent();
-    const QModelIndex draggedPreviousIndex = model->index(draggedIndex.row() - 1, 0, draggedParentIndex);
-    const QModelIndex draggedNextIndex = model->index(draggedIndex.row() + 1, 0, draggedParentIndex);
-
-    const QModelIndex targetIndex = indexAt(event->position().toPoint());
-    const QModelIndex targetParentIndex = targetIndex.parent();
-    if (_canProceedWithDragDrop(dropindicationPos, draggedIndex, targetIndex, draggedPreviousIndex, draggedNextIndex, targetParentIndex, model)) {
+    const QModelIndex& draggedIndex = draggedNode->getModelIndex();
+    const QModelIndex& draggedParentIndex = draggedIndex.parent();
+    const QModelIndex& draggedPreviousIndex = model->index(draggedIndex.row() - 1, 0, draggedParentIndex);
+    const QModelIndex& draggedNextIndex = model->index(draggedIndex.row() + 1, 0, draggedParentIndex);
+    bool canProceedWithDragDrop = _canProceedWithDragDrop(dropindicationPos, draggedIndex, targetIndex, draggedPreviousIndex, draggedNextIndex, targetParentIndex, model);
+    model->setProperty("NXCanProceedWithDragDrop", canProceedWithDragDrop);
+    if (canProceedWithDragDrop) {
         if (dropindicationPos == QAbstractItemView::OnItem) {
             gIndicatorColor = static_cast<NXNavigationNode*>(targetIndex.internalPointer())->getIsExpanderNode()
                 ? NXThemeColor(nxTheme->getThemeMode(), BasicText)
@@ -252,67 +241,57 @@ void NXNavigationView::dragMoveEvent(QDragMoveEvent* event)
     else {
         gIndicatorColor = NXThemeColor(nxTheme->getThemeMode(), BasicText);
     }
-
-    viewport()->update();
     event->accept();
+    viewport()->update();
 }
 
 void NXNavigationView::dropEvent(QDropEvent* event)
 {
-    DropIndicatorPosition dropindicationPos = dropIndicatorPositionOverride();
-    _hoveredIndex = QModelIndex();
-
-    const QModelIndex targetIndex = indexAt(event->position().toPoint());
-    const QModelIndex targetParentIndex = targetIndex.parent();
+    NXNavigationModel* model = qobject_cast<NXNavigationModel*>(this->model());
+    if (!model->property("NXCanProceedWithDragDrop").toBool()) {
+        event->ignore(); return;
+    }
+    DropIndicatorPosition dropindicationPos = model->property("NXDropIndicatorPosition").value<DropIndicatorPosition>();
+    const QModelIndex& targetIndex = model->property("NXDropTargetIndex").value<QModelIndex>();
     NXNavigationNode* targetNode = static_cast<NXNavigationNode*>(targetIndex.internalPointer());
 
-    NXNavigationModel* model = qobject_cast<NXNavigationModel*>(this->model());
-    model->setDropIndicatorPosition(static_cast<NXNavigationModel::DropIndicatorPosition>(dropindicationPos));
     NXNavigationNode* draggedNode = model->getSelectedNode();
     const QModelIndex draggedIndex = draggedNode->getModelIndex();
-    const QModelIndex draggedParentIndex = draggedIndex.parent();
-    const QModelIndex draggedPreviousIndex = model->index(draggedIndex.row() - 1, 0, draggedParentIndex);
-    const QModelIndex draggedNextIndex = model->index(draggedIndex.row() + 1, 0, draggedParentIndex);
-
-    if (_canProceedWithDragDrop(dropindicationPos, draggedIndex, targetIndex, draggedPreviousIndex, draggedNextIndex, targetParentIndex, model)) {
-        if (dropindicationPos == QAbstractItemView::OnItem) {
-            if (targetNode->getIsExpanderNode()) {
-                event->ignore(); return;
-            }
-            draggedNode->swapShowInfo(targetNode);
-            model->swapNodes(draggedNode->getNodeKey(), targetNode->getNodeKey());
-            Q_EMIT navigationPositionSwapped(draggedIndex);
-            _navigationStyle->setPressIndex(QModelIndex());
-            event->acceptProposedAction();
+    if (dropindicationPos == QAbstractItemView::OnItem) {
+        if (targetNode->getIsExpanderNode()) {
+            model->setProperty("NXDropTargetIndex", QModelIndex());
+            model->setProperty("NXDropIndicatorPosition", DropIndicatorPosition::OnViewport);
+            event->ignore();
+            return;
         }
-        else {
-            int targetRow = targetIndex.row();
-            if (!model->canDropMimeData(event->mimeData(), Qt::MoveAction, targetRow, 0, targetParentIndex)) {
-                event->ignore(); return;
-            }
-            model->dropMimeData(event->mimeData(), Qt::MoveAction, targetRow, 0, targetParentIndex);
-            event->acceptProposedAction();
-        }
+        draggedNode->swapVisual(targetNode);
+        model->swapNodes(draggedNode->getNodeKey(), targetNode->getNodeKey());
+        Q_EMIT navigationPositionSwapped(draggedIndex, targetIndex);
+        _navigationStyle->setPressIndex(QModelIndex());
     }
     else {
-        event->ignore();
+        model->dropMimeData(event->mimeData(), Qt::MoveAction, targetIndex.row(), 0, targetIndex.parent());
     }
+    model->setProperty("NXDropTargetIndex", QModelIndex());
+    model->setProperty("NXDropIndicatorPosition", DropIndicatorPosition::OnViewport);
+    event->acceptProposedAction();
 }
-
 
 void NXNavigationView::paintEvent(QPaintEvent* event)
 {
     QTreeView::paintEvent(event);
-    if (!_hoveredIndex.isValid()) return;
+    NXNavigationModel* model = qobject_cast<NXNavigationModel*>(this->model());
+    const QModelIndex& dropTargetIndex = model->property("NXDropTargetIndex").value<QModelIndex>();
+    if (!dropTargetIndex.isValid()) return;
     QStyleOptionViewItem option;
     option.initFrom(this);
-    option.rect = visualRect(_hoveredIndex);
+    option.rect = visualRect(dropTargetIndex);
 
     QPainter painter(viewport());
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(QPen(gIndicatorColor, 2));
 
-    switch (dropIndicatorPositionOverride()) {
+    switch (model->property("NXDropIndicatorPosition").value<DropIndicatorPosition>()) {
     case QAbstractItemView::AboveItem: {
         int startY = option.rect.top() + 1;
         int startX = option.rect.left() + 6;
@@ -342,23 +321,7 @@ bool NXNavigationView::eventFilter(QObject* watched, QEvent* event)
     case QEvent::MouseMove:
     case QEvent::HoverMove:
     {
-        if (_pNavigationBarPrivate->_currentDisplayMode == NXNavigationType::NavigationDisplayMode::Compact)
-        {
-            QModelIndex posIndex = indexAt(mapFromGlobal(QCursor::pos()));
-            if (!posIndex.isValid())
-            {
-                _compactToolTip->hide();
-                break;
-            }
-            NXNavigationNode* posNode = static_cast<NXNavigationNode*>(posIndex.internalPointer());
-            _compactToolTip->setToolTip(posNode->getNodeTitle());
-            _compactToolTip->updatePos(QCursor::pos());
-            _compactToolTip->show();
-        }
-        else
-        {
-            _compactToolTip->hide();
-        }
+        _doCompactToolTip();
         break;
     }
     default:
@@ -379,4 +342,34 @@ bool NXNavigationView::_canProceedWithDragDrop(QAbstractItemView::DropIndicatorP
         (draggedNextIndex.isValid() && draggedNextIndex == targetIndex && dropIndicatorPosition == QAbstractItemView::AboveItem) ||
         ((draggedIndex.row() == model->rowCount(targetParentIndex) - 1) && !targetIndex.isValid()) ||
         (targetIndex == draggedIndex.parent() && !model->getSelectedNode()->getParentNode()->getIsRootNode()));
+}
+
+void NXNavigationView::_doCompactToolTip()
+{
+    if (_pNavigationBarPrivate->_currentDisplayMode == NXNavigationType::NavigationDisplayMode::Compact)
+    {
+        if (!_compactToolTip)
+        {
+            _compactToolTip = new NXToolTip(this);
+        }
+        const QPoint& cursorPos = mapFromGlobal(QCursor::pos());
+        const QModelIndex& posIndex = indexAt(cursorPos);
+        if (!posIndex.isValid())
+        {
+            _compactToolTip->hide();
+            return;
+        }
+        NXNavigationNode* posNode = static_cast<NXNavigationNode*>(posIndex.internalPointer());
+        _compactToolTip->setToolTip(posNode->getNodeTitle());
+        _compactToolTip->updatePos(cursorPos);
+        _compactToolTip->show();
+    }
+    else
+    {
+        if (_compactToolTip)
+        {
+            _compactToolTip->deleteLater();
+            _compactToolTip = nullptr;
+        }
+    }
 }

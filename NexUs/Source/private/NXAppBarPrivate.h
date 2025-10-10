@@ -49,6 +49,7 @@ private:
     QVBoxLayout* _titleLabelLayout{nullptr};
 
     NXToolButton* _routeBackButton{nullptr};
+    NXToolButton* _routeForwardButton{ nullptr };
     NXToolButton* _navigationButton{nullptr};
     NXToolButton* _themeChangeButton{nullptr};
     NXToolButton* _stayTopButton{nullptr};

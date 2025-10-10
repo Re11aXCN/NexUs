@@ -6,13 +6,11 @@
 #include "DeveloperComponents/NXTableViewStyle.h"
 #include "NXScrollBar.h"
 #include "private/NXTableViewPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXTableView, bool, DrawSelectionBackground)
 NXTableView::NXTableView(QWidget* parent)
     : QTableView(parent), d_ptr(new NXTableViewPrivate())
 {
     Q_D(NXTableView);
     d->q_ptr = this;
-    d->_pDrawSelectionBackground = true;
 
     setMouseTracking(true);
     setObjectName("NXTableView");
@@ -70,8 +68,22 @@ bool NXTableView::getIsSelectionEffectsEnabled() const {
     return d->_pTableViewStyle->getIsSelectionEffectsEnabled();
 }
 
+void NXTableView::setIsHoverEffectsEnabled(bool enabled) {
+    Q_D(NXTableView);
+    d->_pTableViewStyle->setIsHoverEffectsEnabled(enabled);
+    update();
+}
+
+bool NXTableView::getIsHoverEffectsEnabled() const {
+    Q_D(const NXTableView);
+    return d->_pTableViewStyle->getIsHoverEffectsEnabled();
+}
+
 void NXTableView::setIndexWidget(const QModelIndex& index, QWidget* widget) {
     QTableView::setIndexWidget(index, widget);
+    if (auto* indexWidget = qobject_cast<NXModelIndexWidget*>(widget)) {
+        Q_EMIT indexWidgetAdded(indexWidget);
+    }
 }
 
 QWidget* NXTableView::indexWidget(const QModelIndex& index) const
@@ -79,67 +91,67 @@ QWidget* NXTableView::indexWidget(const QModelIndex& index) const
     return QTableView::indexWidget(index);
 }
 
-QRect NXTableView::getAlignLeft(const QRect& cellRect, const QSize& iconSize) const
+QList<NXModelIndexWidget*> NXTableView::getIndexWidgets() const
 {
-    return QRect(cellRect.x(),
-        cellRect.y() + (cellRect.height() - iconSize.height()) / 2,
-        iconSize.width(),
-        iconSize.height());
+    QList<NXModelIndexWidget*> widgets;
+    for (int row = 0; row < model()->rowCount(); ++row) {
+        for (int col = 0; col < model()->columnCount(); ++col) {
+            if (auto* widget = qobject_cast<NXModelIndexWidget*>(indexWidget(model()->index(row, col)))) {
+                widgets.append(widget);
+            }
+        }
+    }
+    return widgets;
 }
 
-QRect NXTableView::getAlignCenter(const QRect& cellRect, const QSize& iconSize) const
+NXModelIndexWidget* NXTableView::getIndexWidget(const QModelIndex& index) const
 {
-    return QRect(cellRect.x() + (cellRect.width() - iconSize.width()) / 2,
-        cellRect.y() + (cellRect.height() - iconSize.height()) / 2,
-        iconSize.width(),
-        iconSize.height());
+    return qobject_cast<NXModelIndexWidget*>(indexWidget(index));
 }
-
-QRect NXTableView::getAlignRight(const QRect& cellRect, const QSize& iconSize) const
+/*
+void NXTableView::updateIndexWidgets()
 {
-    return QRect(cellRect.x() + (cellRect.width() - iconSize.width()),
-        cellRect.y() + (cellRect.height() - iconSize.height()) / 2,
-        iconSize.width(),
-        iconSize.height());
+    for (int row = 0; row < model()->rowCount(); ++row) {
+        for (int col = 0; col < model()->columnCount(); ++col) {
+            QModelIndex currentIndex = model()->index(row, col);
+            if (auto* widget = getIndexWidget(currentIndex)) {
+                widget->setIndex(currentIndex);
+            }
+        }
+    }
 }
-
-void NXTableView::setHeaderFontSize(int size)
+*/
+void NXTableView::setHorizontalHeaderFontSize(int pixelSize)
 {
     QFont tableHeaderFont = horizontalHeader()->font();
-    tableHeaderFont.setPixelSize(size);
+    tableHeaderFont.setPixelSize(pixelSize);
     horizontalHeader()->setFont(tableHeaderFont);
 }
 
-void NXTableView::setModelFontSize(int size)
+void NXTableView::setVerticalHeaderFontSize(int pixelSize)
 {
-    QFont tableModelFont = this->font();
-    tableModelFont.setPixelSize(size);
-    this->setFont(tableModelFont);
+    QFont tableHeaderFont = verticalHeader()->font();
+    tableHeaderFont.setPixelSize(pixelSize);
+    verticalHeader()->setFont(tableHeaderFont);
 }
 
-void NXTableView::setTableFontSize(int size)
+void NXTableView::setFontSize(int pixelSize)
 {
-    setHeaderFontSize(size);
-    setModelFontSize(size);
+    QFont tableFont = this->font();
+    tableFont.setPixelSize(pixelSize);
+    this->setFont(tableFont);
 }
 
-void NXTableView::setHeaderAdjustParam(const QMap<int, NXAdjustParam>& adjustParamMap)
+void NXTableView::adjustHeaderColumnIconRect(const QHash<int, coords>& adjusts)
 {
     Q_D(NXTableView);
-    d->_pTableViewStyle->setHeaderAdjustParam(adjustParamMap);
+    d->_pTableViewStyle->adjustHeaderColumnIconRect(adjusts);
 }
 
-void NXTableView::setAdjustTextRect(const QMap<int, NXAdjustParam>& adjustParamsMap)
+void NXTableView::adjustColummTextRect(const QHash<int, coords>& adjusts)
 {
     Q_D(NXTableView);
-    d->_pTableViewStyle->setAdjustParams(adjustParamsMap);
-}
-
-void NXTableView::setCurrentHoverRow(int row)
-{
-    Q_D(NXTableView);
-    d->_pTableViewStyle->setCurrentHoverRow(row);
-    update();
+    d->_pTableViewStyle->adjustColummTextRect(adjusts);
 }
 
 void NXTableView::setHeaderMargin(int headerMargin)
@@ -176,11 +188,8 @@ void NXTableView::mouseMoveEvent(QMouseEvent* event)
     if (selectionBehavior() == QAbstractItemView::SelectRows)
     {
         const QModelIndex& currentIndex = indexAt(event->pos());
-        int currentHoverdRow = currentIndex.row();
-        int currentHoverdColumn = currentIndex.column();
-        d->_pTableViewStyle->setCurrentHoverRow(currentHoverdRow);
-        Q_EMIT currentHoverRowChanged(currentHoverdRow);
-        Q_EMIT currentHoverColumnChanged(currentHoverdColumn);
+        d->_pTableViewStyle->setCurrentHoverIndex(currentIndex);
+        Q_EMIT currentHoverIndexChanged(currentIndex);
         update();
     }
     QTableView::mouseMoveEvent(event);
@@ -196,65 +205,140 @@ void NXTableView::mouseReleaseEvent(QMouseEvent* event)
 {
     QTableView::mouseReleaseEvent(event);
 }
+
 void NXTableView::leaveEvent(QEvent* event)
 {
     Q_D(NXTableView);
     if (selectionBehavior() == QAbstractItemView::SelectRows)
     {
-        d->_pTableViewStyle->setCurrentHoverRow(-1);
-        Q_EMIT currentHoverRowChanged(-1);
+        d->_pTableViewStyle->setCurrentHoverIndex(QModelIndex());
+        Q_EMIT currentHoverIndexChanged(QModelIndex());
         update();
     }
     QTableView::leaveEvent(event);
 }
+/*
+void NXTableView::rowsInserted(const QModelIndex& parent, int start, int end)
+{
+    QTableView::rowsInserted(parent, start, end);
+    // 行插入后可能需要更新索引widget
+    updateIndexWidgets();
+}
 
-NXModelIndexWidget::NXModelIndexWidget(const QModelIndex& index, NXTableView* parent)
+void NXTableView::rowsAboutToBeRemoved(const QModelIndex& parent, int start, int end)
+{
+    QTableView::rowsAboutToBeRemoved(parent, start, end);
+}
+
+void NXTableView::reset()
+{
+    QTableView::reset();
+    // 模型重置后更新所有索引widget
+    updateIndexWidgets();
+}
+*/
+NXModelIndexWidget::NXModelIndexWidget(NXTableView* parent)
     : QWidget(parent), d_ptr(new NXModelIndexWidgetPrivate())
 {
     Q_D(NXModelIndexWidget);
     d->q_ptr = this;
-    d->_index = index;
-    QObject::connect(this, &NXModelIndexWidget::updateIndex, this, [d, parent, this](const QModelIndex& newIndex) {
-        d->_index = newIndex;
-        if (parent->selectionBehavior() == QAbstractItemView::SelectRows)
-        {
-            parent->setCurrentHoverRow(newIndex.row());
-        }
-        });
+    setAttribute(Qt::WA_Hover, true);
+    setMouseTracking(true);
+}
+
+NXModelIndexWidget::NXModelIndexWidget(const QModelIndex& index, NXTableView* parent)
+    : NXModelIndexWidget(parent)
+{
+    setIndex(index);
 }
 
 NXModelIndexWidget::~NXModelIndexWidget()
 {
 }
 
-const QModelIndex& NXModelIndexWidget::index() const
+const QModelIndex& NXModelIndexWidget::getIndex() const
 {
     Q_D(const NXModelIndexWidget);
-    return d->_index;
+    return d->_pIndex;
 }
 
 void NXModelIndexWidget::setIndex(const QModelIndex& index)
 {
     Q_D(NXModelIndexWidget);
-    d->_index = index;
+    if (d->_pIndex != index) {
+        d->_pIndex = index;
+        Q_EMIT indexChanged(index);
+        update(); // 索引改变时重绘
+    }
+}
+
+bool NXModelIndexWidget::isValid() const
+{
+    Q_D(const NXModelIndexWidget);
+    return d->_pIndex.isValid();
+}
+
+int NXModelIndexWidget::row() const
+{
+    Q_D(const NXModelIndexWidget);
+    return d->_pIndex.row();
+}
+
+int NXModelIndexWidget::column() const
+{
+    Q_D(const NXModelIndexWidget);
+    return d->_pIndex.column();
 }
 
 void NXModelIndexWidget::enterEvent(QEnterEvent* event)
 {
-    Q_D(NXModelIndexWidget);
     Q_EMIT entered();
     QWidget::enterEvent(event);
 }
 
 void NXModelIndexWidget::leaveEvent(QEvent* event)
 {
-    Q_D(NXModelIndexWidget);
     Q_EMIT leaved();
     QWidget::leaveEvent(event);
 }
 
 void NXModelIndexWidget::mousePressEvent(QMouseEvent* event)
 {
-    Q_D(NXModelIndexWidget);
+    if (event->button() == Qt::LeftButton) {
+        Q_EMIT clicked();
+    }
     QWidget::mousePressEvent(event);
+}
+
+void NXModelIndexWidget::mouseReleaseEvent(QMouseEvent* event)
+{
+    QWidget::mouseReleaseEvent(event);
+}
+
+void NXModelIndexWidget::mouseDoubleClickEvent(QMouseEvent* event)
+{
+    if (event->button() == Qt::LeftButton) {
+        Q_EMIT doubleClicked();
+    }
+    QWidget::mouseDoubleClickEvent(event);
+}
+
+void NXModelIndexWidget::paintEvent(QPaintEvent* event)
+{
+    QWidget::paintEvent(event);
+}
+
+bool NXModelIndexWidget::event(QEvent* event)
+{
+    switch (event->type()) {
+    case QEvent::HoverEnter:
+        Q_EMIT entered();
+        break;
+    case QEvent::HoverLeave:
+        Q_EMIT leaved();
+        break;
+    default:
+        break;
+    }
+    return QWidget::event(event);
 }

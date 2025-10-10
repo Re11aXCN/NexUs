@@ -17,26 +17,26 @@ NXScrollPagePrivate::~NXScrollPagePrivate()
 {
 }
 
-void NXScrollPagePrivate::onNavigationRouteBack(QVariantMap routeData)
+void NXScrollPagePrivate::onNavigationRoute(QVariantMap routeData)
 {
     // 面包屑
     Q_Q(NXScrollPage);
     QString pageCheckSumKey = routeData.value("NXScrollPageCheckSumKey").toString();
+    bool isRouteBack = routeData.value("NXRouteBackMode").toBool();
     if (pageCheckSumKey == "Navigation")
     {
-        QString pageTitle = routeData.value("NXPageTitle").toString();
+        QString pageTitle = isRouteBack ? routeData.value("NXBackPageTitle").toString() : routeData.value("NXForwardPageTitle").toString();
         q->navigation(_centralWidgetMap.value(pageTitle), false);
     }
     else if (pageCheckSumKey == "BreadcrumbClicked")
     {
-        QStringList lastBreadcrumbList = routeData.value("LastBreadcrumbList").toStringList();
-        int widgetIndex = _centralWidgetMap.value(lastBreadcrumbList.last());
+        QStringList breadcrumbList = isRouteBack ? routeData.value("NXBackBreadcrumbList").toStringList() : routeData.value("NXForwardBreadcrumbList").toStringList();
+        int widgetIndex = _centralWidgetMap.value(breadcrumbList.last());
         _switchCentralStackIndex(widgetIndex, _navigationTargetIndex);
         _navigationTargetIndex = widgetIndex;
-        _breadcrumbBar->setBreadcrumbList(lastBreadcrumbList);
+        _breadcrumbBar->setBreadcrumbList(breadcrumbList);
     }
 }
-
 void NXScrollPagePrivate::_switchCentralStackIndex(int targetIndex, int lastIndex)
 {
     QWidget* currentWidget = _centralStackedWidget->widget(lastIndex);

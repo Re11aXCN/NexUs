@@ -7,6 +7,7 @@
 class NXTabBarStyle : public QProxyStyle
 {
     Q_OBJECT
+     Q_PRIVATE_CREATE(QSize, TabSize)
 public:
     explicit NXTabBarStyle(QStyle* style = nullptr);
     ~NXTabBarStyle() override;
