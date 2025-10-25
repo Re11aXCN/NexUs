@@ -1,6 +1,10 @@
-# NexUs/MSVC sln
+# NexUs
 **ElaWidgetTools QT开源库的修改封装部分代码**
 <u>https://github.com/Liniyous/ElaWidgetTools/commits/main/</u>
+
+
+
+# 版权归 ElaWidgetTools  作者[Liniyous](https://github.com/Liniyous)所有
 
 
 
