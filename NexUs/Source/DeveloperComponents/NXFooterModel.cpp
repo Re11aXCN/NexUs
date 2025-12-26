@@ -31,11 +31,11 @@ QVariant NXFooterModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-NodeOperateReturnTypeWithKey NXFooterModel::addFooterNode(const QString& footerTitle, bool isHasFooterPage, int keyPoints, NXIconType::IconName awesome)
+NXNodeOperateResult NXFooterModel::addFooterNode(const QString& footerTitle, bool isHasFooterPage, int keyPoints, NXIconType::IconName awesome)
 {
     if (_footerNodeList.count() >= 3)
     {
-        return { NXNavigationType::FooterUpperLimit, QString{} };
+        return NXUnexpected<QString>{ NXNavigationType::FooterUpperLimit };
     }
     NXNavigationNode* node = new NXNavigationNode(footerTitle);
     node->setKeyPoints(keyPoints);
@@ -46,7 +46,7 @@ NodeOperateReturnTypeWithKey NXFooterModel::addFooterNode(const QString& footerT
     _footerNodeList.append(node);
     endResetModel();
     node->setModelIndex(this->index(_footerNodeList.count() - 1));
-    return { NXNavigationType::Success, node->getNodeKey() };
+    return node->getNodeKey();
 }
 
 int NXFooterModel::getFooterNodeCount() const

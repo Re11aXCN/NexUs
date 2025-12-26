@@ -12,7 +12,7 @@ class NXFooterModel : public QAbstractListModel
 public:
     explicit NXFooterModel(QObject* parent = nullptr);
     ~NXFooterModel();
-    NodeOperateReturnTypeWithKey addFooterNode(const QString& footerTitle, bool isHasFooterPage, int keyPoints = 0, NXIconType::IconName awesome = NXIconType::None);
+    NXNodeOperateResult addFooterNode(const QString& footerTitle, bool isHasFooterPage, int keyPoints = 0, NXIconType::IconName awesome = NXIconType::None);
     int getFooterNodeCount() const;
     NXNavigationNode* getNavigationNode(const QString& footerKey);
     void removeNavigationNode(const QString& footerKey);

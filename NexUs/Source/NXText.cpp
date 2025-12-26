@@ -28,7 +28,7 @@ NXText::NXText(QWidget* parent)
     setWordWrap(true);
     d->_themeMode = nxTheme->getThemeMode();
     d->onThemeChanged(nxTheme->getThemeMode());
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXTextPrivate::onThemeChanged);
+    connect(nxTheme, &NXTheme::themeModeChanged, d, &NXTextPrivate::onThemeChanged);
 }
 
 NXText::NXText(QString text, QWidget* parent)

@@ -20,7 +20,7 @@ NXDrawerHeader::NXDrawerHeader(QWidget* parent)
     setContentsMargins(0, 0, 30, 0);
 
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }
@@ -47,7 +47,7 @@ void NXDrawerHeader::setHeaderWidget(QWidget* widget)
 void NXDrawerHeader::doExpandOrCollapseAnimation()
 {
     QPropertyAnimation* rotateAnimation = new QPropertyAnimation(this, "pExpandIconRotate");
-    QObject::connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         update();
     });
     rotateAnimation->setDuration(300);

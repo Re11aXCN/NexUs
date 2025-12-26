@@ -33,7 +33,7 @@ NXProgressRing::NXProgressRing(QWidget* parent)
     setStyleSheet("#NXProgressRing{background-color:transparent;}");
 
     d->_busyStartDegAnimation = new QPropertyAnimation(d, "pBusyStartDeg");
-    QObject::connect(d->_busyStartDegAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+    connect(d->_busyStartDegAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
         update();
     });
     d->_busyStartDegAnimation->setEasingCurve(QEasingCurve::Linear);
@@ -51,7 +51,7 @@ NXProgressRing::NXProgressRing(QWidget* parent)
     d->_busyContentDegAnimation->setLoopCount(-1);
 
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
         update();
     });

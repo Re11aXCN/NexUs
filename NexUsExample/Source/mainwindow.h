@@ -24,8 +24,8 @@ class MainWindow : public NXWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget* parent = nullptr);
-    ~MainWindow();
+    explicit MainWindow(QWidget* parent = nullptr);
+    ~MainWindow() override;
 
     void initWindow();
     void initEdgeLayout();
@@ -36,6 +36,7 @@ protected:
 
 private:
     NXContentDialog* _closeDialog{nullptr};
+    NXSuggestBox* _windowSuggestBox{nullptr};
     T_Home* _homePage{nullptr};
 #ifdef Q_OS_WIN
     T_NXScreen* _elaScreenPage{nullptr};

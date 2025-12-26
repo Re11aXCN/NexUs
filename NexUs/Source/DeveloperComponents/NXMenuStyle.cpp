@@ -12,7 +12,7 @@ NXMenuStyle::NXMenuStyle(QStyle* style)
     _pMenuItemHeight = 32;
     _pBorderRadius = 6;
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

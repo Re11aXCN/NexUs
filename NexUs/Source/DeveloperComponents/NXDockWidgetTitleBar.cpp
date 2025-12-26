@@ -20,20 +20,20 @@ NXDockWidgetTitleBar::NXDockWidgetTitleBar(QWidget* parent)
     _floatButton = new NXIconButton(NXIconType::WindowRestore, 13, 32, 26, this);
     _floatButton->setLightHoverColor(NXThemeColor(NXThemeType::Light, BasicHoverAlpha));
     _floatButton->setDarkHoverColor(NXThemeColor(NXThemeType::Dark, BasicHoverAlpha));
-    QObject::connect(_floatButton, &NXIconButton::clicked, this, &NXDockWidgetTitleBar::onFloatButtonClicked);
+    connect(_floatButton, &NXIconButton::clicked, this, &NXDockWidgetTitleBar::onFloatButtonClicked);
     _closeButton = new NXIconButton(NXIconType::Xmark, 17, 32, 26, this);
     _closeButton->setLightHoverColor(NXThemeColor(NXThemeType::Light, StatusDanger));
     _closeButton->setDarkHoverColor(NXThemeColor(NXThemeType::Dark, StatusDanger));
-    QObject::connect(_closeButton, &NXIconButton::clicked, this, &NXDockWidgetTitleBar::onCloseButtonClicked);
+    connect(_closeButton, &NXIconButton::clicked, this, &NXDockWidgetTitleBar::onCloseButtonClicked);
 
     _setVisibleFromFeatures(_dockWidget->features());
-    QObject::connect(_dockWidget, &QDockWidget::featuresChanged, this, [=](QDockWidget::DockWidgetFeatures features) {
+    connect(_dockWidget, &QDockWidget::featuresChanged, this, [=](QDockWidget::DockWidgetFeatures features) {
         _setVisibleFromFeatures(features);
     });
-    QObject::connect(_dockWidget, &QDockWidget::windowTitleChanged, this, [=](const QString& title) {
+    connect(_dockWidget, &QDockWidget::windowTitleChanged, this, [=](const QString& title) {
         _titleLabel->setText(title);
     });
-    QObject::connect(_dockWidget, &QDockWidget::windowIconChanged, this, [=](const QIcon& icon) {
+    connect(_dockWidget, &QDockWidget::windowIconChanged, this, [=](const QIcon& icon) {
         _iconLabel->setPixmap(icon.pixmap(QSize(18, 18)));
     });
 
@@ -51,7 +51,7 @@ NXDockWidgetTitleBar::NXDockWidgetTitleBar(QWidget* parent)
 
     //主题变更
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

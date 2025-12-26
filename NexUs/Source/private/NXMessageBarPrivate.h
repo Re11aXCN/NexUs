@@ -24,7 +24,7 @@ class NXMessageBarManager : public QObject
     SINGLETON_CREATE_H(NXMessageBarManager)
 private:
     explicit NXMessageBarManager(QObject* parent = nullptr);
-    ~NXMessageBarManager();
+    ~NXMessageBarManager() override;
 
 public:
     //请求事件堆栈调用
@@ -52,9 +52,10 @@ class NXMessageBarPrivate : public QObject
     Q_OBJECT
     Q_D_CREATE(NXMessageBar)
     Q_PROPERTY_CREATE(qreal, Opacity)
+    Q_PROPERTY_CREATE(qreal, TimePercent)
 public:
     explicit NXMessageBarPrivate(QObject* parent = nullptr);
-    ~NXMessageBarPrivate();
+    ~NXMessageBarPrivate() override;
     void tryToRequestMessageBarEvent();
     WorkStatus getWorkMode() const;
     Q_INVOKABLE void onOtherMessageBarEnd(QVariantMap eventData);
@@ -63,11 +64,13 @@ public:
 
 private:
     qreal _createTime{0};
+    qreal _timePercentHeight{ 2 };
 
     QString _title{""};
     QString _text{""};
     NXThemeType::ThemeMode _themeMode;
-    int _borderRadius{6};    NXMessageBarType::PositionPolicy _policy;
+    int _borderRadius{6};
+    NXMessageBarType::PositionPolicy _policy;
     NXMessageBarType::MessageMode _messageMode;
 
 

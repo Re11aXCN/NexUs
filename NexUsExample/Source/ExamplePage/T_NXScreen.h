@@ -7,7 +7,7 @@
 
 class NXDxgiScreen;
 class NXComboBox;
-#if defined(Q_OS_WIN) && defined(NXPACKETIO_LIBRARY_ALREADY_BUILT)
+#if defined(Q_OS_WIN) && defined(BUILD_WITH_NXPACKETIO)
 class T_NXPacketIO;
 #endif
 class T_RecvScreen;
@@ -22,7 +22,7 @@ private:
     NXDxgiScreen* _dxgiScreen{nullptr};
     NXComboBox* _dxComboBox{nullptr};
     NXComboBox* _outputComboBox{nullptr};
-#if defined(Q_OS_WIN) && defined(NXPACKETIO_LIBRARY_ALREADY_BUILT)
+#if defined(Q_OS_WIN) && defined(BUILD_WITH_NXPACKETIO)
     T_NXPacketIO* _packetSendIO{nullptr};
     T_NXPacketIO* _packetRecvIO{nullptr};
     T_RecvScreen* _recvScreen{nullptr};

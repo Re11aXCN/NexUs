@@ -113,8 +113,8 @@ void NXApplicationPrivate::_initMicaBaseImage(const QImage& img)
     }
     QThread* initThread = new QThread();
     NXMicaBaseInitObject* initObject = new NXMicaBaseInitObject(this);
-    QObject::connect(initThread, &QThread::finished, initObject, &NXMicaBaseInitObject::deleteLater);
-    QObject::connect(initObject, &NXMicaBaseInitObject::initFinished, initThread, [=]() {
+    connect(initThread, &QThread::finished, initObject, &NXMicaBaseInitObject::deleteLater);
+    connect(initObject, &NXMicaBaseInitObject::initFinished, initThread, [=]() {
         Q_EMIT q->pWindowDisplayModeChanged();
         _updateAllMicaWidget();
         initThread->quit();
@@ -123,7 +123,7 @@ void NXApplicationPrivate::_initMicaBaseImage(const QImage& img)
     });
     initObject->moveToThread(initThread);
     initThread->start();
-    QObject::connect(this, &NXApplicationPrivate::initMicaBase, initObject, &NXMicaBaseInitObject::onInitMicaBase);
+    connect(this, &NXApplicationPrivate::initMicaBase, initObject, &NXMicaBaseInitObject::onInitMicaBase);
     Q_EMIT initMicaBase(img);
 }
 

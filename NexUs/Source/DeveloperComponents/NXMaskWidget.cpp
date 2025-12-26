@@ -17,10 +17,10 @@ NXMaskWidget::~NXMaskWidget()
 void NXMaskWidget::doMaskAnimation(int endValue)
 {
     QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pMaskAlpha");
-    QObject::connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         update();
     });
-    QObject::connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]() {
         if (endValue == 0)
         {
             setVisible(false);

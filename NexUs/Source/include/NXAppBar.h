@@ -57,13 +57,12 @@ class NX_EXPORT NXAppBar : public QWidget
     Q_PROPERTY_CREATE_Q_H(bool, IsDefaultClosed)
     Q_PROPERTY_CREATE_Q_H(bool, IsOnlyAllowMinAndClose)
     Q_PROPERTY_CREATE_Q_H(int, AppBarHeight)
-    Q_PROPERTY_CREATE_Q_H(int, CustomWidgetMaximumWidth)
 public:
     explicit NXAppBar(QWidget* parent = nullptr);
     ~NXAppBar() override;
 
-    void setCustomWidget(NXAppBarType::CustomArea customArea, QWidget* customWidget);
-    QWidget* getCustomWidget() const;
+    void setCustomWidget(NXAppBarType::CustomArea customArea, QWidget* customWidget, QObject* hitTestObject = nullptr, const QString& hitTestFunctionName = "");
+    QWidget* getCustomWidget(NXAppBarType::CustomArea customArea) const;
     void setCustomMenu(QMenu* customMenu);
     QMenu* getCustomMenu() const;
 

@@ -39,7 +39,7 @@ NXContentDialog::NXContentDialog(QWidget* parent)
     createWinId();
 #endif
     d->_leftButton = new NXPushButton("cancel", this);
-    QObject::connect(d->_leftButton, &NXPushButton::clicked, this, [=]() {
+    connect(d->_leftButton, &NXPushButton::clicked, this, [=]() {
         Q_EMIT leftButtonClicked();
         onLeftButtonClicked();
         d->_doCloseAnimation(false);
@@ -49,7 +49,7 @@ NXContentDialog::NXContentDialog(QWidget* parent)
     d->_leftButton->setFixedHeight(38);
     d->_leftButton->setBorderRadius(6);
     d->_middleButton = new NXPushButton("minimum", this);
-    QObject::connect(d->_middleButton, &NXPushButton::clicked, this, [=]() {
+    connect(d->_middleButton, &NXPushButton::clicked, this, [=]() {
         Q_EMIT middleButtonClicked();
         onMiddleButtonClicked();
     });
@@ -58,7 +58,7 @@ NXContentDialog::NXContentDialog(QWidget* parent)
     d->_middleButton->setFixedHeight(38);
     d->_middleButton->setBorderRadius(6);
     d->_rightButton = new NXPushButton("exit", this);
-    QObject::connect(d->_rightButton, &NXPushButton::clicked, this, [=]() {
+    connect(d->_rightButton, &NXPushButton::clicked, this, [=]() {
         Q_EMIT rightButtonClicked();
         onRightButtonClicked();
         d->_doCloseAnimation(true);
@@ -100,7 +100,7 @@ NXContentDialog::NXContentDialog(QWidget* parent)
     d->_mainLayout->addWidget(d->_buttonWidget);
 
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
 }

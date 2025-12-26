@@ -34,7 +34,7 @@ NXPushButton::NXPushButton(QWidget* parent)
     setFont(font);
     setObjectName("NXPushButton");
     setStyleSheet("#NXPushButton{background-color:transparent;}");
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
 }

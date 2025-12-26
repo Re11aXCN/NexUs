@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "NXAppBar.h"
+#include "NXSuggestBox.h"
 class NXWindowPrivate;
 class NX_EXPORT NXWindow : public QMainWindow
 {
@@ -17,10 +18,10 @@ class NX_EXPORT NXWindow : public QMainWindow
     Q_PROPERTY_CREATE_Q_H(int, NavigationBarWidth)
     Q_PROPERTY_CREATE_Q_H(int, CurrentStackIndex)
     Q_PROPERTY_CREATE_Q_H(int, AppBarHeight)
-    Q_PROPERTY_CREATE_Q_H(int, CustomWidgetMaximumWidth)
     Q_PROPERTY_CREATE_Q_H(int, ThemeChangeTime)
     Q_PROPERTY_CREATE_Q_H(NXNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
     Q_PROPERTY_CREATE_Q_H(NXWindowType::StackSwitchMode, StackSwitchMode)
+    Q_PROPERTY_CREATE_Q_H(NXWindowType::PaintMode, WindowPaintMode)
     Q_TAKEOVER_NATIVEEVENT_H
 public:
     Q_INVOKABLE explicit NXWindow(QWidget* parent = nullptr);
@@ -28,8 +29,8 @@ public:
 
     void moveToCenter();
 
-    void setCustomWidget(NXAppBarType::CustomArea customArea, QWidget* customWidget);
-    QWidget* getCustomWidget() const;
+    void setCustomWidget(NXAppBarType::CustomArea customArea, QWidget* customWidget, QObject* hitTestObject = nullptr, const QString& hitTestFunctionName = "");
+    QWidget* getCustomWidget(NXAppBarType::CustomArea customArea) const;
 
     void setCentralCustomWidget(QWidget* customWidget);
     QWidget* getCentralCustomWidget() const;
@@ -44,17 +45,17 @@ public:
     void setUserInfoCardTitle(const QString& title);
     void setUserInfoCardSubTitle(const QString& subTitle);
 
-    NXNavigationType::NodeOperateReturnType setNavigationNodeTitle(const QString& nodeTitle, const QString& nodeKey);
+    NXNavigationType::NodeOperateError setNavigationNodeTitle(const QString& nodeTitle, const QString& nodeKey);
     QString getNavigationNodeTitle(const QString& nodeKey) const;
 
-    NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome = NXIconType::None) const;
-    NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome = NXIconType::None) const;
-    NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, QWidget* page, NXIconType::IconName awesome = NXIconType::None);
-    NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, NXIconType::IconName awesome = NXIconType::None);
-    NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, QWidget* page, int keyPoints = 0, NXIconType::IconName awesome = NXIconType::None);
-    NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, int keyPoints = 0, NXIconType::IconName awesome = NXIconType::None);
-    NodeOperateReturnTypeWithKey addFooterNode(const QString& footerTitle, int keyPoints = 0, NXIconType::IconName awesome = NXIconType::None) const;
-    NodeOperateReturnTypeWithKey addFooterNode(const QString& footerTitle, QWidget* page, int keyPoints = 0, NXIconType::IconName awesome = NXIconType::None);
+    NXNodeOperateResult addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome = NXIconType::None) const;
+    NXNodeOperateResult addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome = NXIconType::None) const;
+    NXNodeOperateResult addPageNode(const QString& pageTitle, QWidget* page, NXIconType::IconName awesome = NXIconType::None);
+    NXNodeOperateResult addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, NXIconType::IconName awesome = NXIconType::None);
+    NXNodeOperateResult addPageNode(const QString& pageTitle, QWidget* page, int keyPoints = 0, NXIconType::IconName awesome = NXIconType::None);
+    NXNodeOperateResult addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, int keyPoints = 0, NXIconType::IconName awesome = NXIconType::None);
+    NXNodeOperateResult addFooterNode(const QString& footerTitle, int keyPoints = 0, NXIconType::IconName awesome = NXIconType::None) const;
+    NXNodeOperateResult addFooterNode(const QString& footerTitle, QWidget* page, int keyPoints = 0, NXIconType::IconName awesome = NXIconType::None);
 
     void addCentralWidget(QWidget* centralWidget);
     QWidget* getCentralWidget(int index) const;
@@ -74,13 +75,23 @@ public:
     void navigation(const QString& pageKey);
     int getCurrentNavigationIndex() const;
     QString getCurrentNavigationPageKey() const;
+    QList<NXSuggestBox::SuggestData> getNavigationSuggestDataList() const;
 
     void setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable = true);
     void setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags);
     NXAppBarType::ButtonFlags getWindowButtonFlags() const;
 
+    void setWindowMoviePath(NXThemeType::ThemeMode themeMode, const QString& moviePath);
+    QString getWindowMoviePath(NXThemeType::ThemeMode themeMode) const;
+
+    void setWindowPixmap(NXThemeType::ThemeMode themeMode, const QPixmap& pixmap);
+    QPixmap getWindowPixmap(NXThemeType::ThemeMode themeMode) const;
+
+    void setWindowMovieRate(qreal rate);
+    qreal getWindowMovieRate() const;
+
     void closeWindow();
-    Q_SLOT NXNavigationType::NodeOperateReturnType navigationPageNodeSwitch(const QString& targetPageKey);
+    Q_SLOT NXNavigationType::NodeOperateError navigationPageNodeSwitch(const QString& targetPageKey);
     void setNavigationPageOpenPolicy(std::function<void(const QString&/*nodeKey*/)>&& openNavigationPageFunc);
 Q_SIGNALS:
     Q_SIGNAL void userInfoCardClicked();
@@ -94,6 +105,7 @@ Q_SIGNALS:
 protected:
     virtual bool eventFilter(QObject* watched, QEvent* event) override;
     virtual QMenu* createPopupMenu() override;
+    virtual void paintEvent(QPaintEvent* event) override;
 };
 
 #endif // NXWINDOW_H

@@ -16,7 +16,7 @@ class NXMenuPrivate : public QObject
     Q_PROPERTY_CREATE(bool, AlignParentMenuHeight)
 public:
     explicit NXMenuPrivate(QObject* parent = nullptr);
-    ~NXMenuPrivate();
+    ~NXMenuPrivate() override;
 
 private:
     bool _isCloseAnimation{false};

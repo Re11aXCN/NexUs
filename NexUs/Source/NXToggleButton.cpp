@@ -27,7 +27,7 @@ NXToggleButton::NXToggleButton(QWidget* parent)
     setFont(font);
     setObjectName("NXToggleButton");
     setStyleSheet("#NXToggleButton{background-color:transparent;}");
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
 
@@ -100,10 +100,10 @@ void NXToggleButton::mouseReleaseEvent(QMouseEvent* event)
     d->_isAlphaAnimationFinished = false;
     d->_isToggled = !d->_isToggled;
     QPropertyAnimation* alphaAnimation = new QPropertyAnimation(d, "pToggleAlpha");
-    QObject::connect(alphaAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    connect(alphaAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         update();
     });
-    QObject::connect(alphaAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(alphaAnimation, &QPropertyAnimation::finished, this, [=]() {
         d->_isAlphaAnimationFinished = true;
     });
     alphaAnimation->setDuration(250);

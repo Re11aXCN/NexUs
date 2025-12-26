@@ -10,7 +10,7 @@ NXPlainTextEditStyle::NXPlainTextEditStyle(QStyle* style)
 {
     _pExpandMarkWidth = 0;
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

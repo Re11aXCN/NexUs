@@ -69,11 +69,8 @@ void NXSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText)
             q->raise();
             _searchViewBaseWidget->show();
             _searchViewBaseWidget->raise();
-            QPoint cyclePoint = _searchViewBaseWidget->mapFromGlobal(q->mapToGlobal(QPoint(-5, q->height())));
-            if (cyclePoint != QPoint(0, 0))
-            {
-                _searchViewBaseWidget->move(cyclePoint);
-            }
+            QPoint cyclePoint = q->mapTo(q->window(), QPoint(-5, q->height()));
+            _searchViewBaseWidget->move(cyclePoint);
             _startSizeAnimation(QSize(q->width() + 10, 0), QSize(q->width() + 10, 40 * rowCount + 16));
             _searchView->move(_searchView->x(), -(40 * rowCount + 16));
         }
@@ -99,7 +96,9 @@ void NXSuggestBoxPrivate::onSearchViewClicked(const QModelIndex& index)
         return;
     }
     NXSuggestion* suggest = _searchModel->getSearchSuggestion(index.row());
-    Q_EMIT q->suggestionClicked(suggest->getSuggestText(), suggest->getSuggestData());
+    NXSuggestBox::SuggestData data(suggest->getNXIcon(), suggest->getSuggestText(), suggest->getSuggestData());
+    data.setSuggestKey(suggest->getSuggestKey());
+    Q_EMIT q->suggestionClicked(data);
     _startCloseAnimation();
 }
 
@@ -111,10 +110,10 @@ void NXSuggestBoxPrivate::_startSizeAnimation(QSize oldSize, QSize newSize)
     }
     _shadowLayout->removeWidget(_searchView);
     QPropertyAnimation* expandAnimation = new QPropertyAnimation(_searchViewBaseWidget, "size");
-    QObject::connect(expandAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+    connect(expandAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
         _searchView->resize(_searchViewBaseWidget->size());
     });
-    QObject::connect(expandAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(expandAnimation, &QPropertyAnimation::finished, this, [=]() {
         _shadowLayout->addWidget(_searchView);
     });
     expandAnimation->setDuration(300);
@@ -134,7 +133,7 @@ void NXSuggestBoxPrivate::_startExpandAnimation()
     _isCloseAnimationFinished = true;
     _isExpandAnimationFinished = false;
     QPropertyAnimation* expandAnimation = new QPropertyAnimation(_searchView, "pos");
-    QObject::connect(expandAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(expandAnimation, &QPropertyAnimation::finished, this, [=]() {
         _isExpandAnimationFinished = true;
         _searchView->clearSelection();
     });
@@ -160,7 +159,7 @@ void NXSuggestBoxPrivate::_startCloseAnimation()
     baseWidgetsAnimation->setEndValue(QSize(_searchViewBaseWidget->width(), 0));
     baseWidgetsAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     QPropertyAnimation* closeAnimation = new QPropertyAnimation(_searchView, "pos");
-    QObject::connect(closeAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(closeAnimation, &QPropertyAnimation::finished, this, [=]() {
         _isCloseAnimationFinished = true;
         _searchModel->clearSearchNode();
         _searchViewBaseWidget->hide();

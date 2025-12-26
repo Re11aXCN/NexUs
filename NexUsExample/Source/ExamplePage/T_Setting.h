@@ -15,6 +15,11 @@ public:
 private:
     NXComboBox* _themeComboBox{nullptr};
     NXRadioButton* _normalButton{nullptr};
+
+    NXRadioButton* _windowNormalButton{nullptr};
+    NXRadioButton* _windowPixmapButton{nullptr};
+    NXRadioButton* _windowMovieButton{nullptr};
+
     NXRadioButton* _elaMicaButton{nullptr};
 #ifdef Q_OS_WIN
     NXRadioButton* _micaButton{nullptr};
@@ -23,6 +28,7 @@ private:
     NXRadioButton* _dwmBlurnormalButton{nullptr};
 #endif
     NXToggleSwitch* _logSwitchButton{nullptr};
+    NXToggleSwitch* _userCardSwitchButton{nullptr};
     NXRadioButton* _minimumButton{nullptr};
     NXRadioButton* _compactButton{nullptr};
     NXRadioButton* _maximumButton{nullptr};

@@ -34,8 +34,8 @@ NXIconButton::NXIconButton(QPixmap pix, QWidget* parent)
     d->_pIsSelected = false;
     d->_pBorderRadius = 0;
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXIconButton::NXIconButton(NXIconType::IconName awesome, QWidget* parent)
@@ -59,8 +59,8 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, QWidget* parent)
     this->setFont(iconFont);
     d->_pAwesome = awesome;
     this->setText(QChar((unsigned short)awesome));
-    QObject::connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXIconButton::NXIconButton(NXIconType::IconName awesome, int pixelSize, QWidget* parent)
@@ -84,8 +84,8 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, int pixelSize, QWidget*
     this->setFont(iconFont);
     d->_pAwesome = awesome;
     this->setText(QChar((unsigned short)awesome));
-    QObject::connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXIconButton::NXIconButton(NXIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight, QWidget* parent)
@@ -110,8 +110,8 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, int pixelSize, int fixe
     d->_pAwesome = awesome;
     this->setText(QChar((unsigned short)awesome));
     this->setFixedSize(fixedWidth, fixedHeight);
-    QObject::connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXIconButton::~NXIconButton()
@@ -147,10 +147,10 @@ bool NXIconButton::event(QEvent* event)
         {
             d->_isAlphaAnimationFinished = false;
             QPropertyAnimation* alphaAnimation = new QPropertyAnimation(d, "pHoverAlpha");
-            QObject::connect(alphaAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            connect(alphaAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
                 update();
             });
-            QObject::connect(alphaAnimation, &QPropertyAnimation::finished, this, [=]() {
+            connect(alphaAnimation, &QPropertyAnimation::finished, this, [=]() {
                 d->_isAlphaAnimationFinished = true;
             });
             alphaAnimation->setDuration(175);
@@ -166,10 +166,10 @@ bool NXIconButton::event(QEvent* event)
         {
             d->_isAlphaAnimationFinished = false;
             QPropertyAnimation* alphaAnimation = new QPropertyAnimation(d, "pHoverAlpha");
-            QObject::connect(alphaAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            connect(alphaAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
                 update();
             });
-            QObject::connect(alphaAnimation, &QPropertyAnimation::finished, this, [=]() {
+            connect(alphaAnimation, &QPropertyAnimation::finished, this, [=]() {
                 d->_isAlphaAnimationFinished = true;
             });
             alphaAnimation->setDuration(175);

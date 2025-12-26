@@ -11,7 +11,7 @@ NXColorValueSliderStyle::NXColorValueSliderStyle(QStyle* style)
     _baseGradient = new QLinearGradient(0, 0, 100, 100);
     setProperty("circleRadius", 0.01);
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 NXColorValueSliderStyle::~NXColorValueSliderStyle()
@@ -165,7 +165,7 @@ void NXColorValueSliderStyle::_startRadiusAnimation(qreal startRadius, qreal end
 {
     NXColorValueSliderStyle* style = const_cast<NXColorValueSliderStyle*>(this);
     QPropertyAnimation* circleRadiusAnimation = new QPropertyAnimation(style, "circleRadius");
-    QObject::connect(circleRadiusAnimation, &QPropertyAnimation::valueChanged, style, [=](const QVariant& value) {
+    connect(circleRadiusAnimation, &QPropertyAnimation::valueChanged, style, [=](const QVariant& value) {
         this->_circleRadius = value.toReal();
         widget->update(); });
     circleRadiusAnimation->setEasingCurve(QEasingCurve::InOutSine);

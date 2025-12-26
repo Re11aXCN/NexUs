@@ -30,7 +30,7 @@ NXInteractiveCard::NXInteractiveCard(QWidget* parent)
     d->_pCardPixMode = NXCardPixType::PixMode::Ellipse;
     d->_themeMode = nxTheme->getThemeMode();
     setMouseTracking(true);
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXInteractiveCard::~NXInteractiveCard()

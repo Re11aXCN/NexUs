@@ -113,7 +113,7 @@ void NXWinShadowHelper::setWindowShadow(quint64 hwnd)
 
 void NXWinShadowHelper::setWindowThemeMode(quint64 hwnd, bool isLightMode)
 {
-    if (!compareWindowsVersion(Win10_1809))
+    if (!compareWindowsVersion(Win10_1809) || !_dwmSetWindowAttribute)
     {
         return;
     }
@@ -270,7 +270,10 @@ void NXWinShadowHelper::setWindowDisplayMode(QWidget* widget, NXApplicationType:
 bool NXWinShadowHelper::getIsCompositionEnabled() const
 {
     BOOL isCompositionEnabled = false;
-    _dwmIsCompositionEnabled(&isCompositionEnabled);
+    if (_dwmIsCompositionEnabled)
+    {
+        _dwmIsCompositionEnabled(&isCompositionEnabled);
+    }
     return isCompositionEnabled;
 }
 
@@ -348,6 +351,9 @@ bool NXWinShadowHelper::compareWindowsVersion(const QString& windowsVersion) con
 void NXWinShadowHelper::_externWindowMargins(HWND hwnd)
 {
     static const MARGINS margins = { 65536, 0, 0, 0 };
-    _dwmExtendFrameIntoClientArea(hwnd, &margins);
+    if (_dwmExtendFrameIntoClientArea)
+    {
+        _dwmExtendFrameIntoClientArea(hwnd, &margins);
+    }
 }
 #endif

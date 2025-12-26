@@ -148,16 +148,16 @@ void NXCalendarPrivate::_doSwitchAnimation(bool isZoomIn)
     _isSwitchAnimationFinished = false;
     _calendarDelegate->setIsTransparent(true);
     QPropertyAnimation* oldPixZoomAnimation = new QPropertyAnimation(this, "pZoomRatio");
-    QObject::connect(oldPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+    connect(oldPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
         q->update();
     });
-    QObject::connect(oldPixZoomAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(oldPixZoomAnimation, &QPropertyAnimation::finished, this, [=]() {
         _isDrawNewPix = true;
         QPropertyAnimation* newPixZoomAnimation = new QPropertyAnimation(this, "pZoomRatio");
-        QObject::connect(newPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+        connect(newPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
             q->update();
         });
-        QObject::connect(newPixZoomAnimation, &QPropertyAnimation::finished, this, [=]() {
+        connect(newPixZoomAnimation, &QPropertyAnimation::finished, this, [=]() {
             if (_calendarModel->getDisplayMode() == NXCalendarType::DayMode)
             {
                 _calendarTitleView->setVisible(true);
@@ -196,7 +196,7 @@ void NXCalendarPrivate::_doSwitchAnimation(bool isZoomIn)
     oldPixZoomAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
     QPropertyAnimation* oldPixOpacityAnimation = new QPropertyAnimation(this, "pPixOpacity");
-    QObject::connect(oldPixZoomAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(oldPixZoomAnimation, &QPropertyAnimation::finished, this, [=]() {
         QPropertyAnimation* newPixOpacityAnimation = new QPropertyAnimation(this, "pPixOpacity");
         newPixOpacityAnimation->setStartValue(0);
         newPixOpacityAnimation->setEndValue(1);

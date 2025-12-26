@@ -4,6 +4,7 @@
 #include <QVariantMap>
 #include <QObject>
 
+#include "NXSuggestBox.h"
 #include "NXDef.h"
 class QLayout;
 class NXMenu;
@@ -16,7 +17,6 @@ class NXNavigationNode;
 class NXNavigationModel;
 class NXNavigationView;
 class NXNavigationStyle;
-class NXSuggestBox;
 class NXInteractiveCard;
 
 class NXBaseListView;
@@ -33,6 +33,7 @@ class NXNavigationBarPrivate : public QObject
     Q_D_CREATE(NXNavigationBar)
     Q_PROPERTY_CREATE(int, NavigationViewWidth);
     Q_PROPERTY_CREATE_D(int, NavigationBarWidth)
+    Q_PROPERTY_CREATE(int, UserButtonSpacing);
     Q_PROPERTY_CREATE_D(bool, IsTransparent)
     Q_PROPERTY_CREATE_D(bool, IsAllowPageOpenInNewWindow)
 public:
@@ -59,11 +60,13 @@ private:
     QMap<QString, const QMetaObject*> _pageMetaMap;
     QMap<QString, int> _pageNewWindowCountMap;
     QMap<NXNavigationNode*, NXMenu*> _compactMenuMap;
+    QList<NXSuggestBox::SuggestData> _suggestDataList;
     QList<NXNavigationNode*> _lastExpandedNodesList;
     std::function<void(const QString&)> _openPageFunc{};
     QVBoxLayout* _navigationButtonLayout{nullptr};
     QHBoxLayout* _navigationSuggestLayout{nullptr};
     QVBoxLayout* _userButtonLayout{nullptr};
+    QVBoxLayout* _userCardLayout{ nullptr };
 
     NXIconButton* _userButton{nullptr};
     NXToolButton* _searchButton{nullptr};
@@ -85,17 +88,18 @@ private:
     void _addFooterPage(QWidget* page, QString footKey);
 
     void _raiseNavigationBar();
-
+    void _smoothScrollNavigationView(const QModelIndex& index);
     void _doComponentAnimation(NXNavigationType::NavigationDisplayMode displayMode, bool isAnimation);
     void _handleNavigationExpandState(bool isSave);
-    void _handleMaximalToCompactLayout();
-    void _handleCompactToMaximalLayout();
+    void _handleUserButtonLayout(bool isCompact);
+    // void _handleMaximalToCompactLayout();
+    // void _handleCompactToMaximalLayout();
     void _resetLayout();
 
     void _doNavigationBarWidthAnimation(NXNavigationType::NavigationDisplayMode displayMode, bool isAnimation);
     void _doNavigationViewWidthAnimation(bool isAnimation);
-    void _doNavigationButtonAnimation(bool isCompact, bool isAnimation);
-    void _doSearchButtonAnimation(bool isCompact, bool isAnimation);
+    // void _doNavigationButtonAnimation(bool isCompact, bool isAnimation);
+    // void _doSearchButtonAnimation(bool isCompact, bool isAnimation);
     void _doUserButtonAnimation(bool isCompact, bool isAnimation);
 };
 

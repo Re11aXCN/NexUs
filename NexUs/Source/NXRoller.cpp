@@ -1,14 +1,18 @@
 ﻿#include "NXRoller.h"
 #include "private/NXRollerPrivate.h"
 #include "NXTheme.h"
+#include <QDebug>
 #include <QPainter>
+#include <QPainterPath>
 #include <QPropertyAnimation>
 #include <QWheelEvent>
-#include <cmath>
-
+#include <QtMath>
+#include <utility>
 Q_PROPERTY_CREATE_Q_CPP(NXRoller, int, BorderRadius)
+Q_PROPERTY_CREATE_Q_CPP(NXRoller, bool, IsContainer)
+Q_PROPERTY_CREATE_Q_CPP(NXRoller, bool, IsEnableLoop)
 NXRoller::NXRoller(QWidget* parent)
-    : QWidget{parent}, d_ptr(new NXRollerPrivate())
+    : QWidget{ parent }, d_ptr(new NXRollerPrivate())
 {
     Q_D(NXRoller);
     d->q_ptr = this;
@@ -17,6 +21,9 @@ NXRoller::NXRoller(QWidget* parent)
     d->_pBorderRadius = 3;
     d->_pMaxVisibleItems = 5;
     d->_pCurrentIndex = 0;
+    d->_pIsEnableLoop = true;
+    d->_pIsContainer = false;
+    setFixedWidth(90);
     setFixedSize(90, 175);
     setMouseTracking(true);
     setObjectName("NXRoller");
@@ -26,15 +33,15 @@ NXRoller::NXRoller(QWidget* parent)
     setFont(font);
 
     d->_scrollAnimation = new QPropertyAnimation(d, "pScrollOffset");
-    QObject::connect(d->_scrollAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+    connect(d->_scrollAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
         update();
-    });
-    QObject::connect(d->_scrollAnimation, &QPropertyAnimation::finished, this, [=]() {
+        });
+    connect(d->_scrollAnimation, &QPropertyAnimation::finished, this, [=]() {
         while (d->_pScrollOffset < -d->_pItemList.size() * d->_pItemHeight)
         {
             d->_pScrollOffset += d->_pItemList.size() * d->_pItemHeight;
         }
-        while (d->_pScrollOffset > d->_pItemList.size() * d->_pItemHeight)
+        while (d->_pScrollOffset >= d->_pItemList.size() * d->_pItemHeight)
         {
             d->_pScrollOffset -= d->_pItemList.size() * d->_pItemHeight;
         }
@@ -52,26 +59,59 @@ NXRoller::NXRoller(QWidget* parent)
         {
             d->_pCurrentIndex = currentIndex;
             Q_EMIT pCurrentIndexChanged();
+            Q_EMIT currentDataChanged(getCurrentData());
         }
         update();
-    });
+        });
 
     d->_scrollAnimation->setDuration(300);
     d->_scrollAnimation->setEasingCurve(QEasingCurve::OutCubic);
 
+    d->_pressSustainTimer = new QTimer(this);
+    d->_pressSustainTimer->setInterval(300);
+    connect(d->_pressSustainTimer, &QTimer::timeout, this, [=]() {
+        d->_repeatScrollTimer->start();
+        });
+
+    d->_repeatScrollTimer = new QTimer(this);
+    d->_repeatScrollTimer->setInterval(50);
+    connect(d->_repeatScrollTimer, &QTimer::timeout, this, [=]() {
+        if (d->_isUpArrowPress)
+        {
+            d->_scroll(120);
+        }
+        if (d->_isDownArrowPress)
+        {
+            d->_scroll(-120);
+        }
+        });
+
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
-    });
+        });
 }
 
 NXRoller::~NXRoller()
 {
 }
 
+void NXRoller::setCurrentData(const QString& data)
+{
+    Q_D(NXRoller);
+    if (d->_pItemList.contains(data))
+    {
+        setCurrentIndex(d->_pItemList.indexOf(data));
+    }
+}
+
 QString NXRoller::getCurrentData() const
 {
     Q_D(const NXRoller);
+    if (d->_pCurrentIndex >= d->_pItemList.count())
+    {
+        return {};
+    }
     return d->_pItemList[d->_pCurrentIndex];
 }
 
@@ -130,7 +170,6 @@ void NXRoller::setCurrentIndex(int currentIndex)
     d->_pScrollOffset = d->_pItemHeight * currentIndex;
     d->_targetScrollOffset = d->_pScrollOffset;
     update();
-    Q_EMIT pCurrentIndexChanged();
 }
 
 int NXRoller::getCurrentIndex() const
@@ -146,26 +185,60 @@ void NXRoller::wheelEvent(QWheelEvent* event)
     event->accept();
 }
 
+void NXRoller::mousePressEvent(QMouseEvent* event)
+{
+    Q_D(NXRoller);
+    if (d->_pIsContainer && d->_pMaxVisibleItems >= 5)
+    {
+        auto currentPos = event->pos();
+        if (d->_upArrowRect.contains(currentPos))
+        {
+            d->_isUpArrowPress = true;
+            d->_scroll(120);
+            d->_pressSustainTimer->start();
+        }
+        else if (d->_downArrowRect.contains(currentPos))
+        {
+            d->_isDownArrowPress = true;
+            d->_scroll(-120);
+            d->_pressSustainTimer->start();
+        }
+    }
+    QWidget::mousePressEvent(event);
+}
+
 void NXRoller::mouseReleaseEvent(QMouseEvent* event)
 {
     Q_D(NXRoller);
     int centerIndex = d->_pMaxVisibleItems / 2;
     int clickIndex = event->pos().y() / d->_pItemHeight;
     int jumpCount = abs(d->_pMaxVisibleItems / 2 - clickIndex);
-    if (clickIndex > centerIndex)
+    if (d->_isUpArrowPress || d->_isDownArrowPress)
     {
-        for (int i = 0; i < jumpCount; i++)
+        d->_pressSustainTimer->stop();
+        d->_repeatScrollTimer->stop();
+        d->_isUpArrowPress = false;
+        d->_isDownArrowPress = false;
+        update();
+    }
+    else
+    {
+        if (clickIndex > centerIndex)
         {
-            d->_scroll(-120);
+            for (int i = 0; i < jumpCount; i++)
+            {
+                d->_scroll(-120);
+            }
+        }
+        else if (clickIndex < centerIndex)
+        {
+            for (int i = 0; i < jumpCount; i++)
+            {
+                d->_scroll(120);
+            }
         }
     }
-    else if (clickIndex < centerIndex)
-    {
-        for (int i = 0; i < jumpCount; i++)
-        {
-            d->_scroll(120);
-        }
-    }
+    update();
 }
 
 void NXRoller::mouseMoveEvent(QMouseEvent* event)
@@ -191,11 +264,14 @@ void NXRoller::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 背景绘制
-    QRect foregroundRect(d->_penBorderWidth, d->_penBorderWidth, width() - 2 * d->_penBorderWidth, height() - 2 * d->_penBorderWidth);
-    painter.setPen(QPen(NXThemeColor(d->_themeMode, BasicBorder), d->_penBorderWidth));
-    painter.setBrush(isEnabled() ? NXThemeColor(d->_themeMode, BasicBase) : NXThemeColor(d->_themeMode, BasicDisable));
-    painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
-
+    QRect foregroundRect(d->_penBorderWidth, d->_penBorderWidth, width() - 2 * d->_penBorderWidth, height() - 2 * d->_penBorderWidth - 1);
+    if (!d->_pIsContainer)
+    {
+        painter.setPen(QPen(NXThemeColor(d->_themeMode, BasicBorder), d->_penBorderWidth));
+        painter.setBrush(isEnabled() ? NXThemeColor(d->_themeMode, BasicBase) : NXThemeColor(d->_themeMode, BasicDisable));
+        painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
+    }
+    painter.setClipRect(foregroundRect);
     // 中心指示区域绘制
     painter.setPen(Qt::NoPen);
     painter.setBrush(NXThemeColor(d->_themeMode, PrimaryNormal));
@@ -218,13 +294,16 @@ void NXRoller::paintEvent(QPaintEvent* event)
     {
         qreal y = (i + startIndexOffset) * d->_pItemHeight - d->_pScrollOffset;
         // 范围控制
-        while (y <= yStart)
+        if (d->_pIsEnableLoop)
         {
-            y += d->_pItemList.size() * d->_pItemHeight;
-        }
-        while (y >= yEnd)
-        {
-            y -= d->_pItemList.size() * d->_pItemHeight;
+            while (y <= yStart)
+            {
+                y += d->_pItemList.size() * d->_pItemHeight;
+            }
+            while (y >= yEnd)
+            {
+                y -= d->_pItemList.size() * d->_pItemHeight;
+            }
         }
         // 可见区域绘制
         if (y >= yStart && y <= yEnd)
@@ -253,6 +332,36 @@ void NXRoller::paintEvent(QPaintEvent* event)
             painter.drawText(QRect(0, 0, width(), d->_pItemHeight), Qt::AlignCenter | Qt::TextSingleLine, d->_pItemList[i]);
             painter.restore();
         }
+    }
+    // Container模式指示器绘制
+    if (d->_pIsContainer && d->_pMaxVisibleItems >= 5 && underMouse())
+    {
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(NXThemeColor(d->_themeMode, PopupBase));
+        // 覆盖文字
+        d->_upArrowRect = QRect(foregroundRect.x(), foregroundRect.y(), foregroundRect.width(), d->_pItemHeight);
+        d->_downArrowRect = QRect(foregroundRect.x(), foregroundRect.bottom() - d->_pItemHeight + 2, foregroundRect.width(), d->_pItemHeight);
+        painter.drawRect(d->_upArrowRect);
+        painter.drawRect(d->_downArrowRect);
+        painter.setBrush(NXThemeColor(d->_themeMode, BasicText));
+        // 上箭头
+        int upArrowWidth = d->_isUpArrowPress ? 8 : 10; // 边长
+        qreal upAdjacentEdge = upArrowWidth * qCos(30 * M_PI / 180.0);
+        QPainterPath upArrowPath;
+        upArrowPath.moveTo(d->_upArrowRect.center().x(), d->_upArrowRect.center().y() - upAdjacentEdge / 2);
+        upArrowPath.lineTo(d->_upArrowRect.center().x() + upArrowWidth / 2, d->_upArrowRect.center().y() + upAdjacentEdge / 2);
+        upArrowPath.lineTo(d->_upArrowRect.center().x() - upArrowWidth / 2, d->_upArrowRect.center().y() + upAdjacentEdge / 2);
+        upArrowPath.closeSubpath();
+        painter.drawPath(upArrowPath);
+        // 下箭头
+        int downArrowWidth = d->_isDownArrowPress ? 8 : 10;
+        qreal downAdjacentEdge = downArrowWidth * qCos(30 * M_PI / 180.0);
+        QPainterPath downArrowPath;
+        downArrowPath.moveTo(d->_downArrowRect.center().x(), d->_downArrowRect.center().y() + downAdjacentEdge / 2);
+        downArrowPath.lineTo(d->_downArrowRect.center().x() + downArrowWidth / 2, d->_downArrowRect.center().y() - downAdjacentEdge / 2);
+        downArrowPath.lineTo(d->_downArrowRect.center().x() - downArrowWidth / 2, d->_downArrowRect.center().y() - downAdjacentEdge / 2);
+        downArrowPath.closeSubpath();
+        painter.drawPath(downArrowPath);
     }
     painter.restore();
 }

@@ -86,7 +86,7 @@ T_NXScreen::T_NXScreen(QWidget* parent)
     centerLayout->addLayout(comboBoxLayout);
     centerLayout->addWidget(dxgiScreenArea);
 
-#if defined(Q_OS_WIN) && defined(NXPACKETIO_LIBRARY_ALREADY_BUILT)
+#if defined(Q_OS_WIN) && defined(BUILD_WITH_NXPACKETIO)
     QHBoxLayout* packetLayout = new QHBoxLayout();
     NXText* packetIOText = new NXText("网络视图 (需要先进行屏幕捕获 若接口IP不正确或不可用 程序可能会崩溃)", this);
     packetIOText->setTextPixelSize(17);
@@ -142,13 +142,13 @@ T_NXScreen::T_NXScreen(QWidget* parent)
 
 T_NXScreen::~T_NXScreen()
 {
-#if defined(Q_OS_WIN) && defined(NXPACKETIO_LIBRARY_ALREADY_BUILT)
+#if defined(Q_OS_WIN) && defined(BUILD_WITH_NXPACKETIO)
     _unInitThread(true);
     _unInitThread(false);
 #endif
 }
 
-#if defined(Q_OS_WIN) && defined(NXPACKETIO_LIBRARY_ALREADY_BUILT)
+#if defined(Q_OS_WIN) && defined(BUILD_WITH_NXPACKETIO)
 void T_NXScreen::_initSendThread(QString interfaceIP)
 {
     _packetIOSendThread = new QThread(this);

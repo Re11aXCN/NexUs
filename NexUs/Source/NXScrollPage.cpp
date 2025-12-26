@@ -23,7 +23,7 @@ NXScrollPage::NXScrollPage(QWidget* parent)
     d->_pCustomWidget = nullptr;
     d->_breadcrumbBar = new NXBreadcrumbBar(this);
     d->_breadcrumbBar->setTextPixelSize(28);
-    QObject::connect(d->_breadcrumbBar, &NXBreadcrumbBar::breadcrumbClicked, this, [=](QString breadcrumb, QStringList lastBreadcrumbList) {
+    connect(d->_breadcrumbBar, &NXBreadcrumbBar::breadcrumbClicked, this, [=](QString breadcrumb, QStringList lastBreadcrumbList) {
         if (d->_centralWidgetMap.contains(breadcrumb))
         {
             int widgetIndex = d->_centralWidgetMap.value(breadcrumb);
@@ -81,9 +81,15 @@ void NXScrollPage::addCentralWidget(QWidget* centralWidget, bool isWidgetResizea
     scrollArea->setHorizontalScrollBarPolicy(hScrollBarPolicy);
     NXScrollBar* floatVScrollBar = new NXScrollBar(scrollArea->verticalScrollBar(), scrollArea);
     floatVScrollBar->setIsAnimation(true);
-    scrollArea->setWidget(centralWidget);
-    centralWidget->setObjectName("NXScrollPage_CentralPage");
-    centralWidget->setStyleSheet("#NXScrollPage_CentralPage{background-color:transparent;}");
+
+    QWidget* scrollPageContainer = new QWidget(this);
+    scrollPageContainer->setObjectName("NXScrollPageContainer");
+    scrollPageContainer->setStyleSheet("#NXScrollPageContainer{background-color:transparent;}");
+    QVBoxLayout* scrollPageContainerLayout = new QVBoxLayout(scrollPageContainer);
+    scrollPageContainerLayout->setContentsMargins(0, 0, 0, 0);
+    scrollPageContainerLayout->addWidget(centralWidget);
+    scrollArea->setWidget(scrollPageContainer);
+
     d->_centralWidgetMap.insert(centralWidget->windowTitle(), d->_centralStackedWidget->count());
     d->_centralStackedWidget->addWidget(scrollArea);
 }

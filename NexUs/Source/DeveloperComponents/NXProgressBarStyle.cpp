@@ -10,7 +10,7 @@ NXProgressBarStyle::NXProgressBarStyle(QStyle* style)
     setProperty("busyStartValue", 0);
     setProperty("busyEndValue", 0);
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 NXProgressBarStyle::~NXProgressBarStyle()

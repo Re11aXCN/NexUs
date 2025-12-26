@@ -49,7 +49,7 @@ NXCalendar::NXCalendar(QWidget* parent)
     d->_calendarView->setModel(d->_calendarModel);
     d->_calendarDelegate = new NXCalendarDelegate(d->_calendarModel, this);
     d->_calendarView->setItemDelegate(d->_calendarDelegate);
-    QObject::connect(d->_calendarView, &NXBaseListView::clicked, d, &NXCalendarPrivate::onCalendarViewClicked);
+    connect(d->_calendarView, &NXBaseListView::clicked, d, &NXCalendarPrivate::onCalendarViewClicked);
 
     // 模式切换按钮
     d->_modeSwitchButton = new NXToolButton(this);
@@ -59,8 +59,8 @@ NXCalendar::NXCalendar(QWidget* parent)
     d->_modeSwitchButton->setFont(switchButtonFont);
     d->_modeSwitchButton->setToolButtonStyle(Qt::ToolButtonTextOnly);
     d->_modeSwitchButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    QObject::connect(d->_modeSwitchButton, &NXToolButton::clicked, d, &NXCalendarPrivate::onSwitchButtonClicked);
-    QObject::connect(d->_calendarView->verticalScrollBar(), &QScrollBar::valueChanged, d, [=]() {
+    connect(d->_modeSwitchButton, &NXToolButton::clicked, d, &NXCalendarPrivate::onSwitchButtonClicked);
+    connect(d->_calendarView->verticalScrollBar(), &QScrollBar::valueChanged, d, [=]() {
         d->_updateSwitchButtonText();
     });
 
@@ -68,12 +68,12 @@ NXCalendar::NXCalendar(QWidget* parent)
     d->_upButton = new NXToolButton(this);
     d->_upButton->setFixedSize(36, 36);
     d->_upButton->setNXIcon(NXIconType::CaretUp);
-    QObject::connect(d->_upButton, &NXToolButton::clicked, d, &NXCalendarPrivate::onUpButtonClicked);
+    connect(d->_upButton, &NXToolButton::clicked, d, &NXCalendarPrivate::onUpButtonClicked);
 
     d->_downButton = new NXToolButton(this);
     d->_downButton->setFixedSize(36, 36);
     d->_downButton->setNXIcon(NXIconType::CaretDown);
-    QObject::connect(d->_downButton, &NXToolButton::clicked, d, &NXCalendarPrivate::onDownButtonClicked);
+    connect(d->_downButton, &NXToolButton::clicked, d, &NXCalendarPrivate::onDownButtonClicked);
 
     QHBoxLayout* buttonLayout = new QHBoxLayout();
     buttonLayout->setContentsMargins(5, 5, 10, 0);
@@ -88,7 +88,7 @@ NXCalendar::NXCalendar(QWidget* parent)
     mainLayout->addWidget(d->_calendarView);
 
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
     setVisible(true);

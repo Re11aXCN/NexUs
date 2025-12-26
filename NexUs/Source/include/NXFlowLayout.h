@@ -14,7 +14,7 @@ class NX_EXPORT NXFlowLayout : public QLayout
 public:
     explicit NXFlowLayout(QWidget* parent, int margin = -1, int hSpacing = -1, int vSpacing = -1);
     explicit NXFlowLayout(int margin = -1, int hSpacing = -1, int vSpacing = -1);
-    ~NXFlowLayout();
+    ~NXFlowLayout() override;
 
     void addItem(QLayoutItem* item) override;
     int horizontalSpacing() const;

@@ -14,10 +14,10 @@ NXCalendarDelegate::NXCalendarDelegate(NXCalendarModel* calendarModel, QObject* 
     _pItemHeight = 42;
     _nowDate = QDate::currentDate();
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
-    QObject::connect(_calendarModel, &NXCalendarModel::displayModeChanged, this, &NXCalendarDelegate::onCalendarModelDisplayModeChanged);
+    connect(_calendarModel, &NXCalendarModel::displayModeChanged, this, &NXCalendarDelegate::onCalendarModelDisplayModeChanged);
 }
 
 NXCalendarDelegate::~NXCalendarDelegate()

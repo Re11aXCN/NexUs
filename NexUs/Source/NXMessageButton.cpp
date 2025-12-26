@@ -34,11 +34,11 @@ NXMessageButton::NXMessageButton(QWidget* parent)
     d->_pPositionPolicy = NXMessageBarType::TopRight;
     d->_themeMode = nxTheme->getThemeMode();
     d->_pMessageTargetWidget = parent;
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
-    QObject::connect(this, &NXMessageButton::clicked, d, &NXMessageButtonPrivate::_showMessage);
-    QObject::connect(this, &NXMessageButton::showMessage, d, &NXMessageButtonPrivate::_showMessage);
+    connect(this, &NXMessageButton::clicked, d, &NXMessageButtonPrivate::_showMessage);
+    connect(this, &NXMessageButton::showMessage, d, &NXMessageButtonPrivate::_showMessage);
 }
 
 NXMessageButton::NXMessageButton(const QString& text, QWidget* parent)

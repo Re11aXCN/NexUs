@@ -33,10 +33,10 @@ NXPopularCard::NXPopularCard(QWidget* parent)
     d->_pCardFloatArea = parentWidget();
     d->_floater = new NXPopularCardFloater(this, d, d->_pCardFloatArea);
     d->_floatTimer = new QTimer(this);
-    QObject::connect(d->_floatTimer, &QTimer::timeout, d, &NXPopularCardPrivate::_showFloater);
+    connect(d->_floatTimer, &QTimer::timeout, d, &NXPopularCardPrivate::_showFloater);
 
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
 }
@@ -90,7 +90,7 @@ bool NXPopularCard::event(QEvent* event)
     {
         d->_floatTimer->start(450);
         QPropertyAnimation* hoverAnimation = new QPropertyAnimation(d, "pHoverYOffset");
-        QObject::connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+        connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
             update();
         });
         hoverAnimation->setDuration(130);
@@ -108,7 +108,7 @@ bool NXPopularCard::event(QEvent* event)
     {
         d->_floatTimer->stop();
         QPropertyAnimation* hoverAnimation = new QPropertyAnimation(d, "pHoverYOffset");
-        QObject::connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+        connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
             update();
         });
         hoverAnimation->setDuration(130);

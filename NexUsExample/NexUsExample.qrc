@@ -1,4 +1,4 @@
-﻿<RCC>
+<RCC>
     <qresource prefix="/">
         <file>Resource/Image/control/Acrylic.png</file>
         <file>Resource/Image/control/AnimatedIcon.png</file>
@@ -120,5 +120,9 @@
         <file>Resource/Image/Model/RainMan.jpg</file>
         <file>Resource/Image/Model/RunningInTheDark.jpg</file>
         <file>Resource/Image/Model/STYXHELIX.jpg</file>
+        <file>Resource/Image/WindowBase/Miku.gif</file>
+        <file>Resource/Image/WindowBase/Miku.png</file>
+        <file>Resource/Image/WindowBase/WorldTree.gif</file>
+        <file>Resource/Image/WindowBase/WorldTree.jpg</file>
     </qresource>
 </RCC>

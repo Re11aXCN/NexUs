@@ -58,11 +58,11 @@ MainWindow::MainWindow(QWidget* parent)
     connect(_closeDialog, &NXContentDialog::middleButtonClicked, this, [=]() {
         _closeDialog->close();
         showMinimized();
-    });
+        });
     this->setIsDefaultClosed(false);
     connect(this, &MainWindow::closeButtonClicked, this, [=]() {
         _closeDialog->exec();
-    });
+        });
 
     //移动到中心
     //moveToCenter();
@@ -106,28 +106,35 @@ void MainWindow::initWindow()
     centralStack->setAlignment(Qt::AlignCenter);
     addCentralWidget(centralStack);
 
+    // 窗口绘制模式
+    setWindowPixmap(NXThemeType::Light, QPixmap(":/Resource/Image/WindowBase/Miku.png"));
+    setWindowPixmap(NXThemeType::Dark, QPixmap(":/Resource/Image/WindowBase/WorldTree.jpg"));
+    setWindowMoviePath(NXThemeType::Light, ":/Resource/Image/WindowBase/Miku.gif");
+    setWindowMoviePath(NXThemeType::Dark, ":/Resource/Image/WindowBase/WorldTree.gif");
+    //setWindowPaintMode(NXWindowType::PaintMode::Pixmap);
+
     // 自定义AppBar菜单
     NXMenu* appBarMenu = new NXMenu(this);
     appBarMenu->setMenuItemHeight(27);
     connect(appBarMenu->addAction("跳转到一级主要堆栈"), &QAction::triggered, this, [=]() {
         setCurrentStackIndex(0);
-    });
+        });
     connect(appBarMenu->addAction("跳转到二级主要堆栈"), &QAction::triggered, this, [=]() {
         setCurrentStackIndex(1);
-    });
+        });
     connect(appBarMenu->addAction("更改页面切换特效(Scale)"), &QAction::triggered, this, [=]() {
         setStackSwitchMode(NXWindowType::StackSwitchMode::Scale);
-    });
+        });
     connect(appBarMenu->addNXIconAction(NXIconType::GearComplex, "自定义主窗口设置"), &QAction::triggered, this, [=]() {
         navigation(_settingKey);
-    });
+        });
     appBarMenu->addSeparator();
     connect(appBarMenu->addNXIconAction(NXIconType::MoonStars, "更改项目主题"), &QAction::triggered, this, [=]() {
         nxTheme->setThemeMode(nxTheme->getThemeMode() == NXThemeType::Light ? NXThemeType::Dark : NXThemeType::Light);
-    });
+        });
     connect(appBarMenu->addAction("使用原生菜单"), &QAction::triggered, this, [=]() {
         setCustomMenu(nullptr);
-    });
+        });
     setCustomMenu(appBarMenu);
 
     // 堆栈独立自定义窗口
@@ -139,13 +146,13 @@ void MainWindow::initWindow()
     leftButton->setEnabled(false);
     connect(leftButton, &NXToolButton::clicked, this, [=]() {
         NXNavigationRouter::getInstance()->navigationRouteBack();
-    });
+        });
     NXToolButton* rightButton = new NXToolButton(this);
     rightButton->setNXIcon(NXIconType::AngleRight);
     rightButton->setEnabled(false);
     connect(rightButton, &NXToolButton::clicked, this, [=]() {
         NXNavigationRouter::getInstance()->navigationRouteForward();
-    });
+        });
     connect(NXNavigationRouter::getInstance(), &NXNavigationRouter::navigationRouterStateChanged, this, [=](NXNavigationRouterType::RouteMode routeMode) {
         switch (routeMode)
         {
@@ -170,12 +177,16 @@ void MainWindow::initWindow()
             break;
         }
         }
-    });
-    NXSuggestBox* centralStackSuggest = new NXSuggestBox(this);
-    centralStackSuggest->setFixedHeight(32);
-    centralStackSuggest->setPlaceholderText("搜索关键字");
+        });
+    _windowSuggestBox = new NXSuggestBox(this);
+    _windowSuggestBox->setFixedHeight(32);
+    _windowSuggestBox->setPlaceholderText("搜索关键字");
+    connect(_windowSuggestBox, &NXSuggestBox::suggestionClicked, this, [=](const NXSuggestBox::SuggestData& suggestData) {
+        navigation(suggestData.getSuggestData().value("NXPageKey").toString());
+        });
 
     NXText* progressBusyRingText = new NXText("系统运行中", this);
+    progressBusyRingText->setIsWrapAnywhere(false);
     progressBusyRingText->setTextPixelSize(15);
 
     NXProgressRing* progressBusyRing = new NXProgressRing(this);
@@ -185,7 +196,7 @@ void MainWindow::initWindow()
 
     centralCustomWidgetLayout->addWidget(leftButton);
     centralCustomWidgetLayout->addWidget(rightButton);
-    centralCustomWidgetLayout->addWidget(centralStackSuggest);
+    centralCustomWidgetLayout->addWidget(_windowSuggestBox);
     centralCustomWidgetLayout->addStretch();
     centralCustomWidgetLayout->addWidget(progressBusyRingText);
     centralCustomWidgetLayout->addWidget(progressBusyRing);
@@ -198,13 +209,13 @@ void MainWindow::initEdgeLayout()
     NXMenuBar* menuBar = new NXMenuBar(this);
     menuBar->setFixedHeight(30);
     QWidget* customWidget = new QWidget(this);
+    customWidget->setFixedWidth(500);
     QVBoxLayout* customLayout = new QVBoxLayout(customWidget);
     customLayout->setContentsMargins(0, 0, 0, 0);
     customLayout->addWidget(menuBar);
     customLayout->addStretch();
     // this->setMenuBar(menuBar);
     this->setCustomWidget(NXAppBarType::MiddleArea, customWidget);
-    this->setCustomWidgetMaximumWidth(500);
 
     menuBar->addNXIconAction(NXIconType::AtomSimple, "动作菜单");
     NXMenu* iconMenu = menuBar->addMenu(NXIconType::Aperture, "图标菜单");
@@ -294,12 +305,12 @@ void MainWindow::initEdgeLayout()
     NXDockWidget* logDockWidget = new NXDockWidget("日志信息", this);
     logDockWidget->setWidget(new T_LogWidget(this));
     this->addDockWidget(Qt::RightDockWidgetArea, logDockWidget);
-    resizeDocks({logDockWidget}, {200}, Qt::Horizontal);
+    resizeDocks({ logDockWidget }, { 200 }, Qt::Horizontal);
 
     NXDockWidget* updateDockWidget = new NXDockWidget("更新内容", this);
     updateDockWidget->setWidget(new T_UpdateWidget(this));
     this->addDockWidget(Qt::RightDockWidgetArea, updateDockWidget);
-    resizeDocks({updateDockWidget}, {200}, Qt::Horizontal);
+    resizeDocks({ updateDockWidget }, { 200 }, Qt::Horizontal);
 
     //状态栏
     NXStatusBar* statusBar = new NXStatusBar(this);
@@ -329,13 +340,13 @@ void MainWindow::initContent()
     addPageNode("HOME", _homePage, NXIconType::House);
 #ifdef Q_OS_WIN
     // 默认是root 添加一个expander节点
-    auto [type, NXDxgiKey] = addExpanderNode("NXDxgi", NXIconType::TvMusic);
-    addPageNode("NXScreen", _elaScreenPage, NXDxgiKey, 3, NXIconType::ObjectGroup);
+    NXNodeOperateResult dxgiResult = addExpanderNode("NXDxgi", NXIconType::TvMusic);
+    addPageNode("NXScreen", _elaScreenPage, *dxgiResult, 3, NXIconType::ObjectGroup);
 #endif
     // navigation(elaScreenWidget->property("NXPageKey").toString());
     addPageNode("NXBaseComponents", _baseComponentsPage, NXIconType::CabinetFiling);
 
-    _viewKey = addExpanderNode("NXView", _rootKey, NXIconType::CameraViewfinder).nodeKey;
+    _viewKey = *addExpanderNode("NXView", _rootKey, NXIconType::CameraViewfinder);
     addPageNode("NXListView", _listViewPage, _viewKey, 9, NXIconType::List);
     addPageNode("NXTableView", _tableViewPage, _viewKey, NXIconType::Table);
     addPageNode("NXTreeView", _treeViewPage, _viewKey, NXIconType::ListTree);
@@ -346,54 +357,50 @@ void MainWindow::initContent()
     addPageNode("NXNavigation", _navigationPage, NXIconType::LocationArrow);
     addPageNode("NXPopup", _popupPage, NXIconType::Envelope);
     addPageNode("NXIcon", _iconPage, 99, NXIconType::FontCase);
-    NodeOperateReturnTypeWithKey returnType1 = addExpanderNode("TEST4", NXIconType::Acorn);
-    NodeOperateReturnTypeWithKey returnType2 = addExpanderNode("TEST5", returnType1.nodeKey, NXIconType::Acorn);
-    addPageNode("Third Level", new QWidget(this), returnType2.nodeKey, NXIconType::Acorn);
-    addExpanderNode("TEST6", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST7", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST8", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST9", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST10", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST11", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST12", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST13", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST14", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST15", NXIconType::Acorn);
-    addExpanderNode("TEST16", NXIconType::Acorn);
-    addExpanderNode("TEST17", NXIconType::Acorn);
 
-    _aboutKey = addFooterNode("About", nullptr, 0, NXIconType::User).nodeKey;
+    auto testKey_1 = addExpanderNode("TEST_EXPAND_NODE1", _rootKey, NXIconType::Acorn);
+    auto testKey_2 = addExpanderNode("TEST_EXPAND_NODE2", *testKey_1, NXIconType::Acorn);
+    addPageNode("TEST_NODE3", new QWidget(this), *testKey_2, NXIconType::Acorn);
+    for (int i = 0; i < 10; i++)
+    {
+        addExpanderNode(QString("TEST_EXPAND_NODE%1").arg(i + 4), *testKey_2, NXIconType::Acorn);
+    }
+    addExpanderNode("TEST_EXPAND_NODE14", _rootKey, NXIconType::Acorn);
+    addExpanderNode("TEST_EXPAND_NODE5", _rootKey, NXIconType::Acorn);
+    addExpanderNode("TEST_EXPAND_NODE16", _rootKey, NXIconType::Acorn);
+
+    _aboutKey = *addFooterNode("About", nullptr, 0, NXIconType::User);
     _aboutPage = new T_About();
 
     _aboutPage->hide();
-    connect(this, &NXWindow::navigationNodeClicked, this, [=](NXNavigationType::NavigationNodeType nodeType, QString nodeKey) {
+    connect(this, &NXWindow::navigationNodeClicked, this, [this](NXNavigationType::NavigationNodeType nodeType, QString nodeKey) {
         if (_aboutKey == nodeKey)
         {
             _aboutPage->moveToCenter();
             _aboutPage->show();
         }
-    });
-    _settingKey = addFooterNode("Setting", _settingPage, 0, NXIconType::GearComplex).nodeKey;
+        });
+    _settingKey = *addFooterNode("Setting", _settingPage, 0, NXIconType::GearComplex);
     connect(this, &MainWindow::userInfoCardClicked, this, [=]() {
         this->navigation(_homePage->property("NXPageKey").toString());
-    });
+        });
 #ifdef Q_OS_WIN
     connect(_homePage, &T_Home::elaScreenNavigation, this, [=]() {
         this->navigation(_elaScreenPage->property("NXPageKey").toString());
-    });
+        });
 #endif
     connect(_homePage, &T_Home::elaBaseComponentNavigation, this, [=]() {
         this->navigation(_baseComponentsPage->property("NXPageKey").toString());
-    });
+        });
     connect(_homePage, &T_Home::elaSceneNavigation, this, [=]() {
         this->navigation(_graphicsPage->property("NXPageKey").toString());
-    });
+        });
     connect(_homePage, &T_Home::elaIconNavigation, this, [=]() {
         this->navigation(_iconPage->property("NXPageKey").toString());
-    });
+        });
     connect(_homePage, &T_Home::elaCardNavigation, this, [=]() {
         this->navigation(_cardPage->property("NXPageKey").toString());
-    });
+        });
     qDebug() << "已注册的事件列表" << NXEventBus::getInstance()->getRegisteredEventsName();
 }
 

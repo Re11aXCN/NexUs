@@ -39,7 +39,6 @@ T_Home::T_Home(QWidget* parent)
     NXImageCard* backgroundCard = new NXImageCard(this);
     backgroundCard->setBorderRadius(10);
     backgroundCard->setFixedHeight(340);
-    backgroundCard->setMaximumAspectRatio(1.7);
     backgroundCard->setCardImage(QImage(":/Resource/Image/Home_Background.png"));
 
     NXAcrylicUrlCard* urlCard1 = new NXAcrylicUrlCard(this);

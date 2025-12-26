@@ -15,7 +15,7 @@ NXScrollBarStyle::NXScrollBarStyle(QStyle* style)
     _pScrollBar = nullptr;
     _pSliderExtent = 2.4;
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 NXScrollBarStyle::~NXScrollBarStyle()
@@ -151,7 +151,7 @@ void NXScrollBarStyle::startExpandAnimation(bool isExpand)
     {
         _pIsExpand = true;
         QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pOpacity");
-        QObject::connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+        connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
             _pScrollBar->update();
         });
         opacityAnimation->setDuration(250);
@@ -170,10 +170,10 @@ void NXScrollBarStyle::startExpandAnimation(bool isExpand)
     else
     {
         QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pOpacity");
-        QObject::connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]() {
+        connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]() {
             _pIsExpand = false;
         });
-        QObject::connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+        connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
             _pScrollBar->update();
         });
         opacityAnimation->setDuration(250);

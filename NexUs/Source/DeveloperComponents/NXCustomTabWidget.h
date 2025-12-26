@@ -16,7 +16,10 @@ public:
     NXTabBar* getCustomTabBar() const;
     NXTabWidget* getCustomTabWidget() const;
 
+    Q_INVOKABLE bool processHitTest();
+
 private:
+    bool _isAllowLeave{ false };
     NXTabBar* _customTabBar{ nullptr };
     NXTabWidget* _customTabWidget{ nullptr };
 };

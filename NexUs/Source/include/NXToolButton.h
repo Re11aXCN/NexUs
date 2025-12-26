@@ -31,14 +31,14 @@ class NX_EXPORT NXToolButton : public NXAdvancedToolButton
 
 public:
     explicit NXToolButton(QWidget* parent = nullptr);
-    ~NXToolButton();
+    ~NXToolButton() override;
 
     void setIsTransparent(bool isTransparent);
     bool getIsTransparent() const;
 
     void setMenu(NXMenu* menu);
     void setNXIcon(NXIconType::IconName icon);
-
+    void setNXIcon(NXIconType::IconName icon, int rotate);
 protected:
     virtual bool eventFilter(QObject* watched, QEvent* event) override;
 };

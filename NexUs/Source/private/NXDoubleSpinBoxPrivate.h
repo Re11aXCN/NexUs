@@ -22,7 +22,7 @@ private:
     NXSpinBoxStyle* _style{nullptr};
     NXThemeType::ThemeMode _themeMode;
     NXMenu* _createStandardContextMenu();
-    void _changeTheme();
+    void _changnxTheme();
 };
 
 #endif // NXDOUBLESPINBOXPRIVATE_H

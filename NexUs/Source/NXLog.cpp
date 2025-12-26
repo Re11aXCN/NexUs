@@ -17,9 +17,9 @@ NXLog::NXLog(QObject* parent)
     d->_pLogSavePath = QDir::currentPath();
     d->_pIsLogFileNameWithTime = false;
     d->_clearLogFile();
-    QObject::connect(this, &NXLog::pLogSavePathChanged, d, &NXLogPrivate::_clearLogFile);
-    QObject::connect(this, &NXLog::pLogFileNameChanged, d, &NXLogPrivate::_clearLogFile);
-    QObject::connect(this, &NXLog::pIsLogFileNameWithTimeChanged, d, &NXLogPrivate::_clearLogFile);
+    connect(this, &NXLog::pLogSavePathChanged, d, &NXLogPrivate::_clearLogFile);
+    connect(this, &NXLog::pLogFileNameChanged, d, &NXLogPrivate::_clearLogFile);
+    connect(this, &NXLog::pIsLogFileNameWithTimeChanged, d, &NXLogPrivate::_clearLogFile);
 }
 
 NXLog::~NXLog()

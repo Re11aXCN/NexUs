@@ -21,7 +21,7 @@ NXDoubleSpinBox::NXDoubleSpinBox(QWidget* parent)
     lineEdit()->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     lineEdit()->setStyleSheet("background-color:transparent;padding-left:10px;padding-bottom:3px;");
     d->onThemeChanged(nxTheme->getThemeMode());
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXDoubleSpinBoxPrivate::onThemeChanged);
+    connect(nxTheme, &NXTheme::themeModeChanged, d, &NXDoubleSpinBoxPrivate::onThemeChanged);
 }
 
 NXDoubleSpinBox::~NXDoubleSpinBox()
@@ -72,7 +72,7 @@ void NXDoubleSpinBox::focusInEvent(QFocusEvent* event)
     if (event->reason() == Qt::MouseFocusReason)
     {
         QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-        QObject::connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             update();
         });
         markAnimation->setDuration(300);
@@ -90,7 +90,7 @@ void NXDoubleSpinBox::focusOutEvent(QFocusEvent* event)
     if (event->reason() != Qt::PopupFocusReason)
     {
         QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-        QObject::connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             update();
         });
         markAnimation->setDuration(300);

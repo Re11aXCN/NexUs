@@ -22,7 +22,7 @@ NXSpinBox::NXSpinBox(QWidget* parent)
     lineEdit()->setStyleSheet("background-color:transparent;padding-left:10px;padding-bottom:3px;");
     lineEdit()->setAttribute(Qt::WA_MacShowFocusRect, false);
     d->onThemeChanged(nxTheme->getThemeMode());
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXSpinBoxPrivate::onThemeChanged);
+    connect(nxTheme, &NXTheme::themeModeChanged, d, &NXSpinBoxPrivate::onThemeChanged);
 }
 
 NXSpinBox::~NXSpinBox()
@@ -56,8 +56,8 @@ void NXSpinBox::setButtonMode(NXSpinBoxType::ButtonMode buttonMode)
         break;
     }
     }
-    d->onThemeChanged(nxTheme->getThemeMode());
     setFrame(hasFrame());
+    d->onThemeChanged(nxTheme->getThemeMode());
     Q_EMIT pButtonModeChanged();
 }
 
@@ -73,7 +73,7 @@ void NXSpinBox::focusInEvent(QFocusEvent* event)
     if (event->reason() == Qt::MouseFocusReason)
     {
         QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-        QObject::connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             update();
         });
         markAnimation->setDuration(300);
@@ -91,7 +91,7 @@ void NXSpinBox::focusOutEvent(QFocusEvent* event)
     if (event->reason() != Qt::PopupFocusReason)
     {
         QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-        QObject::connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             update();
         });
         markAnimation->setDuration(300);

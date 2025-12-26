@@ -1,5 +1,7 @@
 ﻿#include "NXNavigationBarPrivate.h"
 
+#include <QScrollBar>
+#include <QTimer>
 #include <QEvent>
 #include <QLayout>
 #include <QPropertyAnimation>
@@ -81,7 +83,8 @@ void NXNavigationBarPrivate::onNavigationCloseCurrentWindow(const QString& nodeK
         return;
     }
     q->removeNavigationNode(nodeKey);
-}void NXNavigationBarPrivate::onNavigationRoute(QVariantMap routeData)
+}
+void NXNavigationBarPrivate::onNavigationRoute(QVariantMap routeData)
 {
     Q_Q(NXNavigationBar);
     bool isRouteBack = routeData.value("NXRouteBackMode").toBool();
@@ -423,8 +426,7 @@ void NXNavigationBarPrivate::_addStackedPage(QWidget* page, QString pageKey)
     NXNavigationNode* node = _navigationModel->getNavigationNode(pageKey);
     QVariantMap suggestData;
     suggestData.insert("NXPageKey", pageKey);
-    QString suggestKey = _navigationSuggestBox->addSuggestion(node->getAwesome(), node->getNodeTitle(), suggestData);
-    _suggestKeyMap.insert(pageKey, suggestKey);
+    _suggestDataList.append(NXSuggestBox::SuggestData(node->getAwesome(), node->getNodeTitle(), suggestData));
 }
 
 void NXNavigationBarPrivate::_addFooterPage(QWidget* page, QString footKey)
@@ -439,8 +441,7 @@ void NXNavigationBarPrivate::_addFooterPage(QWidget* page, QString footKey)
     NXNavigationNode* node = _footerModel->getNavigationNode(footKey);
     QVariantMap suggestData;
     suggestData.insert("NXPageKey", footKey);
-    QString suggestKey = _navigationSuggestBox->addSuggestion(node->getAwesome(), node->getNodeTitle(), suggestData);
-    _suggestKeyMap.insert(footKey, suggestKey);
+    _suggestDataList.append(NXSuggestBox::SuggestData(node->getAwesome(), node->getNodeTitle(), suggestData));
 }
 
 void NXNavigationBarPrivate::_raiseNavigationBar()
@@ -449,6 +450,234 @@ void NXNavigationBarPrivate::_raiseNavigationBar()
     q->raise();
 }
 
+void NXNavigationBarPrivate::_smoothScrollNavigationView(const QModelIndex& index)
+{
+    QTimer::singleShot(200, this, [=]() {
+        if (_currentDisplayMode == NXNavigationType::Compact)
+        {
+            return;
+        }
+        QRect indexRect = _navigationView->visualRect(index);
+        QRect viewportRect = _navigationView->viewport()->rect();
+        if (viewportRect.contains(indexRect))
+        {
+            return;
+        }
+        auto vScrollBar = _navigationView->verticalScrollBar();
+        int startValue = vScrollBar->value();
+        int endValue = startValue + indexRect.top() - ((viewportRect.height() - indexRect.height()) / 2);
+        QPropertyAnimation* scrollAnimation = new QPropertyAnimation(vScrollBar, "value");
+        scrollAnimation->setEasingCurve(QEasingCurve::OutSine);
+        scrollAnimation->setDuration(255);
+        scrollAnimation->setStartValue(startValue);
+        scrollAnimation->setEndValue(endValue);
+        scrollAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+        });
+}
+void NXNavigationBarPrivate::_doComponentAnimation(NXNavigationType::NavigationDisplayMode displayMode, bool isAnimation)
+{
+    switch (displayMode)
+    {
+    case NXNavigationType::Minimal:
+    {
+        _doNavigationBarWidthAnimation(displayMode, isAnimation);
+        if (_currentDisplayMode == NXNavigationType::Maximal)
+        {
+            _userCard->setVisible(false);
+            if (_isShowUserCard)
+            {
+                _userButton->setVisible(true);
+            }
+            _handleNavigationExpandState(true);
+        }
+        _currentDisplayMode = displayMode;
+        break;
+    }
+    case NXNavigationType::Compact:
+    {
+        _doNavigationBarWidthAnimation(displayMode, isAnimation);
+        _doNavigationViewWidthAnimation(isAnimation);
+        if (_currentDisplayMode != NXNavigationType::Minimal)
+        {
+            _handleUserButtonLayout(true);
+            _doUserButtonAnimation(true, isAnimation);
+            _handleNavigationExpandState(true);
+        }
+        _currentDisplayMode = displayMode;
+        break;
+    }
+    case NXNavigationType::Maximal:
+    {
+        _handleUserButtonLayout(false);
+        _doNavigationBarWidthAnimation(displayMode, isAnimation);
+        _doUserButtonAnimation(false, isAnimation);
+        _currentDisplayMode = displayMode;
+        _handleNavigationExpandState(false);
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+}
+
+void NXNavigationBarPrivate::_handleNavigationExpandState(bool isSave)
+{
+    if (isSave)
+    {
+        // 保存展开状态 收起根节点所有子树
+        _lastExpandedNodesList = _navigationModel->getRootExpandedNodes();
+        for (auto node : _lastExpandedNodesList)
+        {
+            onTreeViewClicked(node->getModelIndex(), false);
+        }
+    }
+    else
+    {
+        // 修正动画覆盖
+        _navigationView->resize(_pNavigationBarWidth - 5, _navigationView->height());
+        for (auto node : _lastExpandedNodesList)
+        {
+            onTreeViewClicked(node->getModelIndex(), false);
+        }
+    }
+}
+
+void NXNavigationBarPrivate::_handleUserButtonLayout(bool isCompact)
+{
+    while (_userButtonLayout->count())
+    {
+        _userButtonLayout->takeAt(0);
+    }
+    if (_isShowUserCard)
+    {
+        _userButtonLayout->addSpacing(isCompact ? 36 : 80);
+    }
+}
+
+void NXNavigationBarPrivate::_resetLayout()
+{
+    while (_userButtonLayout->count())
+    {
+        _userButtonLayout->takeAt(0);
+    }
+    _userButtonLayout->addWidget(_userButton);
+}
+
+void NXNavigationBarPrivate::_doNavigationBarWidthAnimation(NXNavigationType::NavigationDisplayMode displayMode, bool isAnimation)
+{
+    Q_Q(NXNavigationBar);
+    QPropertyAnimation* navigationBarWidthAnimation = new QPropertyAnimation(q, "maximumWidth");
+    navigationBarWidthAnimation->setEasingCurve(QEasingCurve::OutCubic);
+    navigationBarWidthAnimation->setStartValue(q->width());
+    navigationBarWidthAnimation->setDuration(isAnimation ? 255 : 0);
+    switch (displayMode)
+    {
+    case NXNavigationType::Minimal:
+    {
+        connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            q->setFixedWidth(value.toUInt());
+            });
+        navigationBarWidthAnimation->setEndValue(0);
+        break;
+    }
+    case NXNavigationType::Compact:
+    {
+        connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            q->setFixedWidth(value.toUInt());
+            });
+        navigationBarWidthAnimation->setEndValue(42);
+        break;
+    }
+    case NXNavigationType::Maximal:
+    {
+        connect(navigationBarWidthAnimation, &QPropertyAnimation::finished, this, [=]() {
+            _resetLayout();
+            });
+        connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            q->setFixedWidth(value.toUInt());
+            });
+        navigationBarWidthAnimation->setEndValue(_pNavigationBarWidth);
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    navigationBarWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
+void NXNavigationBarPrivate::_doNavigationViewWidthAnimation(bool isAnimation)
+{
+    QPropertyAnimation* navigationViewWidthAnimation = new QPropertyAnimation(this, "pNavigationViewWidth");
+    connect(navigationViewWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        _navigationView->setColumnWidth(0, value.toUInt());
+        });
+    navigationViewWidthAnimation->setEasingCurve(QEasingCurve::OutCubic);
+    navigationViewWidthAnimation->setStartValue(_navigationView->columnWidth(0));
+    navigationViewWidthAnimation->setEndValue(40);
+    navigationViewWidthAnimation->setDuration(isAnimation ? 255 : 0);
+    navigationViewWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
+void NXNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnimation)
+{
+    QPropertyAnimation* userButtonAnimation = new QPropertyAnimation(_userButton, "geometry");
+    connect(userButtonAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        _userButton->setFixedSize(value.toRect().size());
+        });
+    userButtonAnimation->setEasingCurve(isCompact ? QEasingCurve::OutCubic : QEasingCurve::InOutSine);
+    QRect maximumRect = QRect(13, 18, 64, 64);
+    QRect compactRect = QRect(3, 10, 36, 36);
+    userButtonAnimation->setStartValue(isCompact ? maximumRect : compactRect);
+    userButtonAnimation->setEndValue(isCompact ? compactRect : maximumRect);
+
+    QPropertyAnimation* spacingAnimation = new QPropertyAnimation(this, "pUserButtonSpacing");
+    connect(spacingAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        while (_userButtonLayout->count())
+        {
+            _userButtonLayout->takeAt(0);
+        }
+        if (_isShowUserCard)
+        {
+            _userButtonLayout->addSpacing(value.toInt());
+        }
+        });
+    spacingAnimation->setEasingCurve(isCompact ? QEasingCurve::OutCubic : QEasingCurve::InOutSine);
+    spacingAnimation->setStartValue(isCompact ? 80 : 36);
+    spacingAnimation->setEndValue(isCompact ? 36 : 80);
+    if (isCompact)
+    {
+        _userCard->setVisible(false);
+        if (_isShowUserCard)
+        {
+            _userButton->setVisible(true);
+        }
+        userButtonAnimation->setDuration(isAnimation ? 255 : 0);
+        spacingAnimation->setDuration(isAnimation ? 255 : 0);
+    }
+    else
+    {
+        connect(spacingAnimation, &QPropertyAnimation::finished, this, [=]() {
+            _userButton->setFixedSize(36, 36);
+            _userButton->setGeometry(QRect(3, 10, 36, 36));
+            _userButton->setVisible(false);
+            _resetLayout();
+            if (_isShowUserCard)
+            {
+                _userCard->setVisible(true);
+            }
+            });
+        userButtonAnimation->setDuration(isAnimation ? 135 : 0);
+        spacingAnimation->setDuration(isAnimation ? 135 : 0);
+    }
+    userButtonAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    spacingAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+}
+// 旧逻辑保留
+/*
 void NXNavigationBarPrivate::_doComponentAnimation(NXNavigationType::NavigationDisplayMode displayMode, bool isAnimation)
 {
     switch (displayMode)
@@ -608,7 +837,7 @@ void NXNavigationBarPrivate::_doNavigationBarWidthAnimation(NXNavigationType::Na
     {
     case NXNavigationType::Minimal:
     {
-        QObject::connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             q->setFixedWidth(value.toUInt());
         });
         navigationBarWidthAnimation->setEndValue(0);
@@ -616,7 +845,7 @@ void NXNavigationBarPrivate::_doNavigationBarWidthAnimation(NXNavigationType::Na
     }
     case NXNavigationType::Compact:
     {
-        QObject::connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             q->setFixedWidth(value.toUInt());
         });
         navigationBarWidthAnimation->setEndValue(47);
@@ -624,10 +853,10 @@ void NXNavigationBarPrivate::_doNavigationBarWidthAnimation(NXNavigationType::Na
     }
     case NXNavigationType::Maximal:
     {
-        QObject::connect(navigationBarWidthAnimation, &QPropertyAnimation::finished, this, [=]() {
+        connect(navigationBarWidthAnimation, &QPropertyAnimation::finished, this, [=]() {
             _resetLayout();
         });
-        QObject::connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             q->setFixedWidth(value.toUInt());
         });
         navigationBarWidthAnimation->setEndValue(_pNavigationBarWidth);
@@ -644,7 +873,7 @@ void NXNavigationBarPrivate::_doNavigationBarWidthAnimation(NXNavigationType::Na
 void NXNavigationBarPrivate::_doNavigationViewWidthAnimation(bool isAnimation)
 {
     QPropertyAnimation* navigationViewWidthAnimation = new QPropertyAnimation(this, "pNavigationViewWidth");
-    QObject::connect(navigationViewWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    connect(navigationViewWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         _navigationView->setColumnWidth(0, value.toUInt());
     });
     navigationViewWidthAnimation->setEasingCurve(QEasingCurve::OutCubic);
@@ -660,7 +889,7 @@ void NXNavigationBarPrivate::_doNavigationButtonAnimation(bool isCompact, bool i
     {
         // 导航按钮
         QPropertyAnimation* navigationButtonAnimation = new QPropertyAnimation(_navigationButton, "pos");
-        QObject::connect(navigationButtonAnimation, &QPropertyAnimation::finished, this, [=]() {
+        connect(navigationButtonAnimation, &QPropertyAnimation::finished, this, [=]() {
             _resetLayout();
         });
         QPoint navigationButtonPos = _navigationButton->pos();
@@ -734,7 +963,7 @@ void NXNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnima
             _userButton->setVisible(true);
         }
         QPropertyAnimation* userButtonAnimation = new QPropertyAnimation(_userButton, "geometry");
-        QObject::connect(userButtonAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        connect(userButtonAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             _userButton->setFixedSize(value.toRect().size());
         });
         userButtonAnimation->setEasingCurve(QEasingCurve::OutCubic);
@@ -746,7 +975,7 @@ void NXNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnima
     else
     {
         QPropertyAnimation* userButtonAnimation = new QPropertyAnimation(_userButton, "geometry");
-        QObject::connect(userButtonAnimation, &QPropertyAnimation::finished, this, [=]() {
+        connect(userButtonAnimation, &QPropertyAnimation::finished, this, [=]() {
             if (_isShowUserCard)
             {
                 _userCard->setVisible(true);
@@ -755,7 +984,7 @@ void NXNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnima
             _userButton->setGeometry(QRect(3, 10, 36, 36));
             _userButton->setVisible(false);
         });
-        QObject::connect(userButtonAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        connect(userButtonAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             _userButton->setFixedSize(value.toRect().size());
         });
         userButtonAnimation->setEasingCurve(QEasingCurve::InOutSine);
@@ -765,3 +994,4 @@ void NXNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnima
         userButtonAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     }
 }
+*/

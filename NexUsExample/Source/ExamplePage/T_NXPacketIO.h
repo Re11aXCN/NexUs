@@ -2,12 +2,12 @@
 #define NXFRAMEWORK_NXWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_NXPACKETIO_H_
 
 #include <QObject>
-#if defined(Q_OS_WIN) && defined(NXPACKETIO_LIBRARY_ALREADY_BUILT)
+#if defined(Q_OS_WIN) && defined(BUILD_WITH_NXPACKETIO)
 #include "NXProperty.h"
 #include "XIO/NXXIO_PacketRegistry.h"
 #include "Util/UtCallbackHolder.h"
-#include <QImage>
 #include <QPixmap>
+#include <QImage>
 #include <QMutex>
 #include <QQueue>
 class NXXIO_Interface;

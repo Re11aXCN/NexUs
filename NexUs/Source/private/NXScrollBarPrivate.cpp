@@ -20,10 +20,10 @@ void NXScrollBarPrivate::onRangeChanged(int min, int max)
     if (q->isVisible() && _pIsAnimation && max != 0)
     {
         QPropertyAnimation* rangeSmoothAnimation = new QPropertyAnimation(this, "pTargetMaximum");
-        QObject::connect(rangeSmoothAnimation, &QPropertyAnimation::finished, this, [=]() {
+        connect(rangeSmoothAnimation, &QPropertyAnimation::finished, this, [=]() {
             Q_EMIT q->rangeAnimationFinished();
         });
-        QObject::connect(rangeSmoothAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        connect(rangeSmoothAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             q->blockSignals(true);
             q->setMaximum(value.toUInt());
             q->blockSignals(false);

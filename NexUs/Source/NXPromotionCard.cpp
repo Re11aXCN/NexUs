@@ -109,10 +109,10 @@ bool NXPromotionCard::event(QEvent* event)
     {
         QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(event);
         QPropertyAnimation* opacityAnimation = new QPropertyAnimation(d, "pPressOpacity");
-        QObject::connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             update();
         });
-        QObject::connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]() {
+        connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]() {
             d->_isPressAnimationFinished = true;
         });
         opacityAnimation->setDuration(300);
@@ -122,7 +122,7 @@ bool NXPromotionCard::event(QEvent* event)
         opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
         QPropertyAnimation* pressAnimation = new QPropertyAnimation(d, "pPressRadius");
-        QObject::connect(pressAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        connect(pressAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             d->_pressGradient->setRadius(value.toReal());
         });
         pressAnimation->setDuration(300);

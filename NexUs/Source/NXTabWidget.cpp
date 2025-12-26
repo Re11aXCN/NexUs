@@ -20,11 +20,11 @@ NXTabWidget::NXTabWidget(QWidget* parent)
     setAcceptDrops(true);
     d->_tabBar = new NXTabBar(this);
     setTabBar(d->_tabBar);
-    QObject::connect(d->_tabBar, &NXTabBar::tabDragCreate, d, &NXTabWidgetPrivate::onTabDragCreate);
-    QObject::connect(d->_tabBar, &NXTabBar::tabDragEnter, d, &NXTabWidgetPrivate::onTabDragEnter);
-    QObject::connect(d->_tabBar, &NXTabBar::tabDragLeave, d, &NXTabWidgetPrivate::onTabDragLeave);
-    QObject::connect(d->_tabBar, &NXTabBar::tabDragDrop, d, &NXTabWidgetPrivate::onTabDragDrop);
-    QObject::connect(d->_tabBar, &NXTabBar::tabCloseRequested, d, &NXTabWidgetPrivate::onTabCloseRequested);
+    connect(d->_tabBar, &NXTabBar::tabDragCreate, d, &NXTabWidgetPrivate::onTabDragCreate);
+    connect(d->_tabBar, &NXTabBar::tabDragEnter, d, &NXTabWidgetPrivate::onTabDragEnter);
+    connect(d->_tabBar, &NXTabBar::tabDragLeave, d, &NXTabWidgetPrivate::onTabDragLeave);
+    connect(d->_tabBar, &NXTabBar::tabDragDrop, d, &NXTabWidgetPrivate::onTabDragDrop);
+    connect(d->_tabBar, &NXTabBar::tabCloseRequested, d, &NXTabWidgetPrivate::onTabCloseRequested);
 }
 
 NXTabWidget::~NXTabWidget()

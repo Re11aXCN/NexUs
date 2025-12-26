@@ -19,14 +19,9 @@ NXGraphicsView::NXGraphicsView(QWidget* parent)
 }
 
 NXGraphicsView::NXGraphicsView(QGraphicsScene* scene, QWidget* parent)
-    : QGraphicsView(scene, parent), d_ptr(new NXGraphicsViewPrivate())
+    : NXGraphicsView(parent)
 {
-    Q_D(NXGraphicsView);
-    d->q_ptr = this;
-    d->_pMaxTransform = 5;
-    d->_pMinTransform = 0.15;
-    d->_initStyle();
-    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+    setScene(scene);
 }
 
 NXGraphicsView::~NXGraphicsView()
@@ -47,6 +42,7 @@ void NXGraphicsView::wheelEvent(QWheelEvent* event)
         {
             this->scale(1.0 / 1.1, 1.0 / 1.1);
         }
+        event->accept();
         return;
     }
     QGraphicsView::wheelEvent(event);

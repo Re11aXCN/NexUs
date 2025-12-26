@@ -13,7 +13,6 @@ NXFlowLayout::NXFlowLayout(QWidget* parent, int margin, int hSpacing, int vSpaci
     d->_hSpacing = hSpacing;
     d->_vSpacing = vSpacing;
     setContentsMargins(margin, margin, margin, margin);
-    d->_lastHeightMap.insert(this, 0);
 }
 
 NXFlowLayout::NXFlowLayout(int margin, int hSpacing, int vSpacing)
@@ -24,7 +23,6 @@ NXFlowLayout::NXFlowLayout(int margin, int hSpacing, int vSpacing)
     d->_hSpacing = hSpacing;
     d->_vSpacing = vSpacing;
     setContentsMargins(margin, margin, margin, margin);
-    d->_lastHeightMap.insert(this, 0);
 }
 
 NXFlowLayout::~NXFlowLayout()
@@ -68,12 +66,14 @@ int NXFlowLayout::verticalSpacing() const
 }
 int NXFlowLayout::count() const
 {
-    return d_ptr->_itemList.size();
+    Q_D(const NXFlowLayout);
+    return d->_itemList.size();
 }
 
 QLayoutItem* NXFlowLayout::itemAt(int index) const
 {
-    return d_ptr->_itemList.value(index);
+    Q_D(const NXFlowLayout);
+    return d->_itemList.value(index);
 }
 
 QLayoutItem* NXFlowLayout::takeAt(int index)
@@ -104,9 +104,8 @@ bool NXFlowLayout::hasHeightForWidth() const
 
 int NXFlowLayout::heightForWidth(int width) const
 {
-    int height = d_ptr->_doLayout(QRect(0, 0, width, 0), true);
-    d_ptr->_lastHeightMap[const_cast<NXFlowLayout*>(this)] = height;
-    return height;
+    Q_D(const NXFlowLayout);
+    return d->_doLayout(QRect(0, 0, width, 0), true);
 }
 
 void NXFlowLayout::setGeometry(const QRect& rect)
@@ -123,12 +122,12 @@ QSize NXFlowLayout::sizeHint() const
 
 QSize NXFlowLayout::minimumSize() const
 {
+    Q_D(const NXFlowLayout);
     QSize size;
-    for (const QLayoutItem* item : std::as_const(d_ptr->_itemList))
+    for (const QLayoutItem* item : d->_itemList)
     {
         size = size.expandedTo(item->minimumSize());
     }
-
     const QMargins margins = contentsMargins();
     size += QSize(margins.left() + margins.right(), margins.top() + margins.bottom());
     return size;

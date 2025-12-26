@@ -16,7 +16,7 @@ void NXToggleSwitchPrivate::_startPosAnimation(qreal startX, qreal endX, bool is
 {
     Q_Q(NXToggleSwitch);
     QPropertyAnimation* circleAnimation = new QPropertyAnimation(q, "circleCenterX");
-    QObject::connect(circleAnimation, &QPropertyAnimation::valueChanged, q, [=](const QVariant& value) {
+    connect(circleAnimation, &QPropertyAnimation::valueChanged, q, [=](const QVariant& value) {
                 this->_circleCenterX = value.toReal();
                 q->update(); });
     circleAnimation->setStartValue(startX);
@@ -31,7 +31,7 @@ void NXToggleSwitchPrivate::_startRadiusAnimation(qreal startRadius, qreal endRa
 {
     Q_Q(NXToggleSwitch);
     QPropertyAnimation* circleRadiusAnimation = new QPropertyAnimation(q, "circleRadius");
-    QObject::connect(circleRadiusAnimation, &QPropertyAnimation::valueChanged, q, [=](const QVariant& value) {
+    connect(circleRadiusAnimation, &QPropertyAnimation::valueChanged, q, [=](const QVariant& value) {
         this->_circleRadius = value.toReal();
         q->update(); });
     circleRadiusAnimation->setEasingCurve(QEasingCurve::InOutSine);

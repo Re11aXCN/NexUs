@@ -22,6 +22,19 @@
 
 Q_PROPERTY_CREATE_Q_CPP(NXSuggestBox, int, BorderRadius)
 Q_PROPERTY_CREATE_Q_CPP(NXSuggestBox, Qt::CaseSensitivity, CaseSensitivity)
+NXSuggestBox::SuggestData::SuggestData()
+{
+}
+
+NXSuggestBox::SuggestData::SuggestData(NXIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData)
+    : _pNXIcon(icon), _pSuggestText(suggestText), _pSuggestData(suggestData)
+{
+}
+
+NXSuggestBox::SuggestData::~SuggestData()
+{
+}
+
 NXSuggestBox::NXSuggestBox(QWidget* parent)
     : QWidget{ parent }, d_ptr(new NXSuggestBoxPrivate())
 {
@@ -135,6 +148,33 @@ QString NXSuggestBox::addSuggestion(NXIconType::IconName icon, const QString& su
     return suggest->getSuggestKey();
 }
 
+QString NXSuggestBox::addSuggestion(const NXSuggestBox::SuggestData& suggestData)
+{
+    Q_D(NXSuggestBox);
+    NXSuggestion* suggest = new NXSuggestion(this);
+    suggest->setNXIcon(suggestData.getNXIcon());
+    suggest->setSuggestText(suggestData.getSuggestText());
+    suggest->setSuggestData(suggestData.getSuggestData());
+    d->_suggestionVector.append(suggest);
+    return suggest->getSuggestKey();
+}
+
+QStringList NXSuggestBox::addSuggestion(const QList<NXSuggestBox::SuggestData>& suggestDataList)
+{
+    Q_D(NXSuggestBox);
+    QStringList suggestKeyList;
+    for (const auto& suggestData : suggestDataList)
+    {
+        NXSuggestion* suggest = new NXSuggestion(this);
+        suggest->setNXIcon(suggestData.getNXIcon());
+        suggest->setSuggestText(suggestData.getSuggestText());
+        suggest->setSuggestData(suggestData.getSuggestData());
+        d->_suggestionVector.append(suggest);
+        suggestKeyList.append(suggest->getSuggestKey());
+    }
+    return suggestKeyList;
+}
+
 void NXSuggestBox::removeSuggestion(const QString& suggestKey)
 {
     Q_D(NXSuggestBox);
@@ -158,4 +198,14 @@ void NXSuggestBox::removeSuggestion(int index)
     NXSuggestion* suggest = d->_suggestionVector[index];
     d->_suggestionVector.removeOne(suggest);
     suggest->deleteLater();
+}
+
+void NXSuggestBox::clearSuggestion()
+{
+    Q_D(NXSuggestBox);
+    foreach(auto suggest, d->_suggestionVector)
+    {
+        d->_suggestionVector.removeOne(suggest);
+        suggest->deleteLater();
+    }
 }

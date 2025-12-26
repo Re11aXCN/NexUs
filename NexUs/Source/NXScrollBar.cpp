@@ -23,19 +23,19 @@ NXScrollBar::NXScrollBar(QWidget* parent)
     d->_pSpeedLimit = 20;
     d->_pTargetMaximum = 0;
     d->_pIsAnimation = false;
-    QObject::connect(this, &NXScrollBar::rangeChanged, d, &NXScrollBarPrivate::onRangeChanged);
+    connect(this, &NXScrollBar::rangeChanged, d, &NXScrollBarPrivate::onRangeChanged);
     NXScrollBarStyle* scrollBarStyle = new NXScrollBarStyle(style());
     scrollBarStyle->setScrollBar(this);
     setStyle(scrollBarStyle);
     d->_slideSmoothAnimation = new QPropertyAnimation(this, "value");
     d->_slideSmoothAnimation->setEasingCurve(QEasingCurve::OutSine);
     d->_slideSmoothAnimation->setDuration(300);
-    QObject::connect(d->_slideSmoothAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(d->_slideSmoothAnimation, &QPropertyAnimation::finished, this, [=]() {
         d->_scrollValue = value();
     });
 
     d->_expandTimer = new QTimer(this);
-    QObject::connect(d->_expandTimer, &QTimer::timeout, this, [=]() {
+    connect(d->_expandTimer, &QTimer::timeout, this, [=]() {
         d->_expandTimer->stop();
         d->_isExpand = underMouse();
         scrollBarStyle->startExpandAnimation(d->_isExpand);
@@ -66,13 +66,13 @@ NXScrollBar::NXScrollBar(QScrollBar* originScrollBar, QAbstractScrollArea* paren
     d->_originScrollBar = originScrollBar;
     d->_initAllConfig();
 
-    QObject::connect(d->_originScrollBar, &QScrollBar::valueChanged, this, [=](int value) {
+    connect(d->_originScrollBar, &QScrollBar::valueChanged, this, [=](int value) {
         d->_handleScrollBarValueChanged(this, value);
     });
-    QObject::connect(this, &QScrollBar::valueChanged, this, [=](int value) {
+    connect(this, &QScrollBar::valueChanged, this, [=](int value) {
         d->_handleScrollBarValueChanged(d->_originScrollBar, value);
     });
-    QObject::connect(d->_originScrollBar, &QScrollBar::rangeChanged, this, [=](int min, int max) {
+    connect(d->_originScrollBar, &QScrollBar::rangeChanged, this, [=](int min, int max) {
         d->_handleScrollBarRangeChanged(min, max);
     });
 }

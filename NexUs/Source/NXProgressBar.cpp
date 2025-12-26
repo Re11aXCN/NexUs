@@ -15,7 +15,7 @@ NXProgressBar::NXProgressBar(QWidget* parent)
     d->_style = new NXProgressBarStyle(style());
     setStyle(d->_style);
     d->_busyAnimation = new QPropertyAnimation(d->_style, "busyStartValue");
-    QObject::connect(d->_busyAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    connect(d->_busyAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         d->_style->setProperty("busyEndValue", value.toInt() + 75);
         update();
     });

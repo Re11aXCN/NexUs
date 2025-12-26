@@ -11,7 +11,7 @@ NXLineEditStyle::NXLineEditStyle(QStyle* style)
     _pLineEditIconMargin = 10;
     _pLineEditBorderRadius = 6;
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

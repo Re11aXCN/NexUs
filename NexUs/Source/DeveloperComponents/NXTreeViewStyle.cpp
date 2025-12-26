@@ -12,7 +12,7 @@ NXTreeViewStyle::NXTreeViewStyle(QStyle* style)
     _pHeaderMargin = 5;
     _pIconName = NXIconType::None;
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

@@ -34,7 +34,7 @@ NXLineEdit::NXLineEdit(QWidget* parent)
     setStyle(d->_lineEditStyle);
     setStyleSheet("#NXLineEdit{background-color:transparent;padding-left: 10px;}");
     d->onThemeChanged(nxTheme->getThemeMode());
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXLineEditPrivate::onThemeChanged);
+    connect(nxTheme, &NXTheme::themeModeChanged, d, &NXLineEditPrivate::onThemeChanged);
     setVisible(true);
 }
 
@@ -122,7 +122,7 @@ void NXLineEdit::focusInEvent(QFocusEvent* event)
             setClearButtonEnabled(true);
         }
         QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-        QObject::connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             update();
         });
         markAnimation->setDuration(300);
@@ -145,7 +145,7 @@ void NXLineEdit::focusOutEvent(QFocusEvent* event)
             setClearButtonEnabled(false);
         }
         QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-        QObject::connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             update();
         });
         markAnimation->setDuration(300);
@@ -185,11 +185,11 @@ void NXLineEdit::contextMenuEvent(QContextMenuEvent* event)
     {
         action = menu->addNXIconAction(NXIconType::ArrowRotateLeft, tr("撤销"), QKeySequence::Undo);
         action->setEnabled(isUndoAvailable());
-        QObject::connect(action, &QAction::triggered, this, &NXLineEdit::undo);
+        connect(action, &QAction::triggered, this, &NXLineEdit::undo);
 
         action = menu->addNXIconAction(NXIconType::ArrowRotateRight, tr("恢复"), QKeySequence::Redo);
         action->setEnabled(isRedoAvailable());
-        QObject::connect(action, &QAction::triggered, this, &NXLineEdit::redo);
+        connect(action, &QAction::triggered, this, &NXLineEdit::redo);
         menu->addSeparator();
     }
 #ifndef QT_NO_CLIPBOARD
@@ -197,25 +197,25 @@ void NXLineEdit::contextMenuEvent(QContextMenuEvent* event)
     {
         action = menu->addNXIconAction(NXIconType::KnifeKitchen, tr("剪切"), QKeySequence::Cut);
         action->setEnabled(!isReadOnly() && hasSelectedText() && echoMode() == QLineEdit::Normal);
-        QObject::connect(action, &QAction::triggered, this, &NXLineEdit::cut);
+        connect(action, &QAction::triggered, this, &NXLineEdit::cut);
     }
 
     action = menu->addNXIconAction(NXIconType::Copy, tr("复制"), QKeySequence::Copy);
     action->setEnabled(hasSelectedText() && echoMode() == QLineEdit::Normal);
-    QObject::connect(action, &QAction::triggered, this, &NXLineEdit::copy);
+    connect(action, &QAction::triggered, this, &NXLineEdit::copy);
 
     if (!isReadOnly())
     {
         action = menu->addNXIconAction(NXIconType::Paste, tr("粘贴"), QKeySequence::Paste);
         action->setEnabled(!isReadOnly() && !QGuiApplication::clipboard()->text().isEmpty());
-        QObject::connect(action, &QAction::triggered, this, &NXLineEdit::paste);
+        connect(action, &QAction::triggered, this, &NXLineEdit::paste);
     }
 #endif
     if (!isReadOnly())
     {
         action = menu->addNXIconAction(NXIconType::DeleteLeft, tr("删除"));
         action->setEnabled(!isReadOnly() && !text().isEmpty() && hasSelectedText());
-        QObject::connect(action, &QAction::triggered, this, [=](bool checked) {
+        connect(action, &QAction::triggered, this, [=](bool checked) {
             if (hasSelectedText())
             {
                 int startIndex = selectionStart();
@@ -231,6 +231,6 @@ void NXLineEdit::contextMenuEvent(QContextMenuEvent* event)
     action = menu->addAction(tr("全选"));
     action->setShortcut(QKeySequence::SelectAll);
     action->setEnabled(!text().isEmpty() && !(selectedText() == text()));
-    QObject::connect(action, &QAction::triggered, this, &NXLineEdit::selectAll);
+    connect(action, &QAction::triggered, this, &NXLineEdit::selectAll);
     menu->popup(event->globalPos());
 }

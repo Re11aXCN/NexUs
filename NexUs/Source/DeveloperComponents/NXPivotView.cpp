@@ -35,10 +35,10 @@ void NXPivotView::doCurrentIndexChangedAnimation(const QModelIndex& index)
     {
         _pCurrentIndexRect = visualRect(index);
         QPropertyAnimation* markAnimation = new QPropertyAnimation(this, "pMarkX");
-        QObject::connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
             update();
         });
-        QObject::connect(markAnimation, &QPropertyAnimation::finished, this, [=]() {
+        connect(markAnimation, &QPropertyAnimation::finished, this, [=]() {
             _pIsAnimationFinished = true;
             update();
             });
@@ -67,10 +67,10 @@ void NXPivotView::doCurrentIndexChangedAnimation(const QModelIndex& index)
     {
         _pCurrentIndexRect = visualRect(model()->index(_pPivotStyle->getCurrentIndex(), 0));
         QPropertyAnimation* markAnimation = new QPropertyAnimation(this, "pMarkX");
-        QObject::connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
             update();
         });
-        QObject::connect(markAnimation, &QPropertyAnimation::finished, this, [=]() {
+        connect(markAnimation, &QPropertyAnimation::finished, this, [=]() {
             _pIsAnimationFinished = true;
             update();
             });

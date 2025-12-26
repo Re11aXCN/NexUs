@@ -19,7 +19,7 @@ NXToolBar::NXToolBar(QWidget* parent)
     layout()->setContentsMargins(3, 3, 3, 3);
 
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
         if (this->isFloating())
         {
@@ -28,7 +28,7 @@ NXToolBar::NXToolBar(QWidget* parent)
     });
     setAttribute(Qt::WA_TranslucentBackground);
 
-    QObject::connect(this, &NXToolBar::topLevelChanged, this, [=](bool topLevel) {
+    connect(this, &NXToolBar::topLevelChanged, this, [=](bool topLevel) {
         if (topLevel)
         {
             layout()->setContentsMargins(d->_shadowBorderWidth + 3, d->_shadowBorderWidth + 3, d->_shadowBorderWidth + 3, d->_shadowBorderWidth + 3);

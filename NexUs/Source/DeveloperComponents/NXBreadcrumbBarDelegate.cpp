@@ -7,7 +7,7 @@ NXBreadcrumbBarDelegate::NXBreadcrumbBarDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

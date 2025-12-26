@@ -23,12 +23,12 @@ void NXDoubleSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
     _themeMode = themeMode;
     if (q->isVisible())
     {
-        _changeTheme();
+        _changnxTheme();
     }
     else
     {
         QTimer::singleShot(1, this, [=] {
-            _changeTheme();
+            _changnxTheme();
         });
     }
 }
@@ -45,11 +45,11 @@ NXMenu* NXDoubleSpinBoxPrivate::_createStandardContextMenu()
     {
         action = menu->addNXIconAction(NXIconType::ArrowRotateLeft, tr("撤销"), QKeySequence::Undo);
         action->setEnabled(lineEdit->isUndoAvailable());
-        QObject::connect(action, &QAction::triggered, lineEdit, &QLineEdit::undo);
+        connect(action, &QAction::triggered, lineEdit, &QLineEdit::undo);
 
         action = menu->addNXIconAction(NXIconType::ArrowRotateRight, tr("恢复"), QKeySequence::Redo);
         action->setEnabled(lineEdit->isRedoAvailable());
-        QObject::connect(action, &QAction::triggered, lineEdit, &QLineEdit::redo);
+        connect(action, &QAction::triggered, lineEdit, &QLineEdit::redo);
         menu->addSeparator();
     }
 #ifndef QT_NO_CLIPBOARD
@@ -57,25 +57,25 @@ NXMenu* NXDoubleSpinBoxPrivate::_createStandardContextMenu()
     {
         action = menu->addNXIconAction(NXIconType::KnifeKitchen, tr("剪切"), QKeySequence::Cut);
         action->setEnabled(!lineEdit->isReadOnly() && lineEdit->hasSelectedText() && lineEdit->echoMode() == QLineEdit::Normal);
-        QObject::connect(action, &QAction::triggered, lineEdit, &QLineEdit::cut);
+        connect(action, &QAction::triggered, lineEdit, &QLineEdit::cut);
     }
 
     action = menu->addNXIconAction(NXIconType::Copy, tr("复制"), QKeySequence::Copy);
     action->setEnabled(lineEdit->hasSelectedText() && lineEdit->echoMode() == QLineEdit::Normal);
-    QObject::connect(action, &QAction::triggered, lineEdit, &QLineEdit::copy);
+    connect(action, &QAction::triggered, lineEdit, &QLineEdit::copy);
 
     if (!lineEdit->isReadOnly())
     {
         action = menu->addNXIconAction(NXIconType::Paste, tr("粘贴"), QKeySequence::Paste);
         action->setEnabled(!lineEdit->isReadOnly() && !QGuiApplication::clipboard()->text().isEmpty());
-        QObject::connect(action, &QAction::triggered, lineEdit, &QLineEdit::paste);
+        connect(action, &QAction::triggered, lineEdit, &QLineEdit::paste);
     }
 #endif
     if (!lineEdit->isReadOnly())
     {
         action = menu->addNXIconAction(NXIconType::DeleteLeft, tr("删除"));
         action->setEnabled(!lineEdit->isReadOnly() && !lineEdit->text().isEmpty() && lineEdit->hasSelectedText());
-        QObject::connect(action, &QAction::triggered, this, [=](bool checked) {
+        connect(action, &QAction::triggered, this, [=](bool checked) {
             if (lineEdit->hasSelectedText())
             {
                 int startIndex = lineEdit->selectionStart();
@@ -91,11 +91,11 @@ NXMenu* NXDoubleSpinBoxPrivate::_createStandardContextMenu()
     action = menu->addAction(tr("全选"));
     action->setShortcut(QKeySequence::SelectAll);
     action->setEnabled(!lineEdit->text().isEmpty() && !(lineEdit->selectedText() == lineEdit->text()));
-    QObject::connect(action, &QAction::triggered, q, &NXDoubleSpinBox::selectAll);
+    connect(action, &QAction::triggered, q, &NXDoubleSpinBox::selectAll);
     return menu;
 }
 
-void NXDoubleSpinBoxPrivate::_changeTheme()
+void NXDoubleSpinBoxPrivate::_changnxTheme()
 {
     Q_Q(NXDoubleSpinBox);
     QPalette palette;

@@ -26,7 +26,7 @@ void NXMultiSelectComboBoxPrivate::onItemPressed(const QModelIndex& index)
     }
     _refreshCurrentIndexs();
     QPropertyAnimation* markAnimation = new QPropertyAnimation(this, "pExpandMarkWidth");
-    QObject::connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         q->update();
     });
     markAnimation->setDuration(300);

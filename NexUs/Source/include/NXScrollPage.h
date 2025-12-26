@@ -15,7 +15,7 @@ class NX_EXPORT NXScrollPage : public QWidget
     Q_PROPERTY_CREATE_Q_H(QWidget*, CustomWidget)
 public:
     explicit NXScrollPage(QWidget* parent = nullptr);
-    ~NXScrollPage();
+    ~NXScrollPage() override;
 
     void addCentralWidget(QWidget* centralWidget, bool isWidgetResizeable = true,
         bool isVerticalGrabGesture = true,

@@ -14,7 +14,7 @@ NXToolButtonStyle::NXToolButtonStyle(QStyle* style)
     _pExpandIconRotate = 0;
     _pBorderRadius = 4;
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

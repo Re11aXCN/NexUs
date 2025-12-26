@@ -23,10 +23,8 @@ class NXAppBarPrivate : public QObject
     Q_PROPERTY_CREATE_D(bool, IsDefaultClosed)
     Q_PROPERTY_CREATE_D(bool, IsOnlyAllowMinAndClose)
     bool _isHoverMaxButton{ false };
-    Q_PRIVATE_CREATE_D(QWidget*, CustomWidget)
     Q_PRIVATE_CREATE_D(QMenu*, CustomMenu)
     Q_PROPERTY_CREATE_D(int, AppBarHeight)
-    Q_PROPERTY_CREATE_D(int, CustomWidgetMaximumWidth)
 public:
     explicit NXAppBarPrivate(QObject* parent = nullptr);
     ~NXAppBarPrivate() override;
@@ -59,6 +57,11 @@ private:
     QScreen* _lastScreen{nullptr};
     NXText* _titleLabel{nullptr};
     QLabel* _iconLabel{nullptr};
+
+    QList<QWidget*> _customAreaWidgetList{ nullptr, nullptr, nullptr };
+    QList<QObject*> _customAreaHitTestObjectList{ nullptr, nullptr, nullptr };
+    QStringList _customAreaHitTestFunctionNameList{ "", "", "" };
+    QList<QWidget*> _clientWidgetList;
 
     void _changeMaxButtonAwesome(bool isMaximized);
     void _showAppBarMenu(QPoint point);

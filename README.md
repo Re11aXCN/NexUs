@@ -1,249 +1,9 @@
 # NexUs
-**ElaWidgetTools QT开源库的修改封装部分代码**
-<u>https://github.com/Liniyous/ElaWidgetTools/commits/main/</u>
+**ElaWidgetTools QT开源库的修改封装部分代码**，修改记录见[doc/TrackRecord.md](./doc/TrackRecord.md)
 
+<u>**版权归 ElaWidgetTools  作者[Liniyous](https://github.com/Liniyous)所有**</u>
 
-
-# 版权归 ElaWidgetTools  作者[Liniyous](https://github.com/Liniyous)所有
-
-
-
-## # **Track Record 1**：	Commits on Mar 12, 2025
-
-### 1. Modify Optize1
-
-> 已修改过NXWidget、NXWindow、NXColorDialog、NXTableView等一些基本的UI控件，修改了NXDef.h、stdafx.h宏定义
->
-> * NXColorDialog：支持Alpha
->
-> * NXDef.h、stdafx.h（现在为NXProperty.h）：修改代码整体设计(NXProperty.h包含宏、NXDef.h包含枚举)、新增多个宏，修改导出枚举宏设计
->
->   注意事项：NXDef.h必须是MOC文件，NXProperty.h不是MOC文件，使用VS2022当修改NXDef.h文件的时候，VS2022会错误的修改文件定义为`<ClInclude Include="Source\include\NXDef.h" />`，你需要进行修改NexUs.vcproj保持为`<QtMoc Include="Source\include\NXDef.h" />`
->
-> * NXWidget：新增设置自定义亮黑主题背景色，新增接口可以操作NXAppBar
->
-> * NXWindow：新增接口可以自定义打开窗口逻辑，添加节点方法设计修改，navigationNodeRemoved信号添加
-
-### 2. Modify Optize2
-
-> 1. 修改QString为const QString&
->
-> 2. 去除addFooterNode等导航添加的方法QString&，改用返回值传递ownerKey
-> 3. NXNavigationNode新增自定义标题方法
-> 4. NXNavigationView右键新增删除Node的Action，并且发送信号给->Bar->NXWindow
->
-> 5. NXNavigationBar新增通过key切换Page显示——navigationPageNodeSwitch
->
-> ​			`NXWindow一起同步修改`
->
-> 6. NXMenu新增修改边角圆形，悬停Action是显示强调样式，新增寻找父菜单方法，添加参数设置子菜单和父菜单左上角同一水平
->
-> 7. NXSlider新增对齐指定的标记Tick
->
-> 8. NXToolButton新增Checkable为true是强调样式，优化ToolButtonTextUnderIcon时的显示位置
->    NXAppBar注释`WM_NCCALCSIZE`部分代码，因为窗口最大化会造成边缘空缺
->
-> 9. NXScrollPage修改addCentralWidget参数新增可以选择开启垂直或者水平的滚动条
-
-### 3. Modify Optize3
-
-> NXContentDialog修改内部按钮信号槽，如果想要设置关闭使用时外部建立即可（NXKeyBinder.cpp被修改，因为使用了NXContentDialog）
->
-> NXMessageButton修改，新增showMessage方法，外部可以调用，新增disconnect按钮clicked时弹出按钮方法，外部可以取消这个点击事件，然后自行建立
-> NXWindow的navigationNodeClicked信号修改新增QWidget*参数
-
-### 4.  Modify Optize4
-
-> 1. NXNavigationModel新增拖拽方法支持拖拽功能
->
-> 2. NXNavigationNode新增insertChildNode方法
->
-> 3. NXNavigationStyle尝试内置拖拽指示器逻辑case  QStyle::PE_IndicatorItemViewItemDrop:
->
-> 4. NXNavigationView新增IsLeftButtonPressedToggleNavigation选择pressed切换pagenode还是released、setNavigationNodeDragAndDropEnable方法设置支持拖拽——NXWindow同步方
->
->    新增自定义dropIndicatorPositionOverride方法（qt内置的不太好用）、拖拽事件的完善、paintEvent指示器的绘制
->
-> 5. NXNavigationBar增加信号槽连接model的move信号完成节点交换重绘
->
->    新增setNavigationPageOpenPolicy自定义打开逻辑（可以使用内部自定义打开custom，也可以自定义方法打开PageNode的widget）——NXWindow同步方法
->
-> 6. NXWindow新增navigationNodeToggled信号替换原来的navigationNodeClicked作用，navigationNodeClicked变为点击触发即使node没有page，navigationNodeToggled是进行page切换
->
->    新增_currentVisibleWidget获取当前stackedWidget和nodekey、nodetype
-
-### 5. Modify Optize5
-
-> 1. NXNavigationModel、NXNavigationView，drag、drop优化，交换位置符合人的视觉行为习惯，添加颜色提示
-
-### 6. Modify Optize6
-
-> 1. 修改stdafx.h的qt枚举导出宏，进行宏重载方便调用
-> 2. NXTreeView新增设置NXIcon图标作为文字绘制，修改NXTreeViewStyle的文字绘制逻辑，绘制选择时的文本间距及文字颜色（如果采用Model将NXIconType作为QIcon返回NXIcon::getInstance()->getNXIcon间距太宽，图标颜色不好使用QStyle::State进行修改）
-> 3. NXListViewStyle的视口绘制逻辑修复
-> 4. NXDockWidget增加dockClosed、dockResized信号
-
-### 7. Modify Optize7
-
-> 1. 修复NavigationNodeClicked/Removed的错误逻辑
-> 1. NXSlider添加的仅按下拖到
-
-------
-
-
-
-## # **Track Record 2**：	Commits on Jun 30, 2025
-
-### 1. Modify Optize1
-
-> 1. 去除先前多个控件不必要的代码，如NXWidget、NXSlider等
-> 2. 优化大部分逻辑
-> 3. 引入NXPacketIO、magic_enum
->
-
-## # **Track Record 3**：	Commits on Jul 8, 2025
-
-### 1. Modify Optize1
-
-> 1. 引入NXShadowGraphicsEffect、NXShadowWidget
-
-## # **Track Record 4**：	Commits on Oct 10, 2025
-
-## 1. Modify Optize1
-
-> 1. 影响文件NXWindow.h、NXWindow.cpp、NXWindowPrivate.h
->
->    删除currentVisibleWidget()逻辑
->
->    删除navigationNodeAdded信号参数
->
->    调整navigationNodeRemoved信号和NXWindowPrivate::onNavigationNodeRemoved的逻辑，删除节点后仍旧存在节点窗口就返回当前节点窗口的key（如，有两个节点1、2，当前处在节点2，删除节点2，那么将会返回节点1窗口的key，底层是QMap按照顺序来的）和窗口指针，如果节点已经删完返回rootkey和空指针
->
->    调整onNavigationNodeClicked逻辑
->
-> 2. 调整添加节点的返回值，NodeOperateReturnTypeWithKey从QPair替换为struct
->
-> 3. 修复开启拖拽移动NXNavigationNode的时候，以下**拖拽情况1**的情况造成程序中断， `qDeleteAll`双重释放了-窗口节点2，不知道为什么？迭代器失效？但是控制台输出的记录顺序正确，已经提示删除了-窗口节点2，范围越界？可能是，调整逻辑不使用qDeleteAll，在`insertChildNode`添加`childNode->setParent(this);`让qt关联生命周期，不进行手动管理
->
->    示例：
->
->    * **原布局	**				**拖拽情况1**				**拖拽情况2**
->
->    根节点 
->
->    -窗口节点1				  -窗口节点1				-窗口节点1
->
->    -挂载拓展节点1 		 -挂载拓展节点1		-窗口节点2 
->
->    --窗口节点2 				-窗口节点2				-挂载拓展节点1
->
->    -窗口节点3				  -窗口节点3			    -窗口节点3
->
->    4. 导航结点交换逻辑完善，新增支持两个窗口节点直接交换位置
->
-> 4. 修复  同步 `Ela Commits on Sep 7, 2025` 版本的 NXCustomTabWidget、NXTabWidget、移除窗口逻辑，原版本CMake编译不会出现双重释放情况，但使用VS2022编译后会出现该错误 (错误出现位置 析构~NXTabWidget(), 操作了不该操作被释放的QVariant)
-
-## 2. Modify Optize2
-
-同步作者 ZongChang-Liu 的部分拓展 ElaWidgetTools代码
-
-https://github.com/ZongChang-Liu/ElaWidgetTools/commits/Zongchang_Liu?author=ZongChang-Liu
-
-> 1. 修改NXToggleButton、支持添加 NXIcon，
->
->    `NXToggleButton.h、NXToggleButton.cpp、NXToggleButtonPrivate.h`
->
-> 2. NXToolTip添加显示偏移api,NXSlider添加ToolTip显示值
->
->    `NXToolTip.h、NXToolTip.cpp、NXToolTipPrivate.h、NXToolTipPrivate.cpp、NXSlider.h、NXSlider.cpp、NXSliderPrivate.h(新增)、NXSliderPrivate.cpp(新增)`
->
-> 3. 为NXNavigationBar添加toolTip显示位置接口
->
->    `NXNavigationBar.h、NXNavigationBar.cpp、NXNavigationView.h、NXNavigationView.cpp`
->
->    修改NXNavigationBar使其更加适合无userCard的显示效果
->
->    `NXNavigationBar.cpp`
->
->    NXNavigationBar显示模式发生改变时会发送信号
->
-> 4. 修改mac下NXSpinBox焦点异常显示的bug
->
->    `NXSpinBox.cpp`
-
-## 3. Modify Optize3
-
-> 1. 修改`singleton.h` 单例模式更通用以来标准库，不依赖qt
->
-> 2. 修改`NXProperty.h`的setter、getter的宏定义，支持普通类型如int、char直接setter、支持QString自定义cvref限定符setter，支持自定义getter返回类型加&限定，支持大类型的setter移动
->
->    ```
->    PROPERTY: 需要和信号关联
->    PRIVATE: 不需要和信号关联
->    _H/_CPP: Pimpl版本
->    _EX_H/_EX_CPP: 自定义setter、getter类型限定符
->    _MOVE: setter拷贝大数据开销大，可以使用移动，但请你注意该类型必须实现移动构造/赋值或是POD类型，setter时候可以调用std::move传参数，但请注意生命周期
->    ```
->
-> 3. 修改NXTableView、NXNavigationView、NXNavigation，优化已有的IndexWidget和指示器代码逻辑
->
-> 4. NXTabWidget的双重释放问题Ela已经修复，NXCustomTabWidget、NXTabWidget合并Ela代码
->
-> 5. NXTabBar版本适配
->
-> ```NXTabBar.cpp
-> void NXTabBar::dragEnterEvent(QDragEnterEvent* event)
-> {
->     Q_D(NXTabBar);
->     if (event->mimeData()->property("DragType").toString() == "NXTabBarDrag")
->     {
->         event->acceptProposedAction();
->         auto mimeData = const_cast<QMimeData*>(event->mimeData());
->         d->_mimeData = mimeData;
-> #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
->         mimeData->setProperty("TabDropIndex", tabAt(event->position().toPoint()));
-> #else
->         mimeData->setProperty("TabDropIndex", tabAt(event->pos()));
-> #endif
->         Q_EMIT tabDragEnter(mimeData);
->         QTimer::singleShot(10, this, [=]() {
-> #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
->             QPoint pressPos(tabRect(currentIndex()).x() + 110, 0);
->             QMouseEvent pressEvent(QEvent::MouseButtonPress, pressPos, mapToGlobal(pressPos), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-> #else
->             QMouseEvent pressEvent(QEvent::MouseButtonPress, QPoint(tabRect(currentIndex()).x() + 110, 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-> #endif
->             QApplication::sendEvent(this, &pressEvent);
-> #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
->             QPoint movePos(event->position().toPoint().x(), 0);
->             QMouseEvent moveEvent(QEvent::MouseMove, movePos, mapToGlobal(movePos), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-> #else
->             QMouseEvent moveEvent(QEvent::MouseMove, QPoint(event->pos().x(), 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-> #endif
->             QApplication::sendEvent(this, &moveEvent);
->             });
->     }
->     QTabBar::dragEnterEvent(event);
-> }
-> 
-> void NXTabBar::dragMoveEvent(QDragMoveEvent* event)
-> {
->     Q_D(NXTabBar);
->     if (event->mimeData()->property("DragType").toString() == "NXTabBarDrag")
->     {
-> #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
->         QPoint movePos(event->position().toPoint().x(), 0);
->         QMouseEvent moveEvent(QEvent::MouseMove, movePos, mapToGlobal(movePos), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-> #else
->         QMouseEvent moveEvent(QEvent::MouseMove, QPoint(event->pos().x(), 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-> #endif
->         QApplication::sendEvent(this, &moveEvent);
->     }
->     QWidget::dragMoveEvent(event);
-> }
-> ```
->
-> 6. CMake优化生成，可选自动打包和Export导出Ela三方库
+仓库链接：<u>https://github.com/Liniyous/ElaWidgetTools/commits/main/</u>
 
 
 
@@ -374,10 +134,6 @@ NexUsExample的路径类似，不再说明
 
 
 
-
-
-
-
 ## Example替换
 
 同步Ela主仓库的Example之后需要进行以下替换进行适配已修改的代码，才能正确编译
@@ -439,25 +195,33 @@ mainwindow.cpp
 构造函数新增初始化	_rootKey(getNavigationRootKey())
 
 ```cpp
+void MainWindow::initContent()
+{
+    _homePage = new T_Home(this);
+#ifdef Q_OS_WIN
+    _elaScreenPage = new T_NXScreen(this);
+#endif
+    _iconPage = new T_Icon(this);
+    _baseComponentsPage = new T_BaseComponents(this);
+    _graphicsPage = new T_Graphics(this);
+    _navigationPage = new T_Navigation(this);
+    _popupPage = new T_Popup(this);
+    _cardPage = new T_Card(this);
+    _listViewPage = new T_ListView(this);
+    _tableViewPage = new T_TableView(this);
+    _treeViewPage = new T_TreeView(this);
+    _settingPage = new T_Setting(this);
 
-// 旧
-_settingPage = new T_Setting(this);
-... // 替换内容
-_aboutPage->hide();
-
-
-
-// 新
     addPageNode("HOME", _homePage, NXIconType::House);
 #ifdef Q_OS_WIN
     // 默认是root 添加一个expander节点
-    auto [type, NXDxgiKey] = addExpanderNode("NXDxgi", NXIconType::TvMusic);
-    addPageNode("NXScreen", _elaScreenPage, NXDxgiKey, 3, NXIconType::ObjectGroup);
+    NXNodeOperateResult dxgiResult = addExpanderNode("NXDxgi", NXIconType::TvMusic);
+    addPageNode("NXScreen", _elaScreenPage, *dxgiResult, 3, NXIconType::ObjectGroup);
 #endif
     // navigation(elaScreenWidget->property("NXPageKey").toString());
     addPageNode("NXBaseComponents", _baseComponentsPage, NXIconType::CabinetFiling);
 
-    _viewKey = addExpanderNode("NXView", _rootKey, NXIconType::CameraViewfinder).nodeKey;
+    _viewKey = *addExpanderNode("NXView", _rootKey, NXIconType::CameraViewfinder);
     addPageNode("NXListView", _listViewPage, _viewKey, 9, NXIconType::List);
     addPageNode("NXTableView", _tableViewPage, _viewKey, NXIconType::Table);
     addPageNode("NXTreeView", _treeViewPage, _viewKey, NXIconType::ListTree);
@@ -468,30 +232,51 @@ _aboutPage->hide();
     addPageNode("NXNavigation", _navigationPage, NXIconType::LocationArrow);
     addPageNode("NXPopup", _popupPage, NXIconType::Envelope);
     addPageNode("NXIcon", _iconPage, 99, NXIconType::FontCase);
-    NodeOperateReturnTypeWithKey returnType1 = addExpanderNode("TEST4", NXIconType::Acorn);
-    NodeOperateReturnTypeWithKey returnType2 = addExpanderNode("TEST5", returnType1.nodeKey, NXIconType::Acorn);
-    addPageNode("Third Level", new QWidget(this), returnType2.nodeKey, NXIconType::Acorn);
-    addExpanderNode("TEST6", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST7", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST8", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST9", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST10", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST11", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST12", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST13", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST14", _rootKey, NXIconType::Acorn);
-    addExpanderNode("TEST15", NXIconType::Acorn);
-    addExpanderNode("TEST16", NXIconType::Acorn);
-    addExpanderNode("TEST17", NXIconType::Acorn);
 
-    _aboutKey = addFooterNode("About", nullptr, 0, NXIconType::User).nodeKey;
+    auto testKey_1 = addExpanderNode("TEST_EXPAND_NODE1", _rootKey, NXIconType::Acorn);
+    auto testKey_2 = addExpanderNode("TEST_EXPAND_NODE2", *testKey_1, NXIconType::Acorn);
+    addPageNode("TEST_NODE3", new QWidget(this), *testKey_2, NXIconType::Acorn);
+    for (int i = 0; i < 10; i++)
+    {
+        addExpanderNode(QString("TEST_EXPAND_NODE%1").arg(i + 4), *testKey_2, NXIconType::Acorn);
+    }
+    addExpanderNode("TEST_EXPAND_NODE14", _rootKey, NXIconType::Acorn);
+    addExpanderNode("TEST_EXPAND_NODE5", _rootKey, NXIconType::Acorn);
+    addExpanderNode("TEST_EXPAND_NODE16", _rootKey, NXIconType::Acorn);
+
+    _aboutKey = *addFooterNode("About", nullptr, 0, NXIconType::User);
     _aboutPage = new T_About();
 
-
-// 旧
-    addFooterNode("Setting", _settingPage, _settingKey, 0, ElaIconType::GearComplex);
-// 新
-    _settingKey = addFooterNode("Setting", _settingPage, 0, NXIconType::GearComplex).nodeKey;
-
+    _aboutPage->hide();
+    connect(this, &NXWindow::navigationNodeClicked, this, [this](NXNavigationType::NavigationNodeType nodeType, QString nodeKey) {
+        if (_aboutKey == nodeKey)
+        {
+            _aboutPage->moveToCenter();
+            _aboutPage->show();
+        }
+        });
+    _settingKey = *addFooterNode("Setting", _settingPage, 0, NXIconType::GearComplex);
+    connect(this, &MainWindow::userInfoCardClicked, this, [=]() {
+        this->navigation(_homePage->property("NXPageKey").toString());
+        });
+#ifdef Q_OS_WIN
+    connect(_homePage, &T_Home::elaScreenNavigation, this, [=]() {
+        this->navigation(_elaScreenPage->property("NXPageKey").toString());
+        });
+#endif
+    connect(_homePage, &T_Home::elaBaseComponentNavigation, this, [=]() {
+        this->navigation(_baseComponentsPage->property("NXPageKey").toString());
+        });
+    connect(_homePage, &T_Home::elaSceneNavigation, this, [=]() {
+        this->navigation(_graphicsPage->property("NXPageKey").toString());
+        });
+    connect(_homePage, &T_Home::elaIconNavigation, this, [=]() {
+        this->navigation(_iconPage->property("NXPageKey").toString());
+        });
+    connect(_homePage, &T_Home::elaCardNavigation, this, [=]() {
+        this->navigation(_cardPage->property("NXPageKey").toString());
+        });
+    qDebug() << "已注册的事件列表" << NXEventBus::getInstance()->getRegisteredEventsName();
+}
 ```
 

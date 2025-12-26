@@ -22,12 +22,12 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
  
-    NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome);
-    NodeOperateReturnTypeWithKey addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome);
-    NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, NXIconType::IconName awesome);
-    NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, const QString& targetExpanderKey, NXIconType::IconName awesome);
-    NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, int keyPoints, NXIconType::IconName awesome);
-    NodeOperateReturnTypeWithKey addPageNode(const QString& pageTitle, const QString& targetExpanderKey, int keyPoints, NXIconType::IconName awesome);
+    NXNodeOperateResult addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome);
+    NXNodeOperateResult addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome);
+    NXNodeOperateResult addPageNode(const QString& pageTitle, NXIconType::IconName awesome);
+    NXNodeOperateResult addPageNode(const QString& pageTitle, const QString& targetExpanderKey, NXIconType::IconName awesome);
+    NXNodeOperateResult addPageNode(const QString& pageTitle, int keyPoints, NXIconType::IconName awesome);
+    NXNodeOperateResult addPageNode(const QString& pageTitle, const QString& targetExpanderKey, int keyPoints, NXIconType::IconName awesome);
     QStringList removeNavigationNode(const QString& nodeKey);
 
     const NXNavigationNode* getRootNode() const;

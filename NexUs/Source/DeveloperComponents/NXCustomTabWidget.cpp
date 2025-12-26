@@ -6,6 +6,7 @@
 #include "private/NXTabWidgetPrivate.h"
 #include <QDebug>
 #include <QMimeData>
+#include <QMouseEvent>
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QVariant>
@@ -28,32 +29,32 @@ NXCustomTabWidget::NXCustomTabWidget(QWidget* parent)
     setAcceptDrops(true);
     _customTabBar = new NXTabBar(this);
     _customTabBar->setObjectName("NXCustomTabBar");
-    QObject::connect(_customTabBar, &NXTabBar::tabMoved, this, [=](int from, int to) {
+    connect(_customTabBar, &NXTabBar::tabMoved, this, [=](int from, int to) {
         _customTabWidget->tabBar()->moveTab(from, to);
         });
-    QObject::connect(_customTabBar, &NXTabBar::currentChanged, this, [=](int index) {
+    connect(_customTabBar, &NXTabBar::currentChanged, this, [=](int index) {
         _customTabWidget->setCurrentIndex(index);
         });
-    QObject::connect(_customTabWidget, &NXTabWidget::currentChanged, this, [=](int index) {
+    connect(_customTabWidget, &NXTabWidget::currentChanged, this, [=](int index) {
         if (index == -1)
         {
             _pIsFinished = true;
             hide();
         }
         });
-    QObject::connect(_customTabBar, &NXTabBar::tabCloseRequested, originTabBar, &QTabBar::tabCloseRequested);
+    connect(_customTabBar, &NXTabBar::tabCloseRequested, originTabBar, &QTabBar::tabCloseRequested);
 
     _customTabWidget->d_ptr->_customTabBar = _customTabBar;
-    QObject::connect(_customTabBar, &NXTabBar::tabDragCreate, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragCreate);
-    QObject::connect(_customTabBar, &NXTabBar::tabDragDrop, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragDrop);
-    QObject::connect(_customTabBar, &NXTabBar::tabDragEnter, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragEnter);
-    QObject::connect(_customTabBar, &NXTabBar::tabDragLeave, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragLeave);
+    connect(_customTabBar, &NXTabBar::tabDragCreate, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragCreate);
+    connect(_customTabBar, &NXTabBar::tabDragDrop, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragDrop);
+    connect(_customTabBar, &NXTabBar::tabDragEnter, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragEnter);
+    connect(_customTabBar, &NXTabBar::tabDragLeave, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragLeave);
     QWidget* customWidget = new QWidget(this);
     QVBoxLayout* customLayout = new QVBoxLayout(customWidget);
     customLayout->setContentsMargins(10, 0, 10, 0);
     customLayout->addStretch();
     customLayout->addWidget(_customTabBar);
-    _appBar->setCustomWidget(NXAppBarType::LeftArea, customWidget);
+    _appBar->setCustomWidget(NXAppBarType::LeftArea, customWidget, this, "processHitTest");
     setCentralWidget(_customTabWidget);
 }
 
@@ -90,4 +91,10 @@ NXTabBar* NXCustomTabWidget::getCustomTabBar() const
 NXTabWidget* NXCustomTabWidget::getCustomTabWidget() const
 {
     return _customTabWidget;
+}
+
+bool NXCustomTabWidget::processHitTest()
+{
+    auto point = _customTabBar->mapFromGlobal(QCursor::pos());
+    return _customTabBar->tabAt(point) < 0;
 }

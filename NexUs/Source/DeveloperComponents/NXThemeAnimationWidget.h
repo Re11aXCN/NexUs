@@ -13,7 +13,7 @@ class NXThemeAnimationWidget : public QWidget
     Q_PROPERTY_CREATE(QImage, OldWindowBackground)
 public:
     explicit NXThemeAnimationWidget(QWidget* parent = nullptr);
-    ~NXThemeAnimationWidget();
+    ~NXThemeAnimationWidget() override;
     void startAnimation(int msec);
 Q_SIGNALS:
     Q_SIGNAL void animationFinished();

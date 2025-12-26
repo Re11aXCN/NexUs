@@ -58,11 +58,48 @@ T_Setting::T_Setting(QWidget* parent)
         }
         _themeComboBox->blockSignals(false);
     });
+    NXText* windowPaintText = new NXText("主窗口绘制设置", this);
+    windowPaintText->setWordWrap(false);
+    windowPaintText->setTextPixelSize(15);
+
+    _windowNormalButton = new NXRadioButton("Normal", this);
+    _windowNormalButton->setChecked(true);
+    _windowPixmapButton = new NXRadioButton("Pixmap", this);
+    _windowMovieButton = new NXRadioButton("Movie", this);
+
+    QButtonGroup* windowPaintButtonGroup = new QButtonGroup(this);
+    windowPaintButtonGroup->addButton(_windowNormalButton, 0);
+    windowPaintButtonGroup->addButton(_windowPixmapButton, 1);
+    windowPaintButtonGroup->addButton(_windowMovieButton, 2);
+    connect(windowPaintButtonGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled), this, [=](QAbstractButton* button, bool isToggled) {
+        if (isToggled)
+        {
+            window->setWindowPaintMode((NXWindowType::PaintMode)windowPaintButtonGroup->id(button));
+        }
+    });
+    connect(window, &NXWindow::pWindowPaintModeChanged, this, [=]() {
+        auto button = windowPaintButtonGroup->button(window->getWindowPaintMode());
+        NXRadioButton* elaRadioButton = dynamic_cast<NXRadioButton*>(button);
+        if (elaRadioButton)
+        {
+            elaRadioButton->setChecked(true);
+        }
+    });
+    NXScrollPageArea* windowPaintModeArea = new NXScrollPageArea(this);
+    QHBoxLayout* windowPaintModeLayout = new QHBoxLayout(windowPaintModeArea);
+    windowPaintModeLayout->addWidget(windowPaintText);
+    windowPaintModeLayout->addStretch();
+    windowPaintModeLayout->addWidget(_windowNormalButton);
+    windowPaintModeLayout->addWidget(_windowPixmapButton);
+    windowPaintModeLayout->addWidget(_windowMovieButton);
 
     NXText* helperText = new NXText("应用程序设置", this);
     helperText->setWordWrap(false);
     helperText->setTextPixelSize(18);
 
+    NXText* micaSwitchText = new NXText("窗口效果", this);
+    micaSwitchText->setWordWrap(false);
+    micaSwitchText->setTextPixelSize(15);
     _normalButton = new NXRadioButton("Normal", this);
     _elaMicaButton = new NXRadioButton("NXMica", this);
 #ifdef Q_OS_WIN
@@ -97,9 +134,6 @@ T_Setting::T_Setting(QWidget* parent)
     });
     NXScrollPageArea* micaSwitchArea = new NXScrollPageArea(this);
     QHBoxLayout* micaSwitchLayout = new QHBoxLayout(micaSwitchArea);
-    NXText* micaSwitchText = new NXText("窗口效果", this);
-    micaSwitchText->setWordWrap(false);
-    micaSwitchText->setTextPixelSize(15);
     micaSwitchLayout->addWidget(micaSwitchText);
     micaSwitchLayout->addStretch();
     micaSwitchLayout->addWidget(_normalButton);
@@ -130,6 +164,19 @@ T_Setting::T_Setting(QWidget* parent)
         {
             qDebug() << "日志已关闭!";
         }
+    });
+
+    _userCardSwitchButton = new NXToggleSwitch(this);
+    NXScrollPageArea* userCardSwitchArea = new NXScrollPageArea(this);
+    QHBoxLayout* userCardSwitchLayout = new QHBoxLayout(userCardSwitchArea);
+    NXText* userCardSwitchText = new NXText("隐藏用户卡片", this);
+    userCardSwitchText->setWordWrap(false);
+    userCardSwitchText->setTextPixelSize(15);
+    userCardSwitchLayout->addWidget(userCardSwitchText);
+    userCardSwitchLayout->addStretch();
+    userCardSwitchLayout->addWidget(_userCardSwitchButton);
+    connect(_userCardSwitchButton, &NXToggleSwitch::toggled, this, [=](bool checked) {
+        window->setUserInfoCardVisible(!checked);
     });
 
     _minimumButton = new NXRadioButton("Minimum", this);
@@ -212,6 +259,8 @@ T_Setting::T_Setting(QWidget* parent)
     centerLayout->addWidget(helperText);
     centerLayout->addSpacing(10);
     centerLayout->addWidget(logSwitchArea);
+    centerLayout->addWidget(userCardSwitchArea);
+    centerLayout->addWidget(windowPaintModeArea);
     centerLayout->addWidget(micaSwitchArea);
     centerLayout->addWidget(displayModeArea);
     centerLayout->addWidget(stackSwitchModeArea);

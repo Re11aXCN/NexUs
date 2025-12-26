@@ -28,7 +28,7 @@ NXDrawerContainer::NXDrawerContainer(QWidget* parent)
     _mainLayout->addWidget(_containerWidget);
 
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }
@@ -71,10 +71,10 @@ void NXDrawerContainer::doDrawerAnimation(bool isExpand)
     }
     _pContainerPix = grab(rect());
     QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pOpacity");
-    QObject::connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         update();
         });
-    QObject::connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]() {
         _pContainerPix = QPixmap();
         if (isExpand)
         {

@@ -18,9 +18,10 @@ NXKeyBinderContainer::NXKeyBinderContainer(QWidget* parent)
     textFont.setPixelSize(16);
     setFont(textFont);
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
-    });
+        update();
+        });
 }
 
 NXKeyBinderContainer::~NXKeyBinderContainer()
@@ -54,6 +55,57 @@ void NXKeyBinderContainer::saveBinderChanged()
     {
         _keyBinder->setText(u8"  按键: " + _pBinderKeyText + "      ");
     }
+}
+
+bool NXKeyBinderContainer::event(QEvent* event)
+{
+    switch (event->type())
+    {
+    case QEvent::KeyPress:
+    {
+        QKeyEvent* keyEvent = dynamic_cast<QKeyEvent*>(event);
+        if (!keyEvent->isAutoRepeat())
+        {
+            switch (keyEvent->key())
+            {
+            case Qt::Key_Shift:
+            {
+                _pBinderKeyText = "Shift";
+                break;
+            }
+            case Qt::Key_Control:
+            {
+                _pBinderKeyText = "Ctrl";
+                break;
+            }
+            case Qt::Key_Alt:
+            {
+                _pBinderKeyText = "Alt";
+                break;
+            }
+            case Qt::Key_Meta:
+            {
+                _pBinderKeyText = "Win";
+                break;
+            }
+            default:
+            {
+                _pBinderKeyText = QKeySequence(keyEvent->key()).toString();
+                break;
+            }
+            }
+            _pNativeVirtualBinderKey = keyEvent->nativeVirtualKey();
+            update();
+        }
+        event->accept();
+        return true;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    return QWidget::event(event);
 }
 
 void NXKeyBinderContainer::mousePressEvent(QMouseEvent* event)
@@ -97,17 +149,6 @@ void NXKeyBinderContainer::mousePressEvent(QMouseEvent* event)
     }
     QWidget::mousePressEvent(event);
     update();
-}
-
-void NXKeyBinderContainer::keyPressEvent(QKeyEvent* event)
-{
-    if (!event->isAutoRepeat())
-    {
-        _pBinderKeyText = QKeySequence(event->key()).toString();
-        _pNativeVirtualBinderKey = event->nativeVirtualKey();
-        update();
-    }
-    QWidget::keyPressEvent(event);
 }
 
 void NXKeyBinderContainer::focusOutEvent(QFocusEvent* event)

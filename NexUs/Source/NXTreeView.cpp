@@ -18,7 +18,7 @@ NXTreeView::NXTreeView(QWidget* parent)
 
     NXScrollBar* hScrollBar = new NXScrollBar(this);
     hScrollBar->setIsAnimation(true);
-    QObject::connect(hScrollBar, &NXScrollBar::rangeAnimationFinished, this, [=]() {
+    connect(hScrollBar, &NXScrollBar::rangeAnimationFinished, this, [=]() {
         doItemsLayout();
     });
     setHorizontalScrollBar(hScrollBar);
@@ -26,7 +26,7 @@ NXTreeView::NXTreeView(QWidget* parent)
 
     NXScrollBar* vScrollBar = new NXScrollBar(this);
     vScrollBar->setIsAnimation(true);
-    QObject::connect(vScrollBar, &NXScrollBar::rangeAnimationFinished, this, [=]() {
+    connect(vScrollBar, &NXScrollBar::rangeAnimationFinished, this, [=]() {
         doItemsLayout();
     });
     setVerticalScrollBar(vScrollBar);

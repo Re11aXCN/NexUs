@@ -2,6 +2,7 @@
 cmake_policy(SET CMP0087 NEW)
 project(NexUsExample VERSION 0.1 LANGUAGES CXX)
 
+include(Dependencies.cmake)
 FILE(GLOB ORIGIN main.cpp Source/*.cpp Source/*.h)
 FILE(GLOB MODELVIEW Source/ModelView/*.h Source/ModelView/*.cpp)
 FILE(GLOB EXAMPLEPAGE Source/ExamplePage/*.h Source/ExamplePage/*.cpp)

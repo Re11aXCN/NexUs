@@ -12,11 +12,10 @@ class NX_EXPORT NXImageCard : public QWidget
     Q_Q_CREATE(NXImageCard)
     Q_PROPERTY_CREATE_Q_H(bool, IsPreserveAspectCrop)
     Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
-    Q_PROPERTY_CREATE_Q_H(qreal, MaximumAspectRatio)
     Q_PROPERTY_CREATE_Q_H(QImage, CardImage);
 public:
     explicit NXImageCard(QWidget* parent = nullptr);
-    ~NXImageCard();
+    ~NXImageCard() override;
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;

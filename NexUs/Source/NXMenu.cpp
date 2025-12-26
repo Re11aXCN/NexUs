@@ -186,11 +186,11 @@ void NXMenu::showEvent(QShowEvent* event)
     }
     d->_animationPix = this->grab(this->rect());
     QPropertyAnimation* posAnimation = new QPropertyAnimation(d, "pAnimationImagePosY");
-    QObject::connect(posAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(posAnimation, &QPropertyAnimation::finished, this, [=]() {
         d->_animationPix = QPixmap();
         update();
     });
-    QObject::connect(posAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    connect(posAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         update();
     });
     posAnimation->setEasingCurve(QEasingCurve::OutCubic);

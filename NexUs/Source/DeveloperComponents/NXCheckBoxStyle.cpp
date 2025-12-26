@@ -10,7 +10,7 @@ NXCheckBoxStyle::NXCheckBoxStyle(QStyle* style)
     _pCheckIndicatorWidth = 21;
     _pCheckBorderRadius = 2;
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

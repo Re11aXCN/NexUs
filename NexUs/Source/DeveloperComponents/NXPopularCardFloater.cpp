@@ -36,10 +36,10 @@ NXPopularCardFloater::NXPopularCardFloater(NXPopularCard* card, NXPopularCardPri
     _overButton->setDarkTextColor(Qt::white);
     _overButton->setMinimumSize(0, 0);
     _overButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-    QObject::connect(_overButton, &NXPushButton::clicked, _card, &NXPopularCard::popularCardButtonClicked);
+    connect(_overButton, &NXPushButton::clicked, _card, &NXPopularCard::popularCardButtonClicked);
 
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
     setVisible(false);
 }
 
@@ -55,7 +55,7 @@ void NXPopularCardFloater::showFloater()
     _opacityEffect->setOpacity(1);
 
     QPropertyAnimation* geometryAnimation = new QPropertyAnimation(this, "geometry");
-    QObject::connect(geometryAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+    connect(geometryAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
         update();
     });
     geometryAnimation->setEasingCurve(QEasingCurve::OutQuad);
@@ -85,11 +85,11 @@ void NXPopularCardFloater::hideFloater()
     }
     _isHideAnimationFinished = false;
     QPropertyAnimation* geometryAnimation = new QPropertyAnimation(this, "geometry");
-    QObject::connect(geometryAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+    connect(geometryAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
         QRect endGeometry = QRect(_card->mapTo(_cardPrivate->_pCardFloatArea, QPoint(0, 0)), _card->size());
         geometryAnimation->setEndValue(endGeometry);
     });
-    QObject::connect(geometryAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(geometryAnimation, &QPropertyAnimation::finished, this, [=]() {
         _cardPrivate->_isFloating = false;
         setVisible(false);
         _card->update();
@@ -109,7 +109,7 @@ void NXPopularCardFloater::hideFloater()
 
     //内容调整动画
     QPropertyAnimation* hoverAnimation = new QPropertyAnimation(this, "pHoverYOffset");
-    QObject::connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+    connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
         update();
     });
     hoverAnimation->setDuration(300);

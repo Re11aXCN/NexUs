@@ -10,7 +10,7 @@ NXSpinBoxStyle::NXSpinBoxStyle(QStyle* style)
 {
     _pButtonMode = NXSpinBoxType::Inline;
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

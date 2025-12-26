@@ -17,7 +17,7 @@ NXRadioButton::NXRadioButton(QWidget* parent)
     setFont(font);
     setStyle(new NXRadioButtonStyle(style()));
     d->onThemeChanged(nxTheme->getThemeMode());
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXRadioButtonPrivate::onThemeChanged);
+    connect(nxTheme, &NXTheme::themeModeChanged, d, &NXRadioButtonPrivate::onThemeChanged);
 }
 
 NXRadioButton::NXRadioButton(const QString& text, QWidget* parent)

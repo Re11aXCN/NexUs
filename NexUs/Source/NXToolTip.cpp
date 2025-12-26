@@ -39,7 +39,7 @@ NXToolTip::NXToolTip(QWidget* parent)
     d->_mainLayout->addWidget(d->_toolTipText);
 
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
         update();
     });

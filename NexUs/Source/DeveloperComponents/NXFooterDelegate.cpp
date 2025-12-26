@@ -13,7 +13,7 @@ NXFooterDelegate::NXFooterDelegate(QObject* parent)
 {
     _pNXListView = nullptr;
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
     setProperty("lastSelectMarkTop", 10.0);
@@ -22,19 +22,19 @@ NXFooterDelegate::NXFooterDelegate(QObject* parent)
     setProperty("selectMarkBottom", 10.0);
     // Mark向上
     _lastSelectMarkTopAnimation = new QPropertyAnimation(this, "lastSelectMarkTop");
-    QObject::connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         _lastSelectMarkTop = value.toReal();
         _pNXListView->viewport()->update(); });
     _lastSelectMarkTopAnimation->setDuration(300);
     _lastSelectMarkTopAnimation->setEasingCurve(QEasingCurve::InOutSine);
 
     _selectMarkBottomAnimation = new QPropertyAnimation(this, "selectMarkBottom");
-    QObject::connect(_selectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    connect(_selectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         _selectMarkBottom = value.toReal();
         _pNXListView->viewport()->update(); });
     _selectMarkBottomAnimation->setDuration(300);
     _selectMarkBottomAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    QObject::connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::finished, this, [=]() {
         _isSelectMarkDisplay = true;
         _lastSelectedNode = nullptr;
         _selectMarkBottomAnimation->setStartValue(0);
@@ -44,7 +44,7 @@ NXFooterDelegate::NXFooterDelegate(QObject* parent)
 
     // Mark向下
     _lastSelectMarkBottomAnimation = new QPropertyAnimation(this, "lastSelectMarkBottom");
-    QObject::connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         _lastSelectMarkBottom = value.toReal();
         _pNXListView->viewport()->update(); 
 		});
@@ -52,13 +52,13 @@ NXFooterDelegate::NXFooterDelegate(QObject* parent)
     _lastSelectMarkBottomAnimation->setEasingCurve(QEasingCurve::InOutSine);
 
     _selectMarkTopAnimation = new QPropertyAnimation(this, "selectMarkTop");
-    QObject::connect(_selectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    connect(_selectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         _selectMarkTop = value.toReal();
         _pNXListView->viewport()->update();
 		});
     _selectMarkTopAnimation->setDuration(300);
     _selectMarkTopAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    QObject::connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::finished, this, [=]() {
         _isSelectMarkDisplay = true;
         _lastSelectedNode = nullptr;
         _selectMarkTopAnimation->setStartValue(0);

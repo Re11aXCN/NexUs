@@ -12,12 +12,11 @@ class NXImageCardPrivate : public QObject
     Q_OBJECT
     Q_D_CREATE(NXImageCard)
     Q_PROPERTY_CREATE_D(QImage, CardImage);
-    Q_PROPERTY_CREATE_D(qreal, MaximumAspectRatio)
     Q_PROPERTY_CREATE_D(bool, IsPreserveAspectCrop)
     Q_PROPERTY_CREATE_D(int, BorderRadius)
 public:
     explicit NXImageCardPrivate(QObject* parent = nullptr);
-    ~NXImageCardPrivate();
+    ~NXImageCardPrivate() override;
 
 private:
     NXThemeType::ThemeMode _themeMode;

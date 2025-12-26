@@ -11,7 +11,7 @@ NXDrawerArea::NXDrawerArea(QWidget* parent)
 
     d->_drawerHeader = new NXDrawerHeader(this);
     d->_drawerContainer = new NXDrawerContainer(this);
-    QObject::connect(d->_drawerHeader, &NXDrawerHeader::drawerHeaderClicked, d, &NXDrawerAreaPrivate::onDrawerHeaderClicked);
+    connect(d->_drawerHeader, &NXDrawerHeader::drawerHeaderClicked, d, &NXDrawerAreaPrivate::onDrawerHeaderClicked);
 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
@@ -20,7 +20,7 @@ NXDrawerArea::NXDrawerArea(QWidget* parent)
     mainLayout->addWidget(d->_drawerContainer);
 
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
 }

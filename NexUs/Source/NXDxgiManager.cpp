@@ -41,8 +41,8 @@ NXDxgiManager::NXDxgiManager(QObject* parent)
     }
     d->_dxgi->moveToThread(d->_dxgiThread);
     d->_dxgiThread->start();
-    QObject::connect(d, &NXDxgiManagerPrivate::grabScreen, d->_dxgi, &NXDxgi::onGrabScreen);
-    QObject::connect(d->_dxgi, &NXDxgi::grabScreenOver, this, &NXDxgiManager::grabImageUpdate);
+    connect(d, &NXDxgiManagerPrivate::grabScreen, d->_dxgi, &NXDxgi::onGrabScreen);
+    connect(d->_dxgi, &NXDxgi::grabScreenOver, this, &NXDxgiManager::grabImageUpdate);
 }
 
 NXDxgiManager::~NXDxgiManager()
@@ -248,7 +248,7 @@ NXDxgiScreen::NXDxgiScreen(QWidget* parent)
     d->_pBorderRadius = 5;
     d->_dxgiManager = NXDxgiManager::getInstance();
     setFixedSize(700, 500);
-    QObject::connect(d->_dxgiManager, &NXDxgiManager::grabImageUpdate, this, [=](QImage img) {
+    connect(d->_dxgiManager, &NXDxgiManager::grabImageUpdate, this, [=](QImage img) {
         if (isVisible())
         {
             d->_img = std::move(img);

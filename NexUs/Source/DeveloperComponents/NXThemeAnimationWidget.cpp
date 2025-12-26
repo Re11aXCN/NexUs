@@ -18,14 +18,15 @@ void NXThemeAnimationWidget::startAnimation(int msec)
     QPropertyAnimation* themeChangeAnimation = new QPropertyAnimation(this, "pRadius");
     themeChangeAnimation->setDuration(msec);
     themeChangeAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    QObject::connect(themeChangeAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(themeChangeAnimation, &QPropertyAnimation::finished, this, [=]() {
         Q_EMIT animationFinished();
         this->deleteLater();
     });
-    QObject::connect(themeChangeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
+    connect(themeChangeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
     themeChangeAnimation->setStartValue(0);
     themeChangeAnimation->setEndValue(_pEndRadius);
     themeChangeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    show();
 }
 
 void NXThemeAnimationWidget::paintEvent(QPaintEvent* event)

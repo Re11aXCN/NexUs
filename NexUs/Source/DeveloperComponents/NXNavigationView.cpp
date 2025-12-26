@@ -35,7 +35,7 @@ NXNavigationView::NXNavigationView(QWidget* parent)
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     NXScrollBar* vScrollBar = new NXScrollBar(this);
-    QObject::connect(vScrollBar, &NXScrollBar::rangeAnimationFinished, this, [=]() {
+    connect(vScrollBar, &NXScrollBar::rangeAnimationFinished, this, [=]() {
         doItemsLayout();
     });
     setVerticalScrollBar(vScrollBar);
@@ -60,7 +60,7 @@ NXNavigationView::NXNavigationView(QWidget* parent)
     properties.setScrollMetric(QScrollerProperties::FrameRate, QScrollerProperties::Fps60);
     scroller->setScrollerProperties(properties);
 
-    QObject::connect(scroller, &QScroller::stateChanged, this, [=](QScroller::State newstate) {
+    connect(scroller, &QScroller::stateChanged, this, [=](QScroller::State newstate) {
         if (newstate == QScroller::Pressed)
         {
             _navigationStyle->setPressIndex(indexAt(mapFromGlobal(QCursor::pos())));
@@ -73,7 +73,7 @@ NXNavigationView::NXNavigationView(QWidget* parent)
     });
 
     setContextMenuPolicy(Qt::CustomContextMenu);
-    QObject::connect(this, &NXNavigationView::customContextMenuRequested, this, &NXNavigationView::onCustomContextMenuRequested);
+    connect(this, &NXNavigationView::customContextMenuRequested, this, &NXNavigationView::onCustomContextMenuRequested);
 
 }
 
@@ -134,11 +134,11 @@ void NXNavigationView::onCustomContextMenuRequested(const QPoint& pos)
         NXMenu menu;
         menu.setMenuItemHeight(27);
         QAction* openAction = menu.addNXIconAction(NXIconType::ObjectGroup, "在新窗口中打开");
-        QObject::connect(openAction, &QAction::triggered, this, [=]() {
+        connect(openAction, &QAction::triggered, this, [=]() {
             Q_EMIT navigationOpenNewWindow(posNode->getNodeKey());
         });
   		QAction* closeAction = menu.addNXIconAction(NXIconType::FilmSlash, "关闭当前导航窗口");
-        QObject::connect(closeAction, &QAction::triggered, this, [=]() {
+        connect(closeAction, &QAction::triggered, this, [=]() {
             Q_EMIT navigationCloseCurrentWindow(posNode->getNodeKey());
             });
         menu.exec(mapToGlobal(pos));

@@ -41,8 +41,8 @@ NXAcrylicUrlCard::NXAcrylicUrlCard(QWidget* parent)
     d->_pCardPixmapBorderRadius = 6;
     d->_pCardPixMode = NXCardPixType::PixMode::Ellipse;
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(this, &NXAcrylicUrlCard::clicked, this, [=]() { QDesktopServices::openUrl(QUrl(d->_pUrl)); });
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(this, &NXAcrylicUrlCard::clicked, this, [=]() { QDesktopServices::openUrl(QUrl(d->_pUrl)); });
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXAcrylicUrlCard::~NXAcrylicUrlCard()

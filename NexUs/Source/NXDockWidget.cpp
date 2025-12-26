@@ -23,14 +23,14 @@ NXDockWidget::NXDockWidget(QWidget* parent, Qt::WindowFlags flags)
 
     // 主题变更动画
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXDockWidgetPrivate::onThemeModeChanged);
+    connect(nxTheme, &NXTheme::themeModeChanged, d, &NXDockWidgetPrivate::onThemeModeChanged);
 
     d->_windowDisplayMode = nxApp->getWindowDisplayMode();
-    QObject::connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]() {
+    connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]() {
         d->_windowDisplayMode = nxApp->getWindowDisplayMode();
         update();
     });
-    QObject::connect(this, &NXDockWidget::topLevelChanged, this, [=](bool topLevel) {
+    connect(this, &NXDockWidget::topLevelChanged, this, [=](bool topLevel) {
         if (nxApp->getWindowDisplayMode() == NXApplicationType::WindowDisplayMode::NXMica)
         {
             nxApp->syncWindowDisplayMode(this, topLevel);

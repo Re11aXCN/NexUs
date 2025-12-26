@@ -20,7 +20,7 @@ NXToggleSwitch::NXToggleSwitch(QWidget* parent)
     d->_themeMode = nxTheme->getThemeMode();
     setProperty("circleCenterX", 0.01);
     setProperty("circleRadius", 0.01);
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
 }

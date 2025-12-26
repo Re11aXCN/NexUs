@@ -22,7 +22,7 @@ NXPromotionView::NXPromotionView(QWidget* parent)
     setStyleSheet("#NXPromotionView{background-color:transparent;}");
 
     d->_autoScrollTimer = new QTimer(this);
-    QObject::connect(d->_autoScrollTimer, &QTimer::timeout, this, [=]() {
+    connect(d->_autoScrollTimer, &QTimer::timeout, this, [=]() {
         if (isVisible() && d->_promotionCardList.count() > 2)
         {
             d->onPromotionCardClicked(d->_promotionCardList[d->_getAdjacentIndex(Qt::LeftToRight, d->_pCurrentIndex)]);
@@ -30,7 +30,7 @@ NXPromotionView::NXPromotionView(QWidget* parent)
     });
 
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXPromotionView::~NXPromotionView()
@@ -136,7 +136,7 @@ void NXPromotionView::appendPromotionCard(NXPromotionCard* card)
     card->setMaximumSize(10000, 10000);
     card->setParent(this);
     d->_promotionCardList.append(card);
-    QObject::connect(card, &NXPromotionCard::promotionCardClicked, this, [=]() {
+    connect(card, &NXPromotionCard::promotionCardClicked, this, [=]() {
         d->onPromotionCardClicked(card);
     });
     d->_updatePromotionCardGeometry();

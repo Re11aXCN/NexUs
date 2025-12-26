@@ -21,21 +21,21 @@ NXXIO_Interface::NXXIO_Interface()
     : _applicationName("NXPacketIO"),
     mTCP_Port(0),
     mMulticastTimeToLive(-1),
+    mMulticastLoopback(true),
+    mHeartbeatInterval(5.0),
+    mShowTransferRate(false),
     _isInit(false),
+    mConnectorPtr(nullptr),
     mCurrentTime(0.0),
     mPreviousHeartbeatTime(-1.0E6),
     mPreviousConnectionUpdateTime(-1.0E6),
     mConnectionUpdateInterval(0.5),
+    mTotalBytesSent(0),
+    mTotalBytesReceived(0),
     mPreviousBytesSent(0),
+    mPreviousBytesReceived(0),
     mUDP_HeaderPtr(new NXXIO_UdpHeader(NXXIO_PacketRegistry::getPacketVersion()))
 {
-    mTotalBytesSent = 0;
-    mTotalBytesReceived = 0;
-    mHeartbeatInterval = 5.0;
-    mMulticastLoopback = true;
-    mShowTransferRate = false;
-    mConnectorPtr = nullptr;
-    mPreviousBytesReceived = 0;
     NXXIO_PacketRegistry::registerPackets(*this);
 
     _callbacks += Connect(&NXXIO_Interface::_handleHeartbeat, this);

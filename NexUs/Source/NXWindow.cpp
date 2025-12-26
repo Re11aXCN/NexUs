@@ -14,14 +14,16 @@
 #include <QApplication>
 #include <QDockWidget>
 #include <QHBoxLayout>
+#include <QMovie>
+#include <QPainter>
+#include <QPixmap>
 #include <QPropertyAnimation>
 #include <QResizeEvent>
 #include <QScreen>
-#include <QStackedWidget>
 #include <QStyleOption>
-#include <QTimer>
 #include <QToolBar>
-#include <QVBoxLayout>
+#include <QtMath>
+
 Q_PROPERTY_CREATE_Q_CPP(NXWindow, int, ThemeChangeTime)
 Q_PROPERTY_CREATE_Q_CPP(NXWindow, NXNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
 Q_PROPERTY_CREATE_Q_CPP(NXWindow, NXWindowType::StackSwitchMode, StackSwitchMode)
@@ -37,32 +39,32 @@ NXWindow::NXWindow(QWidget* parent)
 
     d->_pThemeChangeTime = 700;
     d->_pNavigationBarDisplayMode = NXNavigationType::NavigationDisplayMode::Auto;
-    QObject::connect(this, &NXWindow::pNavigationBarDisplayModeChanged, d, &NXWindowPrivate::onDisplayModeChanged);
+    connect(this, &NXWindow::pNavigationBarDisplayModeChanged, d, &NXWindowPrivate::onDisplayModeChanged);
 
     // 自定义AppBar
     d->_appBar = new NXAppBar(this);
-    QObject::connect(d->_appBar, &NXAppBar::routeBackButtonClicked, this, []() {
+    connect(d->_appBar, &NXAppBar::routeBackButtonClicked, this, []() {
         NXNavigationRouter::getInstance()->navigationRouteBack();
     });
-    QObject::connect(d->_appBar, &NXAppBar::routeForwardButtonClicked, this, []() {
+    connect(d->_appBar, &NXAppBar::routeForwardButtonClicked, this, []() {
         NXNavigationRouter::getInstance()->navigationRouteForward();
         });
-    QObject::connect(d->_appBar, &NXAppBar::closeButtonClicked, this, &NXWindow::closeButtonClicked);
+    connect(d->_appBar, &NXAppBar::closeButtonClicked, this, &NXWindow::closeButtonClicked);
     // 导航栏
     d->_navigationBar = new NXNavigationBar(this);
     // 返回按钮状态变更
     connect(NXNavigationRouter::getInstance(), &NXNavigationRouter::navigationRouterStateChanged, d, &NXWindowPrivate::onNavigationRouterStateChanged);
 
     // 转发用户卡片点击信号
-    QObject::connect(d->_navigationBar, &NXNavigationBar::userInfoCardClicked, this, &NXWindow::userInfoCardClicked);
+    connect(d->_navigationBar, &NXNavigationBar::userInfoCardClicked, this, &NXWindow::userInfoCardClicked);
     // 转发点击信号 跳转处理
-    QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeClicked, d, &NXWindowPrivate::onNavigationNodeClicked);
+    connect(d->_navigationBar, &NXNavigationBar::navigationNodeClicked, d, &NXWindowPrivate::onNavigationNodeClicked);
     // 新增窗口
-    QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeAdded, d, &NXWindowPrivate::onNavigationNodeAdded);
+    connect(d->_navigationBar, &NXNavigationBar::navigationNodeAdded, d, &NXWindowPrivate::onNavigationNodeAdded);
     // 移除窗口
-    QObject::connect(d->_navigationBar, &NXNavigationBar::navigationNodeRemoved, d, &NXWindowPrivate::onNavigationNodeRemoved);
+    connect(d->_navigationBar, &NXNavigationBar::navigationNodeRemoved, d, &NXWindowPrivate::onNavigationNodeRemoved);
     // 在新窗口打开
-    QObject::connect(d->_navigationBar, &NXNavigationBar::pageOpenInNewWindow, this, &NXWindow::pageOpenInNewWindow);
+    connect(d->_navigationBar, &NXNavigationBar::pageOpenInNewWindow, this, &NXWindow::pageOpenInNewWindow);
 
     // 导航中心堆栈窗口
     d->_navigationCenterStackedWidget = new NXCentralStackedWidget(this);
@@ -72,7 +74,7 @@ NXWindow::NXWindow(QWidget* parent)
     navigationCentralWidget->setStyleSheet("#NXWindowNavigationCentralWidget{background-color:transparent;}");
     navigationCentralWidget->installEventFilter(this);
     d->_centerLayout = new QHBoxLayout(navigationCentralWidget);
-    d->_centerLayout->setSpacing(0);
+    d->_centerLayout->setSpacing(5);
     d->_centerLayout->addWidget(d->_navigationBar);
     d->_centerLayout->addWidget(d->_navigationCenterStackedWidget);
     d->_centerLayout->setContentsMargins(d->_contentsMargins, 0, 0, 0);
@@ -82,12 +84,12 @@ NXWindow::NXWindow(QWidget* parent)
     d->_focusEvent->registerAndInit();
 
     // 展开导航栏
-    QObject::connect(d->_appBar, &NXAppBar::navigationButtonClicked, d, &NXWindowPrivate::onNavigationButtonClicked);
+    connect(d->_appBar, &NXAppBar::navigationButtonClicked, d, &NXWindowPrivate::onNavigationButtonClicked);
 
     // 主题变更动画
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXWindowPrivate::onThemeModeChanged);
-    QObject::connect(d->_appBar, &NXAppBar::themeChangeButtonClicked, d, &NXWindowPrivate::onThemeReadyChange);
+    connect(nxTheme, &NXTheme::themeModeChanged, d, &NXWindowPrivate::onThemeModeChanged);
+    connect(d->_appBar, &NXAppBar::themeChangeButtonClicked, d, &NXWindowPrivate::onThemeReadyChange);
     d->_isInitFinished = true;
 
     // 中心堆栈窗口
@@ -98,23 +100,28 @@ NXWindow::NXWindow(QWidget* parent)
     setObjectName("NXWindow");
     setStyleSheet("#NXWindow{background-color:transparent;}");
     setStyle(new NXWindowStyle(style()));
-
-    //延时渲染
-    QTimer::singleShot(1, this, [=] {
-        QPalette palette = this->palette();
-        palette.setBrush(QPalette::Window, NXThemeColor(d->_themeMode, WindowBase));
-        this->setPalette(palette);
-    });
+    
     nxApp->syncWindowDisplayMode(this);
-    QObject::connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]() {
-        d->onThemeModeChanged(d->_themeMode);
-    });
+    d->_windowDisplayMode = nxApp->getWindowDisplayMode();
+    connect(nxApp, &NXApplication::pWindowDisplayModeChanged, d, &NXWindowPrivate::onWindowDisplayModeChanged);
+
+    d->_pWindowPaintMode = NXWindowType::PaintMode::Normal;
+    d->_lightWindowPix = new QPixmap();
+    d->_darkWindowPix = new QPixmap();
+
+    d->_windowPaintMovie = new QMovie(this);
+    connect(d->_windowPaintMovie, &QMovie::frameChanged, this, [=]() {
+        update();
+        });
 }
 
 NXWindow::~NXWindow()
 {
+    Q_D(NXWindow);
     nxApp->syncWindowDisplayMode(this, false);
     delete this->style();
+    delete d->_lightWindowPix;
+    delete d->_darkWindowPix;
 }
 
 void NXWindow::setIsStayTop(bool isStayTop)
@@ -166,17 +173,17 @@ int NXWindow::getAppBarHeight() const
     return d->_appBar->getAppBarHeight();
 }
 
-void NXWindow::setCustomWidget(NXAppBarType::CustomArea customArea, QWidget* widget)
+void NXWindow::setCustomWidget(NXAppBarType::CustomArea customArea, QWidget* widget, QObject* hitTestObject, const QString& hitTestFunctionName)
 {
     Q_D(NXWindow);
-    d->_appBar->setCustomWidget(customArea, widget);
+    d->_appBar->setCustomWidget(customArea, widget, hitTestObject, hitTestFunctionName);
     Q_EMIT customWidgetChanged();
 }
 
-QWidget* NXWindow::getCustomWidget() const
+QWidget* NXWindow::getCustomWidget(NXAppBarType::CustomArea customArea) const
 {
     Q_D(const NXWindow);
-    return d->_appBar->getCustomWidget();
+    return d->_appBar->getCustomWidget(customArea);
 }
 
 void NXWindow::setCentralCustomWidget(QWidget* customWidget)
@@ -203,19 +210,6 @@ QMenu* NXWindow::getCustomMenu() const
 {
     Q_D(const NXWindow);
     return d->_appBar->getCustomMenu();
-}
-
-void NXWindow::setCustomWidgetMaximumWidth(int width)
-{
-    Q_D(NXWindow);
-    d->_appBar->setCustomWidgetMaximumWidth(width);
-    Q_EMIT pCustomWidgetMaximumWidthChanged();
-}
-
-int NXWindow::getCustomWidgetMaximumWidth() const
-{
-    Q_D(const NXWindow);
-    return d->_appBar->getCustomWidgetMaximumWidth();
 }
 
 void NXWindow::setIsCentralStackedWidgetTransparent(bool isTransparent)
@@ -277,6 +271,29 @@ int NXWindow::getCurrentStackIndex() const
 {
     Q_D(const NXWindow);
     return d->_centerStackedWidget->getContainerStackedWidget()->currentIndex();
+}
+
+void NXWindow::setWindowPaintMode(NXWindowType::PaintMode windowPaintMode)
+{
+    Q_D(NXWindow);
+    if (d->_windowPaintMovie->state() == QMovie::Running)
+    {
+        d->_windowPaintMovie->stop();
+    }
+    if (windowPaintMode == NXWindowType::PaintMode::Movie)
+    {
+        d->_windowPaintMovie->setFileName(d->_themeMode == NXThemeType::Light ? d->_lightWindowMoviePath : d->_darkWindowMoviePath);
+        d->_windowPaintMovie->start();
+    }
+    d->_pWindowPaintMode = windowPaintMode;
+    update();
+    Q_EMIT pWindowPaintModeChanged();
+}
+
+NXWindowType::PaintMode NXWindow::getWindowPaintMode() const
+{
+    Q_D(const NXWindow);
+    return d->_pWindowPaintMode;
 }
 
 void NXWindow::moveToCenter()
@@ -343,7 +360,7 @@ void NXWindow::setUserInfoCardSubTitle(const QString& subTitle)
     d->_navigationBar->setUserInfoCardSubTitle(subTitle);
 }
 
-NXNavigationType::NodeOperateReturnType NXWindow::setNavigationNodeTitle(const QString& nodeTitle, const QString& nodeKey)
+NXNavigationType::NodeOperateError NXWindow::setNavigationNodeTitle(const QString& nodeTitle, const QString& nodeKey)
 {
     Q_D(NXWindow);
     return d->_navigationBar->setNavigationNodeTitle(nodeTitle, nodeKey);
@@ -355,7 +372,7 @@ QString NXWindow::getNavigationNodeTitle(const QString& nodeKey) const
     return d->_navigationBar->getNavigationNodeTitle(nodeKey);
 }
 
-NXNavigationType::NodeOperateReturnType NXWindow::navigationPageNodeSwitch(const QString& targetPageKey)
+NXNavigationType::NodeOperateError NXWindow::navigationPageNodeSwitch(const QString& targetPageKey)
 {
     Q_D(NXWindow);
     return d->_navigationBar->navigationPageNodeSwitch(targetPageKey);
@@ -367,73 +384,73 @@ void NXWindow::setNavigationPageOpenPolicy(std::function<void(const QString&/*no
     d->_navigationBar->setNavigationPageOpenPolicy(std::move(openNavigationPageFunc));
 }
 
-NodeOperateReturnTypeWithKey NXWindow::addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome) const
+NXNodeOperateResult NXWindow::addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome) const
 {
     Q_D(const NXWindow);
     return d->_navigationBar->addExpanderNode(expanderTitle, awesome);
 }
 
-NodeOperateReturnTypeWithKey NXWindow::addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome) const
+NXNodeOperateResult NXWindow::addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome) const
 {
     Q_D(const NXWindow);
     return d->_navigationBar->addExpanderNode(expanderTitle, targetExpanderKey, awesome);
 }
 
-NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, NXIconType::IconName awesome)
+NXNodeOperateResult NXWindow::addPageNode(const QString& pageTitle, QWidget* page, NXIconType::IconName awesome)
 {
     Q_D(NXWindow);
-    NodeOperateReturnTypeWithKey returnData = d->_navigationBar->addPageNode(pageTitle, page, awesome);
-    if (returnData.nodeOperateReturnType == NXNavigationType::Success)
+    NXNodeOperateResult returnData = d->_navigationBar->addPageNode(pageTitle, page, awesome);
+    if (returnData.has_value())
     {
         d->_pageMetaMap.insert(page->property("NXPageKey").toString(), page->metaObject());
     }
     return returnData;
 }
 
-NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, NXIconType::IconName awesome)
+NXNodeOperateResult NXWindow::addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, NXIconType::IconName awesome)
 {
     Q_D(NXWindow);
-    NodeOperateReturnTypeWithKey returnData = d->_navigationBar->addPageNode(pageTitle, page, targetExpanderKey, awesome);
-    if (returnData.nodeOperateReturnType == NXNavigationType::Success)
+    NXNodeOperateResult returnData = d->_navigationBar->addPageNode(pageTitle, page, targetExpanderKey, awesome);
+    if (returnData.has_value())
     {
         d->_pageMetaMap.insert(page->property("NXPageKey").toString(), page->metaObject());
     }
     return returnData;
 }
 
-NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, int keyPoints, NXIconType::IconName awesome)
+NXNodeOperateResult NXWindow::addPageNode(const QString& pageTitle, QWidget* page, int keyPoints, NXIconType::IconName awesome)
 {
     Q_D(NXWindow);
-    NodeOperateReturnTypeWithKey returnData = d->_navigationBar->addPageNode(pageTitle, page, keyPoints, awesome);
-    if (returnData.nodeOperateReturnType == NXNavigationType::Success)
+    NXNodeOperateResult returnData = d->_navigationBar->addPageNode(pageTitle, page, keyPoints, awesome);
+    if (returnData.has_value())
     {
         d->_pageMetaMap.insert(page->property("NXPageKey").toString(), page->metaObject());
     }
     return returnData;
 }
 
-NodeOperateReturnTypeWithKey NXWindow::addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, int keyPoints, NXIconType::IconName awesome)
+NXNodeOperateResult NXWindow::addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, int keyPoints, NXIconType::IconName awesome)
 {
     Q_D(NXWindow);
-    NodeOperateReturnTypeWithKey returnData = d->_navigationBar->addPageNode(pageTitle, page, targetExpanderKey, keyPoints, awesome);
-    if (returnData.nodeOperateReturnType == NXNavigationType::Success)
+    NXNodeOperateResult returnData = d->_navigationBar->addPageNode(pageTitle, page, targetExpanderKey, keyPoints, awesome);
+    if (returnData.has_value())
     {
         d->_pageMetaMap.insert(page->property("NXPageKey").toString(), page->metaObject());
     }
     return returnData;
 }
 
-NodeOperateReturnTypeWithKey NXWindow::addFooterNode(const QString& footerTitle, int keyPoints, NXIconType::IconName awesome) const
+NXNodeOperateResult NXWindow::addFooterNode(const QString& footerTitle, int keyPoints, NXIconType::IconName awesome) const
 {
     Q_D(const NXWindow);
     return d->_navigationBar->addFooterNode(footerTitle, nullptr, keyPoints, awesome);
 }
 
-NodeOperateReturnTypeWithKey NXWindow::addFooterNode(const QString& footerTitle, QWidget* page, int keyPoints, NXIconType::IconName awesome)
+NXNodeOperateResult NXWindow::addFooterNode(const QString& footerTitle, QWidget* page, int keyPoints, NXIconType::IconName awesome)
 {
     Q_D(NXWindow);
-    NodeOperateReturnTypeWithKey returnData = d->_navigationBar->addFooterNode(footerTitle, page, keyPoints, awesome);
-    if (page && returnData.nodeOperateReturnType == NXNavigationType::Success)
+    NXNodeOperateResult returnData = d->_navigationBar->addFooterNode(footerTitle, page, keyPoints, awesome);
+    if (page && returnData.has_value())
     {
         d->_pageMetaMap.insert(page->property("NXPageKey").toString(), page->metaObject());
     }
@@ -550,6 +567,12 @@ QString NXWindow::getCurrentNavigationPageKey() const
     return d->_navigationCenterStackedWidget->getContainerStackedWidget()->currentWidget()->property("NXPageKey").toString();
 }
 
+QList<NXSuggestBox::SuggestData> NXWindow::getNavigationSuggestDataList() const
+{
+    Q_D(const NXWindow);
+    return d->_navigationBar->getSuggestDataList();
+}
+
 void NXWindow::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable)
 {
     Q_D(NXWindow);
@@ -565,6 +588,66 @@ void NXWindow::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags)
 NXAppBarType::ButtonFlags NXWindow::getWindowButtonFlags() const
 {
     return d_ptr->_appBar->getWindowButtonFlags();
+}
+
+void NXWindow::setWindowMoviePath(NXThemeType::ThemeMode themeMode, const QString& moviePath)
+{
+    Q_D(NXWindow);
+    if (themeMode == NXThemeType::ThemeMode::Light)
+    {
+        d->_lightWindowMoviePath = moviePath;
+    }
+    else
+    {
+        d->_darkWindowMoviePath = moviePath;
+    }
+    if (d->_themeMode == themeMode && d->_pWindowPaintMode == NXWindowType::PaintMode::Movie)
+    {
+        if (d->_windowPaintMovie->state() == QMovie::Running)
+        {
+            d->_windowPaintMovie->stop();
+        }
+        d->_windowPaintMovie->setFileName(moviePath);
+        d->_windowPaintMovie->start();
+    }
+}
+
+QString NXWindow::getWindowMoviePath(NXThemeType::ThemeMode themeMode) const
+{
+    Q_D(const NXWindow);
+    return themeMode == NXThemeType::Light ? d->_lightWindowMoviePath : d->_darkWindowMoviePath;
+}
+
+void NXWindow::setWindowMovieRate(qreal rate)
+{
+    Q_D(NXWindow);
+    d->_windowPaintMovie->setSpeed(rate * 100);
+}
+
+qreal NXWindow::getWindowMovieRate() const
+{
+    Q_D(const NXWindow);
+    return d->_windowPaintMovie->speed() / 100.0;
+}
+
+void NXWindow::setWindowPixmap(NXThemeType::ThemeMode themeMode, const QPixmap& pixmap)
+{
+    Q_D(NXWindow);
+    if (themeMode == NXThemeType::ThemeMode::Light)
+    {
+        *d->_lightWindowPix = pixmap;
+    }
+    else
+    {
+        *d->_darkWindowPix = pixmap;
+    }
+    update();
+}
+
+QPixmap NXWindow::getWindowPixmap(NXThemeType::ThemeMode themeMode) const
+{
+    Q_D(const NXWindow);
+    return themeMode == NXThemeType::Light ? *d->_lightWindowPix : *d->_darkWindowPix;
 }
 
 void NXWindow::closeWindow()
@@ -631,4 +714,75 @@ QMenu* NXWindow::createPopupMenu()
         menu->setMenuItemHeight(28);
     }
     return menu;
+}
+
+void NXWindow::paintEvent(QPaintEvent* event)
+{
+    Q_D(NXWindow);
+    QPainter painter(this);
+    painter.save();
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    switch (d->_windowDisplayMode)
+    {
+    case NXApplicationType::Normal:
+    {
+        switch (d->_pWindowPaintMode)
+        {
+        case NXWindowType::Normal:
+        {
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(NXThemeColor(d->_themeMode, WindowBase));
+            painter.drawRect(rect());
+            break;
+        }
+        case NXWindowType::Pixmap:
+        {
+            QPixmap* pix = d->_themeMode == NXThemeType::Light ? d->_lightWindowPix : d->_darkWindowPix;
+            qreal windowAspectRatio = (qreal)rect().width() / rect().height();
+            qreal pixAspectRatio = (qreal)pix->width() / pix->height();
+            int targetPixWidth, targetPixHeight;
+            if (windowAspectRatio < pixAspectRatio)
+            {
+                targetPixWidth = qRound(pix->width() * windowAspectRatio / pixAspectRatio);
+                targetPixHeight = pix->height();
+            }
+            else
+            {
+                targetPixWidth = pix->width();
+                targetPixHeight = qRound(pix->height() * pixAspectRatio / windowAspectRatio);
+            }
+            painter.drawPixmap(rect(), *pix, QRect((pix->width() - targetPixWidth) / 2, (pix->height() - targetPixHeight) / 2, targetPixWidth, targetPixHeight));
+            break;
+        }
+        case NXWindowType::Movie:
+        {
+            QPixmap pix = d->_windowPaintMovie->currentPixmap();
+            qreal windowAspectRatio = (qreal)rect().width() / rect().height();
+            qreal pixAspectRatio = (qreal)pix.width() / pix.height();
+            int targetPixWidth, targetPixHeight;
+            if (windowAspectRatio < pixAspectRatio)
+            {
+                targetPixWidth = qRound(pix.width() * windowAspectRatio / pixAspectRatio);
+                targetPixHeight = pix.height();
+            }
+            else
+            {
+                targetPixWidth = pix.width();
+                targetPixHeight = qRound(pix.height() * pixAspectRatio / windowAspectRatio);
+            }
+            painter.drawPixmap(rect(), pix, QRect((pix.width() - targetPixWidth) / 2, (pix.height() - targetPixHeight) / 2, targetPixWidth, targetPixHeight));
+            break;
+        }
+        default:
+        {
+            break;
+        }
+        }
+    }
+    default:
+    {
+        break;
+    }
+    }
+    painter.restore();
 }

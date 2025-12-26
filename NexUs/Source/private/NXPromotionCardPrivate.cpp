@@ -35,7 +35,7 @@ void NXPromotionCardPrivate::_startHoverOpacityAnimation(bool isVisible)
 {
     Q_Q(NXPromotionCard);
     QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pHoverOpacity");
-    QObject::connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         q->update();
     });
     opacityAnimation->setDuration(250);

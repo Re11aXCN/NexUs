@@ -306,6 +306,7 @@
     <ClCompile Include="Source\DeveloperComponents\NXPopularCardFloater.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXProgressBarStyle.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXRadioButtonStyle.cpp" />
+	<ClCompile Include="Source\DeveloperComponents\NXRollerPickerContainer.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXScrollBarStyle.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXSliderStyle.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXSpinBoxStyle.cpp" />
@@ -371,7 +372,8 @@
     <ClCompile Include="Source\NXPushButton.cpp" />
     <ClCompile Include="Source\NXRadioButton.cpp" />
     <ClCompile Include="Source\NXReminderCard.cpp" />
-    <ClCompile Include="Source\NXRoller.cpp" />
+    <ClCompile Include="Source\NXRollerPicker.cpp" />
+	<ClCompile Include="Source\NXRoller.cpp" />
     <ClCompile Include="Source\NXScrollArea.cpp" />
     <ClCompile Include="Source\NXScrollBar.cpp" />
     <ClCompile Include="Source\NXScrollPage.cpp" />
@@ -442,7 +444,8 @@
     <ClCompile Include="Source\private\NXPushButtonPrivate.cpp" />
     <ClCompile Include="Source\private\NXRadioButtonPrivate.cpp" />
     <ClCompile Include="Source\private\NXReminderCardPrivate.cpp" />
-    <ClCompile Include="Source\private\NXRollerPrivate.cpp" />
+    <ClCompile Include="Source\private\NXRollerPickerPrivate.cpp" />
+	<ClCompile Include="Source\private\NXRollerPrivate.cpp" />
     <ClCompile Include="Source\private\NXScrollAreaPrivate.cpp" />
     <ClCompile Include="Source\private\NXScrollBarPrivate.cpp" />
     <ClCompile Include="Source\private\NXScrollPageAreaPrivate.cpp" />
@@ -534,6 +537,7 @@
     <QtMoc Include="Source\DeveloperComponents\NXPopularCardFloater.h" />
     <QtMoc Include="Source\DeveloperComponents\NXProgressBarStyle.h" />
     <QtMoc Include="Source\DeveloperComponents\NXRadioButtonStyle.h" />
+	<QtMoc Include="Source\DeveloperComponents\NXRollerPickerContainer.h" />
     <QtMoc Include="Source\DeveloperComponents\NXScrollBarStyle.h" />
     <QtMoc Include="Source\DeveloperComponents\NXSliderStyle.h" />
     <QtMoc Include="Source\DeveloperComponents\NXSpinBoxStyle.h" />
@@ -596,6 +600,7 @@
     <QtMoc Include="Source\include\NXPushButton.h" />
     <QtMoc Include="Source\include\NXRadioButton.h" />
     <QtMoc Include="Source\include\NXReminderCard.h" />
+	<QtMoc Include="Source\include\NXRollerPicker.h" />
     <QtMoc Include="Source\include\NXRoller.h" />
     <QtMoc Include="Source\include\NXScrollArea.h" />
     <QtMoc Include="Source\include\NXScrollBar.h" />
@@ -663,6 +668,7 @@
     <QtMoc Include="Source\private\NXPushButtonPrivate.h" />
     <QtMoc Include="Source\private\NXRadioButtonPrivate.h" />
     <QtMoc Include="Source\private\NXReminderCardPrivate.h" />
+	<QtMoc Include="Source\private\NXRollerPickerPrivate.h" />
     <QtMoc Include="Source\private\NXRollerPrivate.h" />
     <QtMoc Include="Source\private\NXScrollAreaPrivate.h" />
     <QtMoc Include="Source\private\NXScrollBarPrivate.h" />

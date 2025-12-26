@@ -132,16 +132,16 @@ Q_ENUM_CREATE(TextStyle)
 Q_END_ENUM_CREATE(NXTextType)
 
 Q_BEGIN_ENUM_CREATE(NXNavigationType, NX_EXPORT)
-enum NodeOperateReturnType
+enum NodeOperateError
 {
-    Success = 0x0000,
+    None = 0x0000,
     TargetNodeInvalid = 0x0001,
     TargetNodeTypeError = 0x0002,
     TargetNodeDepthLimit = 0x0003,
     PageInvalid = 0x0004,
     FooterUpperLimit = 0x0005,
 };
-Q_ENUM_CREATE(NodeOperateReturnType)
+Q_ENUM_CREATE(NodeOperateError)
 
 enum NavigationDisplayMode
 {
@@ -254,6 +254,13 @@ enum StackSwitchMode
     Blur = 0x0004,
 };
 Q_ENUM_CREATE(StackSwitchMode)
+enum PaintMode
+{
+    Normal = 0x0000,
+    Pixmap = 0x0001,
+    Movie = 0x0002,
+};
+Q_ENUM_CREATE(PaintMode)
 Q_END_ENUM_CREATE(NXWindowType)
 
 Q_BEGIN_ENUM_CREATE(NXSpinBoxType)
@@ -3603,9 +3610,21 @@ enum RotateMode {
 Q_ENUM_CREATE(RotateMode)
 Q_END_ENUM_CREATE(NXShadowGraphicsEffectType)
 
-struct NodeOperateReturnTypeWithKey {
-    NXNavigationType::NodeOperateReturnType nodeOperateReturnType;
-    QString nodeKey{};
-};
+#if defined(__cpp_lib_expected) || (__cplusplus >= 202302L && __has_include(<expected>))
+    #include <expected>
+    template<typename T>
+    using NXExpected = std::expected<T, NXNavigationType::NodeOperateError>;
+    
+    template<typename T>
+    using NXUnexpected = std::unexpected<NXNavigationType::NodeOperateError>;
+#else
+    #include "expected.hpp"
+    template<typename T>
+    using NXExpected = tl::expected<T, NXNavigationType::NodeOperateError>;
+    
+    template<typename T>
+    using NXUnexpected = tl::unexpected<NXNavigationType::NodeOperateError>;
+#endif // __cplusplus >= 202302L && __has_include(<expected>)
+using NXNodeOperateResult = NXExpected<QString>;
 
 #endif // NXDEF_H

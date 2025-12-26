@@ -22,13 +22,13 @@ NXCustomWidget::NXCustomWidget(QWidget* parent)
     _mainLayout->setContentsMargins(0, 0, 0, 0);
 
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
         update();
     });
 
     _windowDisplayMode = nxApp->getWindowDisplayMode();
-    QObject::connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]() {
+    connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]() {
         _windowDisplayMode = nxApp->getWindowDisplayMode();
         update();
     });

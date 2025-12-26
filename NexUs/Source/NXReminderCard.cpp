@@ -32,7 +32,7 @@ NXReminderCard::NXReminderCard(QWidget* parent)
     d->_pCardPixMode = NXCardPixType::PixMode::Default;
     d->_themeMode = nxTheme->getThemeMode();
     setMouseTracking(true);
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXReminderCard::~NXReminderCard()

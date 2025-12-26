@@ -1,5 +1,5 @@
-﻿#ifndef STDAFX_H
-#define STDAFX_H
+﻿#ifndef NXPROPERTY_H
+#define NXPROPERTY_H
 #include <QObject>
 #include <QtCore/qglobal.h>
 #include <QtCore/qmetaobject.h>
@@ -288,4 +288,4 @@ QString q_get_enum_name(T value)
     return QString(metaEnum.valueToKey(static_cast<int>(value)));
 }
 
-#endif // STDAFX_H
+#endif // NXPROPERTY_H

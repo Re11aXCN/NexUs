@@ -10,7 +10,7 @@ NXTabBarStyle::NXTabBarStyle(QStyle* style)
 {
     _pTabSize = QSize(220, 35);
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
         });
 }
@@ -101,7 +101,7 @@ void NXTabBarStyle::drawControl(ControlElement element, const QStyleOption* opti
                 //选中背景绘制
                 tabRect.setLeft(tabRect.left() - margin);
                 tabRect.setRight(tabRect.right() + margin + 1);
-                painter->setBrush(NXThemeColor(_themeMode, BasicSelectedHover));
+                painter->setBrush(topt->state.testFlag(QStyle::State_Sunken) ? NXThemeColor(_themeMode, BasicSelectedHover) : NXThemeColor(_themeMode, BasicSelectedAlpha));
                 QPainterPath path;
                 path.moveTo(tabRect.x(), tabRect.bottom() + 1);
                 path.arcTo(QRectF(tabRect.x() - margin, tabRect.bottom() - margin * 2 + 1, margin * 2, margin * 2), -90, 90);
@@ -124,7 +124,7 @@ void NXTabBarStyle::drawControl(ControlElement element, const QStyleOption* opti
             {
                 if (topt->state.testFlag(QStyle::State_MouseOver))
                 {
-                    painter->setBrush(NXThemeColor(_themeMode, BasicHover));
+                    painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
                 }
                 else
                 {

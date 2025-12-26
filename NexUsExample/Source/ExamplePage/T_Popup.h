@@ -9,13 +9,14 @@ class NXCalendar;
 class NXCalendarPicker;
 class NXKeyBinder;
 class NXRoller;
+class NXRollerPicker;
 class NXDrawerArea;
 class T_Popup : public T_BasePage
 {
     Q_OBJECT
 public:
     Q_INVOKABLE explicit T_Popup(QWidget* parent = nullptr);
-    ~T_Popup();
+    ~T_Popup() override;
 
 private:
     NXToolButton* _toolButton{nullptr};
@@ -24,6 +25,8 @@ private:
     NXCalendarPicker* _calendarPicker{nullptr};
     NXKeyBinder* _keyBinder{nullptr};
     NXRoller* _roller{nullptr};
+    NXRollerPicker* _timeRollerPicker{nullptr};
+    NXRollerPicker* _clockRollerPicker{nullptr};
     NXDrawerArea* _drawer{nullptr};
 };
 

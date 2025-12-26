@@ -49,7 +49,7 @@ void NXScrollPagePrivate::_switchCentralStackIndex(int targetIndex, int lastInde
     currentWidgetAnimation->setDuration(300);
 
     QPropertyAnimation* targetWidgetAnimation = new QPropertyAnimation(targetWidget, "pos");
-    QObject::connect(targetWidgetAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(targetWidgetAnimation, &QPropertyAnimation::finished, this, [=]() {
         _centralStackedWidget->setCurrentIndex(targetIndex);
     });
     targetWidgetAnimation->setEasingCurve(QEasingCurve::InExpo);

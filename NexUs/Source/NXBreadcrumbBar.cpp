@@ -30,7 +30,7 @@ NXBreadcrumbBar::NXBreadcrumbBar(QWidget* parent)
     d->_listView->setModel(d->_listModel);
     d->_listDelegate = new NXBreadcrumbBarDelegate(this);
     d->_listView->setItemDelegate(d->_listDelegate);
-    QObject::connect(d->_listView, &QListView::clicked, this, [=](const QModelIndex& index) {
+    connect(d->_listView, &QListView::clicked, this, [=](const QModelIndex& index) {
         if (d->_pIsAutoRemove)
         {
             if (d->_listModel->getBreadcrumbListCount() != 1 && index.row() != d->_listModel->getBreadcrumbListCount() * 2 - 2 && index.data(Qt::DisplayRole).toString() != ">")
@@ -59,7 +59,7 @@ NXBreadcrumbBar::NXBreadcrumbBar(QWidget* parent)
     properties.setScrollMetric(QScrollerProperties::FrameRate, QScrollerProperties::Fps60);
     scroller->setScrollerProperties(properties);
 
-    QObject::connect(scroller, &QScroller::stateChanged, this, [=](QScroller::State newstate) {
+    connect(scroller, &QScroller::stateChanged, this, [=](QScroller::State newstate) {
         if (newstate == QScroller::Pressed)
         {
             d->_listDelegate->setPressIndex(d->_listView->indexAt(d->_listView->mapFromGlobal(QCursor::pos())));

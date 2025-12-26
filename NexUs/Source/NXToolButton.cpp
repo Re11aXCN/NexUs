@@ -114,6 +114,12 @@ void NXToolButton::setNXIcon(NXIconType::IconName icon)
     setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::Broom, 1));
 }
 
+void NXToolButton::setNXIcon(NXIconType::IconName icon, int rotate)
+{
+    setNXIcon(icon);
+    setProperty("NXIconRotate", rotate);
+}
+
 bool NXToolButton::eventFilter(QObject* watched, QEvent* event)
 {
     Q_D(NXToolButton);
@@ -125,7 +131,7 @@ bool NXToolButton::eventFilter(QObject* watched, QEvent* event)
         {
             //指示器动画
             QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d->_toolButtonStyle, "pExpandIconRotate");
-            QObject::connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
                 update();
             });
             rotateAnimation->setDuration(300);
@@ -139,7 +145,7 @@ bool NXToolButton::eventFilter(QObject* watched, QEvent* event)
         {
             //指示器动画
             QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d->_toolButtonStyle, "pExpandIconRotate");
-            QObject::connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
                 update();
             });
             rotateAnimation->setDuration(300);

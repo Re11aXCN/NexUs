@@ -45,7 +45,7 @@ NXPivot::NXPivot(QWidget* parent)
     properties.setScrollMetric(QScrollerProperties::FrameRate, QScrollerProperties::Fps60);
     scroller->setScrollerProperties(properties);
 
-    QObject::connect(scroller, &QScroller::stateChanged, this, [=](QScroller::State newstate) {
+    connect(scroller, &QScroller::stateChanged, this, [=](QScroller::State newstate) {
         if (newstate == QScroller::Pressed)
         {
             d->_listStyle->setPressIndex(d->_listView->indexAt(d->_listView->mapFromGlobal(QCursor::pos())));
@@ -57,7 +57,7 @@ NXPivot::NXPivot(QWidget* parent)
             d->_listView->viewport()->update();
         }
     });
-    QObject::connect(d->_listView, &NXPivotView::clicked, this, [=](const QModelIndex& index) {
+    connect(d->_listView, &NXPivotView::clicked, this, [=](const QModelIndex& index) {
         if (index.row() != d->_listStyle->getCurrentIndex())
         {
             Q_EMIT pCurrentIndexChanged();
@@ -66,7 +66,7 @@ NXPivot::NXPivot(QWidget* parent)
         d->_listStyle->setCurrentIndex(index.row());
         Q_EMIT pivotClicked(index.row());
     });
-    QObject::connect(d->_listView, &NXPivotView::doubleClicked, this, [=](const QModelIndex& index) {
+    connect(d->_listView, &NXPivotView::doubleClicked, this, [=](const QModelIndex& index) {
         Q_EMIT pivotDoubleClicked(index.row());
     });
     QVBoxLayout* mainLayout = new QVBoxLayout(this);

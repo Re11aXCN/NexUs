@@ -65,7 +65,7 @@ NXMessageBar::NXMessageBar(NXMessageBarType::PositionPolicy policy, NXMessageBar
     }
     }
     d->_closeButton->setBorderRadius(5);
-    QObject::connect(d->_closeButton, &NXIconButton::clicked, d, &NXMessageBarPrivate::onCloseButtonClicked);
+    connect(d->_closeButton, &NXIconButton::clicked, d, &NXMessageBarPrivate::onCloseButtonClicked);
     QHBoxLayout* mainLayout = new QHBoxLayout(this);
     mainLayout->setContentsMargins(0, 0, 10, 0);
     mainLayout->addStretch();

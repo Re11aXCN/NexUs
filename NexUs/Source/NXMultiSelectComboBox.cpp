@@ -64,13 +64,13 @@ NXMultiSelectComboBox::NXMultiSelectComboBox(QWidget* parent)
 #endif
     }
     QComboBox::setMaxVisibleItems(5);
-    QObject::connect(d->_comboView, &NXComboBoxView::itemPressed, d, &NXMultiSelectComboBoxPrivate::onItemPressed);
-    QObject::connect(this, QOverload<int>::of(&NXMultiSelectComboBox::currentIndexChanged), d, &NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs);
+    connect(d->_comboView, &NXComboBoxView::itemPressed, d, &NXMultiSelectComboBoxPrivate::onItemPressed);
+    connect(this, QOverload<int>::of(&NXMultiSelectComboBox::currentIndexChanged), d, &NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs);
     d->_itemSelection.resize(32);
     d->_itemSelection.fill(false);
     d->_itemSelection[0] = true;
     QComboBox::setMaxVisibleItems(5);
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXMultiSelectComboBox::~NXMultiSelectComboBox()
@@ -233,7 +233,7 @@ void NXMultiSelectComboBox::showPopup()
                 layout->takeAt(0);
             }
             QPropertyAnimation* fixedSizeAnimation = new QPropertyAnimation(container, "maximumHeight");
-            QObject::connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
                 container->setFixedHeight(value.toUInt());
             });
             fixedSizeAnimation->setStartValue(1);
@@ -243,7 +243,7 @@ void NXMultiSelectComboBox::showPopup()
             fixedSizeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
             QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(view(), "pos");
-            QObject::connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() {
+            connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() {
                 d->_isAllowHidePopup = true;
                 layout->addWidget(view());
             });
@@ -256,7 +256,7 @@ void NXMultiSelectComboBox::showPopup()
         }
         //指示器动画
         QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d, "pExpandIconRotate");
-        QObject::connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             update();
         });
         rotateAnimation->setDuration(300);
@@ -301,7 +301,7 @@ void NXMultiSelectComboBox::hidePopup()
                     layout->takeAt(0);
                 }
                 QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(view(), "pos");
-                QObject::connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() {
+                connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() {
                     layout->addWidget(view());
                     QMouseEvent focusEvent(QEvent::MouseButtonPress, QPoint(-1, -1), QPoint(-1, -1), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
                     QApplication::sendEvent(parentWidget(), &focusEvent);
@@ -309,14 +309,14 @@ void NXMultiSelectComboBox::hidePopup()
                     container->setFixedHeight(containerHeight);
                 });
                 QPoint viewPos = view()->pos();
-                QObject::connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() { view()->move(viewPos); });
+                connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() { view()->move(viewPos); });
                 viewPosAnimation->setStartValue(viewPos);
                 viewPosAnimation->setEndValue(QPoint(viewPos.x(), viewPos.y() - view()->height()));
                 viewPosAnimation->setEasingCurve(QEasingCurve::InCubic);
                 viewPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
                 QPropertyAnimation* fixedSizeAnimation = new QPropertyAnimation(container, "maximumHeight");
-                QObject::connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+                connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
                     container->setFixedHeight(value.toUInt());
                 });
                 fixedSizeAnimation->setStartValue(container->height());
@@ -327,7 +327,7 @@ void NXMultiSelectComboBox::hidePopup()
             }
             //指示器动画
             QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d, "pExpandIconRotate");
-            QObject::connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
                 update();
             });
             rotateAnimation->setDuration(300);

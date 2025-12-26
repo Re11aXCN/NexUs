@@ -15,7 +15,7 @@ NXTableViewStyle::NXTableViewStyle(QStyle* style)
     _pIsHoverEffectsEnabled = true;
     _pBorderRadius = 3;
     _themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

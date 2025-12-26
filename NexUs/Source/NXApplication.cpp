@@ -17,7 +17,7 @@ NXApplication::NXApplication(QObject* parent)
     d->_pMicaImagePath = ":/Resource/Image/MicaBase.png";
     d->_pWindowDisplayMode = NXApplicationType::Normal;
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, d, &NXApplicationPrivate::onThemeModeChanged);
+    connect(nxTheme, &NXTheme::themeModeChanged, d, &NXApplicationPrivate::onThemeModeChanged);
 }
 
 NXApplication::~NXApplication()

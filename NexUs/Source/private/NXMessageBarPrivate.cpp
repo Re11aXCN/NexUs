@@ -71,7 +71,7 @@ void NXMessageBarManager::postMessageBarEndEvent(NXMessageBar* messageBar)
     updateActiveMap(messageBar, false);
     //Other MessageBar事件入栈 记录同一策略事件
     NXMessageBarType::PositionPolicy policy = messageBar->d_ptr->_policy;
-    foreach (auto otherMessageBar, *_messageBarActiveMap.value(policy))
+    foreach(auto otherMessageBar, *_messageBarActiveMap.value(policy))
     {
         if (otherMessageBar->d_ptr->_judgeCreateOrder(messageBar))
         {
@@ -156,10 +156,11 @@ void NXMessageBarManager::updateActiveMap(NXMessageBar* messageBar, bool isActiv
 }
 
 NXMessageBarPrivate::NXMessageBarPrivate(QObject* parent)
-    : QObject{parent}
+    : QObject{ parent }
 {
     setProperty("MessageBarClosedY", 0);
     setProperty("MessageBarFinishY", 0);
+    _pTimePercent = 100;
     _createTime = QDateTime::currentMSecsSinceEpoch();
 }
 
@@ -196,8 +197,10 @@ void NXMessageBarPrivate::onOtherMessageBarEnd(QVariantMap eventData)
     _isMessageBarEventAnimationStart = true;
     qreal targetPosY = eventData.value("TargetPosY").toReal();
     QPropertyAnimation* closePosAnimation = new QPropertyAnimation(this, "MessageBarClosedY");
-    QObject::connect(closePosAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { q->move(q->pos().x(), value.toUInt()); });
-    QObject::connect(closePosAnimation, &QPropertyAnimation::finished, this, [=]() {
+    connect(closePosAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        q->move(q->pos().x(), value.toUInt());
+        });
+    connect(closePosAnimation, &QPropertyAnimation::finished, this, [=]() {
         _isMessageBarEventAnimationStart = false;
         if (NXMessageBarManager::getInstance()->getMessageBarEventCount(q) > 1)
         {
@@ -207,9 +210,9 @@ void NXMessageBarPrivate::onOtherMessageBarEnd(QVariantMap eventData)
         {
             NXMessageBarManager::getInstance()->requestMessageBarEvent(q);
         }
-    });
-    closePosAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    closePosAnimation->setDuration(200);
+        });
+    closePosAnimation->setEasingCurve(QEasingCurve::OutCubic);
+    closePosAnimation->setDuration(220);
     closePosAnimation->setStartValue(q->pos().y());
     closePosAnimation->setEndValue(targetPosY);
     closePosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
@@ -220,13 +223,13 @@ void NXMessageBarPrivate::messageBarEnd(QVariantMap eventData)
     Q_Q(NXMessageBar);
     NXMessageBarManager::getInstance()->postMessageBarEndEvent(q);
     QPropertyAnimation* barFinishedOpacityAnimation = new QPropertyAnimation(this, "pOpacity");
-    QObject::connect(barFinishedOpacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+    connect(barFinishedOpacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
         _closeButton->setOpacity(_pOpacity);
         q->update();
-    });
-    QObject::connect(barFinishedOpacityAnimation, &QPropertyAnimation::finished, this, [=]() {
+        });
+    connect(barFinishedOpacityAnimation, &QPropertyAnimation::finished, this, [=]() {
         q->deleteLater();
-    });
+        });
     barFinishedOpacityAnimation->setDuration(300);
     barFinishedOpacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
     barFinishedOpacityAnimation->setStartValue(1);
@@ -245,11 +248,13 @@ void NXMessageBarPrivate::onCloseButtonClicked()
     _isNormalDisplay = false;
     NXMessageBarManager::getInstance()->forcePostMessageBarEndEvent(q);
     QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pOpacity");
-    QObject::connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+    connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
         _closeButton->setOpacity(_pOpacity);
         q->update();
-    });
-    QObject::connect(opacityAnimation, &QPropertyAnimation::finished, q, [=]() { q->deleteLater(); });
+        });
+    connect(opacityAnimation, &QPropertyAnimation::finished, q, [=]() {
+        q->deleteLater();
+        });
     opacityAnimation->setStartValue(_pOpacity);
     opacityAnimation->setEndValue(0);
     opacityAnimation->setDuration(220);
@@ -280,17 +285,27 @@ void NXMessageBarPrivate::_messageBarCreate(int displayMsec)
     _calculateInitialPos(startX, startY, endX, endY);
     // 滑入动画
     QPropertyAnimation* barPosAnimation = new QPropertyAnimation(q, "pos");
-    QObject::connect(barPosAnimation, &QPropertyAnimation::finished, q, [=]() {
+    connect(barPosAnimation, &QPropertyAnimation::finished, q, [=]() {
         _isNormalDisplay = true;
         _isMessageBarCreateAnimationFinished = true;
-        if(NXMessageBarManager::getInstance()->getMessageBarEventCount(q) > 1)
+        if (NXMessageBarManager::getInstance()->getMessageBarEventCount(q) > 1)
         {
             NXMessageBarManager::getInstance()->requestMessageBarEvent(q);
         }
         QTimer::singleShot(displayMsec, q, [=]() {
             _isReadyToEnd = true;
             NXMessageBarManager::getInstance()->requestMessageBarEvent(q);
-        }); });
+            });
+        QPropertyAnimation* timePercentAnimation = new QPropertyAnimation(this, "pTimePercent");
+        connect(timePercentAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+            q->update();
+            });
+        timePercentAnimation->setStartValue(100);
+        timePercentAnimation->setEndValue(0);
+        timePercentAnimation->setEasingCurve(QEasingCurve::Linear);
+        timePercentAnimation->setDuration(displayMsec);
+        timePercentAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+        });
     switch (_policy)
     {
     case NXMessageBarType::Top:
@@ -317,6 +332,7 @@ void NXMessageBarPrivate::_calculateInitialPos(int& startX, int& startY, int& en
     QList<int> resultList = _getOtherMessageBarTotalData();
     int minimumHeightTotal = resultList[0];
     int indexLessCount = resultList[1];
+    int lastEndY = endY;
     switch (_policy)
     {
     case NXMessageBarType::Top:
@@ -384,6 +400,10 @@ void NXMessageBarPrivate::_calculateInitialPos(int& startX, int& startY, int& en
         endY = startY;
         break;
     }
+    }
+    if (endY == lastEndY)
+    {
+        return;
     }
     if (endY < _messageBarVerticalTopMargin || endY > q->parentWidget()->height() - _messageBarVerticalBottomMargin - q->minimumHeight())
     {
@@ -461,11 +481,11 @@ bool NXMessageBarPrivate::_judgeCreateOrder(NXMessageBar* otherMessageBar)
 void NXMessageBarPrivate::_drawSuccess(QPainter* painter)
 {
     Q_Q(NXMessageBar);
+    painter->save();
     painter->setBrush(QColor(0xE0, 0xF6, 0xDD));
     QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth, q->height() - 2 * _shadowBorderWidth);
     painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
     // 图标绘制
-    painter->save();
     painter->setPen(Qt::white);
     QPainterPath textPath;
     textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
@@ -475,6 +495,13 @@ void NXMessageBarPrivate::_drawSuccess(QPainter* painter)
     iconFont.setPixelSize(12);
     painter->setFont(iconFont);
     painter->drawText(_leftPadding, 0, q->width(), q->height(), Qt::AlignVCenter, QChar((unsigned short)NXIconType::Check));
+    // 时间进度条绘制
+    QPainterPath clipPath;
+    clipPath.addRoundedRect(foregroundRect, _borderRadius, _borderRadius);
+    painter->setClipPath(clipPath);
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(QColor(0x3C, 0x96, 0x4B));
+    painter->drawRoundedRect(QRectF(foregroundRect.x(), foregroundRect.bottom() - _timePercentHeight, foregroundRect.width() * _pTimePercent / 100.0, _timePercentHeight + 1), 2, 2);
     painter->restore();
     // 文字颜色
     painter->setPen(QPen(Qt::black));
@@ -483,37 +510,51 @@ void NXMessageBarPrivate::_drawSuccess(QPainter* painter)
 void NXMessageBarPrivate::_drawWarning(QPainter* painter)
 {
     Q_Q(NXMessageBar);
-    painter->setBrush(QColor(0x6B, 0x56, 0x27));
+    painter->save();
+    painter->setBrush(QColor(0xFF, 0xF4, 0xCE));
     QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth, q->height() - 2 * _shadowBorderWidth);
     painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
     // 图标绘制
     // exclamation
-    painter->save();
     painter->setPen(Qt::black);
     QPainterPath textPath;
     textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
     painter->setClipPath(textPath);
     painter->fillPath(textPath, QColor(0xF8, 0xE2, 0x23));
     painter->drawText(_leftPadding + 4, 0, q->width(), q->height(), Qt::AlignVCenter, "!");
+    // 时间进度条绘制
+    QPainterPath clipPath;
+    clipPath.addRoundedRect(foregroundRect, _borderRadius, _borderRadius);
+    painter->setClipPath(clipPath);
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(QColor(0xC4, 0xAD, 0x59));
+    painter->drawRoundedRect(QRectF(foregroundRect.x(), foregroundRect.bottom() - _timePercentHeight, foregroundRect.width() * _pTimePercent / 100.0, _timePercentHeight + 1), 2, 2);
     painter->restore();
     // 文字颜色
-    painter->setPen(QColor(0xFA, 0xFA, 0xFA));
+    painter->setPen(Qt::black);
 }
 
 void NXMessageBarPrivate::_drawInformation(QPainter* painter)
 {
     Q_Q(NXMessageBar);
+    painter->save();
     painter->setBrush(QColor(0xF4, 0xF4, 0xF4));
     QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth, q->height() - 2 * _shadowBorderWidth);
     painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
     // 图标绘制
-    painter->save();
     painter->setPen(Qt::white);
     QPainterPath textPath;
     textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
     painter->setClipPath(textPath);
     painter->fillPath(textPath, QColor(0x00, 0x66, 0xB4));
     painter->drawText(_leftPadding + 4, 0, q->width(), q->height(), Qt::AlignVCenter, "i");
+    // 时间进度条绘制
+    QPainterPath clipPath;
+    clipPath.addRoundedRect(foregroundRect, _borderRadius, _borderRadius);
+    painter->setClipPath(clipPath);
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(QColor(0x00, 0x66, 0xB4));
+    painter->drawRoundedRect(QRectF(foregroundRect.x(), foregroundRect.bottom() - _timePercentHeight, foregroundRect.width() * _pTimePercent / 100.0, _timePercentHeight + 1), 2, 2);
     painter->restore();
     // 文字颜色
     painter->setPen(Qt::black);
@@ -522,11 +563,11 @@ void NXMessageBarPrivate::_drawInformation(QPainter* painter)
 void NXMessageBarPrivate::_drawError(QPainter* painter)
 {
     Q_Q(NXMessageBar);
-    painter->setBrush(QColor(0xFE, 0xE7, 0xEA));
+    painter->save();
+    painter->setBrush(QColor(0xFD, 0xE7, 0xE9));
     QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth, q->height() - 2 * _shadowBorderWidth);
     painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
     // 图标绘制
-    painter->save();
     painter->setPen(Qt::white);
     QPainterPath textPath;
     textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
@@ -536,6 +577,13 @@ void NXMessageBarPrivate::_drawError(QPainter* painter)
     iconFont.setPixelSize(13);
     painter->setFont(iconFont);
     painter->drawText(_leftPadding + 1, 0, q->width(), q->height(), Qt::AlignVCenter, QChar((unsigned short)NXIconType::Xmark));
+    // 时间进度条绘制
+    QPainterPath clipPath;
+    clipPath.addRoundedRect(foregroundRect, _borderRadius, _borderRadius);
+    painter->setClipPath(clipPath);
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(QColor(0xCC, 0x5C, 0x65));
+    painter->drawRoundedRect(QRectF(foregroundRect.x(), foregroundRect.bottom() - _timePercentHeight, foregroundRect.width() * _pTimePercent / 100.0, _timePercentHeight + 1), 2, 2);
     painter->restore();
     // 文字颜色
     painter->setPen(Qt::black);

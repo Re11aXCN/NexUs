@@ -27,20 +27,20 @@ NXDialog::NXDialog(QWidget* parent)
     d->_appBar = new NXAppBar(this);
     d->_appBar->setIsStayTop(true);
     d->_appBar->setWindowButtonFlags(NXAppBarType::StayTopButtonHint | NXAppBarType::MinimizeButtonHint | NXAppBarType::MaximizeButtonHint | NXAppBarType::CloseButtonHint);
-    QObject::connect(d->_appBar, &NXAppBar::routeBackButtonClicked, this, &NXDialog::routeBackButtonClicked);
-    QObject::connect(d->_appBar, &NXAppBar::navigationButtonClicked, this, &NXDialog::navigationButtonClicked);
-    QObject::connect(d->_appBar, &NXAppBar::themeChangeButtonClicked, this, &NXDialog::themeChangeButtonClicked);
-    QObject::connect(d->_appBar, &NXAppBar::closeButtonClicked, this, &NXDialog::closeButtonClicked);
+    connect(d->_appBar, &NXAppBar::routeBackButtonClicked, this, &NXDialog::routeBackButtonClicked);
+    connect(d->_appBar, &NXAppBar::navigationButtonClicked, this, &NXDialog::navigationButtonClicked);
+    connect(d->_appBar, &NXAppBar::themeChangeButtonClicked, this, &NXDialog::themeChangeButtonClicked);
+    connect(d->_appBar, &NXAppBar::closeButtonClicked, this, &NXDialog::closeButtonClicked);
 
     // 主题
     d->_themeMode = nxTheme->getThemeMode();
-    QObject::connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
         update();
         });
 
     d->_windowDisplayMode = nxApp->getWindowDisplayMode();
-    QObject::connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]() {
+    connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]() {
         d->_windowDisplayMode = nxApp->getWindowDisplayMode();
         update();
         });
