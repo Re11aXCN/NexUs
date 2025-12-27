@@ -28,6 +28,8 @@ public:
     QColor getDarkTextColor() const;
 
     void setTextStyle(NXTextType::TextStyle textStyle, std::optional<int> pixelSize, std::optional<QFont::Weight> weight);
+    void setNXIcon(NXIconType::IconName icon);
+    void setNXIcon(NXIconType::IconName icon, int iconSize);
 protected:
     virtual void mousePressEvent(QMouseEvent* event) override;
     virtual void mouseReleaseEvent(QMouseEvent* event) override;

@@ -22,6 +22,7 @@
 #include "T_ListView.h"
 #include "T_Setting.h"
 #include "T_TableView.h"
+#include "T_TableWidget.h"
 #include "T_TreeView.h"
 #include <QDebug>
 #include <QGraphicsView>
@@ -29,8 +30,10 @@
 #include <QMouseEvent>
 #ifdef Q_OS_WIN
 #include "NXApplication.h"
-#include "ExamplePage/T_NXScreen.h"
 #include <QTimer>
+#endif
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
+#include "ExamplePage/T_NXScreen.h"
 #endif
 
 #include "ExamplePage/T_Home.h"
@@ -39,7 +42,6 @@
 #include "ExamplePage/T_Navigation.h"
 #include "ExamplePage/T_Popup.h"
 #include "ExamplePage/T_UpdateWidget.h"
-
 MainWindow::MainWindow(QWidget* parent)
     : NXWindow(parent)
     , _rootKey(getNavigationRootKey())
@@ -58,11 +60,15 @@ MainWindow::MainWindow(QWidget* parent)
     connect(_closeDialog, &NXContentDialog::middleButtonClicked, this, [=]() {
         _closeDialog->close();
         showMinimized();
-        });
+    });
+    // 如果不需要，可以隐藏按钮
+    //_closeDialog->setLeftButtonVisible(false);
+    //_closeDialog->setMiddleButtonVisible(false);
+    //_closeDialog->setRightButtonVisible(false);
     this->setIsDefaultClosed(false);
     connect(this, &MainWindow::closeButtonClicked, this, [=]() {
         _closeDialog->exec();
-        });
+    });
 
     //移动到中心
     //moveToCenter();
@@ -118,23 +124,23 @@ void MainWindow::initWindow()
     appBarMenu->setMenuItemHeight(27);
     connect(appBarMenu->addAction("跳转到一级主要堆栈"), &QAction::triggered, this, [=]() {
         setCurrentStackIndex(0);
-        });
+    });
     connect(appBarMenu->addAction("跳转到二级主要堆栈"), &QAction::triggered, this, [=]() {
         setCurrentStackIndex(1);
-        });
+    });
     connect(appBarMenu->addAction("更改页面切换特效(Scale)"), &QAction::triggered, this, [=]() {
         setStackSwitchMode(NXWindowType::StackSwitchMode::Scale);
-        });
+    });
     connect(appBarMenu->addNXIconAction(NXIconType::GearComplex, "自定义主窗口设置"), &QAction::triggered, this, [=]() {
         navigation(_settingKey);
-        });
+    });
     appBarMenu->addSeparator();
     connect(appBarMenu->addNXIconAction(NXIconType::MoonStars, "更改项目主题"), &QAction::triggered, this, [=]() {
         nxTheme->setThemeMode(nxTheme->getThemeMode() == NXThemeType::Light ? NXThemeType::Dark : NXThemeType::Light);
-        });
+    });
     connect(appBarMenu->addAction("使用原生菜单"), &QAction::triggered, this, [=]() {
         setCustomMenu(nullptr);
-        });
+    });
     setCustomMenu(appBarMenu);
 
     // 堆栈独立自定义窗口
@@ -146,13 +152,13 @@ void MainWindow::initWindow()
     leftButton->setEnabled(false);
     connect(leftButton, &NXToolButton::clicked, this, [=]() {
         NXNavigationRouter::getInstance()->navigationRouteBack();
-        });
+    });
     NXToolButton* rightButton = new NXToolButton(this);
     rightButton->setNXIcon(NXIconType::AngleRight);
     rightButton->setEnabled(false);
     connect(rightButton, &NXToolButton::clicked, this, [=]() {
         NXNavigationRouter::getInstance()->navigationRouteForward();
-        });
+    });
     connect(NXNavigationRouter::getInstance(), &NXNavigationRouter::navigationRouterStateChanged, this, [=](NXNavigationRouterType::RouteMode routeMode) {
         switch (routeMode)
         {
@@ -177,13 +183,13 @@ void MainWindow::initWindow()
             break;
         }
         }
-        });
+    });
     _windowSuggestBox = new NXSuggestBox(this);
     _windowSuggestBox->setFixedHeight(32);
     _windowSuggestBox->setPlaceholderText("搜索关键字");
     connect(_windowSuggestBox, &NXSuggestBox::suggestionClicked, this, [=](const NXSuggestBox::SuggestData& suggestData) {
         navigation(suggestData.getSuggestData().value("NXPageKey").toString());
-        });
+    });
 
     NXText* progressBusyRingText = new NXText("系统运行中", this);
     progressBusyRingText->setIsWrapAnywhere(false);
@@ -305,12 +311,12 @@ void MainWindow::initEdgeLayout()
     NXDockWidget* logDockWidget = new NXDockWidget("日志信息", this);
     logDockWidget->setWidget(new T_LogWidget(this));
     this->addDockWidget(Qt::RightDockWidgetArea, logDockWidget);
-    resizeDocks({ logDockWidget }, { 200 }, Qt::Horizontal);
+    resizeDocks({logDockWidget}, {200}, Qt::Horizontal);
 
     NXDockWidget* updateDockWidget = new NXDockWidget("更新内容", this);
     updateDockWidget->setWidget(new T_UpdateWidget(this));
     this->addDockWidget(Qt::RightDockWidgetArea, updateDockWidget);
-    resizeDocks({ updateDockWidget }, { 200 }, Qt::Horizontal);
+    resizeDocks({updateDockWidget}, {200}, Qt::Horizontal);
 
     //状态栏
     NXStatusBar* statusBar = new NXStatusBar(this);
@@ -323,7 +329,7 @@ void MainWindow::initEdgeLayout()
 void MainWindow::initContent()
 {
     _homePage = new T_Home(this);
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
     _elaScreenPage = new T_NXScreen(this);
 #endif
     _iconPage = new T_Icon(this);
@@ -334,13 +340,18 @@ void MainWindow::initContent()
     _cardPage = new T_Card(this);
     _listViewPage = new T_ListView(this);
     _tableViewPage = new T_TableView(this);
+    _tableWidgetPage = new T_TableWidget(this);
     _treeViewPage = new T_TreeView(this);
     _settingPage = new T_Setting(this);
 
     addPageNode("HOME", _homePage, NXIconType::House);
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
 #ifdef Q_OS_WIN
     // 默认是root 添加一个expander节点
     NXNodeOperateResult dxgiResult = addExpanderNode("NXDxgi", NXIconType::TvMusic);
+#else
+    addExpanderNode("NXScreenCapture", *dxgiResult, NXIconType::TvMusic);
+#endif
     addPageNode("NXScreen", _elaScreenPage, *dxgiResult, 3, NXIconType::ObjectGroup);
 #endif
     // navigation(elaScreenWidget->property("NXPageKey").toString());
@@ -349,6 +360,7 @@ void MainWindow::initContent()
     _viewKey = *addExpanderNode("NXView", _rootKey, NXIconType::CameraViewfinder);
     addPageNode("NXListView", _listViewPage, _viewKey, 9, NXIconType::List);
     addPageNode("NXTableView", _tableViewPage, _viewKey, NXIconType::Table);
+    addPageNode("NXTableWidget", _tableWidgetPage, _viewKey, NXIconType::TableCells);
     addPageNode("NXTreeView", _treeViewPage, _viewKey, NXIconType::ListTree);
     expandNavigationNode(_viewKey);
 

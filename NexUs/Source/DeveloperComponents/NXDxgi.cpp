@@ -48,7 +48,7 @@ bool NXDxgi::initialize(int dxID, int outputID)
     IDXGIFactory* dxgiFactory = nullptr;
     CreateDXGIFactory(__uuidof(dxgiFactory), reinterpret_cast<void**>(&dxgiFactory));
     IDXGIAdapter* dxgiAdapter = nullptr;
-    QVector<IDXGIAdapter*> dxgiAdapterVector;
+    QList<IDXGIAdapter*> dxgiAdapterVector;
     for (uint i = 0; dxgiFactory->EnumAdapters(i, &dxgiAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
     {
         dxgiAdapterVector.append(dxgiAdapter);
@@ -82,7 +82,7 @@ bool NXDxgi::initialize(int dxID, int outputID)
     }
 
     IDXGIOutput* dxgiOutput = nullptr;
-    QVector<IDXGIOutput*> dxgiOutputVector;
+    QList<IDXGIOutput*> dxgiOutputVector;
     for (uint i = 0; dxgiAdapter->EnumOutputs(i, &dxgiOutput) != DXGI_ERROR_NOT_FOUND; ++i)
     {
         dxgiOutputVector.append(dxgiOutput);

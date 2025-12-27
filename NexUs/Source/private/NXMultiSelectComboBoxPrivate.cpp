@@ -42,7 +42,7 @@ void NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
     Q_Q(NXMultiSelectComboBox);
     QString str;
     _adjustSelectedVector();
-    QVector<bool> selectedIndexVector;
+    QList<bool> selectedIndexVector;
     for (int i = 0; i < q->count(); i++)
     {
         // 该位选中

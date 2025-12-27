@@ -109,6 +109,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ExamplePage\T_TableWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Source\ExamplePage\T_About.h">
@@ -187,6 +190,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Source\mainwindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Source\ExamplePage\T_TableWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

@@ -180,6 +180,7 @@ void NXMenu::showEvent(QShowEvent* event)
     } 
    //消除阴影偏移
     move(this->pos().x() - 1, this->pos().y());
+    updateGeometry();
     if (!d->_animationPix.isNull())
     {
         d->_animationPix = QPixmap();

@@ -18,6 +18,10 @@ public:
     explicit NXApplicationPrivate(QObject* parent = nullptr);
     ~NXApplicationPrivate() override;
     Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode);
+
+    Q_SLOT void onSystemPaletteChanged();
+    void syncSystemTheme();
+
 Q_SIGNALS:
     Q_SIGNAL void initMicaBase(const QImage& img);
 
@@ -34,6 +38,7 @@ private:
     void _updateMica(QWidget* widget, bool isProcessEvent = true);
     void _updateAllMicaWidget();
     void _resetAllMicaWidget();
+    bool _isSystemDarkMode() const;
 };
 
 #endif // NXAPPLICATIONPRIVATE_H

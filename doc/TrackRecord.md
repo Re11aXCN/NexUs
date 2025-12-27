@@ -1,524 +1,499 @@
+# TrackRecord.md - NexUs 修改记录
+
+# 概述
+
+本文档记录了 NexUs 项目对 ElaWidgetTools 库的修改和优化内容，方便开发者了解具体改动点，便于后续维护和使用。
+
 # 一、修改的文件
 
-## 变量替换
+## 一、修改的文件
 
-ElaAwesome
-NXAwesome
+### 1.1 变量替换规则
 
-eApp
-nxApp
+以下替换操作已应用于指定文件类型：`*.h;*.cpp;*.cc;*.hh;*.hpp`
 
-eWinHelper
-nxWinHelper
+#### 全词匹配（区分大小写）
 
-eTheme
-nxTheme
+| 原内容         | 替换为          | 说明                  |
+| -------------- | --------------- | --------------------- |
+| `ELA`          | `NX`            | 命名空间前缀          |
+| `":/include`   | `":/Resource`   | 资源路径前缀          |
+| `eApp`         | `nxApp`         | 应用实例变量名        |
+| `eWinHelper`   | `nxWinHelper`   | Windows辅助工具变量名 |
+| `eTheme`       | `nxTheme`       | 主题变量名            |
+| `ElaAwesome`   | `NXAwesome`     | 字体图标类名          |
+| `QNXpsedTimer` | `QElapsedTimer` | 计时器类名修复        |
+| `TCP_NODNXY`   | `TCP_NODELAY`   | 网络选项修复          |
 
-QNXpsedTimer
-QElapsedTimer
+#### 部分匹配（区分大小写）
 
-TCP_NODNXY
-TCP_NODELAY
+| 原内容 | 替换为 | 说明     |
+| ------ | ------ | -------- |
+| `Ela`  | `NX`   | 类名前缀 |
 
-## 文件改动
+#### 函数签名优化
 
-**.h文件中的成员变量结构布局改动**
-**所有函数签名的 QString 参数 替换为了 const QString&，以宏Q_PROPERTY_CREATE_Q_H包裹的被替换了**
+**所有函数签名中的 `QString` 参数已替换为 `const QString&`，以提高性能并避免不必要的拷贝。**
+
+**注意：** 被宏 `Q_PROPERTY_CREATE_Q_H` 包裹的属性声明也进行了相应替换。
+
+## .h文件中的成员变量结构布局改动
+
+```C++
+// 调整了成员变量声明先后顺序，减少空间开销使用
+```
 
 
 
+# TrackRecord.md - NexUs 修改记录
 
+## 概述
 
-**DeveloperComponents/NXCheckBoxStyle.cpp**  
+本文档记录了 NexUs 项目对 ElaWidgetTools 库的修改和优化内容，方便开发者了解具体改动点，便于后续维护和使用。
 
-* 添加了_pCheckBorderRadius
-* drawControl有逻辑改动
+---
+
+## 一、修改的文件
+
+### 1.1 变量替换规则
+
+以下替换操作已应用于指定文件类型：`*.h;*.cpp;*.cc;*.hh;*.hpp`
+
+#### 全词匹配（区分大小写）
+
+| 原内容         | 替换为          | 说明                  |
+| -------------- | --------------- | --------------------- |
+| `ELA`          | `NX`            | 命名空间前缀          |
+| `":/include`   | `":/Resource`   | 资源路径前缀          |
+| `eApp`         | `nxApp`         | 应用实例变量名        |
+| `eWinHelper`   | `nxWinHelper`   | Windows辅助工具变量名 |
+| `eTheme`       | `nxTheme`       | 主题变量名            |
+| `ElaAwesome`   | `NXAwesome`     | 字体图标类名          |
+| `QNXpsedTimer` | `QElapsedTimer` | 计时器类名修复        |
+| `TCP_NODNXY`   | `TCP_NODELAY`   | 网络选项修复          |
+
+#### 部分匹配（区分大小写）
+
+| 原内容 | 替换为 | 说明     |
+| ------ | ------ | -------- |
+| `Ela`  | `NX`   | 类名前缀 |
+
+#### 函数签名优化
+
+**所有函数签名中的 `QString` 参数已替换为 `const QString&`，以提高性能并避免不必要的拷贝。**
+
+**注意：** 被宏 `Q_PROPERTY_CREATE_Q_H` 包裹的属性声明也进行了相应替换。
+
+---
+
+### 1.2 具体文件改动
+
+#### 样式类文件
+
+**DeveloperComponents/NXCheckBoxStyle.cpp**
+- 新增 `_pCheckBorderRadius` 成员变量，支持自定义复选框圆角
+- `drawControl` 方法逻辑优化，增强绘制效果
 
 **DeveloperComponents/NXListViewStyle.cpp**
-
-* drawControl的 case QStyle::CE_ShapedFrame: 部分 绘制条件逻辑改动
+- `drawControl` 方法中 `case QStyle::CE_ShapedFrame:` 部分的绘制条件逻辑优化
 
 **DeveloperComponents/NXMicaBaseInitObject.cpp**
-
-* onInitMicaBase 参数优化为引用，使用std::move移动图片，避免拷贝
+- `onInitMicaBase` 方法参数优化为引用传递
+- 使用 `std::move` 移动图片数据，避免不必要的拷贝
 
 **DeveloperComponents/NXTreeViewStyle.cpp**
+- 为 `NXIconType::IconName` 枚举添加新图标
+- `drawControl` 方法逻辑扩展，支持在树节点文字前添加自定义图标
+- 为 `NXTreeView` 类新增 `setNXIcon` 接口，支持内置 `NXIconType::IconName` 字体图片渲染
 
-* NXIconType::IconName枚举添加
-* drawControl有逻辑改动，自定义前置图标 - 可以在每个树节点文字前添加自定义图标
-NXTreeView
-* setNXIcon接口添加以支持内置NXIconType::IconName字体图片渲染
+#### 单例模式优化
 
+以下文件中的单例模式实现已使用预处理命令进行统一优化：
+- `include/NXApplication.h`
+- `include/NXDxgiManager.h`
+- `include/NXEventBus.h`
+- `include/NXExponentialBlur.h`
+- `include/NXLog.h`
+- `include/NXNavigationRouter.h`
+- `include/NXTheme.h`
 
-
-**include/NXApplication.h**
-
-* 单例模式预处理命令
-include/NXDxgiManager.h
-* 单例模式预处理命令
-include/NXEventBus.h
-* 单例模式预处理命令
-include/NXExponentialBlur.h
-* 单例模式预处理命令
-include/NXLog.h
-* 单例模式预处理命令
-include/NXNavigationRouter.h
-* 单例模式预处理命令
-include/NXTheme.h
-* 单例模式预处理命令
-
-
+#### 控件功能增强
 
 **NXContentDialog.cpp**
-
-* appBar()接口提供
+- 新增 `appBar()` 接口，提供对应用栏的访问
 
 **NXDockWidget.cpp**
-
-* dockClosed、dockResized信号添加
-
-
+- 新增 `dockClosed`、`dockResized` 信号，增强停靠窗口交互
 
 **NXMessageButton.cpp**
-
-* message响应逻辑分离到 Private
-* 提供 点击后消息发送的 disconnected 断开接口，可以使用showMessgae替代
-private/NXMessageButtonPrivate.cpp
-* _showMessage实现
+- 消息响应逻辑分离到私有类 `NXMessageButtonPrivate`
+- 新增 `disconnected` 接口，允许断开点击后自动发送消息的默认连接
+- 可以使用 `showMessage` 方法替代默认行为
+- **private/NXMessageButtonPrivate.cpp** - 实现 `_showMessage` 方法
 
 **NXPushButton.cpp**
-
-* 新增字体大小设置接口
+- 新增字体大小设置接口
 
 **NXRadioButton.cpp**
-
-* 默认setMouseTracking以设置鼠标手势
-* 新增字体大小设置接口
+- 默认启用 `setMouseTracking` 以设置鼠标手势
+- 新增字体大小设置接口
 
 **NXSlider.cpp**
-* 添加 滑动时 tooltip显示value 逻辑
+- 新增滑动时显示当前值的 ToolTip
+- **private/NXSliderPrivate.cpp** (新增) - 实现滑块私有逻辑
 
 **NXToggleButton.cpp**
-
-* 添加NXIconType::IconName支持内置字体的图标设置
-private/NXToggleButtonPrivate.h
-* 变量添加
+- 新增对 `NXIconType::IconName` 的支持，可使用内置字体图标
+- **private/NXToggleButtonPrivate.h** - 新增相关成员变量
 
 **NXToolButton.cpp**
-
-* 添加NXAdvancedToolButton，作为NXToolButton父类，以支持鼠标滚轮右键点击事件
+- 新增 `NXAdvancedToolButton` 类，作为 `NXToolButton` 的父类
+- 支持鼠标滚轮和右键点击事件
 
 **NXToolTip.cpp**
-
-* OffSetX、OffSetY变量添加，可设置偏移
-* updatePos 接口修改
-private/NXToolTipPrivate.cpp
-* 变量设置初始化
+- 新增 `OffSetX`、`OffSetY` 变量，可设置提示框偏移
+- `updatePos` 接口优化
+- **private/NXToolTipPrivate.cpp** - 变量设置初始化
 
 **NXWidget.cpp**
+- 新增 `appBar` 接口，提供对应用栏的访问
+- 新增自定义背景色接口
+- **private/NXWidgetPrivate.h** - 新增相关成员变量
 
-* appBar接口提供
-* 自定义背景色接口提供
-private/NXWidgetPrivate.h
-* 变量设置
+**private/NXCheckBoxPrivate.cpp** (新增) - 复选框私有逻辑实现
 
+---
 
+### 1.3 重要功能模块改动
 
-<u>**以下文件修改内容较多**</u>
-
-1. 关于Navigation的
+#### 导航系统增强
 
 **DeveloperComponents/NXFooterModel.cpp**
-
-* 导航栏的返回参数修改 void -> NodeOperateReturnTypeWithKey，替换引用传入获取key
+- 导航栏方法返回值修改：`void` → `NodeOperateReturnTypeWithKey`
+- 替换引用参数获取 key，改为返回值传递
 
 **DeveloperComponents/NXNavigationModel.cpp**
-
-* 导航栏的返回参数修改 void -> std::expected or tl::expected，替换引用传入获取key
-* 拖拽功能支持，指示器显示位置
-* getRootNode()接口提供
+- 导航栏方法返回值修改：`void` → `std::expected` 或 `tl::expected`
+- 替换引用参数获取 key，改为返回值传递
+- 新增拖拽功能支持，包含指示器显示位置
+- 新增 `getRootNode()` 接口
 
 **DeveloperComponents/NXNavigationNode.cpp**
 
-* 根节点属性修改，属于IsExpanded
-* node标题接口设置添加
-* 添加insertChildNode指示位置添加node接口
+- 根节点 `IsExpanded` 属性修改
+- 新增节点标题设置接口
+- 新增 `insertChildNode` 接口，支持在指定位置插入子节点
 
 **DeveloperComponents/NXNavigationView.cpp**
-
-* 拖拽功能支持，指示器显示位置
-* 添加获取ToolTip内容接口
-* _doCompactToolTip修改
+- 新增拖拽功能支持，包含指示器显示位置
+- 新增获取 ToolTip 内容的接口
+- `_doCompactToolTip` 方法优化
 
 **NXNavigationBar.cpp**
-
-* navigationPositionSwapped信号槽建立
-* navigationCloseCurrentWindow信号槽建立
-* rowsMoved信号槽建立，以支持拖拽
-* setIsLeftButtonPressedToggleNavigation、setNavigationNodeDragAndDropEnable接口提供支持拖拽设置
-* setToolTipOffset接口提供设置提示位置偏移
-* setNavigationPageOpenPolicy接口提供设置打开自定义窗口（待完善）
-* getNavigationRootKey接口提供获取rootKey，以能够设置挂载
-* 导航栏的返回参数修改 void -> NodeOperateReturnTypeWithKey，替换引用传入获取key
+- 新增 `navigationPositionSwapped` 信号槽连接
+- 新增 `navigationCloseCurrentWindow` 信号槽连接
+- 新增 `rowsMoved` 信号槽连接，支持拖拽功能
+- 新增 `setIsLeftButtonPressedToggleNavigation`、`setNavigationNodeDragAndDropEnable` 接口，支持拖拽设置
+- 新增 `setToolTipOffset` 接口，设置提示位置偏移
+- 新增 `setNavigationPageOpenPolicy` 接口，支持自定义窗口打开逻辑
+- 新增 `getNavigationRootKey` 接口，获取根节点 key
+- 导航栏方法返回值修改：`void` → `NodeOperateReturnTypeWithKey`
 
 **private/NXNavigationBarPrivate.cpp**
-
-* onNavigationCloseCurrentWindow实现
-* navigationNodeClicked信号发送位置调整
+- 实现 `onNavigationCloseCurrentWindow` 方法
+- 调整 `navigationNodeClicked` 信号的发送位置
 
 **NXWindow.cpp**
+- 将转发点击信号移动到跳转处理槽函数内
+- 新增 `switch` 接口，根据 nodekey 切换页面
+- 新增 `setIsLeftButtonPressedToggleNavigation`、`setNavigationNodeDragAndDropEnable` 接口
+- 新增 `getNavigationRootKey` 接口
+- 新增 `setNavigationPageOpenPolicy` 接口
+- 导航栏方法返回值修改：`void` → `NodeOperateReturnTypeWithKey`
 
-* 将转发点击信号移动到跳转处理槽函数内转发
-* 提供switch切换nodepage接口，根据nodekey
-* setIsLeftButtonPressedToggleNavigation、setNavigationNodeDragAndDropEnable接口提供支持拖拽设置
-* getNavigationRootKey接口提供获取rootKey，以能够设置挂载
-* setNavigationPageOpenPolicy接口提供设置打开自定义窗口
-* 导航栏的返回参数修改 void -> NodeOperateReturnTypeWithKey，替换引用传入获取key
-private/NXWindowPrivate.cpp
-* onNavigationNodeRemoved、onNavigationNodeClicked逻辑修改
+**private/NXWindowPrivate.cpp**
+- `onNavigationNodeRemoved`、`onNavigationNodeClicked` 逻辑优化
 
-
-
-2. 关于控件的的
+#### 控件功能增强
 
 **DeveloperComponents/NXTableViewStyle.cpp**
+- 新增变量：是否启用隔行变色、是否启用选中效果、是否启用悬停效果、圆角半径
+- 新增 `adjustHeaderColumnIconRect`、`adjustColummTextRect` 接口，微调文本绘制位置
+- `CE_HeaderLabel` 中新增表头图标绘制
+- `CE_ItemViewItem` 中为第一列新增复选框绘制逻辑
+- 为 `QAbstractItemView::SelectItems` 模式在底部绘制水平条表示选中
 
-* 新增：是否启用隔行变色、是否启用选中效果、是否启用悬停效果、圆角半径变量 变量以及接口设置提供
-* adjustHeaderColumnIconRect、adjustColummTextRect接口添加提供内边距设置，进行微调文本绘制位置
-* CE_HeaderLabel中 添加表头图标绘制
-* CE_ItemViewItem中 为第一列添加了复选框绘制逻辑
-* 为 QAbstractItemView::SelectItems模式 在底部绘制水平条 表示为选中
-NXTableView.cpp
-* 提供IsDrawAlternateRowsEnabled、IsSelectionEffectsEnabled、IsHoverEffectsEnabled、圆角，Header字体大小，内容margin接口
-* NXModelIndexWidget 添加给TableView添加小控件（逻辑可能需要更加完善）
-private/NXTableViewPrivate.h
-* NXModelIndexWidgetPrivate类定义
-* DrawSelectionBackground采用变量
+**NXTableView.cpp**
+
+- 新增接口：`IsDrawAlternateRowsEnabled`、`IsSelectionEffectsEnabled`、`IsHoverEffectsEnabled`、圆角、Header 字体大小、内容 margin
+- 新增 `NXModelIndexWidget`，支持为 TableView 添加小控件
+
+**private/NXTableViewPrivate.h**
+- 新增 `NXModelIndexWidgetPrivate` 类定义
+- `DrawSelectionBackground` 改为变量控制
 
 **DeveloperComponents/NXToolButtonStyle.cpp**
-
-* _drawIcon逻辑修改，为不同的Icon设置位置被渲染的逻辑进行修改，符合视觉
+- `_drawIcon` 逻辑优化，调整不同图标的渲染位置，提升视觉效果
 
 **NXCheckBox.cpp**
-
-* 字体大小、圆角、宽度接口添加
+- 新增字体大小、圆角、宽度设置接口
 
 **NXColorDialog.cpp**
+- 新增 alpha 通道处理
+- `getCurrentColorRGB` 接口重命名为 `getCurrent4ChannelColor`
 
-* 添加 alpha 处理
-* getCurrentColorRGB 接口名字修改为 getCurrent4ChannelColor
-DeveloperComponents/NXColorValueSliderStyle.cpp
-* 添加 alpha 处理
-private/NXColorDialogPrivate.cpp
-* 添加 alpha 处理
+**DeveloperComponents/NXColorValueSliderStyle.cpp**
+- 新增 alpha 通道处理
+
+**private/NXColorDialogPrivate.cpp**
+- 新增 alpha 通道处理
 
 **NXLineEdit.cpp**
+- 新增圆角设置接口、内容边距设置接口
+- 新增委托构造函数
 
-* 添加 圆角设置接口，内容边距设置接口
-* 委托构造函数添加
-DeveloperComponents/NXLineEditStyle.cpp
-* 添加 圆角参数设置 
-* drawControl有逻辑改动
-* 添加 pixelMetric 处理 LineEdit的 icon margin显示
-private/NXLineEditPrivate.h
-* 移除部分成员变量到NXLineEditStyle
+**DeveloperComponents/NXLineEditStyle.cpp**
+- 新增圆角参数设置
+- `drawControl` 方法逻辑优化
+- 新增 `pixelMetric` 处理 LineEdit 的 icon margin 显示
+
+**private/NXLineEditPrivate.h**
+- 将部分成员变量移至 `NXLineEditStyle`
 
 **NXMenu.cpp**
+- 新增圆角设置接口
+- `showEvent` 优化，改进子菜单对齐
+- 新增 `setAlignParentMenuHeight` 接口，使子菜单与父菜单同一水平对齐
+- 新增 `isHasParentMenu` 接口判断是否为父菜单
 
-* 添加圆角设置接口
-* showEvent修改，子menu对齐
-* 提供 子menu 对其到 父menu 接口 setAlignParentMenuHeight，isHasParentMenu接口进行判断是否是父menu
-DeveloperComponents/NXMenuStyle.cpp
-* 添加 圆角参数设置 
-* drawControl有逻辑改动，绘制了悬停背景色，还在左侧绘制了一个小竖条（表示选中或焦点），并且悬停时图标和文字有轻微的位移效果
+**DeveloperComponents/NXMenuStyle.cpp**
+- 新增圆角参数设置
+- `drawControl` 方法逻辑优化，新增悬停背景色绘制、左侧小竖条（表示选中或焦点）
+- 悬停时图标和文字有轻微位移效果
 
 **NXText.cpp**
+- 新增边框类型选择设置颜色粗细接口
+- 字体大小接口优化
+- 支持点击发送信号
 
-* 提供border type选择设置颜色粗细接口
-* 字体大小接口修改
-* 支持点击发送信号
-private/NXTextPrivate.h
-* 变量添加
+**private/NXTextPrivate.h**
+- 新增相关成员变量
 
-
-
-3. 通用工具、枚举、宏定义相关
+#### 通用工具与定义
 
 **include/NXDef.h**
+- 移除枚举宏，分离到 `include/NXProperty.h`
+- 新增多个枚举类型
 
-* 枚举宏移除，分离到include/NXProperty.h
-* 新增部分枚举
-  include/NXProperty.h
-* 新增资产宏
-* 枚举导出宏修改
+**include/NXProperty.h**
+- 新增属性宏
+- 优化枚举导出宏设计
 
 **include/singleton.h**
+- 单例宏优化
 
-* 单例宏修改
+---
 
+### 1.4 新增文件
 
+#### 私有实现类
+- `private/NXSliderPrivate.cpp`
+- `private/NXCheckBoxPrivate.cpp`
+- `private/NXSliderPrivate.cpp`
+- `private/NXShadowGraphicsEffectPrivate.cpp`
 
+#### 功能模块
+- `NXSharedMemoryManager.cpp`
+- `NXAESEncryption.cpp`
+- `NXCentralStackedWidget.cpp`（从 DeveloperComponents 提升为导出控件）
+- `NXShadowGraphicsEffect.cpp`
+- `NXShadowWidget.cpp`
 
+#### 第三方库引入
+- `include/expected.hpp`
+- `include/magic_enum`
+- `include/aesni`
 
-4. 新文件添加
-   private/NXSliderPrivate.cpp
-   private/NXCheckBoxPrivate.cpp
-   private/NXSliderPrivate.cpp
-   NXSharedMemoryManager.cpp
-   NXAESEncryption.cpp
-   NXCentralStackedWidget.cpp （导出该控件而不是Development）
-   NXShadowGraphicsEffect.cpp
-   NXShadowWidget.cpp
-   private/NXShadowGraphicsEffectPrivate.cpp
+#### RainbowCandyX 开发者贡献
+- `NXMessageCard`、`NXMessageCardPrivate`
+- `NXMessageDialog`、`NXMessageDialogPrivate`
+- `NXMultiSelectComboBoxDelegate`
+- `NXGroupBox`、`NXGroupBoxPrivate`、`NXGroupBoxStyle`
+- `NXInputDialog`、`NXInputDialogPrivate`
+- `NXTableWidget`、`NXTableWidgetStyle`、`NXTableWidgetPrivate`
+- `NXScreenCapture`、`NXScreenCaptureManager`、`NXScreenCaptureManagerPrivate`
 
+---
 
+## 二、改动记录
 
-5. 库引入
+### Track Record 1：2025年3月12日提交(Commits on Mar 12, 2025)
 
-include/expected.hpp
+#### Modify Optize1
+- 修改了多个基础UI控件：NXWidget、NXWindow、NXColorDialog、NXTableView等
+- 优化了宏定义文件：NXDef.h、stdafx.h（现为NXProperty.h）
+- **NXColorDialog**：新增Alpha通道支持
+- **NXDef.h/NXProperty.h**：重构代码设计，分离枚举和宏定义，新增多个实用宏
+- **NXWidget**：新增自定义亮黑主题背景色，新增操作NXAppBar的接口
+- **NXWindow**：新增自定义窗口打开逻辑，优化节点方法设计，新增navigationNodeRemoved信号
 
-include/magic_enum
+> **注意事项**：NXDef.h必须是MOC文件，NXProperty.h不是MOC文件，使用VS2022当修改NXDef.h文件的时候，VS2022会错误的修改文件定义为`<ClInclude Include="Source\include\NXDef.h" />`，你需要进行修改NexUs.vcproj保持为`<QtMoc Include="Source\include\NXDef.h" />`
 
-include/aesni
+#### Modify Optize2
+1. 所有QString参数优化为const QString&引用传递
+2. 导航添加方法（如addFooterNode）优化返回值传递ownerKey
+3. NXNavigationNode新增自定义标题方法
+4. NXNavigationView右键新增删除Node的Action并发送信号，并且发送信号给->Bar->NXWindow
+5. NXNavigationBar新增通过key切换Page显示的功能——navigationPageNodeSwitch （`NXWindow一起同步修改`
+6. NXMenu新增圆角设置，优化悬停效果，新增父菜单查找方法，添加参数设置子菜单和父菜单左上角同一水平
+7. NXSlider新增对齐指定标记Tick的功能
+8. NXToolButton优化Checkable状态的显示效果，优化ToolButtonTextUnderIcon布局
+9. NXAppBar注释WM_NCCALCSIZE相关代码，解决窗口最大化边缘空缺问题
+10. NXScrollPage的addCentralWidget新增滚动条方向选择参数
 
+#### Modify Optize3
+- NXContentDialog优化内部按钮信号槽连接，支持外部自定义关闭逻辑
+- NXMessageButton新增showMessage方法，外部可以调用，新增disconnect按钮clicked时弹出按钮方法，外部可以取消这个点击事件，然后自行建立
+- NXWindow的navigationNodeClicked信号新增QWidget*参数
 
+#### Modify Optize4
+1. NXNavigationModel新增拖拽方法
+2. NXNavigationNode新增insertChildNode方法
+3. NXNavigationStyle新增拖拽指示器绘制逻辑case  QStyle::PE_IndicatorItemViewItemDrop:
+4. NXNavigationView新增IsLeftButtonPressedToggleNavigation选择pressed切换pagenode还是released、setNavigationNodeDragAndDropEnable方法设置支持拖拽——NXWindow同步方
 
-# 二、改动记录
+   新增自定义dropIndicatorPositionOverride方法（qt内置的不太好用）、拖拽事件的完善、paintEvent指示器的绘制
+5. NXNavigationBar增加信号槽连接model的move信号完成节点交换重绘
 
-## # **Track Record 1**：	Commits on Mar 12, 2025
+   新增setNavigationPageOpenPolicy自定义打开逻辑（可以使用内部自定义打开custom，也可以自定义方法打开PageNode的widget）（`NXWindow同步方法`
+6. NXWindow新增navigationNodeToggled信号替换原来的navigationNodeClicked作用，navigationNodeClicked变为点击触发即使node没有page，navigationNodeToggled是进行page切换
 
-### 1. Modify Optize1
+   新增_currentVisibleWidget获取当前stackedWidget和nodekey、nodetype
 
-> 已修改过NXWidget、NXWindow、NXColorDialog、NXTableView等一些基本的UI控件，修改了NXDef.h、stdafx.h宏定义
->
-> * NXColorDialog：支持Alpha
->
-> * NXDef.h、stdafx.h（现在为NXProperty.h）：修改代码整体设计(NXProperty.h包含宏、NXDef.h包含枚举)、新增多个宏，修改导出枚举宏设计
->
->   注意事项：NXDef.h必须是MOC文件，NXProperty.h不是MOC文件，使用VS2022当修改NXDef.h文件的时候，VS2022会错误的修改文件定义为`<ClInclude Include="Source\include\NXDef.h" />`，你需要进行修改NexUs.vcproj保持为`<QtMoc Include="Source\include\NXDef.h" />`
->
-> * NXWidget：新增设置自定义亮黑主题背景色，新增接口可以操作NXAppBar
->
-> * NXWindow：新增接口可以自定义打开窗口逻辑，添加节点方法设计修改，navigationNodeRemoved信号添加
+#### Modify Optize5
+- NXNavigationModel、NXNavigationView拖拽功能优化，改进交换位置逻辑，新增颜色提示
 
-### 2. Modify Optize2
+#### Modify Optize6
+1. 修改stdafx.h的qt枚举导出宏，进行宏重载方便调用
+2. NXTreeView新增设置NXIcon图标作为文字绘制，修改NXTreeViewStyle的文字绘制逻辑，绘制选择时的文本间距及文字颜色（如果采用Model将NXIconType作为QIcon返回NXIcon::getInstance()->getNXIcon间距太宽，图标颜色不好使用QStyle::State进行修改）
+3. NXListViewStyle视口绘制逻辑修复
+4. NXDockWidget新增dockClosed、dockResized信号
 
-> 1. 修改QString为const QString&
->
-> 2. 去除addFooterNode等导航添加的方法QString&，改用返回值传递ownerKey
-> 3. NXNavigationNode新增自定义标题方法
-> 4. NXNavigationView右键新增删除Node的Action，并且发送信号给->Bar->NXWindow
->
-> 5. NXNavigationBar新增通过key切换Page显示——navigationPageNodeSwitch
->
-> ​			`NXWindow一起同步修改`
->
-> 6. NXMenu新增修改边角圆形，悬停Action是显示强调样式，新增寻找父菜单方法，添加参数设置子菜单和父菜单左上角同一水平
->
-> 7. NXSlider新增对齐指定的标记Tick
->
-> 8. NXToolButton新增Checkable为true是强调样式，优化ToolButtonTextUnderIcon时的显示位置
->    NXAppBar注释`WM_NCCALCSIZE`部分代码，因为窗口最大化会造成边缘空缺
->
-> 9. NXScrollPage修改addCentralWidget参数新增可以选择开启垂直或者水平的滚动条
+#### Modify Optize7
+1. 修复NavigationNodeClicked/Removed的错误逻辑
+2. NXSlider新增仅按下拖动功能
 
-### 3. Modify Optize3
+---
 
-> NXContentDialog修改内部按钮信号槽，如果想要设置关闭使用时外部建立即可（NXKeyBinder.cpp被修改，因为使用了NXContentDialog）
->
-> NXMessageButton修改，新增showMessage方法，外部可以调用，新增disconnect按钮clicked时弹出按钮方法，外部可以取消这个点击事件，然后自行建立
-> NXWindow的navigationNodeClicked信号修改新增QWidget*参数
+### Track Record 2：2025年6月30日提交
 
-### 4.  Modify Optize4
+#### Modify Optize1
+1. 清理多个控件中不必要的代码，如NXWidget、NXSlider等
+2. 优化整体逻辑
+3. 引入NXPacketIO和magic_enum库
 
-> 1. NXNavigationModel新增拖拽方法支持拖拽功能
->
-> 2. NXNavigationNode新增insertChildNode方法
->
-> 3. NXNavigationStyle尝试内置拖拽指示器逻辑case  QStyle::PE_IndicatorItemViewItemDrop:
->
-> 4. NXNavigationView新增IsLeftButtonPressedToggleNavigation选择pressed切换pagenode还是released、setNavigationNodeDragAndDropEnable方法设置支持拖拽——NXWindow同步方
->
->    新增自定义dropIndicatorPositionOverride方法（qt内置的不太好用）、拖拽事件的完善、paintEvent指示器的绘制
->
-> 5. NXNavigationBar增加信号槽连接model的move信号完成节点交换重绘
->
->    新增setNavigationPageOpenPolicy自定义打开逻辑（可以使用内部自定义打开custom，也可以自定义方法打开PageNode的widget）——NXWindow同步方法
->
-> 6. NXWindow新增navigationNodeToggled信号替换原来的navigationNodeClicked作用，navigationNodeClicked变为点击触发即使node没有page，navigationNodeToggled是进行page切换
->
->    新增_currentVisibleWidget获取当前stackedWidget和nodekey、nodetype
+---
 
-### 5. Modify Optize5
+### Track Record 3：2025年7月8日提交
 
-> 1. NXNavigationModel、NXNavigationView，drag、drop优化，交换位置符合人的视觉行为习惯，添加颜色提示
+#### Modify Optize1
+1. 引入NXShadowGraphicsEffect、NXShadowWidget阴影效果组件
 
-### 6. Modify Optize6
+---
 
-> 1. 修改stdafx.h的qt枚举导出宏，进行宏重载方便调用
-> 2. NXTreeView新增设置NXIcon图标作为文字绘制，修改NXTreeViewStyle的文字绘制逻辑，绘制选择时的文本间距及文字颜色（如果采用Model将NXIconType作为QIcon返回NXIcon::getInstance()->getNXIcon间距太宽，图标颜色不好使用QStyle::State进行修改）
-> 3. NXListViewStyle的视口绘制逻辑修复
-> 4. NXDockWidget增加dockClosed、dockResized信号
+### Track Record 4：2025年12月26日提交
 
-### 7. Modify Optize7
+#### Modify Optize1
+**主要影响文件：NXWindow.h、NXWindow.cpp、NXWindowPrivate.h**
+- 删除currentVisibleWidget()逻辑
 
-> 1. 修复NavigationNodeClicked/Removed的错误逻辑
-> 1. NXSlider添加的仅按下拖到
+- 删除navigationNodeAdded信号参数
 
-------
+- 调整navigationNodeRemoved信号和NXWindowPrivate::onNavigationNodeRemoved的逻辑，删除节点后仍旧存在节点窗口就返回当前节点窗口的key（如，有两个节点1、2，当前处在节点2，删除节点2，那么将会返回节点1窗口的key，底层是QMap按照顺序来的）和窗口指针，如果节点已经删完返回rootkey和空指针
 
+- 调整onNavigationNodeClicked逻辑
 
+- 调整添加节点的返回值，NodeOperateReturnTypeWithKey从QPair替换为struct
 
-## # **Track Record 2**：	Commits on Jun 30, 2025
+- 修复开启拖拽移动NXNavigationNode的时候，以下**拖拽情况1**的情况造成程序中断， `qDeleteAll`双重释放了-窗口节点2，不知道为什么？迭代器失效？但是控制台输出的记录顺序正确，已经提示删除了-窗口节点2，范围越界？可能是，调整逻辑不使用qDeleteAll，在`insertChildNode`添加`childNode->setParent(this);`让qt关联生命周期，不进行手动管理
 
-### 1. Modify Optize1
+  > 示例：
+  >
+  > * **原布局	**				**拖拽情况1**				**拖拽情况2**
+  >
+  > 根节点 
+  >
+  > -窗口节点1				  -窗口节点1				-窗口节点1
+  >
+  > -挂载拓展节点1 		 -挂载拓展节点1		-窗口节点2 
+  >
+  > --窗口节点2 				-窗口节点2				-挂载拓展节点1
+  >
+  > -窗口节点3				  -窗口节点3			    -窗口节点3
 
-> 1. 去除先前多个控件不必要的代码，如NXWidget、NXSlider等
-> 2. 优化大部分逻辑
-> 3. 引入NXPacketIO、magic_enum
+- 完善导航节点交换逻辑，支持窗口节点直接交换
 
-## # **Track Record 3**：	Commits on Jul 8, 2025
+- 修复  同步 `Ela Commits on Sep 7, 2025` 版本的 NXCustomTabWidget、NXTabWidget、移除窗口逻辑，原版本CMake编译不会出现双重释放情况，但使用VS2022编译后会出现该错误 (错误出现位置 析构~NXTabWidget(), 操作了不该操作被释放的QVariant)
 
-### 1. Modify Optize1
+#### Modify Optize2
+**同步[ZongChang-Liu开发者](https://github.com/ZongChang-Liu/ElaWidgetTools/commits/Zongchang_Liu?author=ZongChang-Liu)的ElaWidgetTools改进**
 
-> 1. 引入NXShadowGraphicsEffect、NXShadowWidget
+1. 修改NXToggleButton、支持添加 NXIcon，
 
-## # **Track Record 4**：	Commits on Dec 26, 2025
+   `NXToggleButton.h、NXToggleButton.cpp、NXToggleButtonPrivate.h`
+2. NXToolTip添加显示偏移api,NXSlider添加ToolTip显示值
 
-## 1. Modify Optize1
+   `NXToolTip.h、NXToolTip.cpp、NXToolTipPrivate.h、NXToolTipPrivate.cpp、NXSlider.h、NXSlider.cpp、NXSliderPrivate.h(新增)、NXSliderPrivate.cpp(新增)`
 
-> 1. 影响文件NXWindow.h、NXWindow.cpp、NXWindowPrivate.h
->
->    删除currentVisibleWidget()逻辑
->
->    删除navigationNodeAdded信号参数
->
->    调整navigationNodeRemoved信号和NXWindowPrivate::onNavigationNodeRemoved的逻辑，删除节点后仍旧存在节点窗口就返回当前节点窗口的key（如，有两个节点1、2，当前处在节点2，删除节点2，那么将会返回节点1窗口的key，底层是QMap按照顺序来的）和窗口指针，如果节点已经删完返回rootkey和空指针
->
->    调整onNavigationNodeClicked逻辑
->
-> 2. 调整添加节点的返回值，NodeOperateReturnTypeWithKey从QPair替换为struct
->
-> 3. 修复开启拖拽移动NXNavigationNode的时候，以下**拖拽情况1**的情况造成程序中断， `qDeleteAll`双重释放了-窗口节点2，不知道为什么？迭代器失效？但是控制台输出的记录顺序正确，已经提示删除了-窗口节点2，范围越界？可能是，调整逻辑不使用qDeleteAll，在`insertChildNode`添加`childNode->setParent(this);`让qt关联生命周期，不进行手动管理
->
->    示例：
->
->    * **原布局	**				**拖拽情况1**				**拖拽情况2**
->
->    根节点 
->
->    -窗口节点1				  -窗口节点1				-窗口节点1
->
->    -挂载拓展节点1 		 -挂载拓展节点1		-窗口节点2 
->
->    --窗口节点2 				-窗口节点2				-挂载拓展节点1
->
->    -窗口节点3				  -窗口节点3			    -窗口节点3
->
->    4. 导航结点交换逻辑完善，新增支持两个窗口节点直接交换位置
->
-> 4. 修复  同步 `Ela Commits on Sep 7, 2025` 版本的 NXCustomTabWidget、NXTabWidget、移除窗口逻辑，原版本CMake编译不会出现双重释放情况，但使用VS2022编译后会出现该错误 (错误出现位置 析构~NXTabWidget(), 操作了不该操作被释放的QVariant)
+3. 为NXNavigationBar添加toolTip显示位置接口
 
-## 2. Modify Optize2
+   `NXNavigationBar.h、NXNavigationBar.cpp、NXNavigationView.h、NXNavigationView.cpp`
 
-同步作者 ZongChang-Liu 的部分拓展 ElaWidgetTools代码
+   修改NXNavigationBar使其更加适合无userCard的显示效果
 
-https://github.com/ZongChang-Liu/ElaWidgetTools/commits/Zongchang_Liu?author=ZongChang-Liu
+   `NXNavigationBar.cpp`
 
-> 1. 修改NXToggleButton、支持添加 NXIcon，
->
->    `NXToggleButton.h、NXToggleButton.cpp、NXToggleButtonPrivate.h`
->
-> 2. NXToolTip添加显示偏移api,NXSlider添加ToolTip显示值
->
->    `NXToolTip.h、NXToolTip.cpp、NXToolTipPrivate.h、NXToolTipPrivate.cpp、NXSlider.h、NXSlider.cpp、NXSliderPrivate.h(新增)、NXSliderPrivate.cpp(新增)`
->
-> 3. 为NXNavigationBar添加toolTip显示位置接口
->
->    `NXNavigationBar.h、NXNavigationBar.cpp、NXNavigationView.h、NXNavigationView.cpp`
->
->    修改NXNavigationBar使其更加适合无userCard的显示效果
->
->    `NXNavigationBar.cpp`
->
->    NXNavigationBar显示模式发生改变时会发送信号
->
-> 4. 修改mac下NXSpinBox焦点异常显示的bug
->
->    `NXSpinBox.cpp`
+   NXNavigationBar显示模式发生改变时会发送信号
 
-## 3. Modify Optize3
+4. 修改mac下NXSpinBox焦点异常显示的bug
 
-> 1. 修改`singleton.h` 单例模式更通用以来标准库，不依赖qt
->
-> 2. 修改`NXProperty.h`的setter、getter的宏定义，支持普通类型如int、char直接setter、支持QString自定义cvref限定符setter，支持自定义getter返回类型加&限定，支持大类型的setter移动
->
->    ```
->    PROPERTY: 需要和信号关联
->    PRIVATE: 不需要和信号关联
->    _H/_CPP: Pimpl版本
->    _EX_H/_EX_CPP: 自定义setter、getter类型限定符
->    _MOVE: setter拷贝大数据开销大，可以使用移动，但请你注意该类型必须实现移动构造/赋值或是POD类型，setter时候可以调用std::move传参数，但请注意生命周期
->    ```
->
-> 3. 修改NXTableView、NXNavigationView、NXNavigation，优化已有的IndexWidget和指示器代码逻辑
->
-> 4. NXTabWidget的双重释放问题Ela已经修复，NXCustomTabWidget、NXTabWidget合并Ela代码
->
-> 5. NXTabBar版本适配
->
-> ```NXTabBar.cpp
-> void NXTabBar::dragEnterEvent(QDragEnterEvent* event)
-> {
->     Q_D(NXTabBar);
->     if (event->mimeData()->property("DragType").toString() == "NXTabBarDrag")
->     {
->         event->acceptProposedAction();
->         auto mimeData = const_cast<QMimeData*>(event->mimeData());
->         d->_mimeData = mimeData;
-> #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
->         mimeData->setProperty("TabDropIndex", tabAt(event->position().toPoint()));
-> #else
->         mimeData->setProperty("TabDropIndex", tabAt(event->pos()));
-> #endif
->         Q_EMIT tabDragEnter(mimeData);
->         QTimer::singleShot(10, this, [=]() {
-> #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
->             QPoint pressPos(tabRect(currentIndex()).x() + 110, 0);
->             QMouseEvent pressEvent(QEvent::MouseButtonPress, pressPos, mapToGlobal(pressPos), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-> #else
->             QMouseEvent pressEvent(QEvent::MouseButtonPress, QPoint(tabRect(currentIndex()).x() + 110, 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-> #endif
->             QApplication::sendEvent(this, &pressEvent);
-> #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
->             QPoint movePos(event->position().toPoint().x(), 0);
->             QMouseEvent moveEvent(QEvent::MouseMove, movePos, mapToGlobal(movePos), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-> #else
->             QMouseEvent moveEvent(QEvent::MouseMove, QPoint(event->pos().x(), 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-> #endif
->             QApplication::sendEvent(this, &moveEvent);
->             });
->     }
->     QTabBar::dragEnterEvent(event);
-> }
-> 
-> void NXTabBar::dragMoveEvent(QDragMoveEvent* event)
-> {
->     Q_D(NXTabBar);
->     if (event->mimeData()->property("DragType").toString() == "NXTabBarDrag")
->     {
-> #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
->         QPoint movePos(event->position().toPoint().x(), 0);
->         QMouseEvent moveEvent(QEvent::MouseMove, movePos, mapToGlobal(movePos), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-> #else
->         QMouseEvent moveEvent(QEvent::MouseMove, QPoint(event->pos().x(), 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-> #endif
->         QApplication::sendEvent(this, &moveEvent);
->     }
->     QWidget::dragMoveEvent(event);
-> }
-> ```
->
-> 6. CMake优化生成，可选自动打包和Export导出Ela三方库
-> 6. 引入tl::expected，如果支持C++23的std::expected则使用标准库的，NodeOperateReturnType -> NodeOperateError, NodeOperateReturnType::Success ->NodeOperateError::None
+   `NXSpinBox.cpp`
+
+#### Modify Optize3
+1. 优化singleton.h单例模式，减少Qt依赖
+
+2. 修改`NXProperty.h`的setter、getter的宏定义，支持普通类型如int、char直接setter、支持QString自定义cvref限定符setter，支持自定义getter返回类型加&限定，支持大类型的setter移动
+
+   > ```
+   > PROPERTY: 需要和信号关联
+   > PRIVATE: 不需要和信号关联
+   > _H/_CPP: Pimpl版本
+   > _EX_H/_EX_CPP: 自定义setter、getter类型限定符
+   > _MOVE: setter拷贝大数据开销大，可以使用移动，但请你注意该类型必须实现移动构造/赋值或是POD类型，setter时候可以调用std::move传参数，但请注意生命周期
+   > ```
+
+3. 修改NXTableView、NXNavigationView、NXNavigation，优化已有的IndexWidget和指示器代码逻辑
+
+4. NXTabWidget的双重释放问题Ela已经修复，NXCustomTabWidget、NXTabWidget合并Ela代码
+
+5. 优化NXTabBar版本适配
+
+6. 引入tl::expected，支持C++23的std::expected
+
+7. CMake构建系统优化，支持自动打包和库导出
+
+#### Modify Optize4
+**同步[RainbowCandyX](https://github.com/RainbowCandyX/ElaWidgetTools)开发者的ElaWidgetTools改进**
+
+1. 更新ElaWidgetToolsExample文件
+2. 修复若干问题
+3. 引入创意组件：
+   - NXMessageCard、NXMessageDialog
+   - NXMultiSelectComboBoxDelegate
+   - NXGroupBox、NXGroupBoxStyle
+   - NXInputDialog
+   - NXTableWidget、NXTableWidgetStyle
+   - NXScreenCapture、NXScreenCaptureManager
+
+---
 

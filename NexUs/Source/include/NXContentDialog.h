@@ -24,6 +24,10 @@ public:
     void setMiddleButtonText(const QString& text);
     void setRightButtonText(const QString& text);
 
+    void setLeftButtonVisible(bool visible);
+    void setMiddleButtonVisible(bool visible);
+    void setRightButtonVisible(bool visible);
+
     void close();
     NXAppBar* appBar() const;
 Q_SIGNALS:

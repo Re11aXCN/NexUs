@@ -1,24 +1,31 @@
 ﻿#include "T_NXScreen.h"
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
 #include "NXComboBox.h"
-#include "NXDxgiManager.h"
-#include "NXLineEdit.h"
 #include "NXScrollPageArea.h"
 #include "NXText.h"
 #include "NXToggleButton.h"
-#include "T_NXPacketIO.h"
-#include "T_RecvScreen.h"
 #include <QThread>
 #include <QTimer>
 #include <QVBoxLayout>
+
+#ifdef Q_OS_WIN
+#include "NXDxgiManager.h"
+#include "NXLineEdit.h"
+#include "T_NXPacketIO.h"
+#include "T_RecvScreen.h"
+#endif
+
+#ifdef Q_OS_MAC
+#include "NXScreenCaptureManager.h"
+#endif
+
 T_NXScreen::T_NXScreen(QWidget* parent)
     : T_BasePage(parent)
 {
-    // 预览窗口标题
     setWindowTitle("NXScreen");
 
-    // 顶部元素
+#ifdef Q_OS_WIN
     createCustomWidget("DXGI录制组件被放置于此，可在此界面预览录制效果");
 
     NXDxgiManager* dxgiManager = NXDxgiManager::getInstance();
@@ -86,7 +93,7 @@ T_NXScreen::T_NXScreen(QWidget* parent)
     centerLayout->addLayout(comboBoxLayout);
     centerLayout->addWidget(dxgiScreenArea);
 
-#if defined(Q_OS_WIN) && defined(BUILD_WITH_NXPACKETIO)
+#if defined(BUILD_WITH_NXPACKETIO)
     QHBoxLayout* packetLayout = new QHBoxLayout();
     NXText* packetIOText = new NXText("网络视图 (需要先进行屏幕捕获 若接口IP不正确或不可用 程序可能会崩溃)", this);
     packetIOText->setTextPixelSize(17);
@@ -99,8 +106,8 @@ T_NXScreen::T_NXScreen(QWidget* parent)
     interfaceIPEdit->setPlaceholderText("接口IP");
     interfaceIPEdit->setText("192.168.1");
 
-    NXToggleButton* sendButton = new NXToggleButton("初始发送", this);
-    connect(sendButton, &NXToggleButton::toggled, this, [=](bool isToggled) {
+    NXToggleButton* sendButton2 = new NXToggleButton("初始发送", this);
+    connect(sendButton2, &NXToggleButton::toggled, this, [=](bool isToggled) {
         if (isToggled)
         {
             _initSendThread(interfaceIPEdit->text().trimmed());
@@ -123,7 +130,7 @@ T_NXScreen::T_NXScreen(QWidget* parent)
     });
     packetLayout->addWidget(interfaceIPText);
     packetLayout->addWidget(interfaceIPEdit);
-    packetLayout->addWidget(sendButton);
+    packetLayout->addWidget(sendButton2);
     packetLayout->addWidget(recvButton);
     packetLayout->addStretch();
     _recvScreen = new T_RecvScreen(this);
@@ -138,6 +145,60 @@ T_NXScreen::T_NXScreen(QWidget* parent)
 #endif
 
     addCentralWidget(centralWidget, false, true);
+#endif
+
+#ifdef Q_OS_MAC
+    createCustomWidget("屏幕录制组件被放置于此，可在此界面预览录制效果");
+
+    NXScreenCaptureManager* captureManager = NXScreenCaptureManager::getInstance();
+    captureManager->setGrabArea(1920, 1080);
+
+    NXScrollPageArea* captureScreenArea = new NXScrollPageArea(this);
+    captureScreenArea->setFixedHeight(700);
+    QHBoxLayout* captureScreenLayout = new QHBoxLayout(captureScreenArea);
+    _captureScreen = new NXScreenCaptureScreen(this);
+    _captureScreen->setFixedSize(1200, 678);
+    captureScreenLayout->addWidget(_captureScreen);
+
+    NXText* displayText = new NXText("显示器选择", this);
+    displayText->setTextPixelSize(15);
+    _displayComboBox = new NXComboBox(this);
+    _displayComboBox->addItems(captureManager->getDisplayList());
+    _displayComboBox->setCurrentIndex(captureManager->getDisplayID());
+
+    connect(_displayComboBox, QOverload<int>::of(&NXComboBox::currentIndexChanged), this, [=](int index) {
+        captureManager->setDisplayID(index);
+        _captureScreen->update();
+    });
+
+    NXToggleButton* startButton = new NXToggleButton("捕获", this);
+    connect(startButton, &NXToggleButton::toggled, this, [=](bool isToggled) {
+        if (isToggled)
+        {
+            captureManager->startGrabScreen();
+        }
+        else
+        {
+            captureManager->stopGrabScreen();
+            _captureScreen->update();
+        }
+    });
+
+    QHBoxLayout* comboBoxLayout = new QHBoxLayout();
+    comboBoxLayout->addWidget(displayText);
+    comboBoxLayout->addWidget(_displayComboBox);
+    comboBoxLayout->addWidget(startButton);
+    comboBoxLayout->addStretch();
+
+    QWidget* centralWidget = new QWidget(this);
+    centralWidget->setWindowTitle("NXScreen");
+    QVBoxLayout* centerLayout = new QVBoxLayout(centralWidget);
+    centerLayout->setContentsMargins(0, 0, 0, 0);
+    centerLayout->addLayout(comboBoxLayout);
+    centerLayout->addWidget(captureScreenArea);
+
+    addCentralWidget(centralWidget, false, true);
+#endif
 }
 
 T_NXScreen::~T_NXScreen()

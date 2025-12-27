@@ -10,11 +10,13 @@
 #include <QtMath>
 
 #include "NXApplication.h"
+#include "NXTheme.h"
 #include "DeveloperComponents/NXMicaBaseInitObject.h"
 #include "DeveloperComponents/NXWinShadowHelper.h"
 NXApplicationPrivate::NXApplicationPrivate(QObject* parent)
     : QObject{parent}
 {
+    connect(qApp, &QApplication::paletteChanged, this, &NXApplicationPrivate::onSystemPaletteChanged);
 }
 
 NXApplicationPrivate::~NXApplicationPrivate()
@@ -191,4 +193,37 @@ void NXApplicationPrivate::_resetAllMicaWidget()
         palette.setBrush(QPalette::Window, Qt::transparent);
         widget->setPalette(palette);
     }
+}
+
+void NXApplicationPrivate::onSystemPaletteChanged()
+{
+    syncSystemTheme();
+}
+
+void NXApplicationPrivate::syncSystemTheme()
+{
+    bool systemIsDark = _isSystemDarkMode();
+    NXThemeType::ThemeMode currentMode = nxTheme->getThemeMode();
+    NXThemeType::ThemeMode targetMode = systemIsDark ? NXThemeType::Dark : NXThemeType::Light;
+
+    if (currentMode != targetMode)
+    {
+        nxTheme->setThemeMode(targetMode);
+    }
+}
+
+bool NXApplicationPrivate::_isSystemDarkMode() const
+{
+    QPalette palette = qApp->palette();
+    QColor windowColor = palette.color(QPalette::Window);
+    QColor textColor = palette.color(QPalette::WindowText);
+
+    qreal windowLuminance = 0.299 * windowColor.red() +
+        0.587 * windowColor.green() +
+        0.114 * windowColor.blue();
+
+    qreal textLuminance = 0.299 * textColor.red() +
+        0.587 * textColor.green() +
+        0.114 * textColor.blue();
+    return windowLuminance < textLuminance;
 }

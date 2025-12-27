@@ -9,6 +9,7 @@ class NX_EXPORT NXMultiSelectComboBox : public QComboBox
     Q_OBJECT
     Q_Q_CREATE(NXMultiSelectComboBox)
     Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+    Q_PROPERTY_CREATE_Q_H(bool, ShowCheckBox)
 public:
     explicit NXMultiSelectComboBox(QWidget* parent = nullptr);
     ~NXMultiSelectComboBox();
@@ -19,7 +20,7 @@ public:
     QStringList getCurrentSelection() const;
     QList<int> getCurrentSelectionIndex() const;
 Q_SIGNALS:
-    Q_SIGNAL void itemSelectionChanged(QVector<bool> itemSelection);
+    Q_SIGNAL void itemSelectionChanged(QList<bool> itemSelection);
     Q_SIGNAL void currentTextListChanged(QStringList selectedTextList);
 
 protected:

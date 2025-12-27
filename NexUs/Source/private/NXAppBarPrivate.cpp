@@ -74,7 +74,17 @@ void NXAppBarPrivate::onStayTopButtonClicked()
     }
 #endif
     _stayTopButton->setIsSelected(_pIsStayTop);
-    _stayTopButton->update();
+    int currentRotate = _stayTopButton->property("NXIconRotate").toInt();
+    int targetRotate = _pIsStayTop ? 0 : 45;
+    QPropertyAnimation* rotateAnimation = new QPropertyAnimation(_stayTopButton, "NXIconRotate");
+    rotateAnimation->setDuration(300);
+    rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
+    rotateAnimation->setStartValue(currentRotate);
+    rotateAnimation->setEndValue(targetRotate);
+    connect(rotateAnimation, &QPropertyAnimation::valueChanged, _stayTopButton, [=]() {
+        _stayTopButton->update();
+        });
+    rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 void NXAppBarPrivate::_changeMaxButtonAwesome(bool isMaximized)

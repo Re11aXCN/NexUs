@@ -261,6 +261,10 @@
     <QtRcc Include="NexUs.qrc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\DeveloperComponents\NXGroupBoxStyle.cpp" />
+    <ClCompile Include="Source\DeveloperComponents\NXMultiSelectComboBoxDelegate.cpp" />
+    <ClCompile Include="Source\DeveloperComponents\NXScreenCapture.cpp" />
+    <ClCompile Include="Source\DeveloperComponents\NXTableWidgetStyle.cpp" />
     <ClCompile Include="Source\NXDialog.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXBaseListView.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXBreadcrumbBarDelegate.cpp" />
@@ -306,7 +310,7 @@
     <ClCompile Include="Source\DeveloperComponents\NXPopularCardFloater.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXProgressBarStyle.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXRadioButtonStyle.cpp" />
-	<ClCompile Include="Source\DeveloperComponents\NXRollerPickerContainer.cpp" />
+    <ClCompile Include="Source\DeveloperComponents\NXRollerPickerContainer.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXScrollBarStyle.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXSliderStyle.cpp" />
     <ClCompile Include="Source\DeveloperComponents\NXSpinBoxStyle.cpp" />
@@ -326,6 +330,11 @@
     <ClCompile Include="Source\NXAESEncryption.cpp" />
     <ClCompile Include="Source\NXAppBar.cpp" />
     <ClCompile Include="Source\NXApplication.cpp" />
+    <ClCompile Include="Source\NXGroupBox.cpp" />
+    <ClCompile Include="Source\NXInputDialog.cpp" />
+    <ClCompile Include="Source\NXMessageCard.cpp" />
+    <ClCompile Include="Source\NXMessageDialog.cpp" />
+    <ClCompile Include="Source\NXScreenCaptureManager.cpp" />
     <ClCompile Include="Source\NXShadowGraphicsEffect.cpp" />
     <ClCompile Include="Source\NXBreadcrumbBar.cpp" />
     <ClCompile Include="Source\NXCalendar.cpp" />
@@ -373,7 +382,7 @@
     <ClCompile Include="Source\NXRadioButton.cpp" />
     <ClCompile Include="Source\NXReminderCard.cpp" />
     <ClCompile Include="Source\NXRollerPicker.cpp" />
-	<ClCompile Include="Source\NXRoller.cpp" />
+    <ClCompile Include="Source\NXRoller.cpp" />
     <ClCompile Include="Source\NXScrollArea.cpp" />
     <ClCompile Include="Source\NXScrollBar.cpp" />
     <ClCompile Include="Source\NXScrollPage.cpp" />
@@ -386,6 +395,7 @@
     <ClCompile Include="Source\NXSuggestBox.cpp" />
     <ClCompile Include="Source\NXTabBar.cpp" />
     <ClCompile Include="Source\NXTableView.cpp" />
+    <ClCompile Include="Source\NXTableWidget.cpp" />
     <ClCompile Include="Source\NXTabWidget.cpp" />
     <ClCompile Include="Source\NXText.cpp" />
     <ClCompile Include="Source\NXTheme.cpp" />
@@ -401,6 +411,11 @@
     <ClCompile Include="Source\private\NXAppBarPrivate.cpp" />
     <ClCompile Include="Source\private\NXApplicationPrivate.cpp" />
     <ClCompile Include="Source\private\NXDialogPrivate.cpp" />
+    <ClCompile Include="Source\private\NXGroupBoxPrivate.cpp" />
+    <ClCompile Include="Source\private\NXInputDialogPrivate.cpp" />
+    <ClCompile Include="Source\private\NXMessageCardPrivate.cpp" />
+    <ClCompile Include="Source\private\NXMessageDialogPrivate.cpp" />
+    <ClCompile Include="Source\private\NXScreenCaptureManagerPrivate.cpp" />
     <ClCompile Include="Source\private\NXShadowGraphicsEffectPrivate.cpp" />
     <ClCompile Include="Source\private\NXBreadcrumbBarPrivate.cpp" />
     <ClCompile Include="Source\private\NXCalendarPickerPrivate.cpp" />
@@ -445,7 +460,7 @@
     <ClCompile Include="Source\private\NXRadioButtonPrivate.cpp" />
     <ClCompile Include="Source\private\NXReminderCardPrivate.cpp" />
     <ClCompile Include="Source\private\NXRollerPickerPrivate.cpp" />
-	<ClCompile Include="Source\private\NXRollerPrivate.cpp" />
+    <ClCompile Include="Source\private\NXRollerPrivate.cpp" />
     <ClCompile Include="Source\private\NXScrollAreaPrivate.cpp" />
     <ClCompile Include="Source\private\NXScrollBarPrivate.cpp" />
     <ClCompile Include="Source\private\NXScrollPageAreaPrivate.cpp" />
@@ -455,6 +470,7 @@
     <ClCompile Include="Source\private\NXSuggestBoxPrivate.cpp" />
     <ClCompile Include="Source\private\NXTabBarPrivate.cpp" />
     <ClCompile Include="Source\private\NXTableViewPrivate.cpp" />
+    <ClCompile Include="Source\private\NXTableWidgetPrivate.cpp" />
     <ClCompile Include="Source\private\NXTabWidgetPrivate.cpp" />
     <ClCompile Include="Source\private\NXTextPrivate.cpp" />
     <ClCompile Include="Source\private\NXThemePrivate.cpp" />
@@ -468,10 +484,21 @@
     <ClCompile Include="Source\private\NXWindowPrivate.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="Source\private\NXTableWidgetPrivate.h" />
+    <QtMoc Include="Source\private\NXScreenCaptureManagerPrivate.h" />
+    <QtMoc Include="Source\private\NXMessageDialogPrivate.h" />
+    <QtMoc Include="Source\private\NXMessageCardPrivate.h" />
+    <QtMoc Include="Source\private\NXInputDialogPrivate.h" />
+    <QtMoc Include="Source\private\NXGroupBoxPrivate.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXGroupBoxStyle.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXMultiSelectComboBoxDelegate.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXScreenCapture.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXTableWidgetStyle.h" />
     <ClInclude Include="Source\include\aesni\aesni-enc-cbc.h" />
     <ClInclude Include="Source\include\aesni\aesni-enc-ecb.h" />
     <ClInclude Include="Source\include\aesni\aesni-key-exp.h" />
     <ClInclude Include="Source\include\aesni\aesni-key-init.h" />
+    <ClInclude Include="Source\include\expected.hpp" />
     <ClInclude Include="Source\include\magic_enum\magic_enum.hpp" />
     <ClInclude Include="Source\include\magic_enum\magic_enum_all.hpp" />
     <ClInclude Include="Source\include\magic_enum\magic_enum_containers.hpp" />
@@ -481,6 +508,12 @@
     <ClInclude Include="Source\include\magic_enum\magic_enum_iostream.hpp" />
     <ClInclude Include="Source\include\magic_enum\magic_enum_switch.hpp" />
     <ClInclude Include="Source\include\magic_enum\magic_enum_utility.hpp" />
+    <QtMoc Include="Source\include\NXGroupBox.h" />
+    <QtMoc Include="Source\include\NXInputDialog.h" />
+    <QtMoc Include="Source\include\NXMessageCard.h" />
+    <QtMoc Include="Source\include\NXMessageDialog.h" />
+    <QtMoc Include="Source\include\NXScreenCaptureManager.h" />
+    <QtMoc Include="Source\include\NXTableWidget.h" />
     <ClInclude Include="Source\include\singleton.h" />
     <ClInclude Include="Source\include\NXIcon.h" />
     <ClInclude Include="Source\include\NXGraphicsLineItem.h" />
@@ -537,7 +570,7 @@
     <QtMoc Include="Source\DeveloperComponents\NXPopularCardFloater.h" />
     <QtMoc Include="Source\DeveloperComponents\NXProgressBarStyle.h" />
     <QtMoc Include="Source\DeveloperComponents\NXRadioButtonStyle.h" />
-	<QtMoc Include="Source\DeveloperComponents\NXRollerPickerContainer.h" />
+    <QtMoc Include="Source\DeveloperComponents\NXRollerPickerContainer.h" />
     <QtMoc Include="Source\DeveloperComponents\NXScrollBarStyle.h" />
     <QtMoc Include="Source\DeveloperComponents\NXSliderStyle.h" />
     <QtMoc Include="Source\DeveloperComponents\NXSpinBoxStyle.h" />
@@ -600,7 +633,7 @@
     <QtMoc Include="Source\include\NXPushButton.h" />
     <QtMoc Include="Source\include\NXRadioButton.h" />
     <QtMoc Include="Source\include\NXReminderCard.h" />
-	<QtMoc Include="Source\include\NXRollerPicker.h" />
+    <QtMoc Include="Source\include\NXRollerPicker.h" />
     <QtMoc Include="Source\include\NXRoller.h" />
     <QtMoc Include="Source\include\NXScrollArea.h" />
     <QtMoc Include="Source\include\NXScrollBar.h" />
@@ -668,7 +701,7 @@
     <QtMoc Include="Source\private\NXPushButtonPrivate.h" />
     <QtMoc Include="Source\private\NXRadioButtonPrivate.h" />
     <QtMoc Include="Source\private\NXReminderCardPrivate.h" />
-	<QtMoc Include="Source\private\NXRollerPickerPrivate.h" />
+    <QtMoc Include="Source\private\NXRollerPickerPrivate.h" />
     <QtMoc Include="Source\private\NXRollerPrivate.h" />
     <QtMoc Include="Source\private\NXScrollAreaPrivate.h" />
     <QtMoc Include="Source\private\NXScrollBarPrivate.h" />

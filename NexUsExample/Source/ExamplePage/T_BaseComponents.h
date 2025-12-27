@@ -14,6 +14,7 @@ class NXSlider;
 class NXRadioButton;
 class NXProgressBar;
 class NXProgressRing;
+class NXGroupBox;
 class T_BaseComponents : public T_BasePage
 {
     Q_OBJECT
@@ -42,6 +43,7 @@ private:
     NXProgressRing* _progressPercentRing{nullptr};
     NXProgressRing* _progressBusyRing{nullptr};
     NXProgressRing* _progressBusyTransparentRing{nullptr};
+    NXGroupBox* _groupBox{nullptr};
 };
 
 #endif // T_BASECOMPONENTS_H

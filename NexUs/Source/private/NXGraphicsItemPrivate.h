@@ -2,7 +2,7 @@
 #define NXGRAPHICSITEMPRIVATE_H
 
 #include <QObject>
-#include <QVector>
+#include <QList>
 
 #include "NXGraphicsItem.h"
 class NXGraphicsItemPrivate : public QObject
@@ -25,7 +25,7 @@ public:
 
 private:
     QString _itemUID;
-    QVector<bool> _currentLinkPortState;
+    QList<bool> _currentLinkPortState;
 };
 
 #endif // NXGRAPHICSITEMPRIVATE_H

@@ -2,10 +2,15 @@
 #define T_NXSCREEN_H
 #include <QWidget>
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
 #include "T_BasePage.h"
 
+#ifdef Q_OS_WIN
 class NXDxgiScreen;
+#endif
+#ifdef Q_OS_MAC
+class NXScreenCaptureScreen;
+#endif
 class NXComboBox;
 #if defined(Q_OS_WIN) && defined(BUILD_WITH_NXPACKETIO)
 class T_NXPacketIO;
@@ -19,9 +24,15 @@ public:
     ~T_NXScreen() override;
 
 private:
+#ifdef Q_OS_WIN
     NXDxgiScreen* _dxgiScreen{nullptr};
     NXComboBox* _dxComboBox{nullptr};
     NXComboBox* _outputComboBox{nullptr};
+#endif
+#ifdef Q_OS_MAC
+    NXScreenCaptureScreen* _captureScreen{nullptr};
+    NXComboBox* _displayComboBox{nullptr};
+#endif
 #if defined(Q_OS_WIN) && defined(BUILD_WITH_NXPACKETIO)
     T_NXPacketIO* _packetSendIO{nullptr};
     T_NXPacketIO* _packetRecvIO{nullptr};

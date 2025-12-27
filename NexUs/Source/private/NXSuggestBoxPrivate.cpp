@@ -48,7 +48,7 @@ void NXSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText)
         _startCloseAnimation();
         return;
     }
-    QVector<NXSuggestion*> suggestionVector;
+    QList<NXSuggestion*> suggestionVector;
     for (const auto& suggest: _suggestionVector)
     {
         if (suggest->getSuggestText().contains(searchText, _pCaseSensitivity))

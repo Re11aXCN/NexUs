@@ -109,6 +109,18 @@ void NXWindowPrivate::onThemeReadyChange()
     case NXApplicationType::Normal:
     case NXApplicationType::NXMica:
     {
+        if (_pThemeChangeTime <= 0)
+        {
+            if (nxTheme->getThemeMode() == NXThemeType::Light)
+            {
+                nxTheme->setThemeMode(NXThemeType::Dark);
+            }
+            else
+            {
+                nxTheme->setThemeMode(NXThemeType::Light);
+            }
+            break;
+        }
         _appBar->setIsOnlyAllowMinAndClose(true);
         if (!_animationWidget)
         {
@@ -169,6 +181,14 @@ void NXWindowPrivate::onThemeReadyChange()
 void NXWindowPrivate::onDisplayModeChanged()
 {
     _currentNavigationBarDisplayMode = _pNavigationBarDisplayMode;
+    if (_isNavigationBarFloat)
+    {
+        _isNavigationDisplayModeChanged = true;
+        _isNavigationBarFloat = false;
+        _isNavigationBarExpanded = false;
+        _navigationBar->setIsTransparent(true);
+        _resetWindowLayout(false);
+    }
     switch (_pNavigationBarDisplayMode)
     {
     case NXNavigationType::Auto:

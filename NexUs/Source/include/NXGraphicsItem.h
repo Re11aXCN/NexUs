@@ -31,12 +31,12 @@ public:
     void setLinkPortState(bool isLink, int portIndex);
 
     bool getLinkPortState(int portIndex) const;
-    QVector<bool> getLinkPortState() const;
+    QList<bool> getLinkPortState() const;
 
     int getUsedLinkPortCount() const;
-    QVector<int> getUsedLinkPort() const;
+    QList<int> getUsedLinkPort() const;
     int getUnusedLinkPortCount() const;
-    QVector<int> getUnusedLinkPort() const;
+    QList<int> getUnusedLinkPort() const;
 
 protected:
     virtual QRectF boundingRect() const override;

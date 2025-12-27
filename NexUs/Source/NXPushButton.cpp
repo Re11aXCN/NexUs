@@ -33,8 +33,8 @@ NXPushButton::NXPushButton(QWidget* parent)
     font.setPixelSize(15);
     setFont(font);
     setObjectName("NXPushButton");
-    setStyleSheet("#NXPushButton{background-color:transparent;}");
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+	setStyleSheet("#NXPushButton{background-color:transparent;border:none;outline:none;}");
+	connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
 }
@@ -147,6 +147,23 @@ void NXPushButton::setTextStyle(NXTextType::TextStyle textStyle, std::optional<i
 	}
 	}
 	setFont(textFont);
+}
+
+void NXPushButton::setNXIcon(NXIconType::IconName icon)
+{
+    Q_D(NXPushButton);
+    d->_icon = icon;
+    d->_hasIcon = (icon != NXIconType::None);
+    update();
+}
+
+void NXPushButton::setNXIcon(NXIconType::IconName icon, int iconSize)
+{
+    Q_D(NXPushButton);
+    d->_icon = icon;
+    d->_iconSize = iconSize;
+    d->_hasIcon = (icon != NXIconType::None);
+    update();
 }
 
 void NXPushButton::mousePressEvent(QMouseEvent* event)

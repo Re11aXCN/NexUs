@@ -14,8 +14,9 @@ NXMenuBar::NXMenuBar(QWidget* parent)
     setObjectName("NXMenuBar");
     setStyle(new NXMenuBarStyle(style()));
     QToolButton* tool = this->findChild<QToolButton*>();
-    if (tool->objectName() == "qt_menubar_ext_button")
+    if (tool && tool->objectName() == "qt_menubar_ext_button")
     {
+        tool->setStyleSheet("QToolButton{background-color:transparent; border:none;}");
         QMenu* oldMenu = tool->menu();
         NXMenu* menu = new NXMenu(this);
         menu->setObjectName("NXExtendMenu");

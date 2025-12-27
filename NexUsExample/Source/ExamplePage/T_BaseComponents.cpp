@@ -2,6 +2,7 @@
 
 #include "NXCheckBox.h"
 #include "NXComboBox.h"
+#include "NXGroupBox.h"
 #include "NXMessageButton.h"
 #include "NXMultiSelectComboBox.h"
 #include "NXPlainTextEdit.h"
@@ -96,6 +97,7 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     QStringList multiSelectComboList{"执念的鱼", "提着灯闯过远洋的甄选", "无需誓言", "我的心像自沉的旧母舰"};
     _multiSelectComboBox->addItems(multiComboList);
     _multiSelectComboBox->setCurrentSelection(multiSelectComboList);
+    //_multiSelectComboBox->setShowCheckBox(true);
     NXScrollPageArea* multiSelectComboBoxArea = new NXScrollPageArea(this);
     QHBoxLayout* multiSelectComboBoxLayout = new QHBoxLayout(multiSelectComboBoxArea);
     NXText* multiSelectComboBoxText = new NXText("NXMutilSelectComboBox", this);
@@ -268,6 +270,49 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     progressRingLayout->addWidget(_progressBusyTransparentRing);
     progressRingLayout->addStretch();
 
+    _groupBox = new NXGroupBox("NXGroupBox", this);
+    _groupBox->setFixedSize(350, 220);
+    _groupBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    QVBoxLayout* groupBoxLayout = new QVBoxLayout(_groupBox);
+    groupBoxLayout->setSpacing(8);
+    groupBoxLayout->setContentsMargins(15, 25, 15, 15);
+
+    NXText* label1 = new NXText("这是一个 NXGroupBox 示例", _groupBox);
+    NXText* label2 = new NXText("可以在其中放置各种控件", _groupBox);
+    NXCheckBox* checkbox = new NXCheckBox("GroupBox 内的复选框", _groupBox);
+    NXRadioButton* radio1 = new NXRadioButton("选项 1", _groupBox);
+    NXRadioButton* radio2 = new NXRadioButton("选项 2", _groupBox);
+    NXRadioButton* radio3 = new NXRadioButton("选项 3", _groupBox);
+    checkbox->setChecked(true);
+    radio1->setChecked(true);
+
+    groupBoxLayout->addWidget(label1);
+    groupBoxLayout->addWidget(label2);
+    groupBoxLayout->addWidget(checkbox);
+    groupBoxLayout->addWidget(radio1);
+    groupBoxLayout->addWidget(radio2);
+    groupBoxLayout->addWidget(radio3);
+    groupBoxLayout->addStretch();
+
+    NXScrollPageArea* groupBoxArea = new NXScrollPageArea(this);
+    groupBoxArea->setFixedHeight(240);
+    QHBoxLayout* groupBoxAreaLayout = new QHBoxLayout(groupBoxArea);
+    NXText* groupBoxLabel = new NXText("NXGroupBox", this);
+    groupBoxLabel->setTextPixelSize(12);
+    groupBoxAreaLayout->addWidget(groupBoxLabel);
+    groupBoxAreaLayout->addWidget(_groupBox);
+    groupBoxAreaLayout->addStretch();
+    NXToggleSwitch* groupBoxDisableSwitch = new NXToggleSwitch(this);
+    NXText* groupBoxDisableText = new NXText("禁用", this);
+    groupBoxDisableText->setTextPixelSize(15);
+    connect(groupBoxDisableSwitch, &NXToggleSwitch::toggled, this, [=](bool checked) {
+        _groupBox->setDisabled(checked);
+    });
+    groupBoxAreaLayout->addWidget(groupBoxDisableSwitch);
+    groupBoxAreaLayout->addWidget(groupBoxDisableText);
+    groupBoxAreaLayout->addSpacing(10);
+
     NXPlainTextEdit* edit = new NXPlainTextEdit(this);
     edit->setPlainText("这是一个NXPlainTextEdit  暂时放在这里");
 
@@ -285,6 +330,7 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     centerLayout->addWidget(radioButtonArea);
     centerLayout->addWidget(progressBarArea);
     centerLayout->addWidget(progressRingArea);
+    centerLayout->addWidget(groupBoxArea);
     centerLayout->addWidget(edit);
     centerLayout->addStretch();
     centerLayout->setContentsMargins(0, 0, 0, 0);

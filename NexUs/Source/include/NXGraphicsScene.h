@@ -45,7 +45,7 @@ public:
     bool removeItemLink(NXGraphicsItem* item1);
     bool removeItemLink(NXGraphicsItem* item1, NXGraphicsItem* item2, int port1 = 0, int port2 = 0);
 
-    QVector<QVariantMap> getItemsDataRoute() const;
+    QList<QVariantMap> getItemsDataRoute() const;
 
     // 序列化 反序列化
     void serialize();

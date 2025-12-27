@@ -341,9 +341,9 @@ bool NXGraphicsScene::removeItemLink(NXGraphicsItem* item1, NXGraphicsItem* item
     }
 }
 
-QVector<QVariantMap> NXGraphicsScene::getItemsDataRoute() const
+QList<QVariantMap> NXGraphicsScene::getItemsDataRoute() const
 {
-    QVector<QVariantMap> dataRouteVector;
+    QList<QVariantMap> dataRouteVector;
     for (const auto& pair : d_ptr->_items.toStdMap())
     {
         NXGraphicsItem* item = pair.second;

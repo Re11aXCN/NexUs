@@ -1,12 +1,11 @@
-﻿#ifndef NXFRAMEWORK_NXWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_NXPACKETIO_H_
+#ifndef NXFRAMEWORK_NXWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_NXPACKETIO_H_
 #define NXFRAMEWORK_NXWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_NXPACKETIO_H_
 
 #include <QObject>
 #if defined(Q_OS_WIN) && defined(BUILD_WITH_NXPACKETIO)
 #include "NXProperty.h"
-#include "XIO/NXXIO_PacketRegistry.h"
-#include "Util/UtCallbackHolder.h"
-#include <QPixmap>
+#include "NXXIO_PacketRegistry.h"
+#include "UtCallbackHolder.h"
 #include <QImage>
 #include <QMutex>
 #include <QQueue>

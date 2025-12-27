@@ -5,6 +5,7 @@
 
 #include "NXDef.h"
 class QVBoxLayout;
+class QHBoxLayout;
 class NXPushButton;
 class NXContentDialog;
 class NXMaskWidget;
@@ -18,8 +19,12 @@ public:
     ~NXContentDialogPrivate() override;
 
 private:
- 	qint64 _currentWinID{0};
+    bool _isLeftButtonVisible{ true };
+    bool _isMiddleButtonVisible{ true };
+    bool _isRightButtonVisible{ true };
     NXThemeType::ThemeMode _themeMode;
+ 	qint64 _currentWinID{0};
+    
     QString _leftButtonText{ "cancel" };
     QString _middleButtonText{ "minimum" };
     QString _rightButtonText{ "exit" };
@@ -28,6 +33,7 @@ private:
     QWidget* _centralWidget{nullptr};
     QWidget* _buttonWidget{nullptr};
     QVBoxLayout* _mainLayout{nullptr};
+    QHBoxLayout* _buttonLayout{ nullptr };
     NXPushButton* _leftButton{nullptr};
     NXPushButton* _middleButton{nullptr};
     NXPushButton* _rightButton{nullptr};

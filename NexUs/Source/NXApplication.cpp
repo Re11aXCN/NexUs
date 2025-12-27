@@ -89,6 +89,7 @@ QString NXApplication::getMicaImagePath() const
 
 void NXApplication::init()
 {
+    Q_D(NXApplication);
     Q_INIT_RESOURCE(NexUs);
     QApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
     QFontDatabase::addApplicationFont(":/Resource/Font/NXAwesome.ttf");
@@ -102,6 +103,7 @@ void NXApplication::init()
 #ifdef Q_OS_WIN
     nxWinHelper->initWinAPI();
 #endif
+    d->syncSystemTheme();
 }
 
 void NXApplication::syncWindowDisplayMode(QWidget* widget, bool isSync)

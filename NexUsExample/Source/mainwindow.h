@@ -14,6 +14,7 @@ class T_Popup;
 class T_Card;
 class T_ListView;
 class T_TableView;
+class T_TableWidget;
 class T_TreeView;
 class T_About;
 class T_Setting;
@@ -38,7 +39,7 @@ private:
     NXContentDialog* _closeDialog{nullptr};
     NXSuggestBox* _windowSuggestBox{nullptr};
     T_Home* _homePage{nullptr};
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
     T_NXScreen* _elaScreenPage{nullptr};
 #endif
     T_Icon* _iconPage{nullptr};
@@ -49,6 +50,7 @@ private:
     T_Card* _cardPage{nullptr};
     T_ListView* _listViewPage{nullptr};
     T_TableView* _tableViewPage{nullptr};
+    T_TableWidget* _tableWidgetPage{nullptr};
     T_TreeView* _treeViewPage{nullptr};
     T_About* _aboutPage{nullptr};
     T_Setting* _settingPage{nullptr};

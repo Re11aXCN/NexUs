@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QSize>
 #include <QVariantMap>
-#include <QVector>
+#include <QList>
 
 #include "NXDef.h"
 
@@ -47,7 +47,7 @@ private:
 	bool _isCloseAnimationFinished{ true };
 	NXThemeType::ThemeMode _themeMode;
 	QSize _lastSize;
-	QVector<NXSuggestion*> _suggestionVector;
+	QList<NXSuggestion*> _suggestionVector;
 	QAction* _lightSearchAction{ nullptr };
 	QAction* _darkSearchAction{ nullptr };
 	NXSuggestBoxSearchViewContainer* _searchViewBaseWidget{ nullptr };

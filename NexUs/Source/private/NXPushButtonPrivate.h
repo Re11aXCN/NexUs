@@ -22,8 +22,11 @@ public:
     ~NXPushButtonPrivate();
 
 private:
-    bool _isPressed{ false };
+    int _iconSize{ 18 };
     int _shadowBorderWidth{ 3 };
+    NXIconType::IconName _icon{ NXIconType::None };
+    bool _hasIcon{ false };
+    bool _isPressed{ false };
     NXThemeType::ThemeMode _themeMode;
     QColor _lightTextColor;
     QColor _darkTextColor;

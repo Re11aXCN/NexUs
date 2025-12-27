@@ -8,7 +8,6 @@
 
 #include "NXDef.h"
 #include "singleton.h"
-#include "NXProperty.h"
 
 enum WorkStatus
 {
@@ -61,6 +60,7 @@ public:
     Q_INVOKABLE void onOtherMessageBarEnd(QVariantMap eventData);
     Q_INVOKABLE void messageBarEnd(QVariantMap eventData);
     Q_SLOT void onCloseButtonClicked();
+    Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
 
 private:
     qreal _createTime{0};

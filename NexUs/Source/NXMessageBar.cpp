@@ -72,6 +72,7 @@ NXMessageBar::NXMessageBar(NXMessageBarType::PositionPolicy policy, NXMessageBar
     mainLayout->addWidget(d->_closeButton);
     setObjectName("NXMessageBar");
     setStyleSheet("#NXMessageBar{background-color:transparent;}");
+    connect(nxTheme, &NXTheme::themeModeChanged, d, &NXMessageBarPrivate::onThemeChanged);
     d->_messageBarCreate(displayMsec);
 }
 

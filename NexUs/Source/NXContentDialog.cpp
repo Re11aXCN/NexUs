@@ -152,6 +152,66 @@ void NXContentDialog::setRightButtonText(const QString& text)
     d->_rightButton->setText(text);
 }
 
+void NXContentDialog::setLeftButtonVisible(bool visible)
+{
+    Q_D(NXContentDialog);
+    if (d->_isLeftButtonVisible == visible)
+    {
+        return;
+    }
+    d->_isLeftButtonVisible = visible;
+    if (visible)
+    {
+        d->_buttonLayout->insertWidget(0, d->_leftButton);
+        d->_leftButton->show();
+    }
+    else
+    {
+        d->_buttonLayout->removeWidget(d->_leftButton);
+        d->_leftButton->hide();
+    }
+}
+
+void NXContentDialog::setMiddleButtonVisible(bool visible)
+{
+    Q_D(NXContentDialog);
+    if (d->_isMiddleButtonVisible == visible)
+    {
+        return;
+    }
+    d->_isMiddleButtonVisible = visible;
+    if (visible)
+    {
+        d->_buttonLayout->insertWidget(1, d->_middleButton);
+        d->_middleButton->show();
+    }
+    else
+    {
+        d->_buttonLayout->removeWidget(d->_middleButton);
+        d->_middleButton->hide();
+    }
+}
+
+void NXContentDialog::setRightButtonVisible(bool visible)
+{
+    Q_D(NXContentDialog);
+    if (d->_isRightButtonVisible == visible)
+    {
+        return;
+    }
+    d->_isRightButtonVisible = visible;
+    if (visible)
+    {
+        d->_buttonLayout->addWidget(d->_rightButton);
+        d->_rightButton->show();
+    }
+    else
+    {
+        d->_buttonLayout->removeWidget(d->_rightButton);
+        d->_rightButton->hide();
+    }
+}
+
 void NXContentDialog::close()
 {
     Q_D(NXContentDialog);

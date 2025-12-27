@@ -8,18 +8,21 @@
 #include <QPropertyAnimation>
 
 #include "DeveloperComponents/NXComboBoxView.h"
+#include "DeveloperComponents/NXMultiSelectComboBoxDelegate.h"
 #include "NXApplication.h"
 #include "DeveloperComponents/NXComboBoxStyle.h"
 #include "NXScrollBar.h"
 #include "NXTheme.h"
 #include "private/NXMultiSelectComboBoxPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(NXMultiSelectComboBox, int, BorderRadius)
+Q_PROPERTY_CREATE_Q_CPP(NXMultiSelectComboBox, bool, ShowCheckBox)
 NXMultiSelectComboBox::NXMultiSelectComboBox(QWidget* parent)
     : QComboBox(parent), d_ptr(new NXMultiSelectComboBoxPrivate())
 {
     Q_D(NXMultiSelectComboBox);
     d->q_ptr = this;
     d->_pBorderRadius = 3;
+    d->_pShowCheckBox = false;
     d->_pExpandIconRotate = 0;
     d->_pExpandMarkWidth = 0;
     d->_themeMode = nxTheme->getThemeMode();
@@ -71,6 +74,26 @@ NXMultiSelectComboBox::NXMultiSelectComboBox(QWidget* parent)
     d->_itemSelection[0] = true;
     QComboBox::setMaxVisibleItems(5);
     connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(this, &NXMultiSelectComboBox::pShowCheckBoxChanged, this, [=]()
+        {
+            Q_D(NXMultiSelectComboBox);
+            QAbstractItemView* comboBoxView = this->view();
+            if (d->_pShowCheckBox)
+            {
+                if (!d->_delegate)
+                {
+                    d->_delegate = new NXMultiSelectComboBoxDelegate(this);
+                    connect(this, &NXMultiSelectComboBox::itemSelectionChanged, d->_delegate, &NXMultiSelectComboBoxDelegate::setItemSelection);
+                    d->_delegate->setItemSelection(d->_itemSelection);
+                }
+                comboBoxView->setItemDelegate(d->_delegate);
+            }
+            else
+            {
+                comboBoxView->setItemDelegate(nullptr);
+            }
+            comboBoxView->viewport()->update();
+        });
 }
 
 NXMultiSelectComboBox::~NXMultiSelectComboBox()

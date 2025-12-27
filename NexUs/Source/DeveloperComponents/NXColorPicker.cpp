@@ -5,6 +5,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
+#include <QtMath>
 
 #include "NXTheme.h"
 NXColorPicker::NXColorPicker(QWidget* parent)
@@ -20,7 +21,9 @@ NXColorPicker::NXColorPicker(QWidget* parent)
         for (int x = 0; x < colorPickerImage.width(); x++)
         {
             QColor pixColor;
-            pixColor.setHsvF((qreal)1 / colorPickerPix.width() * x, 1 - (qreal)1 / (colorPickerPix.height() - 1) * y, 1);
+            qreal h = qBound(0.0, (qreal)x / colorPickerPix.width(), 1.0);
+            qreal s = qBound(0.0, 1 - (qreal)y / (colorPickerPix.height() - 1), 1.0);
+            pixColor.setHsvF(h, s, 1);
             pixColor = pixColor.toRgb();
             colorPickerImage.setPixelColor(x, y, pixColor);
         }
@@ -49,7 +52,9 @@ void NXColorPicker::mousePressEvent(QMouseEvent* event)
     _selectedPoint = _adjustPointLimit(event->pos());
     QPointF colorPoint((_selectedPoint.x() - 3) / 254.0 * 359, (_selectedPoint.y() - 3) / 254.0 * 359);
     QColor pixColor;
-    pixColor.setHsvF((qreal)1 / _colorPickerImage.width() * colorPoint.x(), 1 - (qreal)1 / (_colorPickerImage.height() - 1) * colorPoint.y(), 1);
+    qreal h = qBound(0.0, colorPoint.x() / _colorPickerImage.width(), 1.0);
+    qreal s = qBound(0.0, 1 - colorPoint.y() / (_colorPickerImage.height() - 1), 1.0);
+    pixColor.setHsvF(h, s, 1);
     _selectedColor = pixColor.toRgb();
     Q_EMIT selectedColorChanged(_selectedColor);
     QWidget::mousePressEvent(event);
@@ -61,7 +66,9 @@ void NXColorPicker::mouseReleaseEvent(QMouseEvent* event)
     _selectedPoint = _adjustPointLimit(event->pos());
     QPointF colorPoint((_selectedPoint.x() - 3) / 254.0 * 359, (_selectedPoint.y() - 3) / 254.0 * 359);
     QColor pixColor;
-    pixColor.setHsvF((qreal)1 / _colorPickerImage.width() * colorPoint.x(), 1 - (qreal)1 / (_colorPickerImage.height() - 1) * colorPoint.y(), 1);
+    qreal h = qBound(0.0, colorPoint.x() / _colorPickerImage.width(), 1.0);
+    qreal s = qBound(0.0, 1 - colorPoint.y() / (_colorPickerImage.height() - 1), 1.0);
+    pixColor.setHsvF(h, s, 1);
     _selectedColor = pixColor.toRgb();
     Q_EMIT selectedColorChanged(_selectedColor);
     QWidget::mouseReleaseEvent(event);
@@ -73,7 +80,9 @@ void NXColorPicker::mouseMoveEvent(QMouseEvent* event)
     _selectedPoint = _adjustPointLimit(event->pos());
     QPointF colorPoint((_selectedPoint.x() - 3) / 254.0 * 359, (_selectedPoint.y() - 3) / 254.0 * 359);
     QColor pixColor;
-    pixColor.setHsvF((qreal)1 / _colorPickerImage.width() * colorPoint.x(), 1 - (qreal)1 / (_colorPickerImage.height() - 1) * colorPoint.y(), 1);
+    qreal h = qBound(0.0, colorPoint.x() / _colorPickerImage.width(), 1.0);
+    qreal s = qBound(0.0, 1 - colorPoint.y() / (_colorPickerImage.height() - 1), 1.0);
+    pixColor.setHsvF(h, s, 1);
     _selectedColor = pixColor.toRgb();
     Q_EMIT selectedColorChanged(_selectedColor);
     QWidget::mouseMoveEvent(event);

@@ -94,7 +94,7 @@ void NXGraphicsItem::setLinkPortState(bool isLink, int portIndex)
     }
 }
 
-QVector<bool> NXGraphicsItem::getLinkPortState() const
+QList<bool> NXGraphicsItem::getLinkPortState() const
 {
     Q_D(const NXGraphicsItem);
     return d->_currentLinkPortState;
@@ -124,10 +124,10 @@ int NXGraphicsItem::getUsedLinkPortCount() const
     return currentLinkPortCount;
 }
 
-QVector<int> NXGraphicsItem::getUsedLinkPort() const
+QList<int> NXGraphicsItem::getUsedLinkPort() const
 {
     Q_D(const NXGraphicsItem);
-    QVector<int> usedPortVector;
+    QList<int> usedPortVector;
     for (int i = 0; i < d->_pMaxLinkPortCount; i++)
     {
         if (d->_currentLinkPortState[i])
@@ -144,10 +144,10 @@ int NXGraphicsItem::getUnusedLinkPortCount() const
     return d->_pMaxLinkPortCount - getUsedLinkPortCount();
 }
 
-QVector<int> NXGraphicsItem::getUnusedLinkPort() const
+QList<int> NXGraphicsItem::getUnusedLinkPort() const
 {
     Q_D(const NXGraphicsItem);
-    QVector<int> unusedPortVector;
+    QList<int> unusedPortVector;
     for (int i = 0; i < d->_pMaxLinkPortCount; i++)
     {
         if (!(d->_currentLinkPortState[i]))

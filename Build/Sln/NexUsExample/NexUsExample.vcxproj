@@ -276,6 +276,7 @@
     <ClCompile Include="Source\ExamplePage\T_RecvScreen.cpp" />
     <ClCompile Include="Source\ExamplePage\T_Setting.cpp" />
     <ClCompile Include="Source\ExamplePage\T_TableView.cpp" />
+    <ClCompile Include="Source\ExamplePage\T_TableWidget.cpp" />
     <ClCompile Include="Source\ExamplePage\T_TreeView.cpp" />
     <ClCompile Include="Source\ExamplePage\T_UpdateWidget.cpp" />
     <ClCompile Include="Source\mainwindow.cpp" />
@@ -375,6 +376,9 @@
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\qt6.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Source\ExamplePage\T_TableWidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

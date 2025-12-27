@@ -20,7 +20,7 @@ QVariant NXSuggestModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-void NXSuggestModel::setSearchSuggestion(QVector<NXSuggestion*> suggestionVector)
+void NXSuggestModel::setSearchSuggestion(QList<NXSuggestion*> suggestionVector)
 {
     if (suggestionVector.count() == 0)
     {
